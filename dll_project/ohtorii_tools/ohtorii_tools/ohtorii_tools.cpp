@@ -12,7 +12,7 @@ static void LoadTextFile() {
 		return;
 	}
 	FILE *fp = 0;
-	const errno_t error = fopen_s(&fp, "C:\\Users\\ikeuc_000\\Documents\\GitHub\\gather\\macro\\temp_history.txt", "rb");
+	const errno_t error = fopen_s(&fp, "C:\\Users\\ikeuc_000\\Documents\\GitHub\\gather\\temp_history.txt", "rb");
 	if (error != 0) {
 		return ;
 	}

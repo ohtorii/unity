@@ -139,7 +139,7 @@
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\macro\internal\"</Command>
+      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\dll\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,7 +161,7 @@
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\macro\internal\"</Command>
+      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\dll\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

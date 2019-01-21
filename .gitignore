@@ -5,3 +5,15 @@ dll_project/ohtorii_tools/.vs/ohtorii_tools/v15/.suo
 *.opendb
 dll_project/ohtorii_tools/ohtorii_tools/ohtorii_tools.vcxproj.user
 macro/temp_history.txt
+*.obj
+*.tlog
+*.pch
+*.pdb
+*.exp
+*.iobj
+*.ipdb
+*.lib
+dll_project/ohtorii_tools/ohtorii_tools/Release/ohtorii_tools.log
+dll_project/ohtorii_tools/ohtorii_tools/x64/Release/ohtorii_tools.log
+dll_project/ohtorii_tools/Release/ohtorii_tools_x86.dll
+dll_project/ohtorii_tools/x64/Release/ohtorii_tools_x64.dll

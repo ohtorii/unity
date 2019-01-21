@@ -1,4 +1,4 @@
-﻿/* 作成中
+﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
 
 usage:
   gather.mac mode
@@ -61,14 +61,14 @@ main:
 	$$prev_pattern="999";
 	##prev_tickcount=0;
 	while(true){
-		execmacro currentmacrodirectory+"\\..\\..\\command-line\\command-line-internal\\input-keys.mac", $$key_buffer, $$cursor_pos;
+		execmacro currentmacrodirectory+"\\..\\command-line\\command-line-internal\\input-keys.mac", $$key_buffer, $$cursor_pos;
 		$$keybord_buffer=getresultex(-1);
 
-		execmacro currentmacrodirectory+"\\..\\..\\command-line\\command-line-internal\\parse_result.mac" , "keycode"		, $$keybord_buffer;
+		execmacro currentmacrodirectory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keycode"		, $$keybord_buffer;
 		$$keycode=getresultex(-1);
-		execmacro currentmacrodirectory+"\\..\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
+		execmacro currentmacrodirectory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 		$$cursor_pos=getresultex(-1);
-		execmacro currentmacrodirectory+"\\..\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
+		execmacro currentmacrodirectory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 		$$key_buffer=getresultex(-1);
 
 		if($$keycode=="13"){
@@ -76,12 +76,12 @@ main:
 			選択ファイルに対してディフォルトアクションを実行する
 			*/
 			$$key_buffer="";
-		}else if($$keycode=="27"){	break;} 	//Escapeが押された
-		else if($$keycode=="16"){	up;}		//ctrl-p
-		else if($$keycode=="14"){	down;}		//ctrl-n
-		else if($$keycode=="18"){	call Mark;}		//ctrl-space
-		//}else if (##in == 0x1D){		call _Up;		// [↑]
-		//}else if (##in == 0x1F){		call _Down; 	//[↓]
+		}else if($$keycode=="27"){		break;} 	//Escapeが押された
+		else if($$keycode=="16"){		up;}		//ctrl-p
+		else if($$keycode=="14"){		down;}		//ctrl-n
+		else if($$keycode=="18"){		call Mark;}		//ctrl-space
+		else if ($$keycode == "29"){	up;}		// [↑]
+		else if ($$keycode == "31"){	down;} 	//[↓]
 		else{
 			//一致するパターンをファイルから行検索する
 			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
@@ -193,19 +193,27 @@ CloseFileIfOpen:
 	}
 
 LoadDll:
-	#g_dll_ohtorii_tools = loaddll(currentmacrodirectory + "\\internal\\ohtorii_tools_x64.dll");
+	if(platform&0x00080000){
+		#g_dll_ohtorii_tools = loaddll(currentmacrodirectory + "\\dll\\ohtorii_tools_x64.dll");
+	}else{
+		#g_dll_ohtorii_tools = loaddll(currentmacrodirectory + "\\dll\\ohtorii_tools_x86.dll");
+	}
 	if (#g_dll_ohtorii_tools==0) {
-		message "internal\\ohtorii_tools.dllのロードに失敗しました";
+		message "dll\\ohtorii_tools.dllのロードに失敗しました";
 		return false;
 	}
-	#g_hmjre_dll=loaddll("HmJre.dll");
-	if(#g_hmjre_dll==0){
-		message "HmJre.dll のロードに失敗しました\n" +
-				+ "HmJre.dllが秀丸エディタのディレクトリに存在するか確認してください";
-		return false;
+	#g_hmjre_dll=loaddll(macrodir+"\\HmJre.dll");
+	if(#g_hmjre_dll!=0){
+		return true;
 	}
+	#g_hmjre_dll=loaddll(hidemarudir+"\\HmJre.dll");
+	if(#g_hmjre_dll!=0){
+		return true;
+	}
+	message "HmJre.dll のロードに失敗しました\n" +
+			+ "HmJre.dllが秀丸エディタのディレクトリに存在するか確認してください";
+		return false;
 	
-	return true;
 
 FreeDll:
 	freedll #g_dll_ohtorii_tools;
