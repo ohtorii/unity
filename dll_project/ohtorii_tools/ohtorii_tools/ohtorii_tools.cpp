@@ -37,16 +37,16 @@ struct Output{
 	};
 
 	//秀丸エディタへ返す文字列
-	std::vector<std::wstring::value_type>	m_text;	
-	
+	std::vector<std::wstring::value_type>	m_text;
+
 	/*「秀丸エディタの行番号」から「ファイルリストの行番号」を取得するテーブル
-	
+
 	(使用例)
 	ファイルリストの行番号 = m_hidemaru_to_filelist_lineno[秀丸エディタの行番号];
 	*/
 	std::vector<__int64>					m_hidemaru_to_filelist_lineno;
 
-	//秀丸エディタで選択する行番号
+	//秀丸エディタで選択する行番号(インデックスは1始まり)
 	std::vector<__int64>					m_selected_lineno;
 };
 static Output	gs_output;
@@ -63,7 +63,7 @@ static bool LoadTextFile(const WCHAR*filename) {
 	if (error != 0) {
 		//OutputDebugString(L"@1");
 		return false;
-	}	
+	}
 
 	bool result = false;
 	WCHAR line[64 * 1024];
@@ -89,7 +89,7 @@ static bool LoadTextFile(const WCHAR*filename) {
 
 	fclose(fp);
 	//std::sort(gs_text.begin(), gs_text.end());
-	//OutputDebugString(L"==== Loadtext finish ====");	
+	//OutputDebugString(L"==== Loadtext finish ====");
 	//OutputDebugString(L"@4");
 	return result;
 }
@@ -124,13 +124,37 @@ static bool MatchAll(const std::wstring &line,  const std::vector<std::wstring>&
 
 /*行を「選択・選択解除」する
 hidemaru_line_no	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
-　					ファイルの先頭が１です。 
+　					ファイルの先頭が１です。
 */
-extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected) {
-	--hidemaru_line_no;//0始まりにする
+extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected) {	
 	try {
-		const auto filelist_lineno = gs_output.m_hidemaru_to_filelist_lineno.at(hidemaru_line_no);
+		const auto filelist_lineno = gs_output.m_hidemaru_to_filelist_lineno.at(hidemaru_line_no - 1);//-1して0始まりにする
+		const bool old = gs_input.at(filelist_lineno).m_selected;
 		gs_input.at(filelist_lineno).m_selected = is_selected;
+
+		if (old) {
+			if (is_selected) {
+				//select -> select 
+				//pass
+			}
+			else {
+				//select -> unselect
+				auto find_it = std::find(gs_output.m_selected_lineno.begin(), gs_output.m_selected_lineno.end(), hidemaru_line_no);	
+				if (find_it != gs_output.m_selected_lineno.end()) {
+					gs_output.m_selected_lineno.erase(find_it);
+				}
+			}
+		}
+		else {
+			if (is_selected) {
+				//unselect -> select
+				gs_output.m_selected_lineno.push_back(hidemaru_line_no);
+			}
+			else {
+				//unselect -> unselect
+				//pass
+			}
+		}
 		return true;
 	}
 	catch (std::exception) {
@@ -147,22 +171,47 @@ extern "C" INT_PTR GetSelectionCount() {
 
 /*選択行を取得する
 return	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
-　		ファイルの先頭が１です。 
+　		ファイルの先頭が１です。
 */
 extern "C" INT_PTR GetSelectedLineno(INT_PTR index) {
 	try {
-		return gs_output.m_selected_lineno.at(index) + 1;
+		return gs_output.m_selected_lineno.at(index);
 	}catch(std::exception) {
 		//pass
 	}
 	return -1;
 }
 
+/*選択されているファイル名を取得する（秀丸エディタの行番号バージョン）
+*/
+extern "C" WCHAR* GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
+	if (hidemaru_line_no <= 0) {
+		return gs_empty;
+	}
+	--hidemaru_line_no;//0始まりにする
+	try {
+		const auto filelist_lineno = gs_output.m_hidemaru_to_filelist_lineno.at(hidemaru_line_no);
+		return &(gs_input.at(filelist_lineno).m_text.at(0));
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+
+/*選択されているファイル名を取得する
+*/
+extern "C" WCHAR* GetSelectedFilename(INT_PTR index) {
+	INT_PTR hidemaru_line_no = GetSelectedLineno(index);
+	return GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
+}
+
+
 /*ファイルリストのファイル名を設定する
 return	bool	true	成功
 				false	失敗
 */
-extern "C" UINT_PTR SetFileListName(WCHAR* filename) {
+extern "C" INT_PTR SetFileListName(WCHAR* filename) {
 	return LoadTextFile(filename);
 }
 
@@ -175,28 +224,14 @@ extern "C" WCHAR* Filter(WCHAR* search_words) {
 	//OutputDebugString(L"====Enter====");
 	//OutputDebugString(search_words);
 	//LoadTextFile();
-	
+
 	gs_output.Reserve(gs_input.size());
 	gs_output.Clear();
 
 	std::vector<std::wstring> tokens;
 	tokens.reserve(16);
 	Tokenizer(tokens, search_words);
-	//std::sort(token.begin(), token.end());
-
-	//OutputDebugString(L"==== Find start ====");
-	/*if (tokens.size()==0) {
-		//全ての行を返す
-		const size_t size = gs_input.size();
-		for (size_t input_lineno = 0; input_lineno < size; ++input_lineno) {
-			const auto& line = gs_input.at(input_lineno);
-			gs_output.m_text.insert(gs_output.m_text.end(), line.m_text.begin(), line.m_text.end());
-			if (line.m_selected) {
-				gs_output.m_selected_lineno.push_back(input_lineno);
-			}
-			gs_output.m_hidemaru_to_filelist_lineno.push_back(input_lineno);
-		}
-	}else*/
+	
 	{
 		//一致する行を返す
 		size_t			select_lineno	= 0;
@@ -209,7 +244,7 @@ extern "C" WCHAR* Filter(WCHAR* search_words) {
 					gs_output.m_selected_lineno.push_back(select_lineno);
 				}
 				gs_output.m_hidemaru_to_filelist_lineno.push_back(input_lineno);
-				++select_lineno;				
+				++select_lineno;
 			}
 		}
 	}
@@ -221,7 +256,7 @@ extern "C" WCHAR* Filter(WCHAR* search_words) {
 	}
 
 //	OutputDebugString(L"==== Result start ====");
-	//OutputDebugString(&gs_result_text[0]);	
+	//OutputDebugString(&gs_result_text[0]);
 	//OutputDebugString(L"==== Result finish ====");
 	return &gs_output.m_text[0];
 }

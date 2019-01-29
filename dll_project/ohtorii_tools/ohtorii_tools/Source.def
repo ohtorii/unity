@@ -4,4 +4,6 @@ EXPORTS
 	ChangeSelected
 	GetSelectionCount
 	GetSelectedLineno
+	GetSelectedFilename
+	GetSelectedFilenameFromHidemaruLineNo
 	SetFileListName

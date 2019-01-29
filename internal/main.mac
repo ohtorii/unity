@@ -190,7 +190,7 @@ $g_fixed_action="";
 
 /*アクションを実行する対象のファイル名
 */
-$g_fixed_filenames_num=0;
+#g_fixed_filenames_num=0;
 $g_fixed_filenames[0]="";
 
 
@@ -239,7 +239,11 @@ main:
 	deletefile $$temp_filename;
 	return ##ret;
 
-
+/*
+return	アクションが最後まで実行されたかどうか(bool)
+		false	実行された
+		true	実行されていない
+*/
 Start:
 	$$temp_filename		=$$1;
 	$$source_filename	=$$2;
@@ -277,18 +281,36 @@ Start:
 	}
 	
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetFileListName",$$temp_filename);
-	if(##ret){
-		call FilteringProcess;
-		##ret = ##return;
+	if(! ##ret){
+		return false;
 	}
-	
-	//
-	//処理対象の行を取得する。
-	//
-	
-	return ##ret;
+	call FilteringProcess;
+	if(##return==0){
+		//キャンセルされた
+		return false;
+		
+	}
+	call CorrectSelectionLine;
+	if(! ##return){
+		return false;
+	}
+	if(true){
+		//debug
+		debuginfo 1;
+		debuginfo "==================================";
+		debuginfo "#g_fixed_filenames_num="+str(#g_fixed_filenames_num);
+		##i=0;
+		while(##i<#g_fixed_filenames_num){
+			debuginfo str(##i) + "] " + $g_fixed_filenames[##i];
+			##i = ##i + 1;
+		}
+	}
+	return true;
 
-
+/*
+return	0 キャンセル
+		1 確定
+*/
 FilteringProcess:
 	//絞り込み検索
 	$$key_buffer="";
@@ -311,7 +333,7 @@ FilteringProcess:
 			選択ファイルに対してディフォルトアクションを実行する
 			*/
 			//$$key_buffer="";
-		}else if($$keycode=="27"){		return true;} 		//Escapeが押された
+		}else if($$keycode=="27"){		return 0;} 		//Escapeが押された
 		else if($$keycode=="16"){		up;}			//ctrl-p
 		else if($$keycode=="14"){		down;}			//ctrl-n
 		else if($$keycode=="18"){		call Mark;}		//ctrl-space
@@ -320,9 +342,9 @@ FilteringProcess:
 		else if($$keycode=="9"){
 			call ProcessActionMenu;
 			if(##return==0){
-				//pass
+				//キャンセルされた
 			}else{
-				return true;
+				return 1;
 			}
 		}
 		else{
@@ -334,7 +356,7 @@ FilteringProcess:
 			}
 		}
 	}
-	return true;
+	return 0;
 
 Mark:
 	//カーソル行に色を塗る
@@ -356,6 +378,11 @@ Mark:
 		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
 		escape;
 	}
+	
+	debuginfo 1;
+	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	debuginfo "Mark:##count="+str(##count);
+	
 	enabledraw;
 	return;
 
@@ -375,6 +402,10 @@ Filter:
 	//
 	##i = 0;
 	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	
+	debuginfo 1;
+	debuginfo "Filer:##count="+str(##count);
+	
 	while(##i<##count){
 		##selected_lineno = dllfunc(#g_dll_ohtorii_tools,"GetSelectedLineno",##i);
 		if(0 < ##selected_lineno){
@@ -639,8 +670,61 @@ ProcessActionMenu:
 	menuarray $g_action_menu,#g_action_num;
 	if(result==0){
 		//キャンセル
+		return 0;
+	}
+	##index=result-1;
+	
+	$g_fixed_action_kind=$g_action_kind[##index];
+	$g_fixed_action		=$g_action_menu[##index];
+	return 1;
+
+
+/* 処理対象のファイル名を集める。
+
+以下グローバル変数に設定する。
+	#g_fixed_filenames_num
+	$g_fixed_filenames
+
+返値	bool
+
+（メモ）
+ファイルリストは秀丸エディタ上で装飾を施しているためDLL側から取得する。
+*/
+CorrectSelectionLine:
+	#g_fixed_filenames_num=0;
+	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	
+	debuginfo 1;
+	debuginfo "CorrectSelectionLine";
+	debuginfo "##count="+str(##count);
+	
+	if(##count==0){
+		//カーソル行から取得する
+		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilenameFromHidemaruLineNo",lineno);
+		if($$filename==""){
+			return false;
+		}
+		#g_fixed_filenames_num	=1;
+		$g_fixed_filenames[0]	=$$filename;
+		return true;
+	}
+	
+	##i = 0;
+	while(##i < ##count){
+		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
+		debuginfo str(##i)+"] " + $$filename;
+		if($$filename != ""){
+			$g_fixed_filenames[#g_fixed_filenames_num] = $$filename;
+			#g_fixed_filenames_num = #g_fixed_filenames_num + 1;
+			debuginfo "#g_fixed_filenames_num="+str(#g_fixed_filenames_num);
+		}
+		##i = ##i + 1;
+	}
+	if(#g_fixed_filenames_num==0){
+		return false;
 	}
 	return true;
+
 
 
 //==========================================================================
