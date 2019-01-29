@@ -1,0 +1,798 @@
+﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
+
+usage:
+  gather.mac currentmacrodirectory mode
+
+==============================================================================
+Source
+==============================================================================
+実装済	機能				説明
+		file				カレントディレクトリのファイルとディレクトリ一覧
+		file/new			ファイルの新規作成
+○		file_mru			最近開いたファイルの一覧
+		file_rec			カレントディレクトリの全てのファイルの一覧
+		file_rec/async		file_rec の非同期処理版
+		directory			カレントディレクトリのディレクトリ一覧
+		directory/new		ディレクトリの新規作成
+○		directory_mru		最近開いたディレクトリの一覧
+△		tab					タブの一覧
+		source				unite-source の一覧
+△		window				現在のウィンドウのタブ一覧
+		command				定義されているコマンドの一覧
+		function			Vim の組み込み関数と unite.vim、neocomplcache で定義されている関数の一覧
+		mapping				定義されているキーマッピングの一覧
+		grep				外部コマンド "grep" の結果を出力
+		find				外部コマンド "find" の結果を出力
+		menu				g:unite_source_menu_menus に登録されてあるメニューの一覧
+		history/yank		ヤンクされたワードの一覧
+		process				起動しているプロセスの一覧
+
+
+秀丸エディタ独自のソース
+		outline				アウトラインの一覧
+		project				プロジェクトのファイル一覧
+
+秀丸エディタ化するソース名
+		buffer				開かれているバッファの一覧
+		buffer_tab			現在のタブで開かれたバッファの一覧
+		line				現在のバッファの行を出力
+		vimgrep				:vimgrep の結果を出力
+
+秀丸エディタに存在しないソース
+		bookmark			ブックマークの一覧（秀丸マクロに命令が存在しない）
+		runtimepath			runtimepath に追加されているパスの一覧
+		launcher			$PATH にある実行ファイルの一覧
+		register			レジスタの一覧
+		alias				g:unite_source_alias_aliases の一覧
+		output				Vim のコマンドの出力結果を出力する（e.g. :mes）
+		line/fast			10000行以上のバッファ時に使用する line
+		jump				:jump の結果の出力
+		change				:change の結果を出力
+		jump_point			file:line に一致するデータを出力
+		file_point			ファイル名か URI に一致するデータを出力する
+
+
+==============================================================================
+Action
+==============================================================================
+# common
+nop					なにもしない
+append
+delete
+echo				ファイル（またはディレクトリ）の情報を色々出力
+ex					ファイル（またはディレクトリ）のフルパスをコマンドラインに挿入
+insert				ファイル（またはディレクトリ）の名前を挿入
+insert_directory	ファイル（またはディレクトリ）のフルパスを挿入
+preview				ファイル（またはディレクトリ）を開く
+yank				ファイル（またはディレクトリ）のフルパスをyankにコピー
+yank_escape			ファイル（またはディレクトリ）のフルパスをyankにコピー(エスケープする)
+
+
+# openable
+tabopen			Open the file in a new tab.
+choose			Open the file in a selected window.
+split			Open the file, splitting horizontally.
+vsplit			Open the file, splitting vertically.
+left			Open the file in the left, splitting vertically.
+right			Open the file in the right, splitting vertically.
+above			Open the file in the top, splitting horizontally.
+below			Open the file in the bottom, splitting horizontally.
+persist_open	Open the file in alternate window.  unite window isn't closed.
+tabsplit		Open the files and vsplit in a new tab.
+switch			Open the file in current window or jump to existing window/tabpage.
+tabswitch		Open the file in new tab or jump to existing window/tabpage.
+splitswitch		Open the file in split window or jump to existing window/tabpage.
+vsplitswitch	Open the file in vertical split window or jump to existing window/tabpage.
+
+
+# tab
+delete              -- (tab)           delete tabs
+edit                -- (tab)           rename tabs
+open              ! -- (tab)           open this tab
+preview             -- (tab)           preview tab
+rename              -- (tab)           rename tabs
+
+
+# cdable
+cd					カレントディレクトリ移動
+lcd					現在のウィンドウのカレントディレクトリ移動
+tabnew_cd			カレントディレクトリを移動し、新しいタブを開く
+vimshell			対象をカレントディレクトリとしてvimshellを起動する
+vimfiler			対象をカレントディレクトリとしてvimfilerを起動する
+
+# opanable
+tabopen				新しいタブで対象を開く
+chose				選択したウィンドウでファイルを開く
+split				垂直方向にウィンドウを分割して開く
+vsplit				水平方向にウィンドウを分割して開く
+left, right, above, bellow	それぞれの方向にウィンドウを分割して開く
+
+# file
+open				ファイルを開く
+preview				プレビューウィンドウでファイルを開く
+bookmark			ファイルをブックマークに追加する
+mkdir				ディレクトリ作成(directory_newと同じ感じ？)
+diff				対象ファイルと、もうひとつのdiffを表示
+grep, grep_directory	ファイル、もしくはディレクトリに対してgrep検索
+
+
+# command
+edit             ! -- (command)        edit command
+execute          ! -- (command)        execute command
+grep             ! -- (command)        grep this command
+
+
+===============================================================================
+Unite-vimの説明。
+https://www.youtube.com/watch?v=Co4Np4SXOOc
+*/
+
+//空白文字の定義
+$g_space="\r\n\t 　";
+
+
+#g_open_newfile = false;
+#g_new_hidemaru = 0;
+#g_old_hidemaru = hidemaruhandle(0);
+
+//DLL
+#g_hmjre_dll 	= 0;
+#g_dengaku_dll 	= 0;
+#g_dll_ohtorii_tools=0;
+
+
+/*****************************************************************************
+	アクションのテーブル
+*****************************************************************************/
+//アクション数
+#g_action_num=0;
+
+/* アクションのメニュー名
+(例)	[0]="nop";
+		[1]="copy";
+		[2]="open";
+			:
+			:
+*/
+$g_action_menu[0]="";
+
+/*アクションの説明
+(例)	[0]="Do nothing.";
+		[1]="Copy the candidate.";
+		[2]="Open file with new tab.";
+			:
+			:
+*/
+$g_action_description[0]="";
+
+/*アクションの種類
+(例)	[0]="common";
+		[1]="common";
+		[2]="tab";
+			:
+			:
+*/
+$g_action_kind[0]="";
+
+
+/*****************************************************************************
+	ユーザーが確定したアクション
+*****************************************************************************/
+/* 確定したアクションの種類
+（例）common
+*/
+$g_fixed_action_kind="";
+
+/*確定したアクション
+（例）delete
+*/
+$g_fixed_action="";
+
+/*アクションを実行する対象のファイル名
+*/
+$g_fixed_filenames_num=0;
+$g_fixed_filenames[0]="";
+
+
+/*****************************************************************************
+	その他グローバル変数
+*****************************************************************************/
+$g_root_macro_directory=getarg(0);
+
+
+/*****************************************************************************
+	メイン処理
+*****************************************************************************/
+
+$g_old_searchbuffer = searchbuffer;
+#g_old_searchoption = searchoption;
+#g_old_hidemaru     = hidemaruhandle(0);
+
+//disablebreak;
+call main getarg(1);
+call CloseFileIfOpen;
+setsearch $g_old_searchbuffer, #g_old_searchoption;
+endmacro;
+
+main:
+	/***************************************************
+	[注意] ファイル名決め打ち、後で修正。
+	****************************************************/
+	$$source=$$1;
+	$$source="file_mru";
+	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
+	if(existfile($$source_filename)==false){
+		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
+		return false;
+	}
+	
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", ".txt";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return"";
+	}
+	
+	call Start $$temp_filename, $$source_filename;
+	##ret = ##return;
+	
+	call FreeDll;
+	deletefile $$temp_filename;
+	return ##ret;
+
+
+Start:
+	$$temp_filename		=$$1;
+	$$source_filename	=$$2;
+	
+	execmacro $$source_filename, "get_description";
+	$$description=getresultex(-1);
+	
+	execmacro $$source_filename, "get_action";
+	$$action=getresultex(-1);
+	if($$action==""){
+		return false;
+	}
+	call LoadDll;
+	if(! ##return){
+		return false;
+	}
+	call CreateAction $$action;
+	if(! ##return){
+		return false;
+	}
+	call CreateSource $$temp_filename, $$source_filename;
+	if(! ##return){
+		return false;
+	}
+	call NewfileIfExist;
+	if(! ##return){
+		return false;
+	}
+	
+	/*途中の処理で秀丸エディタが切り替わったのでDLLを読み込みし直す。
+	*/
+	call LoadDll;
+	if(! ##return){
+		return false;
+	}
+	
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetFileListName",$$temp_filename);
+	if(##ret){
+		call FilteringProcess;
+		##ret = ##return;
+	}
+	
+	//
+	//処理対象の行を取得する。
+	//
+	
+	return ##ret;
+
+
+FilteringProcess:
+	//絞り込み検索
+	$$key_buffer="";
+	$$cursor_pos="0";
+	$$prev_pattern="999";
+	##prev_tickcount=0;
+	while(true){
+		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\input-keys.mac", $$key_buffer, $$cursor_pos;
+		$$keybord_buffer=getresultex(-1);
+
+		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keycode"		, $$keybord_buffer;
+		$$keycode=getresultex(-1);
+		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
+		$$cursor_pos=getresultex(-1);
+		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
+		$$key_buffer=getresultex(-1);
+
+		if($$keycode=="13"){
+			/*Enterキーが押された。
+			選択ファイルに対してディフォルトアクションを実行する
+			*/
+			//$$key_buffer="";
+		}else if($$keycode=="27"){		return true;} 		//Escapeが押された
+		else if($$keycode=="16"){		up;}			//ctrl-p
+		else if($$keycode=="14"){		down;}			//ctrl-n
+		else if($$keycode=="18"){		call Mark;}		//ctrl-space
+		else if ($$keycode == "29"){	up;}			// [↑]
+		else if ($$keycode == "31"){	down;} 			//[↓]
+		else if($$keycode=="9"){
+			call ProcessActionMenu;
+			if(##return==0){
+				//pass
+			}else{
+				return true;
+			}
+		}
+		else{
+			//一致するパターンをファイルから行検索する
+			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
+				call Filter $$key_buffer;
+				$$prev_pattern=$$key_buffer;
+				##prev_tickcount=tickcount;
+			}
+		}
+	}
+	return true;
+
+Mark:
+	//カーソル行に色を塗る
+	disabledraw;
+	$$marker=getcolormarker(0x0001,"gather");
+	debuginfo 1;
+	debuginfo "$$marker="+$$marker;
+
+	if($$marker=="000000FF"){
+		//マーク削除
+		##ret=dllfunc(#g_dll_ohtorii_tools,"ChangeSelected",lineno,false);
+		selectline 0;
+		deletecolormarker "gather";
+		escape;
+	}else{
+		//マークする
+		##ret=dllfunc(#g_dll_ohtorii_tools,"ChangeSelected",lineno,true);
+		selectline 0;
+		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
+		escape;
+	}
+	enabledraw;
+	return;
+
+Filter:
+	call TrimString $$1;
+	$$pattern=$$return;
+
+	disabledraw;
+	selectall;
+	backspace;
+	$$str = dllfuncstrw(#g_dll_ohtorii_tools,"Filter",$$pattern);
+	insert($$str);
+	call HilightWorld $$pattern;
+
+	//
+	//選択行をマークする
+	//
+	##i = 0;
+	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	while(##i<##count){
+		##selected_lineno = dllfunc(#g_dll_ohtorii_tools,"GetSelectedLineno",##i);
+		if(0 < ##selected_lineno){
+			movetolineno 1, ##selected_lineno;
+			selectline 0;
+			colormarker 0x000000ff,-1,-1,0,0x00,"gather";
+			escape;
+		}
+		##i = ##i + 1;
+	}
+
+	enabledraw;
+	return result;
+
+HilightWorld:
+	$$search_words=$$1;
+	call SearchWordsToHidemaruRegex $$search_words;
+	$$regex=$$return;
+	setsearch $$regex,0x00000800|0x00000010;
+	hilightfound 1;
+	return;
+
+SearchWordsToHidemaruRegex:
+	/*空白区切りの文字列を秀丸エディタの正規表現に変換する。
+	[in]	"hoge 123 .txt"
+	[out]	"hoge|123|\.txt"
+	*/
+	$$word_list=$$1;
+	$$escaped=quote($$word_list);
+	$$regex = dllfuncstr(#g_hmjre_dll,"ReplaceRegular", "[" + $g_space + "]+", $$escaped, 0, "|", 2);
+	return $$regex;
+
+TrimString:
+	while(1){
+	  ##word=strlen($$1);
+	  //文字列の先頭に空白文字がある場合、空白文字を削除
+	  if(strstr($g_space,leftstr($$1,2))!=-1)$$1=rightstr($$1,##word-2);
+	  else if(strstr($g_space,rightstr($$1,2))!=-1)$$1=leftstr($$1,##word-2);
+	  //ここまで全角文字の対処
+	  else if(strstr($g_space,leftstr($$1,1))!=-1)$$1=rightstr($$1,##word-1);
+	  else if(strstr($g_space,rightstr($$1,1))!=-1)$$1=leftstr($$1,##word-1);
+	  else break;
+	}
+	return $$1;
+
+NewfileIfExist:
+	#g_open_newfile = false;
+	if(filetype=="new"){
+		return true;
+	}
+	//編集中のテキストを上書きしないための対応。
+	//新規ファイルを作成しそこへコマンドの実行結果を出力する。
+	newfile;
+	if(result==0){
+		return false;
+	}
+	#g_open_newfile=true;
+	#g_new_hidemaru=hidemaruhandle(0);
+	return true;
+
+CloseFileIfOpen:
+	if(#g_open_newfile){
+		setactivehidemaru	#g_old_hidemaru;
+		closehidemaruforced #g_new_hidemaru;
+
+		#g_old_hidemaru=0;
+		#g_new_hidemaru=0;
+		
+		#g_open_newfile=false;
+	}
+	return true;
+
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;
+	
+LoadDll:
+	if(platform&0x00080000){
+		#g_dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
+	}else{
+		#g_dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x86.dll");
+	}
+	if (#g_dll_ohtorii_tools==0) {
+		message "dll\\ohtorii_tools.dllのロードに失敗しました";
+		return false;
+	}
+	
+	call LoadDllFuzzy("HmJre.dll");
+	#g_hmjre_dll=##return;
+	if(#g_hmjre_dll==0){
+		return false;
+	}
+	call LoadDllFuzzy("DengakuDLL.dll");
+	#g_dengaku_dll=##return;
+	if(#g_dengaku_dll==0){
+		return false;
+	}
+	return true;
+
+
+FreeDll:
+	freedll #g_dll_ohtorii_tools;
+	#g_dll_ohtorii_tools=0;
+
+	freedll #g_hmjre_dll;
+	#g_hmjre_dll=0;
+	
+	freedll #g_dengaku_dll;
+	#g_dengaku_dll=0;
+	return true;
+
+
+
+//==========================================================================
+//	アクションの生成
+//==========================================================================
+CreateAction:
+	$$action = $$1;
+	/*ソースが利用するアクションのリスト
+	（書式）
+	$$source_action_table[0]="common";
+	$$source_action_table[1]="openable";
+	##source_action_num		=2;
+	*/
+	$$source_action_table[0]	="";
+	##source_action_num			=0;
+	
+	{
+		$$tok 	= "\t\n";
+		$$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN",$$action,$$tok);
+		while (1) {
+			$$token = dllfuncstr(#g_dengaku_dll,"RTRIM",$$token);
+			$$token = dllfuncstr(#g_dengaku_dll,"LTRIM",$$token);
+			if("" != $$token){
+				$$source_action_table[##source_action_num]=$$token;
+				##source_action_num = ##source_action_num + 1;
+			}
+		    if (dllfunc(#g_dengaku_dll,"HASMORETOKENS") == 0) {
+				break;
+			}
+		    $$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN","",$$tok);
+		}
+	}
+	
+	
+	{//アクションに対応するファイルが存在しているか検査を行う
+		##i=0;
+		while(##i<##source_action_num){
+			$$kind=$$source_action_table[##i];
+			$$file=$g_root_macro_directory+"\\actions\\"+$$kind+".mac";
+			if(! existfile($$file)){
+				message $$kind + " のファイルが見つかりません。\n\n[todo]メッセージ修正";
+				return false;
+			}
+			##i = ##i + 1;
+		}
+	}
+	
+	
+	{//アクションを解析する
+		##i=0;
+		while(##i<##source_action_num){
+			$$kind=$$source_action_table[##i];
+			$$file=$g_root_macro_directory+"\\actions\\"+$$kind+".mac";
+			
+			execmacro $$file,"get_action_table";
+			$$action_table=getresultex(-1);
+			call ParseActionTable $$action_table, $$kind;
+			if(! ##return){
+				return false;
+			}
+			/*execmacro $$action_file,"get_default_action";
+			$$default_action=getresultex(-1);*/
+			
+			##i = ##i + 1;
+		}
+	}
+	return true;
+
+
+/* 
+以下のグローバル変数を設定する。
+
+#g_action_num
+$g_action_menu
+$g_action_description
+$g_action_kind
+*/
+ParseActionTable:
+	$$action_table	=$$1;
+	$$kind			=$$2;
+	
+	/*トークン分割の結果を納めるバッファ。
+	（入力）
+	"nop	Do nothing.	yank	Yank the candidate."
+	
+	（配列の内容）
+	"nop	Do nothing.	yank	Yank the candidate."
+	$$buffer[0]="nop";
+	$$buffer[1]="Do nothing.";
+	$$buffer[2]="yank";
+	$$buffer[3]="Yank the candidate.";
+	##buffer_num=4;
+	*/
+	$$buffer[0]	="";
+	##buffer_num=0;
+	
+	{
+		$$tok 	="\t\n";
+		$$token =dllfuncstr(#g_dengaku_dll,"GETTOKEN",$$action_table,$$tok);
+		while (1) {
+			$$token = dllfuncstr(#g_dengaku_dll,"RTRIM",$$token);
+			$$token = dllfuncstr(#g_dengaku_dll,"LTRIM",$$token);
+			if("" != $$token){
+				$$buffer[##buffer_num]=$$token;
+				##buffer_num = ##buffer_num + 1;
+			}
+			if (dllfunc(#g_dengaku_dll,"HASMORETOKENS") == 0) {
+				break;
+			}
+		    $$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN","",$$tok);
+		}
+	}
+	if(##buffer_num==0){
+		message $$kind+" のaction_tableが空でした。\n\n[todo]メッセージを後で修正。";
+		return false;
+	}
+	
+	if((##buffer_num%2)!=0){
+		message $$kind+" のaction_tableが偶数個ではありません。\n\n[todo]メッセージを後で修正。";
+		return false;
+	}
+	
+	#g_action_num=0;
+	##i=0;
+	while(##i<##buffer_num){
+		$g_action_menu[#g_action_num]		=$$buffer[##i];
+		$g_action_description[#g_action_num]=$$buffer[##i+1];
+		$g_action_kind[#g_action_num]		=$$kind;
+		#g_action_num = #g_action_num + 1;
+		
+		##i = ##i + 2;
+	}
+	
+	return true;
+
+
+/*	アクションのメニュー処理
+
+return	0 キャンセル
+		1 確定
+*/
+ProcessActionMenu:
+	menuarray $g_action_menu,#g_action_num;
+	if(result==0){
+		//キャンセル
+	}
+	return true;
+
+
+//==========================================================================
+//	ソースの生成処理
+//==========================================================================
+CreateSource:
+	$$temp_filename		=$$1;
+	$$source_filename	=$$2;
+
+	execmacro $$source_filename, "get_candidate_mode";
+	$$candidate_mode=$$return;
+	if($$candidate_mode==""){
+		$$candidate_mode="string";
+	}
+
+	##ret=false;
+	if($$candidate_mode=="string"){
+		call CandidateModeString, $$temp_filename,$$source_filename;
+		##ret=##return;
+	}else{
+		message "get_candidate_mode が未知の型名を返したよ。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
+		##ret=false;
+	}
+
+	return ##ret;
+
+
+CandidateModeString:
+	$$filename			=$$1;
+	$$source_filename	=$$2;
+	
+	/* 候補リストを生成する。
+	*/
+	execmacro $$source_filename, "generate_candidate";
+	$$candidate_list=getresultex(-1);
+	if($$candidate_list == ""){
+		return false;
+	}
+	
+	/* 候補リストをUTF16-BOMで保存する。
+	*/
+	{
+		##old_hidemaru = hidemaruhandle(0);
+		openfile "/h",noaddhist;
+		if(! result){
+			return false;
+		}
+		##cur_hidemaru = hidemaruhandle(0);
+		insert($$candidate_list);
+		saveas $$filename,unicode,lf,bom;
+		if(! result){
+			return false;
+		}
+
+		setactivehidemaru   ##old_hidemaru;
+		if(! result){
+			return false;
+		}
+		closehidemaruforced ##cur_hidemaru;
+		if(! result){
+			return false;
+		}
+	}
+	return true;
+
+
+/*ファイルの新規作成*/
+file_new:
+
+	return ;
+
+
+
+
+/*フォルダヒストリ
+*/
+directory_mru:
+	##i=0;
+	while(##i<100){
+		$$path=getpathhist(##i);
+		if($$path==""){
+			break;
+		}
+		insert($$path+"\n");
+		##i = ##i + 1;
+	}
+	return true;
+
+/*タブ一覧
+*/
+tab:
+	/*
+	ウインドウモードの時
+	未実装
+
+	# タブモードの時
+	1: タブグループ
+		1.1: foo.txt
+		1.2: bar.txt
+	2: タブグループ
+		2.1: readme.md
+		2.2: (無題) *
+	*/
+	if($$1=="get_candidate_mode"){
+		//この関数は文字列を返す
+		return "string";
+	}else if($$1=="generate_candidate"){
+		if(! tabmode){
+			return "";
+		}
+		$$candidate_list="";
+		##i 			= 0;
+		while( ##i < tabgrouptotal ) {
+			##grouptop 		= gettabhandle( true, ##i, 0 );
+			$$candidate_list=$$candidate_list+str(##i+1)+": タブグループ\n";
+			##j 			= 0;
+			while( ##j < tabtotal[##grouptop] ) {
+				##handle = gettabhandle( true, ##i, ##j );
+				$$candidate_list=$$candidate_list+"\t"+ str(##i+1)+"."+str(##j+1) + ": "+filename2[##handle]+"\n";
+				##j = ##j + 1;
+			}
+			##i = ##i + 1;
+		}
+		return $$candidate_list;
+	}
+	return "";
+
+window:
+	/*
+	ウインドウモード時
+	未実装
+
+	タブモード時
+	1: foo.txt
+	2: bar.txt
+
+	*/
+	if($$1=="get_candidate_mode"){
+		//この関数は文字列を返す
+		return "string";
+	}else if($$1=="generate_candidate"){
+		if(! tabmode){
+			return "";
+		}
+		$$candidate_list	="";
+		##i 				=0;
+		##group				=tabgroup[hidemaruhandle(0)];
+		while( ##i < tabtotal[##group] ) {
+			##tab_handle 	=gettabhandle( false, ##group, ##i );
+			$$candidate_list=$$candidate_list+str(##i+1)+": " + filename2[##tab_handle] + "\n";
+			##i 			=##i + 1;
+		}
+		return $$candidate_list;
+	}
+	return "";

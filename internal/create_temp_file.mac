@@ -1,0 +1,43 @@
+﻿/*一時ファイル名を返す
+
+（メモ）一時ファイルを安全に作れていない、後で修正。
+*/
+
+//テンポラリファイル名（ベース名）
+$g_tmpfile_base_name 	= "tmp_hidemaru_gather";
+
+call main getarg(0);
+endmacro $$return;
+
+main:
+	$$ext = $$1;
+	
+	$$tempdir = getenv("TMP");
+	if($$tempdir==""){
+		$$tempdir = getenv("TEMP");
+	}
+	if($$tempdir==""){
+		return"";
+	}
+	
+	$$right_char=rightstr( $$tempdir, 1 );
+	if($$right_char  == "\\" ) {
+		//pass
+	}else if( $$right_char == "/" ){
+		//pass
+	}else{
+		$$tempdir = $$tempdir + "\\";
+	}
+	
+	$$handle=str(hidemaruhandle(0));
+	$$basename=$g_tmpfile_base_name+"_"+year+month+day+hour+minute+second+"_"+$$handle+"_";
+	##n		= 0; //tickcount;
+	##end 	= ##n + 1000;
+	while(##n < ##end){
+	 	$$tempfile = $$tempdir + $$basename + str(##n) + $$ext;
+	 	if( !existfile( $$tempfile ) ) {
+			return $$tempfile;
+		}
+	 	##n = ##n + 1;
+	}
+	return "";

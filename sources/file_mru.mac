@@ -1,0 +1,55 @@
+﻿/*ファイル履歴
+*/
+
+$request=getarg(0);
+call $request,getarg(1),getarg(2);
+endmacro $$return;
+
+
+get_description:
+	//一行の簡潔な説明を返す
+	return "ファイル履歴の候補";
+
+
+get_candidate_mode:
+	/*候補一覧の型名を返す
+	
+	generate_candidate関数が返す型名
+	*/
+	return "string";
+
+
+get_action:
+	/*利用可能なアクションを返す
+
+	(書式)
+	action1 \t action2 ...
+
+	(例)
+	"common" + (\t|\n) + "openable";
+
+	*/
+	return "common";		//+"\t"+"openable";
+
+
+generate_candidate:
+	//候補を返す
+	$$candidate_list="";
+	##i=0;
+	while(##i<filehistcount){
+		$$candidate_list = $$candidate_list + getfilehist(##i) + "\n";
+		##i = ##i + 1;
+	}
+	return $$candidate_list;
+
+/*
+do_action:
+	$$selection=$$1;	//選択行の文字列
+	$$user_data=$$2;	//ユーザーデータ
+	if($$2=="カスタム１"){
+
+	}else if($$2=="カスタム２"){
+
+	}
+	return "";*/
+
