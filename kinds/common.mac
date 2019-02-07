@@ -1,0 +1,305 @@
+﻿/* common.
+
+(引数)
+	リクエスト	...
+
+（説明）
+	第二引数以降はリクエストの種類にり異なります。
+
+
+（リクエストの種類）
+	get_action_table
+	do_action
+	//get_default_action	後で実装
+
+（リクエスト毎の引数）
+	[0] get_action_table
+	[1]	なし
+
+	[0] do_action
+	[1] アクション名
+	[2] ファイル名(タブ区切り)
+
+	//* get_default_action
+	//	[1]	なし
+*/
+
+$request=getarg(0);
+call $request;
+endmacro $$return;
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Request.
+////////////////////////////////////////////////////////////////////////////
+/*
+let s:kind = {
+      \ 'name' : 'common',
+      \ 'default_action' : 'nop',
+      \ 'action_table': {},
+      \ 'parents': [],
+      \}
+
+let s:kind = {
+      \ 'name' : 'buffer',
+      \ 'default_action' : 'open',
+      \ 'action_table': {},
+      \ 'parents': ['file'],		<-- ???
+      \}
+
+*/
+
+
+
+get_action_table:
+	/*書式
+	アクション名(\t|\n)説明(\t|\n) ...
+	*/
+	return
+R"(
+nop	Do nothing.
+yank	Yank the candidate "word" or "action__text".
+yank_escape	Yank the escaped candidate "word" or "action__text".
+insert	Insert the candidate word or text before the cursor.
+append	Insert the candidate word or text after the cursor.
+insert_directory	Insert the candidate directory before the cursor.
+append_directory	Insert the candidate directory after the cursor.
+preview	Preview the candidate text.
+echo	Echo candidates for debug.
+)";
+
+/*対応する動作無し
+ex	Input the escaped candidate text into command line.
+*/
+
+
+
+/*	新しい書式(.ini)
+
+R"(
+[nop]
+description=Do nothing.
+is_selectable=1
+
+[yank]
+description=Yank the candidate "word" or "action__text".
+is_selectable=1
+
+[yank_escape]
+description=Yank the escaped candidate "word" or "action__text".
+is_selectable=1
+
+[ex]
+description=Input the escaped candidate text into command line.
+is_selectable=1
+
+[insert]
+description=Insert the candidate word or text before the cursor.
+is_selectable=1
+
+[insert_directory]
+description=Insert the candidate directory before the cursor.
+is_selectable=1
+
+[append]
+description=Insert the candidate word or text after the cursor.
+is_selectable=1
+
+[preview]
+description=Preview the candidate text.
+is_selectable=0
+
+[echo]
+description=Echo candidates for debug.
+is_selectable=1
+)";
+*/
+
+
+/*get_default_action:
+	return "nop";*/
+
+
+do_action:
+	call SplitFilelist, getarg(2);
+	if(! ##return){
+		return false;
+	}
+	$$action = getarg(1);
+	call $$action;
+	return ##return;
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Action.
+////////////////////////////////////////////////////////////////////////////
+nop:
+	return ;
+
+append:
+	##i=0;
+	while(##i<#g_filelist_num){
+		if(1<=##i){
+			insertreturn;
+		}
+		insert($g_filelist[##i]);
+		##i = ##i + 1;
+	}
+	return ;
+
+echo:
+	//debug　用途なので後回し
+	return ;
+
+ex:
+	return ;
+
+insert:
+	##i=0;
+	while(##i<#g_filelist_num){
+		if(1<=##i){
+			insertreturn;
+			up;
+		}
+		insertfix($g_filelist[##i]);
+		##i = ##i + 1;
+	}
+	return ;
+
+append_directory:
+	call FileListToDirectoryList;
+	if(! ##return){
+		return ;
+	}
+	call append;
+	return ;
+
+insert_directory:
+	call FileListToDirectoryList;
+	if(! ##return){
+		return ;
+	}
+	call insert;
+	return ;
+
+preview:
+	$$text="";
+	{
+		##old_hidemaru=hidemaruhandle(0);
+		openfile "/h /n " + $g_filelist[0];
+		if(!result){
+			return;
+		}
+		##new_hidemaru=hidemaruhandle(0);
+
+		selectall;
+		$$text=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
+		
+		setactivehidemaru	##old_hidemaru;
+		closehidemaruforced ##new_hidemaru;
+	}
+	
+	##output_dll=loaddll("HmOutputPane.dll");
+	if(!result){
+		return;
+	}
+	
+	{
+		//アウトプット枠クリア
+		##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+		##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
+		//ファイル内容を出力する
+		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$text);
+	}
+	
+	freedll ##output_dll;
+	return ;
+
+yank:
+	call MakeClipboardString;
+	setclipboard $$return;
+	return ;
+
+yank_escape:
+	call MakeClipboardString;
+	setclipboard quote($$return);
+	return ;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Utility.
+////////////////////////////////////////////////////////////////////////////
+MakeClipboardString:
+	$$str="";
+	##i=0;
+	while(##i<#g_filelist_num){
+		if(1<=##i){
+			$$str = $$str + "\x0D\x0A";
+		}
+		$$str = $$str + $g_filelist[##i];
+		##i = ##i + 1;
+	}
+	return $$str;
+
+LoadDll:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	return ##dll;
+
+SplitFilelist:
+	/* ファイルリストをグローバル変数に格納します。
+
+	（格納先のグローバル変数）
+	$g_filelist;		//ファイル名
+	#g_filelist_num;	//ファイル名の個数
+	*/
+
+	call LoadDll "DengakuDLL.dll";
+	if(##return==0){
+		return false;
+	}
+	##dll=##return;
+
+	#g_filelist_num=0;
+	$$token = dllfuncstr(##dll,"GETTOKEN",$$1,"\t");
+	while (1) {
+		if($$token != ""){
+			$g_filelist[#g_filelist_num] = $$token;
+			#g_filelist_num = #g_filelist_num + 1;
+		}
+		if (dllfunc(##dll,"HASMORETOKENS") == 0) {
+			break;
+		}
+		$$token = dllfuncstr(##dll,"GETTOKEN","","\t");
+	}
+	freedll ##dll;
+
+	if(#g_filelist_num==0){
+		return false;
+	}
+	return true;
+
+
+FileListToDirectoryList:
+	/* ファイルリストをディレクトリイストへ変更する
+	*/
+	call LoadDll "ht_tools.dll";
+	if(##return==0){
+		return false;
+	}
+	##dll=##return;
+	##i=0;
+	while(##i<#g_filelist_num){
+		$$dir = dllfuncstr(##dll, "GetParentFolder", $g_filelist[##i]);
+		$g_filelist[##i]=$$dir;
+		##i = ##i + 1;
+	}
+	freedll ##dll;
+	return true;
