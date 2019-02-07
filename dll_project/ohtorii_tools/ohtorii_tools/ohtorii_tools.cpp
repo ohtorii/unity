@@ -128,6 +128,7 @@ hidemaru_line_no	秀丸エディタのカーソル位置の、エディタ的に
 */
 extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected) {	
 	try {
+		bool has_change=false;
 		const auto filelist_lineno = gs_output.m_hidemaru_to_filelist_lineno.at(hidemaru_line_no - 1);//-1して0始まりにする
 		const bool old = gs_input.at(filelist_lineno).m_selected;
 		gs_input.at(filelist_lineno).m_selected = is_selected;
@@ -142,6 +143,7 @@ extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected)
 				auto find_it = std::find(gs_output.m_selected_lineno.begin(), gs_output.m_selected_lineno.end(), hidemaru_line_no);	
 				if (find_it != gs_output.m_selected_lineno.end()) {
 					gs_output.m_selected_lineno.erase(find_it);
+					has_change=true;
 				}
 			}
 		}
@@ -149,12 +151,18 @@ extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected)
 			if (is_selected) {
 				//unselect -> select
 				gs_output.m_selected_lineno.push_back(hidemaru_line_no);
+				has_change=true;
 			}
 			else {
 				//unselect -> unselect
 				//pass
 			}
 		}
+		
+		if(has_change){
+			std::sort(gs_output.m_selected_lineno.begin(), gs_output.m_selected_lineno.end());
+		}
+		
 		return true;
 	}
 	catch (std::exception) {
