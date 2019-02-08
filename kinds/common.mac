@@ -212,6 +212,15 @@ preview:
 		##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
 		//ファイル内容を出力する
 		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$text);
+		if(false){
+			//WM_KEYDOWN
+			##ret=sendmessage(##h, 0x0100, 0x11, 0x011D0001);
+			##ret=sendmessage(##h, 0x0100, 0x24, 0x01470001);
+			//WM_KEYUP
+			##ret=sendmessage(##h, 0x0101, 0x24, 0xc1470001);
+			##ret=sendmessage(##h, 0x0101, 0x11, 0xc11d0001);
+		}
+
 	}
 	
 	freedll ##output_dll;
