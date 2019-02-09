@@ -197,7 +197,15 @@ $g_fixed_filenames[0]="";
 /*****************************************************************************
 	その他グローバル変数
 *****************************************************************************/
+//マクロのルートディレクトリ
 $g_root_macro_directory=getarg(0);
+
+/*アクションへ渡すことが出来る最大ファイル数
+(memo)
+execmacro へ渡せる引数の上限は31個
+ファイル名は引数の [11] 以降。
+*/
+#g_max_file_num=30-11;
 
 
 /*****************************************************************************
@@ -741,6 +749,10 @@ CorrectSelectionLine:
 		return true;
 	}
 	
+	if(#g_max_file_num < ##count){
+		##count = #g_max_file_num;
+	}
+	
 	##i = 0;
 	while(##i < ##count){
 		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
@@ -833,20 +845,40 @@ DoActionToSelectionFiles:
 	if(#g_fixed_filenames_num==0){
 		return false;
 	}
-	
-	$$filelist="";
-	##i=0;
-	while(##i < #g_fixed_filenames_num){
-		if(1<=##i){
-			$$filelist=$$filelist+"\t";
+	if(true){
+		$$args[0]="do_action";
+		$$args[1]=$g_fixed_action;
+		$$args[10]=str(#g_fixed_filenames_num);
+		##args_num=11;
+		##i=0;
+		while(##i < #g_fixed_filenames_num){
+			if(1<=##i){
+				$$args[##args_num]=$$args[##args_num];
+			}
+			$$args[##args_num] = $$args[##args_num] + $g_fixed_filenames[##i];
+			##i = ##i + 1;
+			##args_num = ##args_num + 1;
 		}
-		$$filelist = $$filelist + $g_fixed_filenames[##i];
-		##i = ##i + 1;
-	}
-	$$file=$g_root_macro_directory+"\\kinds\\"+$g_fixed_action_kind+".mac";
-	execmacro $$file,"do_action",$g_fixed_action,$$filelist;
-	if(!result){
-		return false;
+		$$file=$g_root_macro_directory+"\\kinds\\"+$g_fixed_action_kind+".mac";
+		execmacro $$file,$$args,##args_num;
+		if(!result){
+			return false;
+		}
+	}else{
+		$$filelist="";
+		##i=0;
+		while(##i < #g_fixed_filenames_num){
+			if(1<=##i){
+				$$filelist=$$filelist+"\t";
+			}
+			$$filelist = $$filelist + $g_fixed_filenames[##i];
+			##i = ##i + 1;
+		}
+		$$file=$g_root_macro_directory+"\\kinds\\"+$g_fixed_action_kind+".mac";
+		execmacro $$file,"do_action",$g_fixed_action,$$filelist;
+		if(!result){
+			return false;
+		}
 	}
 	//getresultex(-1)
 	return true;

@@ -8,17 +8,25 @@
 
 
 （リクエストの種類）
-	get_action_table
-	do_action
-	//get_default_action	後で実装
+	- get_action_table
+	- do_action
+	//- get_default_action	後で実装
 
 （リクエスト毎の引数）
-	[0] get_action_table
-	[1]	なし
+	- get_action_table
+		[0] get_action_table
+		[1]	なし
 
-	[0] do_action
-	[1] アクション名
-	[2] ファイル名(タブ区切り)
+	- do_action
+		[0] 		do_action
+		[1] 		アクション名
+		[2 ... 9]	予約
+		[10]		ファイル数
+		[10+1]		ファイル名 1
+		[10+2]		ファイル名 2
+						:
+						:
+		[10+N] 		ファイル名 N
 
 	//* get_default_action
 	//	[1]	なし
@@ -122,10 +130,11 @@ is_selectable=1
 
 
 do_action:
-	call SplitFilelist, getarg(2);
+	/*call SplitFilelist, getarg(2);
 	if(! ##return){
 		return false;
-	}
+	}*/
+	call MakeFileList;
 	$$action = getarg(1);
 	call $$action;
 	return ##return;
@@ -196,16 +205,16 @@ preview:
 
 		selectall;
 		$$text=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
-		
+
 		setactivehidemaru	##old_hidemaru;
 		closehidemaruforced ##new_hidemaru;
 	}
-	
+
 	##output_dll=loaddll("HmOutputPane.dll");
 	if(!result){
 		return;
 	}
-	
+
 	{
 		//アウトプット枠クリア
 		##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
@@ -222,7 +231,7 @@ preview:
 		}
 
 	}
-	
+
 	freedll ##output_dll;
 	return ;
 
@@ -242,6 +251,16 @@ yank_escape:
 ////////////////////////////////////////////////////////////////////////////
 //	Utility.
 ////////////////////////////////////////////////////////////////////////////
+MakeFileList:
+	#g_filelist_num=val(getarg(10));
+	##i=0;
+	while(##i<#g_filelist_num){
+		$g_filelist[##i]=getarg(11+##i);
+		##i = ##i + 1;
+	}
+	return ;
+
+
 MakeClipboardString:
 	$$str="";
 	##i=0;
@@ -254,6 +273,7 @@ MakeClipboardString:
 	}
 	return $$str;
 
+
 LoadDll:
 	##dll=loaddll(macrodir+"\\"+$$1);
 	if(##dll!=0){
@@ -261,6 +281,7 @@ LoadDll:
 	}
 	##dll=loaddll(hidemarudir+"\\"+$$1);
 	return ##dll;
+
 
 SplitFilelist:
 	/* ファイルリストをグローバル変数に格納します。
