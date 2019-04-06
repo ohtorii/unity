@@ -1,7 +1,7 @@
 ﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
 
 usage:
-  gather.mac mode
+  unity.mac mode
 
 */
 execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,getarg(0);
