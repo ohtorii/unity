@@ -59,6 +59,62 @@ let s:kind = {
 */
 
 
+property:
+	return R"(
+[property]
+name=common
+default_action=nop
+'継承するアクション（スペースで区切る）
+inheritance=
+
+'アクション
+[action.nop]
+'表示に使用する名前
+name=nop
+'秀丸マクロのラベル名
+function=nop
+description=Do nothing.
+
+[action.yank]
+name=yank
+function=yank
+description=Yank the candidate "word" or "action__text".
+
+[action.yank_escape]
+name=yank_escape
+function=yank_escape
+description=Yank the escaped candidate "word" or "action__text".
+
+[action.insert]
+name=insert
+function=insert
+description=Insert the candidate word or text before the cursor.
+
+[action.append]
+name=append
+function=append
+description=Insert the candidate word or text after the cursor.
+
+[action.insert_directory]
+name=insert_directory	
+function=insert_directory	
+description=Insert the candidate directory before the cursor.
+
+[action.append_directory]
+name=append_directory	
+function=append_directory	
+description=Insert the candidate directory after the cursor.
+
+[action.preview]
+name=preview
+function=preview
+description=Preview the candidate text.
+
+[action.echo]
+name=echo
+function=echo
+description=Echo candidates for debug.
+)";
 
 get_action_table:
 	/*書式

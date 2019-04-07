@@ -268,3 +268,8 @@ extern "C" WCHAR* Filter(WCHAR* search_words) {
 	//OutputDebugString(L"==== Result finish ====");
 	return &gs_output.m_text[0];
 }
+
+INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {
+	/*ここで一時ファイルを削除する*/
+	return 0;
+}

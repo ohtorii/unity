@@ -141,53 +141,6 @@ $g_space="\r\n\t 　";
 #g_dll_ohtorii_tools=0;
 
 
-/*****************************************************************************
-	アクションのテーブル
-*****************************************************************************/
-//アクション数
-#g_action_num=0;
-
-/* アクションのメニュー名
-(例)	[0]="nop";
-		[1]="copy";
-		[2]="open";
-			:
-			:
-*/
-$g_action_menu[0]="";
-
-/*アクションの説明
-(例)	[0]="Do nothing.";
-		[1]="Copy the candidate.";
-		[2]="Open file with new tab.";
-			:
-			:
-*/
-$g_action_description[0]="";
-
-/*アクションの種類
-(例)	[0]="common";
-		[1]="common";
-		[2]="tab";
-			:
-			:
-*/
-$g_action_kind[0]="";
-
-
-/*****************************************************************************
-	ユーザーが確定したアクション
-*****************************************************************************/
-/* 確定したアクションの種類
-（例）common
-*/
-$g_fixed_action_kind="";
-
-/*確定したアクション
-（例）delete
-*/
-$g_fixed_action="";
-
 /*アクションを実行する対象のファイル名
 */
 #g_fixed_filenames_num=0;
@@ -234,23 +187,16 @@ main:
 		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
 		return false;
 	}
-	
-	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", ".txt";
-	$$temp_filename=getresultex(-1);
-	if($$temp_filename==""){
-		return"";
-	}
-	
-	call Start $$temp_filename, $$source_filename;
+
+	call Start $$source_filename;
 	##ret = ##return;
-	
+
 	//
 	//後処理
 	//
 	call FreeDll;
 	call CloseFileIfOpen;
-	deletefile $$temp_filename;
-	
+
 	return ##ret;
 
 /*
@@ -259,55 +205,29 @@ return	アクションが最後まで実行されたかどうか(bool)
 		true	実行されていない
 */
 Start:
-	$$temp_filename		=$$1;
-	$$source_filename	=$$2;
-	
-	execmacro $$source_filename, "get_description";
-	$$description=getresultex(-1);
-	
-	execmacro $$source_filename, "get_action";
-	$$action=getresultex(-1);
-	if($$action==""){
-		return false;
-	}
-	call LoadDll;
-	if(! ##return){
-		return false;
-	}
-	call CreateAction $$action;
-	if(! ##return){
-		return false;
-	}
-	call CreateSource $$temp_filename, $$source_filename;
-	if(! ##return){
-		return false;
-	}
-	
-	/*途中の処理で秀丸エディタが切り替わるため一旦開放する
-	*/
-	call FreeDll;
+	$$source_filename	=$$1;
+
 	//call NewfileIfExist;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
-	
-	/*途中の処理で秀丸エディタが切り替わったのでDLLを読み込みし直す。
-	*/
+
 	call LoadDll;
 	if(! ##return){
 		return false;
 	}
-	
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetFileListName",$$temp_filename);
-	if(! ##ret){
+
+	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename;
+	if(getresultex(-1)=="0"){
 		return false;
 	}
+
 	call FilteringProcess;
 	if(##return==0){
 		//キャンセルされた
 		return false;
-		
+
 	}
 	call CorrectSelectionLine;
 	if(! ##return){
@@ -332,9 +252,11 @@ Start:
 	if(! ##return){
 		return false;
 	}
+	
+	/*	後で実装
 	begingroupundo;
 	call DoActionToSelectionFiles;
-	endgroupundo;
+	endgroupundo;*/
 	return true;
 
 /*
@@ -343,8 +265,13 @@ return	0 キャンセル
 */
 FilteringProcess:
 	//絞り込み検索
-	$$key_buffer="";
-	$$cursor_pos="0";
+	$$keybord_buffer="";
+
+	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
+	$$cursor_pos=getresultex(-1);
+	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
+	$$key_buffer=getresultex(-1);
+
 	$$prev_pattern="999";
 	##prev_tickcount=0;
 	while(true){
@@ -371,14 +298,14 @@ FilteringProcess:
 		else if ($$keycode == "29"){	up;}			// [↑]
 		else if ($$keycode == "31"){	down;} 			//[↓]
 		else if($$keycode=="9"){						//tab
+			/*
 			call ProcessActionMenu;
 			if(##return==0){
 				//キャンセルされた
 			}else{
 				return 1;
-			}
-		}
-		else{
+			}*/
+		}else{
 			//一致するパターンをファイルから行検索する
 			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
 				call Filter $$key_buffer;
@@ -506,7 +433,7 @@ CloseFileIfOpen:
 
 		#g_old_hidemaru=0;
 		#g_new_hidemaru=0;
-		
+
 		#g_open_newfile=false;
 	}
 	return true;
@@ -522,7 +449,7 @@ LoadDllFuzzy:
 	}
 	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
 	return 0;
-	
+
 LoadDll:
 	if(platform&0x00080000){
 		#g_dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
@@ -533,7 +460,7 @@ LoadDll:
 		message "dll\\ohtorii_tools.dllのロードに失敗しました";
 		return false;
 	}
-	
+
 	call LoadDllFuzzy("HmJre.dll");
 	#g_hmjre_dll=##return;
 	if(#g_hmjre_dll==0){
@@ -552,12 +479,12 @@ FreeDll:
 		freedll #g_dll_ohtorii_tools;
 		#g_dll_ohtorii_tools=0;
 	}
-	
+
 	if(#g_hmjre_dll!=0){
 		freedll #g_hmjre_dll;
 		#g_hmjre_dll=0;
 	}
-	
+
 	if(#g_dengaku_dll!=0){
 		freedll #g_dengaku_dll;
 		#g_dengaku_dll=0;
@@ -566,160 +493,6 @@ FreeDll:
 
 
 
-//==========================================================================
-//	アクションの生成
-//==========================================================================
-CreateAction:
-	$$action = $$1;
-	/*ソースが利用するアクションのリスト
-	（書式）
-	$$source_action_table[0]="common";
-	$$source_action_table[1]="openable";
-	##source_action_num		=2;
-	*/
-	$$source_action_table[0]	="";
-	##source_action_num			=0;
-	
-	{
-		$$tok 	= "\t\n";
-		$$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN",$$action,$$tok);
-		while (1) {
-			$$token = dllfuncstr(#g_dengaku_dll,"RTRIM",$$token);
-			$$token = dllfuncstr(#g_dengaku_dll,"LTRIM",$$token);
-			if("" != $$token){
-				$$source_action_table[##source_action_num]=$$token;
-				##source_action_num = ##source_action_num + 1;
-			}
-		    if (dllfunc(#g_dengaku_dll,"HASMORETOKENS") == 0) {
-				break;
-			}
-		    $$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN","",$$tok);
-		}
-	}
-	
-	
-	{//アクションに対応するファイルが存在しているか検査を行う
-		##i=0;
-		while(##i<##source_action_num){
-			$$kind=$$source_action_table[##i];
-			$$file=$g_root_macro_directory+"\\kinds\\"+$$kind+".mac";
-			if(! existfile($$file)){
-				message $$kind + " のファイルが見つかりません。\n\n[todo]メッセージ修正";
-				return false;
-			}
-			##i = ##i + 1;
-		}
-	}
-	
-	
-	{//アクションを解析する
-		##i=0;
-		while(##i<##source_action_num){
-			$$kind=$$source_action_table[##i];
-			$$file=$g_root_macro_directory+"\\kinds\\"+$$kind+".mac";
-			
-			execmacro $$file,"get_action_table";
-			$$action_table=getresultex(-1);
-			call ParseActionTable $$action_table, $$kind;
-			if(! ##return){
-				return false;
-			}
-			/*execmacro $$action_file,"get_default_action";
-			$$default_action=getresultex(-1);*/
-			
-			##i = ##i + 1;
-		}
-	}
-	return true;
-
-
-/* 
-以下のグローバル変数を設定する。
-
-#g_action_num
-$g_action_menu
-$g_action_description
-$g_action_kind
-*/
-ParseActionTable:
-	$$action_table	=$$1;
-	$$kind			=$$2;
-	
-	/*トークン分割の結果を納めるバッファ。
-	（入力）
-	"nop	Do nothing.	yank	Yank the candidate."
-	
-	（配列の内容）
-	"nop	Do nothing.	yank	Yank the candidate."
-	$$buffer[0]="nop";
-	$$buffer[1]="Do nothing.";
-	$$buffer[2]="yank";
-	$$buffer[3]="Yank the candidate.";
-	##buffer_num=4;
-	*/
-	$$buffer[0]	="";
-	##buffer_num=0;
-	
-	{
-		$$tok 	="\t\n";
-		$$token =dllfuncstr(#g_dengaku_dll,"GETTOKEN",$$action_table,$$tok);
-		while (1) {
-			$$token = dllfuncstr(#g_dengaku_dll,"RTRIM",$$token);
-			$$token = dllfuncstr(#g_dengaku_dll,"LTRIM",$$token);
-			if("" != $$token){
-				$$buffer[##buffer_num]=$$token;
-				##buffer_num = ##buffer_num + 1;
-			}
-			if (dllfunc(#g_dengaku_dll,"HASMORETOKENS") == 0) {
-				break;
-			}
-		    $$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN","",$$tok);
-		}
-	}
-	if(##buffer_num==0){
-		message $$kind+" のaction_tableが空でした。\n\n[todo]メッセージを後で修正。";
-		return false;
-	}
-	
-	if((##buffer_num%2)!=0){
-		message $$kind+" のaction_tableが偶数個ではありません。\n\n[todo]メッセージを後で修正。";
-		return false;
-	}
-	
-	#g_action_num=0;
-	##i=0;
-	while(##i<##buffer_num){
-		$g_action_menu[#g_action_num]		=$$buffer[##i];
-		$g_action_description[#g_action_num]=$$buffer[##i+1];
-		$g_action_kind[#g_action_num]		=$$kind;
-		#g_action_num = #g_action_num + 1;
-		
-		##i = ##i + 2;
-	}
-	
-	return true;
-
-
-/*	アクションのメニュー処理
-
-return	0 キャンセル
-		1 確定
-
-選択したアクションはグローバル変数に設定します。
-	$g_fixed_action_kind
-	$g_fixed_action
-*/
-ProcessActionMenu:
-	menuarray $g_action_menu,#g_action_num;
-	if(result==0){
-		//キャンセル
-		return 0;
-	}
-	##index=result-1;
-	
-	$g_fixed_action_kind=$g_action_kind[##index];
-	$g_fixed_action		=$g_action_menu[##index];
-	return 1;
 
 
 /* 処理対象のファイル名を集める。
@@ -748,11 +521,11 @@ CorrectSelectionLine:
 		$g_fixed_filenames[0]	=$$filename;
 		return true;
 	}
-	
+
 	if(#g_max_file_num < ##count){
 		##count = #g_max_file_num;
 	}
-	
+
 	##i = 0;
 	while(##i < ##count){
 		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
@@ -771,118 +544,8 @@ CorrectSelectionLine:
 
 
 
-//==========================================================================
-//	ソースの生成処理
-//==========================================================================
-CreateSource:
-	$$temp_filename		=$$1;
-	$$source_filename	=$$2;
-
-	execmacro $$source_filename, "get_candidate_mode";
-	$$candidate_mode=$$return;
-	if($$candidate_mode==""){
-		$$candidate_mode="string";
-	}
-
-	##ret=false;
-	if($$candidate_mode=="string"){
-		call CandidateModeString, $$temp_filename,$$source_filename;
-		##ret=##return;
-	}else{
-		message "get_candidate_mode が未知の型名を返したよ。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
-		##ret=false;
-	}
-
-	return ##ret;
 
 
-CandidateModeString:
-	$$filename			=$$1;
-	$$source_filename	=$$2;
-	
-	/* 候補リストを生成する。
-	*/
-	execmacro $$source_filename, "generate_candidate";
-	$$candidate_list=getresultex(-1);
-	if($$candidate_list == ""){
-		return false;
-	}
-	
-	/* 候補リストをUTF16-BOMで保存する。
-	*/
-	{
-		##old_hidemaru = hidemaruhandle(0);
-		openfile "/h",noaddhist;
-		if(! result){
-			return false;
-		}
-		##cur_hidemaru = hidemaruhandle(0);
-		insert($$candidate_list);
-		saveas $$filename,unicode,lf,bom;
-		if(! result){
-			return false;
-		}
-
-		setactivehidemaru   ##old_hidemaru;
-		if(! result){
-			return false;
-		}
-		closehidemaruforced ##cur_hidemaru;
-		if(! result){
-			return false;
-		}
-	}
-	return true;
-
-
-DoActionToSelectionFiles:
-	/*選択ファイルに対してアクションを実行する
-	*/
-
-	if($g_fixed_action==""){
-		return false;
-	}
-	if(#g_fixed_filenames_num==0){
-		return false;
-	}
-	if(true){
-		$$args[0]="do_action";
-		$$args[1]=$g_fixed_action;
-		$$args[10]=str(#g_fixed_filenames_num);
-		##args_num=11;
-		##i=0;
-		while(##i < #g_fixed_filenames_num){
-			if(1<=##i){
-				$$args[##args_num]=$$args[##args_num];
-			}
-			$$args[##args_num] = $$args[##args_num] + $g_fixed_filenames[##i];
-			##i = ##i + 1;
-			##args_num = ##args_num + 1;
-		}
-		$$file=$g_root_macro_directory+"\\kinds\\"+$g_fixed_action_kind+".mac";
-		execmacro $$file,$$args,##args_num;
-		if(!result){
-			return false;
-		}
-	}else{
-		$$filelist="";
-		##i=0;
-		while(##i < #g_fixed_filenames_num){
-			if(1<=##i){
-				$$filelist=$$filelist+"\t";
-			}
-			$$filelist = $$filelist + $g_fixed_filenames[##i];
-			##i = ##i + 1;
-		}
-		$$file=$g_root_macro_directory+"\\kinds\\"+$g_fixed_action_kind+".mac";
-		execmacro $$file,"do_action",$g_fixed_action,$$filelist;
-		if(!result){
-			return false;
-		}
-	}
-	//getresultex(-1)
-	return true;
-	
 /*ファイルの新規作成*/
 file_new:
 

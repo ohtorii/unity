@@ -1,0 +1,30 @@
+﻿/*編集中の内容をファイルへ保存する
+
+引数	保存先ファイル名
+		編集中の秀丸ハンドル
+
+返値	成功	"1"
+		失敗	空文字
+
+利用例	execmacro "hidemaru_to_file.mac", "c:\\temp\\hfoo.txt", str(##hidemaru_handle)
+
+		// ##hidemaru_handleの内容を"c:\\temp\\hfoo.txt"へ保存する。
+
+*/
+
+call main, getarg(0),getarg(1);
+endmacro $$return;
+
+main:
+	$$dst_filename			= $$1;
+	##edit_hidemaru_handle 	= val($$2);
+	##prev_hidemaru 		= hidemaruhandle(0);
+	
+	setactivehidemaru ##edit_hidemaru_handle;
+	appendsave $$dst_filename;
+	if(! result){
+		return "";
+	}
+	//元の秀丸に戻す
+	setactivehidemaru	##prev_hidemaru;
+	return "1";

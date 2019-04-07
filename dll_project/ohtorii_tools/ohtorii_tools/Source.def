@@ -1,9 +1,11 @@
 LIBRARY
 EXPORTS
     Filter
-	ChangeSelected
-	GetSelectionCount
-	GetSelectedLineno
-	GetSelectedFilename
-	GetSelectedFilenameFromHidemaruLineNo
-	SetFileListName
+    ChangeSelected
+    GetSelectionCount
+    GetSelectedLineno
+    GetSelectedFilename
+    GetSelectedFilenameFromHidemaruLineNo
+    SetFileListName
+	WriteToFile
+    DllDetachFunc_After_Hm866

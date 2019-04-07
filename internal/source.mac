@@ -1,0 +1,138 @@
+﻿/* ソースから候補を取得する
+
+引数	ohtorii_tools_dll_handle, input_source_filename
+返値	成功	"1"
+		失敗	"0"
+*/
+
+//==========================================================================
+//	一時ファイル名
+//==========================================================================
+$g_candidate_filename="";
+$g_ini_temp_filename="";
+
+
+//==========================================================================
+//iniファイルの情報
+//==========================================================================
+$g_ini_candidate_type="";
+
+
+//==========================================================================
+//メイン処理
+//==========================================================================
+#g_dll_ohtorii_tools=val(getarg(0));
+call main getarg(1);
+endmacro $$return;
+
+
+
+//==========================================================================
+//	ソースの生成処理
+//==========================================================================
+main:
+	call Start $$1;
+	##ret=##return;
+	if(! ##ret){
+		if($g_candidate_filename!=""){
+			deletefile $g_candidate_filename;
+			$g_candidate_filename="";
+		}
+	}
+	if($g_ini_temp_filename!=""){
+		deletefile $g_ini_temp_filename;
+		$g_ini_temp_filename="";
+	}
+	if(##ret){
+		return "1";
+	}
+	return "0";
+
+
+Start:
+	$$source_filename=$$1;
+
+	/* ソースからiniファイルを作りパースする。
+	*/
+	call CreateSourceIniFile $$source_filename;
+	$g_ini_temp_filename=getresultex(-1);
+	if($g_ini_temp_filename==""){
+		return false;
+	}
+	call ParseIni $g_ini_temp_filename;
+	if(!##return){
+		return false;
+	}
+	/*候補を作る
+	*/
+	if($g_ini_candidate_type=="list"){
+		call GatherCandidates $$source_filename;
+		$g_candidate_filename=$$return;
+	}else{
+		//未知の型名
+		message "$g_ini_candidate_type が未知の型名だよ。\n\n[todo]親切なメッセージにする";
+		return false;
+	}
+	if($g_candidate_filename==""){
+		return false;
+	}
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetFileListName",$g_candidate_filename /*ソース名,説明など */);
+	if(! ##ret){
+		return false;
+	}
+	return true;
+
+
+CreateSourceIniFile:
+	/*
+	返値	iniファイル名(一時ファイル)
+	*/
+	$$source_filename=$$1;
+	execmacro $$source_filename, "get_property";
+	$$ini=getresultex(-1);
+	if($$ini==""){
+		return "";
+	}
+	execmacro currentmacrodirectory+"\\create_temp_file.mac", "ini", ".txt";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return "";
+	}
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$temp_filename,$$ini);
+	if(! ##ret){
+		deletefile $$temp_filename;
+		return "";
+	}
+	return $$temp_filename;
+
+
+
+ParseIni:
+	$$filename=$$1;
+	$g_ini_candidate_type=getinistrw($$filename,"property","candidate_type");
+	return true;
+
+
+GatherCandidates:
+	/* 候補リストを生成する。
+	*/
+	$$source_filename=$$1;
+
+	execmacro $$source_filename, "gather_candidates";
+	$$list=getresultex(-1);
+
+	execmacro currentmacrodirectory+"\\create_temp_file.mac","candidates",".txt";
+	$$candidates_filename=getresultex(-1);
+	if($$candidates_filename==""){
+		return "";
+	}
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$candidates_filename,$$list);
+	if(! ##ret){
+		deletefile $$candidates_filename;
+		return "";
+	}
+
+	return $$candidates_filename;
