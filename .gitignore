@@ -18,5 +18,6 @@ dll_project/ohtorii_tools/ohtorii_tools/x64/Release/ohtorii_tools.log
 dll_project/ohtorii_tools/Release/ohtorii_tools_x86.dll
 dll_project/ohtorii_tools/x64/Release/ohtorii_tools_x64.dll
 *.log
-unite.vim-ver.6.3
+_unite.vim-ver.6.3
+_neomru.vim-master
 unity.hmbook
