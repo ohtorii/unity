@@ -180,6 +180,11 @@ main:
 	/***************************************************
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
+	if(true){
+		call LoadDll;
+		execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\actions\\common.mac";
+		return false;
+	}
 	$$source=$$1;
 	$$source="file_mru";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
