@@ -1,254 +1,260 @@
-﻿/*****************************************************************************
-	アクションのテーブル
-*****************************************************************************/
-//アクション数
-#g_action_num=0;
+﻿/* アクションから候補を取得する
 
-/* アクションのメニュー名
-(例)	[0]="nop";
-		[1]="copy";
-		[2]="open";
-			:
-			:
+引数	ohtorii_tools_dll_handle, input_action_filename
+返値	成功	"1"
+		失敗	"0"
 */
-$g_action_menu[0]="";
-
-/*アクションの説明
-(例)	[0]="Do nothing.";
-		[1]="Copy the candidate.";
-		[2]="Open file with new tab.";
-			:
-			:
-*/
-$g_action_description[0]="";
-
-/*アクションの種類
-(例)	[0]="common";
-		[1]="common";
-		[2]="tab";
-			:
-			:
-*/
-$g_action_kind[0]="";
 
 
+//==========================================================================
+//グローバル変数
+//==========================================================================
+#g_dll_ht_tool=0;
+#g_dll_ohtorii_tools=val(getarg(0));
 
-/*****************************************************************************
-	ユーザーが確定したアクション
-*****************************************************************************/
-/* 確定したアクションの種類
-（例）common
-*/
-$g_fixed_action_kind="";
+//------------------------
+//iniファイルの情報
+//------------------------
+//アクションのプロパティ
+$g_ini_property_name			="";
+$g_ini_property_description		="";
+$g_ini_property_default_action	="";
+$g_ini_property_inheritance		="";
 
-/*確定したアクション
-（例）delete
-*/
-$g_fixed_action="";
-
+//アクション毎の情報
+$g_ini_action_name[0]					="";
+$g_ini_action_function[0]				="";
+$g_ini_action_description[0]			="";
+$g_ini_action_is_multi_selectable[0]	="";
+$g_ini_action_is_quit[0]				="";
+#g_ini_action_num						=0;
 
 
 
 //==========================================================================
-//	アクションの生成
+//メイン処理
 //==========================================================================
-CreateAction:
-	$$action = $$1;
-	/*ソースが利用するアクションのリスト
-	（書式）
-	$$source_action_table[0]="common";
-	$$source_action_table[1]="openable";
-	##source_action_num		=2;
+call main getarg(1);
+endmacro $$return;
+
+
+main:
+	$$action_filename=$$1;
+
+	/* ソースからiniファイルを作りパースする。
 	*/
-	$$source_action_table[0]	="";
-	##source_action_num			=0;
-	
-	{
-		$$tok 	= "\t\n";
-		$$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN",$$action,$$tok);
-		while (1) {
-			$$token = dllfuncstr(#g_dengaku_dll,"RTRIM",$$token);
-			$$token = dllfuncstr(#g_dengaku_dll,"LTRIM",$$token);
-			if("" != $$token){
-				$$source_action_table[##source_action_num]=$$token;
-				##source_action_num = ##source_action_num + 1;
-			}
-		    if (dllfunc(#g_dengaku_dll,"HASMORETOKENS") == 0) {
-				break;
-			}
-		    $$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN","",$$tok);
-		}
+	call CreateActionIniFile $$action_filename;
+	$g_ini_temp_filename=getresultex(-1);
+	if($g_ini_temp_filename==""){
+		return false;
 	}
+	/*候補を作る
+	*/
+	call GatherCandidates $g_ini_temp_filename;
+	$g_candidate_filename=$$return;
+	
+	//call DumpActionProperty;
+	return;
 	
 	
-	{//アクションに対応するファイルが存在しているか検査を行う
-		##i=0;
-		while(##i<##source_action_num){
-			$$kind=$$source_action_table[##i];
-			$$file=$g_root_macro_directory+"\\actions\\"+$$kind+".mac";
-			if(! existfile($$file)){
-				message $$kind + " のファイルが見つかりません。\n\n[todo]メッセージ修正";
-				return false;
-			}
-			##i = ##i + 1;
-		}
+	if($g_candidate_filename==""){
+		return false;
 	}
-	
-	
-	{//アクションを解析する
-		##i=0;
-		while(##i<##source_action_num){
-			$$kind=$$source_action_table[##i];
-			$$file=$g_root_macro_directory+"\\actions\\"+$$kind+".mac";
-			
-			execmacro $$file,"get_action_table";
-			$$action_table=getresultex(-1);
-			call ParseActionTable $$action_table, $$kind;
-			if(! ##return){
-				return false;
-			}
-			/*execmacro $$action_file,"get_default_action";
-			$$default_action=getresultex(-1);*/
-			
-			##i = ##i + 1;
-		}
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetCandidateList",$g_candidate_filename, $g_ini_name, $g_ini_description);
+	if(! ##ret){
+		return false;
 	}
 	return true;
 
 
-/* 
-以下のグローバル変数を設定する。
-
-#g_action_num
-$g_action_menu
-$g_action_description
-$g_action_kind
-*/
-ParseActionTable:
-	$$action_table	=$$1;
-	$$kind			=$$2;
-	
-	/*トークン分割の結果を納めるバッファ。
-	（入力）
-	"nop	Do nothing.	yank	Yank the candidate."
-	
-	（配列の内容）
-	"nop	Do nothing.	yank	Yank the candidate."
-	$$buffer[0]="nop";
-	$$buffer[1]="Do nothing.";
-	$$buffer[2]="yank";
-	$$buffer[3]="Yank the candidate.";
-	##buffer_num=4;
+CreateActionIniFile:
+	/*
+	返値	iniファイル名(一時ファイル)
 	*/
-	$$buffer[0]	="";
-	##buffer_num=0;
-	
-	{
-		$$tok 	="\t\n";
-		$$token =dllfuncstr(#g_dengaku_dll,"GETTOKEN",$$action_table,$$tok);
-		while (1) {
-			$$token = dllfuncstr(#g_dengaku_dll,"RTRIM",$$token);
-			$$token = dllfuncstr(#g_dengaku_dll,"LTRIM",$$token);
-			if("" != $$token){
-				$$buffer[##buffer_num]=$$token;
-				##buffer_num = ##buffer_num + 1;
-			}
-			if (dllfunc(#g_dengaku_dll,"HASMORETOKENS") == 0) {
-				break;
-			}
-		    $$token = dllfuncstr(#g_dengaku_dll,"GETTOKEN","",$$tok);
-		}
+	$$action_filename=$$1;
+	execmacro $$action_filename, "get_property";
+	$$ini=getresultex(-1);
+	if($$ini==""){
+		return "";
 	}
-	if(##buffer_num==0){
-		message $$kind+" のaction_tableが空でした。\n\n[todo]メッセージを後で修正。";
-		return false;
+	execmacro currentmacrodirectory+"\\create_temp_file.mac", "ini", ".txt";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return "";
+	}
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$temp_filename,$$ini);
+	if(! ##ret){
+		deletefile $$temp_filename;
+		return "";
+	}
+	return $$temp_filename;
+
+
+//#region Gather
+GatherCandidates:
+	/*アクションの候補リストを作成する
+	*/
+	$$ini_filename=$$1;
+	call ParseIni $$ini_filename;
+	if(!##return){
+		call ClearGlobalIniString;
+		return "";
 	}
 	
-	if((##buffer_num%2)!=0){
-		message $$kind+" のaction_tableが偶数個ではありません。\n\n[todo]メッセージを後で修正。";
-		return false;
-	}
-	
-	#g_action_num=0;
+	$$list="";
 	##i=0;
-	while(##i<##buffer_num){
-		$g_action_menu[#g_action_num]		=$$buffer[##i];
-		$g_action_description[#g_action_num]=$$buffer[##i+1];
-		$g_action_kind[#g_action_num]		=$$kind;
-		#g_action_num = #g_action_num + 1;
-		
-		##i = ##i + 2;
+	while(##i<#g_ini_action_num){
+		$$line=$g_ini_action_name[##i]+"\t\t"+$g_ini_property_name+"\t\t"+$g_ini_action_description[##i];
+		$$list=$$list+$$line+"\n";
+		##i = ##i + 1;
 	}
+	call ClearGlobalIniString;
 	
-	return true;
-
-
-/*	アクションのメニュー処理
-
-return	0 キャンセル
-		1 確定
-
-選択したアクションはグローバル変数に設定します。
-	$g_fixed_action_kind
-	$g_fixed_action
-*/
-ProcessActionMenu:
-	menuarray $g_action_menu,#g_action_num;
-	if(result==0){
-		//キャンセル
-		return 0;
+	execmacro currentmacrodirectory+"\\create_temp_file.mac", "action", ".txt";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return "";
 	}
-	##index=result-1;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$temp_filename,$$list);
+	if(! ##ret){
+		deletefile $$temp_filename;
+		return "";
+	}
+	return $$temp_filename;
+
 	
-	$g_fixed_action_kind=$g_action_kind[##index];
-	$g_fixed_action		=$g_action_menu[##index];
-	return 1;
+ParseIni:
+	$$ini_filename=$$1;
+	//debuginfo "$$ini_filename="+$$ini_filename;
+	$g_ini_property_name			=getinistrw($$ini_filename,"property","name");
+	$g_ini_property_description		=getinistrw($$ini_filename,"property","description");
+	$g_ini_property_default_action	=getinistrw($$ini_filename,"property","default_action");
+	$g_ini_property_inheritance		=getinistrw($$ini_filename,"property","inheritance");
 
+	call LoadDll;
+	if(! ##return){
+		return false;
+	}
 
-DoActionToSelectionFiles:
-	/*選択ファイルに対してアクションを実行する
+	/*アクションのセクション名を集める
 	*/
+	$$action_sections[0]="";
+	##action_sections_num=0;
 
-	if($g_fixed_action==""){
-		return false;
-	}
-	if(#g_fixed_filenames_num==0){
-		return false;
-	}
-	if(true){
-		$$args[0]="do_action";
-		$$args[1]=$g_fixed_action;
-		$$args[10]=str(#g_fixed_filenames_num);
-		##args_num=11;
-		##i=0;
-		while(##i < #g_fixed_filenames_num){
-			if(1<=##i){
-				$$args[##args_num]=$$args[##args_num];
-			}
-			$$args[##args_num] = $$args[##args_num] + $g_fixed_filenames[##i];
-			##i = ##i + 1;
-			##args_num = ##args_num + 1;
+	##num = dllfunc(#g_dll_ht_tool,"ReadSectionNames", $$ini_filename);
+	##i=0;
+	while(##i < ##num){
+		$$name = dllfuncstr(#g_dll_ht_tool,"GetSectionName", ##i);
+		call CheckActionsSection $$name;
+		if(##return){
+			$$action_sections[##action_sections_num]=$$name;
+			##action_sections_num = ##action_sections_num + 1;
 		}
-		$$file=$g_root_macro_directory+"\\actions\\"+$g_fixed_action_kind+".mac";
-		execmacro $$file,$$args,##args_num;
-		if(!result){
-			return false;
-		}
-	}else{
-		$$filelist="";
+		##i = ##i + 1;
+	}
+	call FreeDll;
+
+	if(false){
+		//debug
+		debuginfo 1;
+		debuginfo "==== action sections. ====";
 		##i=0;
-		while(##i < #g_fixed_filenames_num){
-			if(1<=##i){
-				$$filelist=$$filelist+"\t";
-			}
-			$$filelist = $$filelist + $g_fixed_filenames[##i];
+		while(##i<##action_sections_num){
+			debuginfo $$action_sections[##i];
 			##i = ##i + 1;
 		}
-		$$file=$g_root_macro_directory+"\\actions\\"+$g_fixed_action_kind+".mac";
-		execmacro $$file,"do_action",$g_fixed_action,$$filelist;
-		if(!result){
-			return false;
-		}
 	}
-	//getresultex(-1)
+
+	/*アクションのセクションから情報を読み取る
+	*/
+	##i=0;
+	while(##i<##action_sections_num){
+		$$section				=$$action_sections[##i];
+		$$name					=getinistrw($$ini_filename,$$section,"name");
+		$$function				=getinistrw($$ini_filename,$$section,"function");
+		$$description			=getinistrw($$ini_filename,$$section,"description");
+		$$is_multi_selectable	=getinistrw($$ini_filename,$$section,"is_multi_selectable");
+		$$is_quit				=getinistrw($$ini_filename,$$section,"is_quit");
+		
+		$g_ini_action_name[##i]					=$$name;
+		$g_ini_action_function[##i]				=$$function;
+		$g_ini_action_description[##i]			=$$description;
+		$g_ini_action_is_multi_selectable[##i]	=$$is_multi_selectable;
+		$g_ini_action_is_quit[##i]				=$$is_quit;
+		
+		##i = ##i + 1;
+	}
+	#g_ini_action_num=##i;
+	
 	return true;
+
+
+CheckActionsSection:
+	/*アクションのセクション名かどうかを調べる
+	*/
+	$$section_name=$$1;
+	if(leftstr($$section_name,7)=="action."){
+		return true;
+	}
+	return false;
+
+
+ClearGlobalIniString:
+	/*iniファイルのパースで使用したグローバル変数の文字列をクリアする
+	*/
+	##i=0;
+	while(##i<#g_ini_action_num){
+		$g_ini_action_name[##i]					="";
+		$g_ini_action_function[##i]				="";
+		$g_ini_action_description[##i]			="";
+		$g_ini_action_is_multi_selectable[##i]	="";
+		$g_ini_action_is_quit[##i]				="";
+		##i = ##i + 1;
+	}
+	return ;
+
+
+//#region DLL
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;
+
+
+LoadDll:
+	call LoadDllFuzzy "ht_tools.dll";
+	#g_dll_ht_tool=##return;
+	if(#g_dll_ht_tool==0){
+		return false;
+	}
+	return true;
+
+FreeDll:
+	if(#g_dll_ht_tool!=0){
+		freedll #g_dll_ht_tool;
+		#g_dll_ht_tool=0;
+	}
+	return true;
+
+
+//#region debug
+//==========================================================================
+//	debug
+//==========================================================================
+DumpActionProperty:
+	debuginfo 1;
+	debuginfo "==== action property ====";
+	debuginfo "name          ="+$g_ini_property_name			;
+	debuginfo "description   ="+$g_ini_property_description		;
+	debuginfo "default_action="+$g_ini_property_default_action	;
+	debuginfo "inheritance   ="+$g_ini_property_inheritance		;
+	return ;
