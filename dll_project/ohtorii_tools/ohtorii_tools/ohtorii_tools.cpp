@@ -219,8 +219,8 @@ extern "C" WCHAR* GetSelectedFilename(INT_PTR index) {
 return	bool	true	成功
 				false	失敗
 */
-extern "C" INT_PTR SetFileListName(WCHAR* filename) {
-	return LoadTextFile(filename);
+extern "C" INT_PTR SetCandidateList(WCHAR* source_filename,WCHAR*source_name,WCHAR*source_description) {
+	return LoadTextFile(source_filename);
 }
 
 /*
