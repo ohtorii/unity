@@ -8,14 +8,13 @@
 
 
 （リクエストの種類）
-	- get_action_table
+	- get_property
 	- do_action
 	//- get_default_action	後で実装
 
 （リクエスト毎の引数）
-	- get_action_table
-		[0] get_action_table
-		[1]	なし
+	- get_property
+		[0] get_property
 
 	- do_action
 		[0] 		do_action
@@ -41,31 +40,13 @@ endmacro $$return;
 ////////////////////////////////////////////////////////////////////////////
 //	Request.
 ////////////////////////////////////////////////////////////////////////////
-/*
-let s:kind = {
-      \ 'name' : 'common',
-      \ 'default_action' : 'nop',
-      \ 'action_table': {},
-      \ 'parents': [],
-      \}
-
-let s:kind = {
-      \ 'name' : 'buffer',
-      \ 'default_action' : 'open',
-      \ 'action_table': {},
-      \ 'parents': ['file'],		<-- ???
-      \}
-
-*/
-
-
-property:
-	return R"(
-[property]
+get_property:
+	return R"([property]
 name=common
+description=common actions.
 default_action=nop
 '継承するアクション（スペースで区切る）
-inheritance=
+'inheritance=
 
 'アクション
 [action.nop]
@@ -73,12 +54,18 @@ inheritance=
 name=nop
 '秀丸マクロのラベル名
 function=nop
+'アクションの説明
 description=Do nothing.
+'アクション実行後に終了するかどうか
+is_quit=false
+'アクションを複数選択に対して実行するかどうか
+is_multi_selectable=true
 
 [action.yank]
 name=yank
 function=yank
 description=Yank the candidate "word" or "action__text".
+is_multi_selectable=true
 
 [action.yank_escape]
 name=yank_escape
@@ -109,6 +96,8 @@ description=Insert the candidate directory after the cursor.
 name=preview
 function=preview
 description=Preview the candidate text.
+is_quit=false
+is_multi_selectable=false
 
 [action.echo]
 name=echo
@@ -116,73 +105,10 @@ function=echo
 description=Echo candidates for debug.
 )";
 
-get_action_table:
-	/*書式
-	アクション名(\t|\n)説明(\t|\n) ...
-	*/
-	return
-R"(
-nop	Do nothing.
-yank	Yank the candidate "word" or "action__text".
-yank_escape	Yank the escaped candidate "word" or "action__text".
-insert	Insert the candidate word or text before the cursor.
-append	Insert the candidate word or text after the cursor.
-insert_directory	Insert the candidate directory before the cursor.
-append_directory	Insert the candidate directory after the cursor.
-preview	Preview the candidate text.
-echo	Echo candidates for debug.
-)";
-
 /*対応する動作無し
 ex	Input the escaped candidate text into command line.
 */
 
-
-
-/*	新しい書式(.ini)
-
-R"(
-[nop]
-description=Do nothing.
-is_selectable=1
-
-[yank]
-description=Yank the candidate "word" or "action__text".
-is_selectable=1
-
-[yank_escape]
-description=Yank the escaped candidate "word" or "action__text".
-is_selectable=1
-
-[ex]
-description=Input the escaped candidate text into command line.
-is_selectable=1
-
-[insert]
-description=Insert the candidate word or text before the cursor.
-is_selectable=1
-
-[insert_directory]
-description=Insert the candidate directory before the cursor.
-is_selectable=1
-
-[append]
-description=Insert the candidate word or text after the cursor.
-is_selectable=1
-
-[preview]
-description=Preview the candidate text.
-is_selectable=0
-
-[echo]
-description=Echo candidates for debug.
-is_selectable=1
-)";
-*/
-
-
-/*get_default_action:
-	return "nop";*/
 
 
 do_action:
