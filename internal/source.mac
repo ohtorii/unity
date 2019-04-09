@@ -15,7 +15,10 @@ $g_ini_temp_filename="";
 //==========================================================================
 //iniファイルの情報
 //==========================================================================
-$g_ini_candidate_type="";
+$g_ini_name				="";
+$g_ini_description		="";
+$g_ini_default_action	="";
+$g_ini_candidate_type	="";
 
 
 //==========================================================================
@@ -77,7 +80,7 @@ Start:
 		return false;
 	}
 
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetFileListName",$g_candidate_filename /*ソース名,説明など */);
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetCandidateList",$g_candidate_filename, $g_ini_name, $g_ini_description);
 	if(! ##ret){
 		return false;
 	}
@@ -110,8 +113,11 @@ CreateSourceIniFile:
 
 
 ParseIni:
-	$$filename=$$1;
-	$g_ini_candidate_type=getinistrw($$filename,"property","candidate_type");
+	$$filename				=$$1;
+	$g_ini_name				=getinistrw($$filename,"property","name");
+	$g_ini_description		=getinistrw($$filename,"property","description");
+	$g_ini_default_action	=getinistrw($$filename,"property","default_action");
+	$g_ini_candidate_type	=getinistrw($$filename,"property","candidate_type");
 	return true;
 
 
