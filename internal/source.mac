@@ -9,16 +9,6 @@
 //	一時ファイル名
 //==========================================================================
 $g_candidate_filename="";
-$g_ini_temp_filename="";
-
-
-//==========================================================================
-//iniファイルの情報
-//==========================================================================
-$g_ini_name				="";
-$g_ini_description		="";
-$g_ini_default_action	="";
-$g_ini_candidate_type	="";
 
 
 //==========================================================================
@@ -26,7 +16,10 @@ $g_ini_candidate_type	="";
 //==========================================================================
 #g_dll_ohtorii_tools=val(getarg(0));
 call main getarg(1);
-endmacro $$return;
+if(##return){
+	endmacro "1";
+}
+endmacro "0";
 
 
 
@@ -34,99 +27,54 @@ endmacro $$return;
 //	ソースの生成処理
 //==========================================================================
 main:
-	call Start $$1;
-	##ret=##return;
-	if(! ##ret){
-		if($g_candidate_filename!=""){
-			deletefile $g_candidate_filename;
-			$g_candidate_filename="";
-		}
-	}
-	if($g_ini_temp_filename!=""){
-		deletefile $g_ini_temp_filename;
-		$g_ini_temp_filename="";
-	}
-	if(##ret){
-		return "1";
-	}
-	return "0";
-
-
-Start:
 	$$source_filename=$$1;
-
-	/* ソースからiniファイルを作りパースする。
+	
+	/*ソースのプロパティを取得する
 	*/
-	call CreateSourceIniFile $$source_filename;
-	$g_ini_temp_filename=getresultex(-1);
-	if($g_ini_temp_filename==""){
-		return false;
-	}
-	call ParseIni $g_ini_temp_filename;
-	if(!##return){
-		return false;
-	}
-	/*候補を作る
-	*/
-	if($g_ini_candidate_type=="list"){
-		call GatherCandidates $$source_filename;
-		$g_candidate_filename=$$return;
-	}else{
-		//未知の型名
-		message "$g_ini_candidate_type が未知の型名だよ。\n\n[todo]親切なメッセージにする";
-		return false;
-	}
-	if($g_candidate_filename==""){
-		return false;
-	}
-
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetCandidateList",$g_candidate_filename, $g_ini_name, $g_ini_description);
-	if(! ##ret){
-		return false;
-	}
-	return true;
-
-
-CreateSourceIniFile:
-	/*
-	返値	iniファイル名(一時ファイル)
-	*/
-	$$source_filename=$$1;
-	execmacro $$source_filename, "get_property";
+	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
 	$$ini=getresultex(-1);
 	if($$ini==""){
-		return "";
+		return false;
 	}
-	execmacro currentmacrodirectory+"\\create_temp_file.mac", "ini", ".txt";
-	$$temp_filename=getresultex(-1);
-	if($$temp_filename==""){
-		return "";
+	$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
+	if($$source_name==""){
+		return false;
 	}
-
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$temp_filename,$$ini);
-	if(! ##ret){
-		deletefile $$temp_filename;
-		return "";
+	$$ini="";//メモリ解放
+	
+	
+	/*候補を作る
+	*/
+	$$cadidate_type=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
+	if($$cadidate_type=="list"){
+		call GatherCandidates $$source_filename;
+		return ##return;
+	}else if($$candidate_type=="function"){
+		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates";
+		if(getresultex(-1)=="1"){
+			return true;
+		}
+		return false;
+	}else{
+		//未知の型名
+		message "$$cadidate_type が未知の型名だよ。\n\n[todo]親切なメッセージにする";
+		return false;
 	}
-	return $$temp_filename;
-
-
-
-ParseIni:
-	$$filename				=$$1;
-	$g_ini_name				=getinistrw($$filename,"property","name");
-	$g_ini_description		=getinistrw($$filename,"property","description");
-	$g_ini_default_action	=getinistrw($$filename,"property","default_action");
-	$g_ini_candidate_type	=getinistrw($$filename,"property","candidate_type");
-	return true;
+	return false;
 
 
 GatherCandidates:
 	/* 候補リストを生成する。
 	*/
+	return false;
+	
+	
+	/*	以下、旧コード
+	*/
+	
 	$$source_filename=$$1;
 
-	execmacro $$source_filename, "gather_candidates";
+	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates";
 	$$list=getresultex(-1);
 
 	execmacro currentmacrodirectory+"\\create_temp_file.mac","candidates",".txt";
@@ -141,4 +89,8 @@ GatherCandidates:
 		return "";
 	}
 
-	return $$candidates_filename;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetCandidateList",$g_candidate_filename, $g_ini_name, $g_ini_description);
+	if(! ##ret){
+		return false;
+	}
+	return true;

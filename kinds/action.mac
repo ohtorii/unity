@@ -1,0 +1,47 @@
+﻿/*アクションの実行
+*/
+$request=getarg(0);
+call $request;
+endmacro $$return;
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Request.
+////////////////////////////////////////////////////////////////////////////
+get_property:
+	return R"([property]
+name=action
+description=action.
+default_action=do
+inheritance=
+
+'アクション
+[action.do]
+'表示に使用する名前
+name=do
+'秀丸マクロのラベル名
+function=do
+'アクションの説明
+description=Do.
+'アクション実行後に終了するかどうか
+is_quit=false
+'アクションを複数選択に対して実行するかどうか
+is_multi_selectable=false
+)";
+
+do_action:
+	return;
+
+do:
+	/*
+	candidate=$$1;
+	execmacro candidate.kind, "do_action", candidate.default_action
+		
+	if(アクションのis_quitを取得する){
+		quitフラグを立てる（）
+		setstaticvariable "unity.is_quit", "1",0;
+
+	}
+	*/
+	return;

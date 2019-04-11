@@ -180,11 +180,11 @@ main:
 	/***************************************************
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
-	if(true){
+	/*if(true){
 		call LoadDll;
 		execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\actions\\common.mac";
 		return false;
-	}
+	}*/
 	$$source=$$1;
 	$$source="file_mru";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
@@ -222,22 +222,32 @@ Start:
 	if(! ##return){
 		return false;
 	}
-
-	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename;
-	if(getresultex(-1)=="0"){
-		return false;
-	}
-
-	call FilteringProcess;
-	if(##return==0){
-		//キャンセルされた
-		return false;
-
-	}
-	call CorrectSelectionLine;
+	
+	call RefineSearch $$source_filename, "", "";
+	/*while(){
+		call Push;
+		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, "";
+		if(getresultex(-1)=="0"){
+			return false;
+		}
+		call RefineSearch;
+		if(##return==0){
+			//キャンセルされた
+			return false;
+		}
+		
+		//アクションへ遷移
+		
+		
+	}*/
+	
+	/*call CorrectSelectionLine;
 	if(! ##return){
 		return false;
-	}
+	}*/
+//	call Push;
+	//アクション
+	
 	if(true){
 		//debug
 		debuginfo 1;
@@ -264,13 +274,31 @@ Start:
 	endgroupundo;*/
 	return true;
 
-/*
-return	0 キャンセル
-		1 確定
-*/
-FilteringProcess:
+
+//#region 絞り込み検索
+RefineSearch:
+	/*
+	return	0 キャンセル
+			1 確定
+	*/
+	$$source_filename	= $$1;
+	$$args				= $$2;
+	$$keybord_buffer	= $$3;
+
+	call PushRefineSearch;
+	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
+	if(getresultex(-1)=="0"){
+		return 0;
+	}
+	call RefineSearchMain, $$keybord_buffer;
+	##ret=##return;
+	call PopRefineSearch;
+	return ##ret;
+
+
+RefineSearchMain:
 	//絞り込み検索
-	$$keybord_buffer="";
+	$$keybord_buffer=$$1;
 
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 	$$cursor_pos=getresultex(-1);
@@ -292,26 +320,28 @@ FilteringProcess:
 		##ctrl =iskeydown(0x11);
 		if($$keycode=="13"){
 			/*Enter / ctrl-m
-			選択ファイルに対してディフォルトアクションを実行する
+			
+			if(ファイル選択あり){
+				$$target_file=先頭のファイル
+			}else{
+				$$target_file=カーソル位置のファイル
+			}
+			default_action($$target_file)
+			
 			*/
-			//$$key_buffer="";
 		}else if($$keycode=="27"){		return 0;} 		//Escapeが押された
 		else if($$keycode=="16"){		up;}			//ctrl-p
 		else if($$keycode=="14"){		down;}			//ctrl-n
 		else if($$keycode=="18"){		call Mark;}		//ctrl-space
 		else if(##ctrl&&($$keycode=="32")){		call Mark;}		//ctrl-space
-		else if ($$keycode == "29"){	up;}			// [↑]
-		else if ($$keycode == "31"){	down;} 			//[↓]
+		else if($$keycode == "29"){		up;}			// [↑]
+		else if($$keycode == "31"){		down;} 			//[↓]
 		else if($$keycode=="9"){						//tab
-			/*
-			call ProcessActionMenu;
-			if(##return==0){
-				//キャンセルされた
-			}else{
-				return 1;
-			}*/
+			/*	アクションの実行
+			*/
+			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac","","";
+			return ##return;
 		}else{
-			//一致するパターンをファイルから行検索する
 			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
 				call Filter $$key_buffer;
 				$$prev_pattern=$$key_buffer;
@@ -342,15 +372,17 @@ Mark:
 	enabledraw;
 	return;
 
+
 Filter:
+	/*絞り込み検索を行う
+	*/
 	call TrimString $$1;
 	$$pattern=$$return;
 
 	disabledraw;
 	selectall;
-	backspace;
-	$$str = dllfuncstrw(#g_dll_ohtorii_tools,"Filter",$$pattern);
-	insert($$str);
+	//backspace;
+	insert(dllfuncstrw(#g_dll_ohtorii_tools,"Filter",$$pattern));
 	call HilightWorld $$pattern;
 
 	//
@@ -373,6 +405,10 @@ Filter:
 	return result;
 
 HilightWorld:
+	/*
+	検索文字列をハイライト表示する
+	*/
+	
 	$$search_words=$$1;
 	call SearchWordsToHidemaruRegex $$search_words;
 	$$regex=$$return;
@@ -408,7 +444,55 @@ TrimString:
 	}
 	return $$1;
 
+/* 処理対象のファイル名を集める。
 
+以下グローバル変数に設定する。
+	#g_fixed_filenames_num
+	$g_fixed_filenames
+
+返値	bool
+
+（メモ）
+ファイルリストは秀丸エディタ上で装飾を施しているためDLL側から取得します。
+*/
+CorrectSelectionLine:
+	#g_fixed_filenames_num=0;
+	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	if(##count==0){
+		//カーソル行から取得する
+		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilenameFromHidemaruLineNo",lineno);
+		if($$filename==""){
+			return false;
+		}
+		#g_fixed_filenames_num	=1;
+		call TrimString $$filename, "\n\r";
+		$$filename=$$return;
+		$g_fixed_filenames[0]	=$$filename;
+		return true;
+	}
+
+	if(#g_max_file_num < ##count){
+		##count = #g_max_file_num;
+	}
+
+	##i = 0;
+	while(##i < ##count){
+		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
+		if($$filename != ""){
+			call TrimString $$filename, "\n\r";
+			$$filename=$$return;
+			$g_fixed_filenames[#g_fixed_filenames_num] = $$filename;
+			#g_fixed_filenames_num = #g_fixed_filenames_num + 1;
+		}
+		##i = ##i + 1;
+	}
+	if(#g_fixed_filenames_num==0){
+		return false;
+	}
+	return true;
+
+
+//#region 秀丸の編集画面
 NewFile:
 	newfile;
 	if(result==0){
@@ -443,6 +527,8 @@ CloseFileIfOpen:
 	}
 	return true;
 
+
+//#region DLL
 LoadDllFuzzy:
 	##dll=loaddll(macrodir+"\\"+$$1);
 	if(##dll!=0){
@@ -497,66 +583,11 @@ FreeDll:
 	return true;
 
 
-
-
-
-/* 処理対象のファイル名を集める。
-
-以下グローバル変数に設定する。
-	#g_fixed_filenames_num
-	$g_fixed_filenames
-
-返値	bool
-
-（メモ）
-ファイルリストは秀丸エディタ上で装飾を施しているためDLL側から取得します。
-*/
-CorrectSelectionLine:
-	#g_fixed_filenames_num=0;
-	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
-	if(##count==0){
-		//カーソル行から取得する
-		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilenameFromHidemaruLineNo",lineno);
-		if($$filename==""){
-			return false;
-		}
-		#g_fixed_filenames_num	=1;
-		call TrimString $$filename, "\n\r";
-		$$filename=$$return;
-		$g_fixed_filenames[0]	=$$filename;
-		return true;
-	}
-
-	if(#g_max_file_num < ##count){
-		##count = #g_max_file_num;
-	}
-
-	##i = 0;
-	while(##i < ##count){
-		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
-		if($$filename != ""){
-			call TrimString $$filename, "\n\r";
-			$$filename=$$return;
-			$g_fixed_filenames[#g_fixed_filenames_num] = $$filename;
-			#g_fixed_filenames_num = #g_fixed_filenames_num + 1;
-		}
-		##i = ##i + 1;
-	}
-	if(#g_fixed_filenames_num==0){
-		return false;
-	}
-	return true;
-
-
-
-
-
+//#region そのた
 /*ファイルの新規作成*/
 file_new:
 
 	return ;
-
-
 
 
 /*フォルダヒストリ

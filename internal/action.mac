@@ -53,7 +53,7 @@ main:
 	call GatherCandidates $g_ini_temp_filename;
 	$g_candidate_filename=$$return;
 	
-	//call DumpActionProperty;
+	call DumpActionProperty;
 	return;
 	
 	

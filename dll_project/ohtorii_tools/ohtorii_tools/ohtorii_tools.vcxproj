@@ -165,19 +165,26 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="candidates.h" />
+    <ClInclude Include="file.h" />
+    <ClInclude Include="sources.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="unity.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="candidates.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="file_util.cpp" />
-    <ClCompile Include="ohtorii_tools.cpp" />
+    <ClCompile Include="file.cpp" />
+    <ClCompile Include="hidemaru_interface.cpp" />
+    <ClCompile Include="sources.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="unity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />

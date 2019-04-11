@@ -1,0 +1,41 @@
+﻿/* ウインドウ一覧
+*/
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+call $label;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=tab
+description=candidates from tab list
+default_kind=window
+candidate_type=function
+)";
+
+gather_candidates:
+	/*
+	タブグループ１[0x0000111]	<- 選択対象
+		foo.txt
+		bar.txt
+	タブグループ２[0x0000112]	<- 選択対象
+		hoge.txt
+	
+	0x....はウインドウハンドル
+	
+	
+	
+	$$win1=	"タブグループ１\n"	+
+			"\tfoo.txt\n"		+
+			"\tbar.txt"			;
+	dllfunc(#g_dll_ohtorii_tools, "AddCandidate", $$win1, UserDataString=ウインドウハンドル1)
+	
+	$$win2=	"タブグループ2\n"	+
+			"\thoge.txt"		;
+	dllfunc(#g_dll_ohtorii_tools, "AddCandidate", $$win2, UserDataString=ウインドウハンドル2)
+	
+
+	*/
+	return;
+	

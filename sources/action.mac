@@ -1,0 +1,40 @@
+﻿/*アクション候補
+*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+
+$label=getarg(1);
+call $label;
+endmacro $$return;
+
+
+get_property:
+	return R"([property]
+name=action
+description=candidates from unity action
+default_kind=action
+candidate_type=list
+)";
+
+gather_candidates:
+	/*
+	args=引数を取得する;
+	
+	if(args.len()==0){
+		return "";
+	}
+	
+	//複数選択かどうか(bool)
+	is_multi_selectable = 2<=args.len();
+	
+	//先頭の候補を利用する
+	candidate=args[0];
+	source=get_source(candidate.source);
+	kind=get_kind(source.get_kind())
+	actions=kind.get_actions(is_multi_selectable)
+	
+	//改行区切りにして返す
+	return actions.join("\n")
+	*/
+	return "";
+	

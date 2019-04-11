@@ -7,5 +7,10 @@ EXPORTS
     GetSelectedFilename
     GetSelectedFilenameFromHidemaruLineNo
     SetCandidateList
-	WriteToFile
+    WriteToFile
     DllDetachFunc_After_Hm866
+    
+	SourcesCreate
+	SourcesGetCandidateType
+    SourcesAppendCandidate
+    SourcesAppendCandidateW

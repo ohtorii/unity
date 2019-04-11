@@ -18,3 +18,12 @@
 #include<string>
 #include<algorithm>
 #include<stdio.h>
+#include<tchar.h>
+
+
+#include"unity.h"
+#include"sources.h"
+#include"file.h"
+#include"candidates.h"
+
+

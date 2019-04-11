@@ -1,7 +1,8 @@
 ﻿/*ファイル履歴
 */
 
-$label=getarg(0);
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
 call $label;
 endmacro $$return;
 
@@ -10,17 +11,36 @@ get_property:
 	return R"([property]
 name=file_mru
 description=candidates from file MRU list
-default_action=common
-candidate_type=list
+default_kind=common
+candidate_type=function
 )";
 
 gather_candidates:
-	/*候補を返す
+	/*候補を集める*/
+	
+	/*
+	candidate_type=function
+	
+	返値	"1"		成功
+			"0"		失敗
 	*/
-	$$candidate_list="";
+	##i=0;
+	while(##i<filehistcount){
+		##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidates", "file_mru", getfilehist(##i));
+		if(##ret==false){
+			return "0";
+		}
+		##i = ##i + 1;
+	}
+	return "1";
+	
+	/*	candidate_type=list
+	*/
+	/*$$candidate_list="";
 	##i=0;
 	while(##i<filehistcount){
 		$$candidate_list = $$candidate_list + getfilehist(##i) + "\n";
 		##i = ##i + 1;
 	}
 	return $$candidate_list;
+*/
