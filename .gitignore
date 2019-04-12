@@ -23,3 +23,4 @@ _neomru.vim-master
 unity.hmbook
 *.hmdesk
 /dll_project/ohtorii_tools/ohtorii_tools/x64/Release
+/.vs
