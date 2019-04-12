@@ -4,28 +4,29 @@
 struct Output {
 	void Clear() {
 		m_text.clear();
-		m_hidemaru_to_filelist_lineno.clear();
-		m_selected_lineno.clear();
+		m_hidemaru_lineno_to_candidate_index.clear();
+		m_hidemaru_selected_lineno.clear();
 	};
 
 	void Reserve(size_t size) {
-		m_text.reserve(size);
-		m_hidemaru_to_filelist_lineno.reserve(size);
-		m_selected_lineno.reserve(32);
+		const size_t text_line_char = 80;
+		m_text.reserve(size*text_line_char);
+		m_hidemaru_lineno_to_candidate_index.reserve(size);
+		m_hidemaru_selected_lineno.reserve(size);
 	};
 
 	//秀丸エディタへ返す文字列
 	std::vector<std::wstring::value_type>	m_text;
 
-	/*「秀丸エディタの行番号」から「ファイルリストの行番号」を取得するテーブル
+	/*「秀丸エディタの行番号」から「候補リストのインデックス」を取得するテーブル
 
 	(使用例)
-	ファイルリストの行番号 = m_hidemaru_to_filelist_lineno[秀丸エディタの行番号];
+	ファイルリストの行番号 = m_hidemaru_lineno_to_candidate_index[秀丸エディタの行番号];
 	*/
-	std::vector<__int64>					m_hidemaru_to_filelist_lineno;
+	std::vector<__int64>					m_hidemaru_lineno_to_candidate_index;
 
-	//秀丸エディタで選択する行番号(インデックスは1始まり)
-	std::vector<__int64>					m_selected_lineno;
+	//秀丸エディタで選択している行番号(インデックスは1始まり)
+	std::vector<__int64>					m_hidemaru_selected_lineno;
 };
 
 
@@ -38,7 +39,7 @@ public:
 	hidemaru_line_no	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
 	　					ファイルの先頭が１です。
 	*/
-	INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected);
+	INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected);
 
 	/*選択行の個数を取得する
 	*/

@@ -8,7 +8,6 @@ EXPORTS
     GetSelectedLineno
     GetSelectedFilename
     GetSelectedFilenameFromHidemaruLineNo
-    SetCandidateList
     WriteToFile
     DllDetachFunc_After_Hm866
     

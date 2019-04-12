@@ -37,9 +37,9 @@ extern "C" WCHAR* GetRefineSearchResult() {
 //source
 /////////////////////////////////////////////////////////////////////////////
 //廃止
-extern "C" INT_PTR SetCandidateList(WCHAR* source_filename, WCHAR*source_name, WCHAR*source_description) {
+/*extern "C" INT_PTR SetCandidateList(WCHAR* source_filename, WCHAR*source_name, WCHAR*source_description) {
 	return Unity::Instance()->SetCandidateList(source_filename, source_name, source_description);
-}
+}*/
 
 extern "C" WCHAR* SourcesCreate(WCHAR* source_ini){
 	return Unity::Instance()->QuerySources()->Create(source_ini);
@@ -76,5 +76,6 @@ extern "C" INT_PTR WriteToFile(const WCHAR* filename, const WCHAR* string) {
 
 extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {
 	/*ここで一時ファイルを削除する*/
+	Unity::Destroy();
 	return 0;
 }

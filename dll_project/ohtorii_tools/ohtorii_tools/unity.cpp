@@ -5,7 +5,7 @@
 //	global variable
 ///////////////////////////////////////////////////////////////////////////////
 //static WCHAR	gs_empty[] = { 0 };
-Unity*	Unity::m_instance=0;
+Unity*	Unity::m_instance=nullptr;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,6 +21,11 @@ Unity* Unity::Instance(){
 		Unity::m_instance=new Unity;
 	}
 	return Unity::m_instance;
+}
+
+void Unity::Destroy() {
+	delete Unity::m_instance;
+	Unity::m_instance = nullptr;
 }
 
 Sources* Unity::QuerySources(){
@@ -47,6 +52,7 @@ Unity::~Unity(){
 	
 }
 
+#if 0
 INT_PTR Unity::SetCandidateList(WCHAR* source_filename,WCHAR*source_name,WCHAR*source_description){
 	return LoadTextFile(source_filename);
 }
@@ -95,6 +101,6 @@ bool Unity::LoadTextFile(const WCHAR*filename) {
 	//OutputDebugString(L"@4");
 	return result;
 }
-
+#endif
 
 

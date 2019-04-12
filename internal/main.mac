@@ -309,12 +309,15 @@ PopRefineSearch:
 RefineSearchMain:
 	//絞り込み検索
 	$$keybord_buffer=$$1;
-
+	
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 	$$cursor_pos=getresultex(-1);
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 	$$key_buffer=getresultex(-1);
-
+	
+	//事前に実行してDLL側のデータを作る。
+	call Filter $$key_buffer;
+	
 	$$prev_pattern="999";
 	##prev_tickcount=0;
 	while(true){
@@ -378,7 +381,10 @@ Mark:
 		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
 		escape;
 	}
-	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	//##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	//debuginfo 1;
+	//debuginfo "GetSelectionCount="+str(##count);
+	
 	enabledraw;
 	return;
 
@@ -400,9 +406,12 @@ Filter:
 	//選択行をマークする
 	//
 	##i = 0;
-	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##count = dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	debuginfo 1;
+	debuginfo "GetSelectionCount="+str(##count);
 	while(##i<##count){
-		##selected_lineno = dllfunc(#g_dll_ohtorii_tools,"GetSelectedLineno",##i);
+		##selected_lineno = dllfuncw(#g_dll_ohtorii_tools,"GetSelectedLineno",##i);
+		debuginfo "##selected_lineno="+str(##selected_lineno);
 		if(0 < ##selected_lineno){
 			movetolineno 1, ##selected_lineno;
 			selectline 0;
