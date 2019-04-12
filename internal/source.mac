@@ -42,11 +42,10 @@ main:
 	}
 	$$ini="";//メモリ解放
 	
-	
 	/*候補を作る
 	*/
-	$$cadidate_type=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
-	if($$cadidate_type=="list"){
+	$$candidate_type=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
+	if($$candidate_type=="list"){
 		call GatherCandidates $$source_filename;
 		return ##return;
 	}else if($$candidate_type=="function"){
@@ -57,7 +56,9 @@ main:
 		return false;
 	}else{
 		//未知の型名
-		message "$$cadidate_type が未知の型名だよ。\n\n[todo]親切なメッセージにする";
+		message sprintf("$$candidate_type が未知の型名だよ。\n"+
+						"$$candidate_type=%s\n"	+
+						"\n\n[todo]親切なメッセージにする", $$candidate_type);
 		return false;
 	}
 	return false;
@@ -65,6 +66,8 @@ main:
 
 GatherCandidates:
 	/* 候補リストを生成する。
+	
+	あとで
 	*/
 	return false;
 	

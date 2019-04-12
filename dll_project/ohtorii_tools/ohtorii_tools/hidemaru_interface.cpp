@@ -6,29 +6,32 @@
 //絞り込み検索
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected) {	
-	return Unity::Instance()->ChangeSelected(hidemaru_line_no, is_selected);
+	return Unity::Instance()->QueryRefineSearch()->ChangeSelected(hidemaru_line_no, is_selected);
 }
 
 extern "C" INT_PTR GetSelectionCount() {
-	return Unity::Instance()->GetSelectionCount();
+	return Unity::Instance()->QueryRefineSearch()->GetSelectionCount();
 }
 
 extern "C" INT_PTR GetSelectedLineno(INT_PTR index) {
-	return Unity::Instance()->GetSelectedLineno(index);
+	return Unity::Instance()->QueryRefineSearch()->GetSelectedLineno(index);
 }
 
 extern "C" WCHAR* GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
-	return Unity::Instance()->GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
+	return Unity::Instance()->QueryRefineSearch()->GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
 }
 
 extern "C" WCHAR* GetSelectedFilename(INT_PTR index) {
-	return Unity::Instance()->GetSelectedFilename(index);
+	return Unity::Instance()->QueryRefineSearch()->GetSelectedFilename(index);
 }
 
-extern "C" WCHAR* Filter(WCHAR* search_words) {
-	return Unity::Instance()->Filter(search_words);
+extern "C" INT_PTR RefineSearch(WCHAR* search_words) {
+	return Unity::Instance()->QueryRefineSearch()->Do(search_words);
 }
 
+extern "C" WCHAR* GetRefineSearchResult() {
+	return Unity::Instance()->QueryRefineSearch()->GetResult();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //source

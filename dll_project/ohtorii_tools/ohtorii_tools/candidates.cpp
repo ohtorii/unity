@@ -6,17 +6,19 @@ Candidates::Candidates() {
 }
 
 bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate) {
-	SourceCandidate* dst = AppendIfNotExist(source_name);
-	dst->m_candidates.emplace_back(candidate);
+	//SourceCandidate* dst = AppendIfNotExist(source_name);
+	//dst->m_candidates.emplace_back(candidate);
+	m_candidates.emplace_back(candidate);
 	return true;
 }
 
 bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*user_data) {
-	SourceCandidate* dst = AppendIfNotExist(source_name);
-	dst->m_candidates.emplace_back(candidate,user_data);
+	//SourceCandidate* dst = AppendIfNotExist(source_name);
+	//dst->m_candidates.emplace_back(candidate,user_data);
+	m_candidates.emplace_back(candidate, user_data);
 	return true;
 }
-
+/*
 SourceCandidate* Candidates::AppendIfNotExist(const WCHAR* source_name) {
 	for (auto& source : m_sources)
 	{
@@ -37,3 +39,5 @@ SourceCandidate* Candidates::Find(const WCHAR* source_name) {
 	}
 	return nullptr;
 }
+*/
+

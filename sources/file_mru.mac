@@ -26,7 +26,7 @@ gather_candidates:
 	*/
 	##i=0;
 	while(##i<filehistcount){
-		##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidates", "file_mru", getfilehist(##i));
+		##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "file_mru", getfilehist(##i));
 		if(##ret==false){
 			return "0";
 		}

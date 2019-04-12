@@ -1,7 +1,7 @@
 ﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
 
 usage:
-  gather.mac currentmacrodirectory mode
+  unity.mac currentmacrodirectory mode
 
 ==============================================================================
 Source
@@ -286,16 +286,26 @@ RefineSearch:
 	$$keybord_buffer	= $$3;
 
 	call PushRefineSearch;
+	//ソースから候補を生成する
 	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
 	if(getresultex(-1)=="0"){
 		return 0;
 	}
+	//絞り込み検索を行う
 	call RefineSearchMain, $$keybord_buffer;
 	##ret=##return;
 	call PopRefineSearch;
 	return ##ret;
 
 
+PushRefineSearch:
+	return ;
+	
+	
+PopRefineSearch:
+	return ;
+	
+	
 RefineSearchMain:
 	//絞り込み検索
 	$$keybord_buffer=$$1;
@@ -339,8 +349,8 @@ RefineSearchMain:
 		else if($$keycode=="9"){						//tab
 			/*	アクションの実行
 			*/
-			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac","","";
-			return ##return;
+			//call RefineSearch $g_root_macro_directory+"\\sources\\action.mac","","";
+			//return ##return;
 		}else{
 			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
 				call Filter $$key_buffer;
@@ -382,7 +392,8 @@ Filter:
 	disabledraw;
 	selectall;
 	//backspace;
-	insert(dllfuncstrw(#g_dll_ohtorii_tools,"Filter",$$pattern));
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"RefineSearch",$$pattern);
+	insert(dllfuncstrw(#g_dll_ohtorii_tools,"GetRefineSearchResult"));
 	call HilightWorld $$pattern;
 
 	//
@@ -403,6 +414,7 @@ Filter:
 
 	enabledraw;
 	return result;
+	
 
 HilightWorld:
 	/*

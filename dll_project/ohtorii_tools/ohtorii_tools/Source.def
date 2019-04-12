@@ -1,6 +1,8 @@
 LIBRARY
 EXPORTS
-    Filter
+    RefineSearch
+	GetRefineSearchResult
+
     ChangeSelected
     GetSelectionCount
     GetSelectedLineno

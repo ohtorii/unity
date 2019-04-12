@@ -65,6 +65,9 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 
 		GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), buf, _countof(buf), cname);
 		default_kind.assign(buf);
+
+		GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), buf, _countof(buf), cname);
+		candidate_type.assign(buf);
 	}
 
 	size_t old_size = m_sources.size();

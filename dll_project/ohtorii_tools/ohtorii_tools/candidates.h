@@ -20,12 +20,14 @@ struct Candidate {
 	std::wstring			m_text;
 	///ユーザーデータ
 	std::wstring			m_user_data;
+	///ソース名
+	std::wstring			m_source_name;
 	///このテキストが秀丸エディタ側で選択されているかどうか
 	bool					m_selected;
 	///必ず表示する候補かどうか
 	bool					m_fource_show;
 };
-
+/*
 struct SourceCandidate{
 	SourceCandidate() {
 	}
@@ -37,18 +39,24 @@ struct SourceCandidate{
 	std::wstring			m_source_name;
 	std::vector<Candidate>	m_candidates;
 };
-
+*/
 
 class Candidates {
 public:
 	Candidates();
 	bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate);
 	bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*user_data);
-	
-private:
-	SourceCandidate* AppendIfNotExist(const WCHAR* source_name);
-	SourceCandidate* Find(const WCHAR* source_name);
+	//const std::vector<SourceCandidate>&	GetSources()const { return m_sources; }
+	const std::vector<Candidate>&	GetCandidates()const	{ return m_candidates; }
+	std::vector<Candidate>&			GetCandidates()			{ return m_candidates; }
 
+private:
+	/*SourceCandidate* AppendIfNotExist(const WCHAR* source_name);
+	SourceCandidate* Find(const WCHAR* source_name);
+	*/
 	//memo: 並び順が大事なのでvector<>を利用
-	std::vector<SourceCandidate>	m_sources;
+	//std::vector<SourceCandidate>	m_sources;
+	
+	std::vector<Candidate>	m_candidates;
+
 };
