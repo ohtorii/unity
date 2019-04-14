@@ -5,6 +5,18 @@
 /////////////////////////////////////////////////////////////////////////////
 //絞り込み検索
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR Push() {
+	return Unity::Push();
+}
+
+extern "C" INT_PTR Pop() {
+	return Unity::Pop();
+}
+
+extern "C" INT_PTR GetCurrentInstanceIndex() {
+	return Unity::GetCurrentInstanceIndex();
+}
+
 extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected) {	
 	return Unity::Instance()->QueryRefineSearch()->ChangeSelected(hidemaru_line_no, is_selected);
 }
@@ -63,8 +75,16 @@ extern "C" INT_PTR SourcesAppendCandidate(WCHAR*source_name, WCHAR*candidate) {
 
 
 /////////////////////////////////////////////////////////////////////////////
-//action
+//kind
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR KindsClear() {
+	Unity::Instance()->QueryKinds()->Clear();
+	return true;
+}
+
+extern "C" WCHAR* KindsCreate(WCHAR* kind_ini) {
+	return Unity::Instance()->QueryKinds()->Create(kind_ini);
+}
 
 
 /////////////////////////////////////////////////////////////////////////////

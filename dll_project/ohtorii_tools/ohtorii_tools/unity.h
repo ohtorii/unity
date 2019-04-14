@@ -1,10 +1,12 @@
 ﻿#pragma once
 #include<vector>
 #include<string>
+#include<array>
 #include"sources.h"
 #include"file.h"
 #include"candidates.h"
 #include"refine_search.h"
+#include"kinds.h"
 
 
 
@@ -14,6 +16,9 @@ public:
 	~Unity();
 
 	static Unity* Instance();
+	static bool Push();
+	static bool Pop();
+	static size_t GetCurrentInstanceIndex();
 	static void Destroy();
 	
 	/*ファイルリストのファイル名を設定する
@@ -35,6 +40,8 @@ public:
 	File*			QueryFile();
 	Candidates*		QueryCandidates();
 	RefineSearch*	QueryRefineSearch();
+	Kinds*			QueryKinds();
+
 
 protected:
 private:
@@ -42,11 +49,15 @@ private:
 	Unity &operator=(const Unity&);
 
 
-	static Unity*		m_instance;
+	static	std::array<Unity*,4>	m_instances;
+	static	size_t					m_current_instance_index;
+
 	Sources				m_sources;
 	File				m_file;
 	Candidates			m_candidates;
 	RefineSearch		m_refine_search;
+	///カインドはインスタンス共通で利用するため静的領域とする
+	static Kinds		m_kinds;
 
 	//std::vector<Candidate>	m_input;
 	//Output				m_output;

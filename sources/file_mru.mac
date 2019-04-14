@@ -3,7 +3,7 @@
 
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
-call $label;
+call $label, getarg(2);
 endmacro $$return;
 
 get_property:
@@ -24,6 +24,7 @@ gather_candidates:
 	返値	"1"		成功
 			"0"		失敗
 	*/
+	$$arg=$$1;
 	##i=0;
 	while(##i<filehistcount){
 		##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "file_mru", getfilehist(##i));

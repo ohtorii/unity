@@ -141,11 +141,6 @@ $g_space="\r\n\t 　";
 #g_dll_ohtorii_tools=0;
 
 
-/*アクションを実行する対象のファイル名
-*/
-#g_fixed_filenames_num=0;
-$g_fixed_filenames[0]="";
-
 
 /*****************************************************************************
 	その他グローバル変数
@@ -158,7 +153,7 @@ $g_root_macro_directory=getarg(0);
 execmacro へ渡せる引数の上限は31個
 ファイル名は引数の [11] 以降。
 */
-#g_max_file_num=30-11;
+//#g_max_file_num=30-11;
 
 
 /*****************************************************************************
@@ -180,11 +175,6 @@ main:
 	/***************************************************
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
-	/*if(true){
-		call LoadDll;
-		execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\actions\\common.mac";
-		return false;
-	}*/
 	$$source=$$1;
 	$$source="file_mru";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
@@ -222,33 +212,12 @@ Start:
 	if(! ##return){
 		return false;
 	}
-	
-	call RefineSearch $$source_filename, "", "";
-	/*while(){
-		call Push;
-		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, "";
-		if(getresultex(-1)=="0"){
-			return false;
-		}
-		call RefineSearch;
-		if(##return==0){
-			//キャンセルされた
-			return false;
-		}
-		
-		//アクションへ遷移
-		
-		
-	}*/
-	
-	/*call CorrectSelectionLine;
+	call LoadKindAll;
 	if(! ##return){
 		return false;
-	}*/
-//	call Push;
-	//アクション
-	
-	if(true){
+	}
+	call RefineSearch $$source_filename, "";
+	if(false){
 		//debug
 		debuginfo 1;
 		debuginfo "==== action. ====";
@@ -278,43 +247,50 @@ Start:
 //#region 絞り込み検索
 RefineSearch:
 	/*
-	return	0 キャンセル
-			1 確定
+	return	0 	キャンセル
+			1 	確定
+			-1	エラー
 	*/
 	$$source_filename	= $$1;
 	$$args				= $$2;
-	$$keybord_buffer	= $$3;
-
-	call PushRefineSearch;
+	
 	//ソースから候補を生成する
 	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
 	if(getresultex(-1)=="0"){
 		return 0;
 	}
+
 	//絞り込み検索を行う
-	call RefineSearchMain, $$keybord_buffer;
+	call RefineSearchMain;
 	##ret=##return;
-	call PopRefineSearch;
 	return ##ret;
 
 
 PushRefineSearch:
-	return ;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"Push");
+	return ##ret;
 	
 	
 PopRefineSearch:
-	return ;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"Pop");
+	return ##ret;
 	
 	
 RefineSearchMain:
-	//絞り込み検索
-	$$keybord_buffer=$$1;
+	/*
+	return	0 	キャンセル
+			1 	確定
+			-1	エラー
+	*/
+	$$keybord_buffer="";
 	
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 	$$cursor_pos=getresultex(-1);
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 	$$key_buffer=getresultex(-1);
 	
+	deletecolormarkerall "gather";
+
 	//事前に実行してDLL側のデータを作る。
 	call Filter $$key_buffer;
 	
@@ -352,8 +328,27 @@ RefineSearchMain:
 		else if($$keycode=="9"){						//tab
 			/*	アクションの実行
 			*/
-			//call RefineSearch $g_root_macro_directory+"\\sources\\action.mac","","";
-			//return ##return;
+			##current_instance_index=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentInstanceIndex");
+			call PushRefineSearch;
+			if(##return==false){
+				return -1;
+			}
+			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac",str(##current_instance_index);
+			##search_result=##return;
+			
+			call PopRefineSearch;
+			if(##return==false){
+				return -1;
+			}
+			if(##search_result==0){
+				//キャンセル
+				//画面を更新して再度絞り込み検索を行う。
+				call Filter $$key_buffer;
+			}else if(##search_result==1){
+				return 1;
+			}else{
+				return -1;
+			}
 		}else{
 			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
 				call Filter $$key_buffer;
@@ -362,7 +357,8 @@ RefineSearchMain:
 			}
 		}
 	}
-	return 0;
+	return -1;
+	
 
 Mark:
 	//カーソル行に色を塗る
@@ -381,9 +377,6 @@ Mark:
 		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
 		escape;
 	}
-	//##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
-	//debuginfo 1;
-	//debuginfo "GetSelectionCount="+str(##count);
 	
 	enabledraw;
 	return;
@@ -407,11 +400,8 @@ Filter:
 	//
 	##i = 0;
 	##count = dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	debuginfo 1;
-	debuginfo "GetSelectionCount="+str(##count);
 	while(##i<##count){
 		##selected_lineno = dllfuncw(#g_dll_ohtorii_tools,"GetSelectedLineno",##i);
-		debuginfo "##selected_lineno="+str(##selected_lineno);
 		if(0 < ##selected_lineno){
 			movetolineno 1, ##selected_lineno;
 			selectline 0;
@@ -465,53 +455,6 @@ TrimString:
 	}
 	return $$1;
 
-/* 処理対象のファイル名を集める。
-
-以下グローバル変数に設定する。
-	#g_fixed_filenames_num
-	$g_fixed_filenames
-
-返値	bool
-
-（メモ）
-ファイルリストは秀丸エディタ上で装飾を施しているためDLL側から取得します。
-*/
-CorrectSelectionLine:
-	#g_fixed_filenames_num=0;
-	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
-	if(##count==0){
-		//カーソル行から取得する
-		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilenameFromHidemaruLineNo",lineno);
-		if($$filename==""){
-			return false;
-		}
-		#g_fixed_filenames_num	=1;
-		call TrimString $$filename, "\n\r";
-		$$filename=$$return;
-		$g_fixed_filenames[0]	=$$filename;
-		return true;
-	}
-
-	if(#g_max_file_num < ##count){
-		##count = #g_max_file_num;
-	}
-
-	##i = 0;
-	while(##i < ##count){
-		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
-		if($$filename != ""){
-			call TrimString $$filename, "\n\r";
-			$$filename=$$return;
-			$g_fixed_filenames[#g_fixed_filenames_num] = $$filename;
-			#g_fixed_filenames_num = #g_fixed_filenames_num + 1;
-		}
-		##i = ##i + 1;
-	}
-	if(#g_fixed_filenames_num==0){
-		return false;
-	}
-	return true;
-
 
 //#region 秀丸の編集画面
 NewFile:
@@ -546,6 +489,38 @@ CloseFileIfOpen:
 
 		#g_open_newfile=false;
 	}
+	return true;
+
+
+//#region Kind
+LoadKindAll:
+	/*全カインドをDLLへ読み込む*/
+	$$kinds[0]="";
+	##kinds_num=0;
+	
+	$$root = $g_root_macro_directory+"\\kinds\\";
+	##n = dllfunc(#g_dengaku_dll,"ENUMFILE",$$root+"*.mac");
+	while (1) {
+		$$file = dllfuncstr(#g_dengaku_dll,"FINDNEXT");
+		if ($$file == "") {
+			break;
+		}
+		$$kinds[##kinds_num]=$$root+$$file;
+		##kinds_num = ##kinds_num + 1;
+	}
+	
+	##n=dllfuncw(#g_dll_ohtorii_tools,"KindsClear");
+		
+	##i=0;
+	while(##i<##kinds_num){
+		execmacro $$kinds[##i],"get_property";
+		$$kind_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsCreate",getresultex(-1));
+		if($$kind_name==""){
+			//return false;
+		}
+		##i = ##i + 1;
+	}
+	return false;
 	return true;
 
 

@@ -130,12 +130,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;OHTORIITOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
@@ -152,12 +153,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;OHTORIITOOLS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
@@ -167,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="candidates.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="kinds.h" />
     <ClInclude Include="refine_search.h" />
     <ClInclude Include="sources.h" />
     <ClInclude Include="stdafx.h" />
@@ -178,6 +181,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="hidemaru_interface.cpp" />
+    <ClCompile Include="kinds.cpp" />
     <ClCompile Include="refine_search.cpp" />
     <ClCompile Include="sources.cpp" />
     <ClCompile Include="stdafx.cpp">

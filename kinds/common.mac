@@ -48,59 +48,49 @@ default_action=nop
 '継承するアクション（スペースで区切る）
 'inheritance=
 
-'アクション
+'アクション(action.より右側の文字（nop）はメニュー表示で使用する名前)
 [action.nop]
-'表示に使用する名前
-name=nop
 '秀丸マクロのラベル名
 function=nop
 'アクションの説明
 description=Do nothing.
 'アクション実行後に終了するかどうか
 is_quit=false
-'アクションを複数選択に対して実行するかどうか
+'アクションは複数選択に対して実行可能か
 is_multi_selectable=true
 
 [action.yank]
-name=yank
 function=yank
 description=Yank the candidate "word" or "action__text".
 is_multi_selectable=true
 
 [action.yank_escape]
-name=yank_escape
 function=yank_escape
 description=Yank the escaped candidate "word" or "action__text".
 
 [action.insert]
-name=insert
 function=insert
 description=Insert the candidate word or text before the cursor.
 
 [action.append]
-name=append
 function=append
 description=Insert the candidate word or text after the cursor.
 
 [action.insert_directory]
-name=insert_directory	
 function=insert_directory	
 description=Insert the candidate directory before the cursor.
 
 [action.append_directory]
-name=append_directory	
 function=append_directory	
 description=Insert the candidate directory after the cursor.
 
 [action.preview]
-name=preview
 function=preview
 description=Preview the candidate text.
 is_quit=false
 is_multi_selectable=false
 
 [action.echo]
-name=echo
 function=echo
 description=Echo candidates for debug.
 )";

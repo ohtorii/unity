@@ -2,9 +2,8 @@
 */
 
 #g_dll_ohtorii_tools=val(getarg(0));
-
 $label=getarg(1);
-call $label;
+call $label, getarg(2);
 endmacro $$return;
 
 
@@ -13,10 +12,28 @@ get_property:
 name=action
 description=candidates from unity action
 default_kind=action
-candidate_type=list
+candidate_type=function
 )";
 
 gather_candidates:
+	##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "action", "yanc"+$$1);
+	##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "action", "echo"+$$1);
+	return "1";
+	
+
+	##instance_index=val($$1);
+	
+	//
+	//選択されたソースから候補を生成する
+	//
+	##ret=dllfuncw(#g_dll_ohtorii_tools, "GenerateKindCandidates", ##instance_index);
+	if(##ret==false){
+		return "0";
+	}
+	return "1";
+	
+	
+	
 	/*
 	args=引数を取得する;
 	
@@ -38,3 +55,67 @@ gather_candidates:
 	*/
 	return "";
 	
+
+
+/* 処理対象のファイル名を集める。
+
+以下グローバル変数に設定する。
+	#g_fixed_filenames_num
+	$g_fixed_filenames
+
+返値	bool
+*/
+gather_select_line:
+	#g_fixed_filenames_num=0;
+	##count = dllfunc(#g_dll_ohtorii_tools,"GetSelectionCount");
+	if(##count==0){
+		//カーソル行から取得する
+		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilenameFromHidemaruLineNo",lineno);
+		if($$filename==""){
+			return false;
+		}
+		#g_fixed_filenames_num	=1;
+		call TrimString $$filename, "\n\r";
+		$$filename=$$return;
+		$g_fixed_filenames[0]	=$$filename;
+		return true;
+	}
+
+	if(#g_max_file_num < ##count){
+		##count = #g_max_file_num;
+	}
+
+	##i = 0;
+	while(##i < ##count){
+		$$filename = dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectedFilename",##i);
+		if($$filename != ""){
+			call TrimString $$filename, "\n\r";
+			$$filename=$$return;
+			$g_fixed_filenames[#g_fixed_filenames_num] = $$filename;
+			#g_fixed_filenames_num = #g_fixed_filenames_num + 1;
+		}
+		##i = ##i + 1;
+	}
+	if(#g_fixed_filenames_num==0){
+		return false;
+	}
+	return true;
+
+
+TrimString:
+	if($$2==""){
+		$$space=$g_space;
+	}else{
+		$$space=$$2;
+	}
+	while(1){
+	  ##word=strlen($$1);
+	  //文字列の先頭に空白文字がある場合、空白文字を削除
+	  if(strstr($$space,leftstr($$1,2))!=-1)$$1=rightstr($$1,##word-2);
+	  else if(strstr($$space,rightstr($$1,2))!=-1)$$1=leftstr($$1,##word-2);
+	  //ここまで全角文字の対処
+	  else if(strstr($$space,leftstr($$1,1))!=-1)$$1=rightstr($$1,##word-1);
+	  else if(strstr($$space,rightstr($$1,1))!=-1)$$1=leftstr($$1,##word-1);
+	  else break;
+	}
+	return $$1;

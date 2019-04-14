@@ -4,8 +4,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 //	global variable
 ///////////////////////////////////////////////////////////////////////////////
-//static WCHAR	gs_empty[] = { 0 };
-Unity*	Unity::m_instance=nullptr;
+std::array<Unity*, 4>	Unity::m_instances{ {nullptr,nullptr,nullptr,nullptr} };
+size_t					Unity::m_current_instance_index = 0;
+Kinds					Unity::m_kinds;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,15 +18,42 @@ Unity*	Unity::m_instance=nullptr;
 //	class Unity
 ///////////////////////////////////////////////////////////////////////////////
 Unity* Unity::Instance(){
-	if(Unity::m_instance==nullptr){
-		Unity::m_instance=new Unity;
+	if(m_instances.at(m_current_instance_index)==nullptr){
+		m_instances.at(m_current_instance_index)=new Unity;
 	}
-	return Unity::m_instance;
+	return m_instances.at(m_current_instance_index);
+}
+
+bool Unity::Push() {
+	if (m_instances.size() <= (m_current_instance_index+1)) {
+		return false;
+	}
+	++m_current_instance_index;
+	m_instances.at(m_current_instance_index) = new Unity;
+	return true;
+}
+
+bool Unity::Pop() {
+	if (m_current_instance_index == 0) {
+		//これ以上popできない
+		return false;
+	}
+	delete m_instances.at(m_current_instance_index);
+	m_instances[m_current_instance_index] = nullptr;
+	--m_current_instance_index;
+	return true;
+}
+
+size_t Unity::GetCurrentInstanceIndex() {
+	return m_current_instance_index;
 }
 
 void Unity::Destroy() {
-	delete Unity::m_instance;
-	Unity::m_instance = nullptr;
+	for (size_t i = 0; i<m_instances.size() ; ++i) {
+		delete m_instances.at(i);
+		m_instances.at(i) = nullptr;
+	}
+	m_current_instance_index = 0;
 }
 
 Sources* Unity::QuerySources(){
@@ -43,6 +71,11 @@ Candidates*	Unity::QueryCandidates() {
 RefineSearch*	Unity::QueryRefineSearch() {
 	return &m_refine_search;
 }
+
+Kinds*			Unity::QueryKinds() {
+	return &m_kinds;
+}
+
 
 Unity::Unity(){
 	

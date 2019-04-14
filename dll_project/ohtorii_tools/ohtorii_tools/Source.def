@@ -1,6 +1,10 @@
 LIBRARY
 EXPORTS
-    RefineSearch
+	Push
+	Pop
+	GetCurrentInstanceIndex
+    
+	RefineSearch
 	GetRefineSearchResult
 
     ChangeSelected
@@ -15,3 +19,6 @@ EXPORTS
 	SourcesGetCandidateType
     SourcesAppendCandidate
     SourcesAppendCandidateW
+
+	KindsClear
+	KindsCreate
