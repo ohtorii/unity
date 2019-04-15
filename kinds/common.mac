@@ -45,8 +45,8 @@ get_property:
 name=common
 description=common actions.
 default_action=nop
-'継承するアクション（スペースで区切る）
-'inheritance=
+'継承するアクション（空白で区切る）
+inheritance=file url
 
 'アクション(action.より右側の文字（nop）はメニュー表示で使用する名前)
 [action.nop]

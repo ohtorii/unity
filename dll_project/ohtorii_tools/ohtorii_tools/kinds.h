@@ -6,21 +6,30 @@
 
 class Action {
 public:
+	Action();
+	//Action();
+
 	///表示に使用する名前
-	std::wstring		m_name;
+	//std::wstring		m_name;
 	///秀丸マクロのラベル名
 	std::wstring		m_function;
 	///アクションの説明
 	std::wstring		m_description;
 	///アクション実行後に終了するかどうか
-	std::wstring		m_is_quit;
+	bool				m_is_quit;
 	///アクションを複数選択に対して実行するかどうか
-	std::wstring		m_is_multi_selectable;
+	bool				m_is_multi_selectable;
 
 };
 
 class Kind {
 public:
+	Kind();
+	Kind(	const std::wstring				&name,
+			const std::wstring				&description,
+			const std::wstring				&default_action,
+			const std::vector<std::wstring>	&inheritance);
+
 	std::wstring				m_name;
 	std::wstring				m_description;
 	std::wstring				m_default_action;
@@ -35,6 +44,7 @@ public:
 	void Clear();
 	WCHAR* Create(const WCHAR* kind_ini);
 
+private:
 	/// m_kind[カインド名]=Kind;
 	std::unordered_map<std::wstring, Kind>		m_kinds;
 };
