@@ -3,7 +3,8 @@ EXPORTS
 	Push
 	Pop
 	GetCurrentInstanceIndex
-    
+    GenerateKindCandidates
+
 	RefineSearch
 	GetRefineSearchResult
 

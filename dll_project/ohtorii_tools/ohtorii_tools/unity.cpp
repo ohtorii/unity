@@ -17,11 +17,14 @@ Kinds					Unity::m_kinds;
 ///////////////////////////////////////////////////////////////////////////////
 //	class Unity
 ///////////////////////////////////////////////////////////////////////////////
-Unity* Unity::Instance(){
-	if(m_instances.at(m_current_instance_index)==nullptr){
-		m_instances.at(m_current_instance_index)=new Unity;
+Unity* Unity::Instance(size_t index) {
+	if (index == UNITY_USE_URRENT_INSTANCE) {
+		if (m_instances.at(m_current_instance_index) == nullptr) {
+			m_instances.at(m_current_instance_index) = new Unity;
+		}
+		return m_instances.at(m_current_instance_index);
 	}
-	return m_instances.at(m_current_instance_index);
+	return m_instances.at(index);
 }
 
 bool Unity::Push() {
@@ -77,7 +80,7 @@ Kinds*			Unity::QueryKinds() {
 }
 
 
-Unity::Unity(){
+Unity::Unity() : m_refine_search(this){
 	
 }
 

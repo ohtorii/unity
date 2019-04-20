@@ -82,13 +82,22 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 	return gs_empty;
 }
 
+Source* Sources::FindSource(const WCHAR*source_name) {
+	auto it = m_sources.find(source_name);
+	if (it == m_sources.end()) {
+		return nullptr;
+	}
+	return &(it->second);
+}
+
+/*
 const WCHAR* Sources::GetCandidateType(const WCHAR*source_name) {
 	auto it=m_sources.find(source_name);
 	if (it == m_sources.end()) {
 		return gs_empty;
 	}
 	return it->second.m_candidate_type.c_str();
-}
+}*/
 
 bool Sources::Exist(const WCHAR*source_name)const {
 	return m_sources.end() != m_sources.find(source_name);

@@ -2,6 +2,7 @@
 #include<vector>
 #include<string>
 #include<array>
+#include"define.h"
 #include"sources.h"
 #include"file.h"
 #include"candidates.h"
@@ -15,7 +16,7 @@ public:
 	Unity();
 	~Unity();
 
-	static Unity* Instance();
+	static Unity* Instance(size_t index= UNITY_USE_URRENT_INSTANCE);
 	static bool Push();
 	static bool Pop();
 	static size_t GetCurrentInstanceIndex();

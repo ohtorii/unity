@@ -67,7 +67,7 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 	tokens.reserve(16);
 	Tokenizer(tokens, const_cast<WCHAR*>(search_words));
 
-	auto& candidates=Unity::Instance()->QueryCandidates()->GetCandidates();
+	auto& candidates= m_instance->QueryCandidates()->GetCandidates();
 	
 	//memo: std::vector<>‚Ìƒƒ‚ƒŠ—\–ñ		
 	m_output.Reserve(candidates.size());
@@ -88,7 +88,7 @@ INT_PTR RefineSearch::ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected)
 	try {
 		bool		has_change		= false;
 		const auto	candidate_index = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no - 1);//-1‚µ‚Ä0Žn‚Ü‚è‚É‚·‚é
-		auto&		candidates		= Unity::Instance()->QueryCandidates()->GetCandidates();
+		auto&		candidates		= m_instance->QueryCandidates()->GetCandidates();
 		const bool	now				= candidates.at(candidate_index).m_selected;
 		
 		candidates.at(candidate_index).m_selected = is_selected;
@@ -155,7 +155,7 @@ WCHAR* 	RefineSearch::GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_lin
 	--hidemaru_line_no;//0Žn‚Ü‚è‚É‚·‚é
 	try {
 		const auto filelist_lineno = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
-		return &(Unity::Instance()->QueryCandidates()->GetCandidates().at(filelist_lineno).m_text.at(0));
+		return &(m_instance->QueryCandidates()->GetCandidates().at(filelist_lineno).m_text.at(0));
 	}
 	catch (std::exception) {
 		//pass
@@ -165,7 +165,28 @@ WCHAR* 	RefineSearch::GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_lin
 
 
 WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR index) {
-	INT_PTR hidemaru_line_no = GetSelectedLineno(index);
-	return GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
+	Candidate*candidate = GetSelectedCandidate(index);
+	if (candidate == nullptr) {
+		return gs_empty;
+	}
+	return &candidate->m_text.at(0);
+	//INT_PTR hidemaru_line_no = GetSelectedLineno(index);
+	//return GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
 }
 
+Candidate* RefineSearch::GetSelectedCandidate(INT_PTR index) {
+	INT_PTR hidemaru_line_no = GetSelectedLineno(index);
+	if (hidemaru_line_no <= 0) {
+		return nullptr;
+	}
+
+	--hidemaru_line_no;//0Žn‚Ü‚è‚É‚·‚é
+	try {
+		const auto filelist_lineno = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
+		return &(m_instance->QueryCandidates()->GetCandidates().at(filelist_lineno));
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return nullptr;
+}

@@ -32,7 +32,9 @@ public:
 	Sources();
 	~Sources();
 	WCHAR* Create(const WCHAR* source_ini);
-	const WCHAR* GetCandidateType(const WCHAR*source_name);
+	///ソースを見付ける
+	Source* FindSource(const WCHAR*source_name);
+	//const WCHAR* GetCandidateType(const WCHAR*source_name);
 
 protected:
 private:

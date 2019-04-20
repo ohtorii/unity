@@ -21,27 +21,6 @@ static bool StringToBool(const WCHAR* str) {
 	return true;
 }
 
-/*
-template <typename List>
-static void split(const std::wstring& s, const std::wstring& separator, List& list)
-{
-	auto separator_length = separator.length();
-	if (separator_length == 0) {
-		list.push_back(s);
-	}
-	else {
-		auto offset = std::wstring::size_type(0);
-		while (1) {
-			auto pos = s.find(separator, offset);
-			if (pos == std::wstring::npos) {
-				list.push_back(s.substr(offset));
-				break;
-			}
-			list.push_back(s.substr(offset, pos - offset));
-			offset = pos + separator_length;
-		}
-	}
-}*/
 static void Tokenize(const std::wstring& str, std::vector<std::wstring>& tokens, const std::wstring& delimiters = _T(" "))
 {
 	tokens.clear();
@@ -60,6 +39,7 @@ static void Tokenize(const std::wstring& str, std::vector<std::wstring>& tokens,
 		pos = str.find_first_of(delimiters, lastPos);
 	}
 }
+
 static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* filename) {
 	WCHAR buf[2 * 1024];
 	//[action.*]セクションのパース
@@ -85,6 +65,8 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	*/
 	WCHAR buf[2*1024];
 
+	dst.m_name.assign(section_name);
+
 	GetPrivateProfileString(section_name, _T("function"), _T(""), buf, _countof(buf), filename);
 	dst.m_function.assign(buf);
 
@@ -96,6 +78,16 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	
 	GetPrivateProfileString(section_name, _T("is_multi_selectable"), _T(""), buf, _countof(buf), filename);
 	dst.m_is_multi_selectable = StringToBool(buf);
+}
+
+static bool CheckAppendable(bool candidate_is_multi_select, bool action_is_multi_selectable) {
+	if (candidate_is_multi_select) {
+		if (action_is_multi_selectable) {
+			return true;
+		}
+		return false;
+	}
+	return true;
 }
 
 
@@ -191,7 +183,8 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 			Action action;
 			for (const auto& section_name: action_sections) {
 				ParseActionSection(action, section_name.c_str(), cname);
-				dst.m_actions.emplace(section_name, action);
+				//dst.m_actions.emplace(section_name, action);
+				dst.m_actions.emplace_back(action);
 			}
 		}
 	}
@@ -199,4 +192,79 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 	name.assign(dst.m_name);
 	m_kinds.emplace(name, dst);
 	return const_cast<WCHAR*>(name.c_str());
+}
+
+Kind* Kinds::FindKind(const WCHAR* kind_name) {
+	auto it=m_kinds.find(kind_name);
+	if (it == m_kinds.end()) {
+		return nullptr;
+	}
+	return &(it->second);
+}
+
+bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
+	OutputDebugString(_T("GenerateKindCandidates"));
+	Unity*instance = Unity::Instance(instance_index);
+	if (instance == nullptr) {
+		OutputDebugString(_T("@1"));
+		return false;
+	}
+		
+	bool			is_multi_select = false;
+	std::wstring	first_source_name;
+	{
+		RefineSearch*	search = instance->QueryRefineSearch();
+		const auto		num_selection = search->GetSelectionCount();
+		if (num_selection == 0) {
+			OutputDebugString(_T("@2"));
+			return false;
+		}
+
+		for (auto select = 0; select < num_selection; ++select) {
+			Candidate* candidate = search->GetSelectedCandidate(select);
+			if (candidate == nullptr) {
+				OutputDebugString(_T("@2.1"));
+				continue;
+			}
+			//Memo: 最初に選択されたソース名
+			OutputDebugString(_T("candidate->m_source_name="));
+			OutputDebugString(candidate->m_source_name.c_str());
+			first_source_name = candidate->m_source_name;
+			break;
+		}
+
+		if (first_source_name.empty()) {
+			OutputDebugString(_T("@3"));
+			return false;
+		}
+		if (2 <= num_selection) {
+			is_multi_select = true;
+		}else {
+			is_multi_select = false;
+		}		
+	}	
+
+	//ソース名からディフォルトカインドを取り出す
+	auto* source= instance->QuerySources()->FindSource(first_source_name.c_str());
+	if (source == nullptr) {
+		OutputDebugString(_T("@4"));
+		return false;
+	}
+	const auto &default_kind = source->m_default_kind;
+
+	auto* kind = instance->QueryKinds()->FindKind(default_kind.c_str());
+	if (kind == nullptr) {
+		OutputDebugString(_T("@5"));
+		return false;
+	}
+
+	//現在のインスタンスへ候補を追加する
+	auto* candidates = Unity::Instance()->QueryCandidates();
+	for (const auto& action : kind->m_actions) {
+		if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
+			candidates->AppendCandidate(first_source_name.c_str(),action.m_name.c_str());
+		}		
+	}
+	OutputDebugString(_T("Finish"));
+	return true;
 }

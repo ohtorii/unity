@@ -516,11 +516,10 @@ LoadKindAll:
 		execmacro $$kinds[##i],"get_property";
 		$$kind_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsCreate",getresultex(-1));
 		if($$kind_name==""){
-			//return false;
+			return false;
 		}
 		##i = ##i + 1;
 	}
-	return false;
 	return true;
 
 

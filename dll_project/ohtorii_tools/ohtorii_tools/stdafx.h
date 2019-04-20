@@ -17,10 +17,12 @@
 #include<vector>
 #include<string>
 #include<algorithm>
+#include<unordered_set>
+#include<unordered_map>
 #include<stdio.h>
 #include<tchar.h>
 
-
+#include"define.h"
 #include"unity.h"
 #include"sources.h"
 #include"file.h"

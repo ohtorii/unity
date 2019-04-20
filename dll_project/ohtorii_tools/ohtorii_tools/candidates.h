@@ -10,20 +10,27 @@ struct Candidate {
 		m_fource_show = false;
 	};
 
-	Candidate(const WCHAR*text) : m_text(text) {
+	Candidate(const WCHAR*source_name,const WCHAR*text) :
+		m_source_name(source_name) ,
+		m_text(text)
+	{
 		m_selected = false;
 		m_fource_show = false;
 	};
-	Candidate(const WCHAR*text, const WCHAR*user_data) : m_text(text),m_user_data(user_data) {
+	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*user_data) :
+		m_source_name(source_name),
+		m_text(text), 
+		m_user_data(user_data) 
+	{
 		m_selected = false;
 		m_fource_show = false;
 	};
-	///ファイルリストから読み込んだファイル名
-	std::wstring			m_text;
-	///ユーザーデータ
-	std::wstring			m_user_data;
 	///ソース名
 	std::wstring			m_source_name;
+	///ファイルリストから読み込んだファイル名
+	std::wstring			m_text;	
+	///ユーザーデータ
+	std::wstring			m_user_data;
 	///このテキストが秀丸エディタ側で選択されているかどうか
 	bool					m_selected;
 	///必ず表示する候補かどうか
@@ -56,9 +63,10 @@ private:
 	/*SourceCandidate* AppendIfNotExist(const WCHAR* source_name);
 	SourceCandidate* Find(const WCHAR* source_name);
 	*/
-	//memo: 並び順が大事なのでvector<>を利用
+	//memo: 並び順が重要なのでvector<>を利用
 	//std::vector<SourceCandidate>	m_sources;
-	
+
+	//memo: 並び順が重要なのでvector<>を利用
 	std::vector<Candidate>	m_candidates;
 
 };

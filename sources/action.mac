@@ -16,11 +16,10 @@ candidate_type=function
 )";
 
 gather_candidates:
-	##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "action", "yanc"+$$1);
+	/*##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "action", "yanc"+$$1);
 	##ret=dllfuncw(#g_dll_ohtorii_tools, "SourcesAppendCandidate", "action", "echo"+$$1);
 	return "1";
-	
-
+	*/
 	##instance_index=val($$1);
 	
 	//

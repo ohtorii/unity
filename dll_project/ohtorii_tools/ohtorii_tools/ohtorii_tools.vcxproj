@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="candidates.h" />
+    <ClInclude Include="define.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="kinds.h" />
     <ClInclude Include="refine_search.h" />

@@ -1,4 +1,6 @@
 #pragma once
+#include"define.h"
+
 
 //秀丸エディタへ返す情報
 struct Output {
@@ -15,7 +17,7 @@ struct Output {
 		m_hidemaru_selected_lineno.reserve(size);
 	};
 
-	//秀丸エディタへ返す文字列
+	//秀丸エディタへ返す文字列(Ex. "foo.txt\nbar.txt\nhoge.cpp")
 	std::vector<std::wstring::value_type>	m_text;
 
 	/*「秀丸エディタの行番号」から「候補リストのインデックス」を取得するテーブル
@@ -30,8 +32,12 @@ struct Output {
 };
 
 
+class Unity;
+
 class RefineSearch {
 public:
+	RefineSearch(Unity*instance) : m_instance(instance) {
+	}
 	bool Do(const WCHAR* search_words);
 	WCHAR* GetResult();
 
@@ -59,7 +65,12 @@ public:
 	*/
 	WCHAR* GetSelectedFilename(INT_PTR index);
 
+	/*選択されている候補の情報を取得する
+	*/
+	Candidate* GetSelectedCandidate(INT_PTR index);
+
 private:
+	Unity*				m_instance;
 	///検索結果
 	Output				m_output;
 

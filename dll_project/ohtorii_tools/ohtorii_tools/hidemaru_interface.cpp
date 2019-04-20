@@ -45,6 +45,10 @@ extern "C" WCHAR* GetRefineSearchResult() {
 	return Unity::Instance()->QueryRefineSearch()->GetResult();
 }
 
+extern "C" INT_PTR GenerateKindCandidates(INT_PTR instance_index) {
+	return Unity::Instance()->QueryKinds()->GenerateKindCandidates(instance_index);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //source
 /////////////////////////////////////////////////////////////////////////////
@@ -58,7 +62,11 @@ extern "C" WCHAR* SourcesCreate(WCHAR* source_ini){
 }
 
 extern "C" const WCHAR* SourcesGetCandidateType(WCHAR*souce_name) {
-	return Unity::Instance()->QuerySources()->GetCandidateType(souce_name);
+	auto*source = Unity::Instance()->QuerySources()->FindSource(souce_name);
+	if(source==nullptr){
+		return _T("");
+	}
+	return source->m_candidate_type.c_str();
 }
 
 
