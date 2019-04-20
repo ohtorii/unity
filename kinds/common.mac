@@ -102,6 +102,10 @@ ex	Input the escaped candidate text into command line.
 
 
 do_action:
+	debuginfo 1;
+	debuginfo "common.mac: do_action!!!";
+	return true;
+	
 	/*call SplitFilelist, getarg(2);
 	if(! ##return){
 		return false;

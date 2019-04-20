@@ -119,6 +119,16 @@ Kind::Kind(const std::wstring		&name,
 
 }
 
+Action* Kind::FindAction(const WCHAR* action_name) {
+	size_t size = m_actions.size();
+	for (size_t i = 0; i < size; ++i) {
+		auto&item=m_actions.at(i);
+		if (wcscmp(item.m_name.c_str(), action_name) == 0) {
+			return &m_actions.at(i);
+		}
+	}
+	return nullptr;
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -202,6 +212,18 @@ Kind* Kinds::FindKind(const WCHAR* kind_name) {
 	return &(it->second);
 }
 
+const WCHAR* Kinds::GetHidemaruLabelName(const WCHAR* kind_name){
+	auto*kind = FindKind(kind_name);
+	if (kind == nullptr) {
+		return gs_empty;
+	}
+	auto *action = kind->FindAction(kind->m_default_action.c_str());
+	if (action == nullptr) {
+			return gs_empty;
+	}
+	return action->m_function.c_str();
+}
+
 bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	OutputDebugString(_T("GenerateKindCandidates"));
 	Unity*instance = Unity::Instance(instance_index);
@@ -247,7 +269,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	//ソース名からディフォルトカインドを取り出す
 	auto* source= instance->QuerySources()->FindSource(first_source_name.c_str());
 	if (source == nullptr) {
-		OutputDebugString(_T("@4"));
+		OutputDebugString((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
 		return false;
 	}
 	const auto &default_kind = source->m_default_kind;
@@ -259,11 +281,15 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}
 
 	//現在のインスタンスへ候補を追加する
-	auto* candidates = Unity::Instance()->QueryCandidates();
-	for (const auto& action : kind->m_actions) {
-		if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
-			candidates->AppendCandidate(first_source_name.c_str(),action.m_name.c_str());
-		}		
+	{
+		std::wstring candidate;
+		auto* candidates = Unity::Instance()->QueryCandidates();
+		for (const auto& action : kind->m_actions) {
+			if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
+				candidate = action.m_name + _T("\t") + action.m_description;
+				candidates->AppendCandidate(/*kind->m_name.c_str()*/_T("action"), candidate.c_str());
+			}
+		}
 	}
 	OutputDebugString(_T("Finish"));
 	return true;

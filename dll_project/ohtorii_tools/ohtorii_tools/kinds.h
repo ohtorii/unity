@@ -29,6 +29,7 @@ public:
 			const std::wstring				&description,
 			const std::wstring				&default_action,
 			const std::vector<std::wstring>	&inheritance);
+	Action* FindAction(const WCHAR* action_name);
 
 	std::wstring				m_name;
 	std::wstring				m_description;
@@ -52,6 +53,9 @@ public:
 
 	///選択からカインドの種類を生成する
 	bool GenerateKindCandidates(INT_PTR instance_index);
+
+	/// 秀丸のラベル名を取得する
+	const WCHAR* GetHidemaruLabelName(const WCHAR* kind_name);
 
 private:
 	/// m_kind[カインド名]=Kind;

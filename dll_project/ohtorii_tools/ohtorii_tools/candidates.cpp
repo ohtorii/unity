@@ -14,6 +14,19 @@ bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate,
 	m_candidates.emplace_back(source_name, candidate, user_data);
 	return true;
 }
+
+const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
+	return m_candidates.at(index).m_source_name.c_str();
+}
+
+const WCHAR* Candidates::GetText(INT_PTR index)const {
+	return m_candidates.at(index).m_text.c_str();
+}
+
+const WCHAR* Candidates::GetUserData(INT_PTR index)const {
+	return m_candidates.at(index).m_user_data.c_str();
+}
+
 /*
 SourceCandidate* Candidates::AppendIfNotExist(const WCHAR* source_name) {
 	for (auto& source : m_sources)

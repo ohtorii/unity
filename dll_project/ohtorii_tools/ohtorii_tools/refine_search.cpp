@@ -137,9 +137,9 @@ INT_PTR RefineSearch::GetSelectionCount() {
 }
 
 
-INT_PTR RefineSearch::GetSelectedLineno(INT_PTR index) {
+INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR selected_index) {
 	try {
-		return m_output.m_hidemaru_selected_lineno.at(index);
+		return m_output.m_hidemaru_selected_lineno.at(selected_index);
 	}
 	catch (std::exception) {
 		//pass
@@ -163,19 +163,34 @@ WCHAR* 	RefineSearch::GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_lin
 	return gs_empty;
 }
 
+INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {
+	const INT_PTR not_found = -1;
 
-WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR index) {
-	Candidate*candidate = GetSelectedCandidate(index);
+	if (hidemaru_line_no <= 0) {
+		return not_found;
+	}
+	--hidemaru_line_no;//0Žn‚Ü‚è‚É‚·‚é
+	try {
+		return m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return not_found;
+}
+
+WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR seleted_index) {
+	Candidate*candidate = GetSelectedCandidate(seleted_index);
 	if (candidate == nullptr) {
 		return gs_empty;
 	}
 	return &candidate->m_text.at(0);
-	//INT_PTR hidemaru_line_no = GetSelectedLineno(index);
+	//INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(index);
 	//return GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
 }
 
-Candidate* RefineSearch::GetSelectedCandidate(INT_PTR index) {
-	INT_PTR hidemaru_line_no = GetSelectedLineno(index);
+Candidate* RefineSearch::GetSelectedCandidate(INT_PTR seleted_index) {
+	INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(seleted_index);
 	if (hidemaru_line_no <= 0) {
 		return nullptr;
 	}

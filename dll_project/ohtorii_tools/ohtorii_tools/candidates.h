@@ -59,6 +59,10 @@ public:
 	const std::vector<Candidate>&	GetCandidates()const	{ return m_candidates; }
 	std::vector<Candidate>&			GetCandidates()			{ return m_candidates; }
 
+	const WCHAR* GetSourceName(INT_PTR index)const;
+	const WCHAR* GetText(INT_PTR index)const;
+	const WCHAR* GetUserData(INT_PTR index)const;
+
 private:
 	/*SourceCandidate* AppendIfNotExist(const WCHAR* source_name);
 	SourceCandidate* Find(const WCHAR* source_name);

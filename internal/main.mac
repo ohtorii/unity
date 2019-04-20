@@ -306,34 +306,32 @@ RefineSearchMain:
 		$$cursor_pos=getresultex(-1);
 		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 		$$key_buffer=getresultex(-1);
+
 		##ctrl =iskeydown(0x11);
-		if($$keycode=="13"){
-			/*Enter / ctrl-m
+		if($$keycode=="13"){		/*Enter / ctrl-m*/
+			/*ディフォルトアクションの実行*/
+			execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory;
+			/*if(getresultex(-1)=="0"){
+				return 0;
+			}*/
+			return 1;
 			
-			if(ファイル選択あり){
-				$$target_file=先頭のファイル
-			}else{
-				$$target_file=カーソル位置のファイル
-			}
-			default_action($$target_file)
-			
+		}else if($$keycode=="27"){				return 0;}		//Escapeが押された
+		else if($$keycode=="16"){				up;}			//ctrl-p
+		else if($$keycode=="14"){				down;}			//ctrl-n
+		else if($$keycode=="18"){				call Mark;} 	//ctrl-space
+		else if(##ctrl&&($$keycode=="32")){ 	call Mark;} 	//ctrl-space
+		else if($$keycode == "29"){ 			up;}			//[↑]
+		else if($$keycode == "31"){ 			down;}			//[↓]
+		else if($$keycode=="9"){								//tab
+			/*	アクションの選択
 			*/
-		}else if($$keycode=="27"){		return 0;} 		//Escapeが押された
-		else if($$keycode=="16"){		up;}			//ctrl-p
-		else if($$keycode=="14"){		down;}			//ctrl-n
-		else if($$keycode=="18"){		call Mark;}		//ctrl-space
-		else if(##ctrl&&($$keycode=="32")){		call Mark;}		//ctrl-space
-		else if($$keycode == "29"){		up;}			// [↑]
-		else if($$keycode == "31"){		down;} 			//[↓]
-		else if($$keycode=="9"){						//tab
-			/*	アクションの実行
-			*/
-			##current_instance_index=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentInstanceIndex");
+			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
 			call PushRefineSearch;
 			if(##return==false){
 				return -1;
 			}
-			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac",str(##current_instance_index);
+			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac",str(##current_context);
 			##search_result=##return;
 			
 			call PopRefineSearch;
@@ -392,7 +390,7 @@ Filter:
 	selectall;
 	//backspace;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"RefineSearch",$$pattern);
-	insert(dllfuncstrw(#g_dll_ohtorii_tools,"GetRefineSearchResult"));
+	insert(dllfuncstrw(#g_dll_ohtorii_tools,"RefineSearchGetResult"));
 	call HilightWorld $$pattern;
 
 	//
@@ -401,7 +399,7 @@ Filter:
 	##i = 0;
 	##count = dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	while(##i<##count){
-		##selected_lineno = dllfuncw(#g_dll_ohtorii_tools,"GetSelectedLineno",##i);
+		##selected_lineno = dllfuncw(#g_dll_ohtorii_tools,"RefineSearchConvertSelectedIndexToHidemaruLineno",##i);
 		if(0 < ##selected_lineno){
 			movetolineno 1, ##selected_lineno;
 			selectline 0;

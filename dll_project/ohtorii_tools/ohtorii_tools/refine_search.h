@@ -23,7 +23,7 @@ struct Output {
 	/*「秀丸エディタの行番号」から「候補リストのインデックス」を取得するテーブル
 
 	(使用例)
-	ファイルリストの行番号 = m_hidemaru_lineno_to_candidate_index[秀丸エディタの行番号];
+	候補のインデックス = m_hidemaru_lineno_to_candidate_index[秀丸エディタの行番号];
 	*/
 	std::vector<__int64>					m_hidemaru_lineno_to_candidate_index;
 
@@ -46,6 +46,19 @@ public:
 	　					ファイルの先頭が１です。
 	*/
 	INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected);
+	
+	
+	/*選択されているファイル名を取得する（秀丸エディタの行番号バージョン）
+	return	成功	ファイル名
+			失敗	空文字
+	*/
+	WCHAR* GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no);
+
+	/**秀丸エディタの行番号から候補リストのインデックスを取得する
+	return	成功	0以上の数値
+			失敗	-1
+	*/
+	INT_PTR ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no);
 
 	/*選択行の個数を取得する
 	*/
@@ -55,19 +68,15 @@ public:
 	return	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
 	　		ファイルの先頭が１です。
 	*/
-	INT_PTR GetSelectedLineno(INT_PTR index);
+	INT_PTR ConvertSelectedIndexToHidemaruLineno(INT_PTR selected_index);
 
-	/*選択されているファイル名を取得する（秀丸エディタの行番号バージョン）
+	/*選択されているファイル名を取得する	
 	*/
-	WCHAR* GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no);
+	WCHAR* GetSelectedFilename(INT_PTR seleted_index);
 
-	/*選択されているファイル名を取得する
+	/*選択されている候補の情報を取得する	
 	*/
-	WCHAR* GetSelectedFilename(INT_PTR index);
-
-	/*選択されている候補の情報を取得する
-	*/
-	Candidate* GetSelectedCandidate(INT_PTR index);
+	Candidate* GetSelectedCandidate(INT_PTR seleted_index);
 
 private:
 	Unity*				m_instance;

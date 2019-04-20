@@ -31,9 +31,13 @@ is_multi_selectable=false
 )";
 
 do_action:
+	debuginfo 1;
+	debuginfo "action.mac: do_action!!!!";
 	return;
 
 do:
+	debuginfo 1;
+	debuginfo "action.mac: DO!!!!";
 	/*
 	candidate=$$1;
 	execmacro candidate.kind, "do_action", candidate.default_action
