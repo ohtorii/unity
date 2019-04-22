@@ -3,7 +3,8 @@
 
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
-call $label, getarg(2);
+$arg=getarg(2);
+call $label, $arg;
 endmacro $$return;
 
 
@@ -21,7 +22,7 @@ gather_candidates:
 	//
 	//選択されたソースから候補を生成する
 	//
-	##ret=dllfuncw(#g_dll_ohtorii_tools, "GenerateKindCandidates", ##context);
+	##ret=dllfuncw(#g_dll_ohtorii_tools, "KindsGenerateCandidates", ##context);
 	if(##ret==false){
 		return "0";
 	}

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 
+#define NOT_FOUND_INDEX	(-1)
 
 ///////////////////////////////////////////////////////////////////////////////
 //	global variable
@@ -12,26 +13,6 @@ static WCHAR	gs_empty[] = { 0 };
 ///////////////////////////////////////////////////////////////////////////////
 //	static function
 ///////////////////////////////////////////////////////////////////////////////
-static void Tokenizer(std::vector<std::wstring>&out, WCHAR* search_words) {
-	//OutputDebugString(L"==== Tokenizer start ====");
-	out.clear();
-	if (wcslen(search_words) == 0) {
-		//OutputDebugString(L"==== Tokenizer finish ====");
-		return;
-	}
-
-	const WCHAR*	delimiters = L" \t\n";
-	WCHAR*			next_token = NULL;
-	WCHAR*			p = wcstok_s(search_words, delimiters, &next_token);
-	while (p) {
-		//	OutputDebugString(p);
-		out.push_back(p);
-		p = wcstok_s(NULL, delimiters, &next_token);
-	}
-	//	OutputDebugString(L"==== Tokenizer finish ====");
-}
-
-
 static bool MatchAll(const std::wstring &line, const std::vector<std::wstring>& tokens) {
 	for (auto&word : tokens) {
 		if (line.find(word) == std::wstring::npos) {
@@ -39,6 +20,19 @@ static bool MatchAll(const std::wstring &line, const std::vector<std::wstring>& 
 		}
 	}
 	return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//	RefineSearch
+///////////////////////////////////////////////////////////////////////////////
+RefineSearch::RefineSearch(Unity*instance) : 
+	m_instance(instance), 
+	m_hidemaru_line_no(0) 
+{
+}
+
+void RefineSearch::SetHidemaruLineno(INT_PTR hidemaru_line_no) {
+	m_hidemaru_line_no = hidemaru_line_no;
 }
 
 void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {
@@ -53,7 +47,7 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 
 			m_output.m_hidemaru_lineno_to_candidate_index.push_back(candidate_index);
 			if (candidate.m_selected) {
-				m_output.m_hidemaru_selected_lineno.push_back(hidemaru_lineno);
+				m_output.m_hidemaru_maeked_lineno.push_back(hidemaru_lineno);
 			}
 
 			++hidemaru_lineno;
@@ -65,7 +59,7 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 bool RefineSearch::Do(const WCHAR* search_words) {
 	std::vector<std::wstring> tokens;
 	tokens.reserve(16);
-	Tokenizer(tokens, const_cast<WCHAR*>(search_words));
+	Tokenize(tokens, const_cast<WCHAR*>(search_words), _T(" \t\n"));
 
 	auto& candidates= m_instance->QueryCandidates()->GetCandidates();
 	
@@ -84,7 +78,7 @@ WCHAR* RefineSearch::GetResult() {
 }
 
 
-INT_PTR RefineSearch::ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected) {
+INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 	try {
 		bool		has_change		= false;
 		const auto	candidate_index = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no - 1);//-1して0始まりにする
@@ -100,9 +94,9 @@ INT_PTR RefineSearch::ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected)
 			}
 			else {
 				//select -> unselect
-				auto find_it = std::find(m_output.m_hidemaru_selected_lineno.begin(), m_output.m_hidemaru_selected_lineno.end(), hidemaru_line_no);
-				if (find_it != m_output.m_hidemaru_selected_lineno.end()) {
-					m_output.m_hidemaru_selected_lineno.erase(find_it);
+				auto find_it = std::find(m_output.m_hidemaru_maeked_lineno.begin(), m_output.m_hidemaru_maeked_lineno.end(), hidemaru_line_no);
+				if (find_it != m_output.m_hidemaru_maeked_lineno.end()) {
+					m_output.m_hidemaru_maeked_lineno.erase(find_it);
 					has_change = true;
 				}
 			}
@@ -110,7 +104,7 @@ INT_PTR RefineSearch::ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected)
 		else {
 			if (is_selected) {
 				//unselect -> select
-				m_output.m_hidemaru_selected_lineno.push_back(hidemaru_line_no);
+				m_output.m_hidemaru_maeked_lineno.push_back(hidemaru_line_no);
 				has_change = true;
 			}
 			else {
@@ -120,7 +114,7 @@ INT_PTR RefineSearch::ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected)
 		}
 
 		if (has_change) {
-			std::sort(m_output.m_hidemaru_selected_lineno.begin(), m_output.m_hidemaru_selected_lineno.end());
+			std::sort(m_output.m_hidemaru_maeked_lineno.begin(), m_output.m_hidemaru_maeked_lineno.end());
 		}
 
 		return true;
@@ -132,23 +126,23 @@ INT_PTR RefineSearch::ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected)
 }
 
 
-INT_PTR RefineSearch::GetSelectionCount() {
-	return m_output.m_hidemaru_selected_lineno.size();
+INT_PTR RefineSearch::GetMarkedCount() {
+	return m_output.m_hidemaru_maeked_lineno.size();
 }
 
 
-INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR selected_index) {
+INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index) {
 	try {
-		return m_output.m_hidemaru_selected_lineno.at(selected_index);
+		return m_output.m_hidemaru_maeked_lineno.at(marked_index);
 	}
 	catch (std::exception) {
 		//pass
 	}
-	return -1;
+	return NOT_FOUND_INDEX;
 }
 
 
-WCHAR* 	RefineSearch::GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
+/*WCHAR* 	RefineSearch::GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
 	if (hidemaru_line_no <= 0) {
 		return gs_empty;
 	}
@@ -161,13 +155,11 @@ WCHAR* 	RefineSearch::GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_lin
 		//pass
 	}
 	return gs_empty;
-}
+}*/
 
-INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {
-	const INT_PTR not_found = -1;
-
+INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {	
 	if (hidemaru_line_no <= 0) {
-		return not_found;
+		return NOT_FOUND_INDEX;
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
@@ -176,32 +168,73 @@ INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_li
 	catch (std::exception) {
 		//pass
 	}
-	return not_found;
+	return NOT_FOUND_INDEX;
 }
 
-WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR seleted_index) {
-	Candidate*candidate = GetSelectedCandidate(seleted_index);
+INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
+	INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(marked_index);
+	if (hidemaru_line_no <= 0) {
+		return NOT_FOUND_INDEX;
+	}
+	--hidemaru_line_no;//0始まりにする
+	try {
+		return m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
+	}catch(std::exception) {
+		//pass
+	}
+	return NOT_FOUND_INDEX;
+}
+
+/*WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR marked_index) {
+	Candidate*candidate = GetMarkedCandidate(marked_index);
 	if (candidate == nullptr) {
 		return gs_empty;
 	}
 	return &candidate->m_text.at(0);
 	//INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(index);
-	//return GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
-}
+	//return GetMarkedFilenameFromHidemaruLineNo(hidemaru_line_no);
+}*/
 
-Candidate* RefineSearch::GetSelectedCandidate(INT_PTR seleted_index) {
-	INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(seleted_index);
-	if (hidemaru_line_no <= 0) {
+Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {	
+	const auto candidate_index = ConvertMarkIndexToCandidatesIndex(marked_index);
+	if (candidate_index == NOT_FOUND_INDEX) {
 		return nullptr;
 	}
-
-	--hidemaru_line_no;//0始まりにする
 	try {
-		const auto filelist_lineno = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
-		return &(m_instance->QueryCandidates()->GetCandidates().at(filelist_lineno));
+		return &(m_instance->QueryCandidates()->GetCandidates().at(candidate_index));
 	}
 	catch (std::exception) {
 		//pass
 	}
 	return nullptr;
+}
+
+INT_PTR	RefineSearch::GetFirstSelectionCandidateIndex() {
+	if (GetMarkedCount()) {
+		const INT_PTR first_item = 0;
+		return ConvertMarkIndexToCandidatesIndex(first_item);
+	}	
+	return ConvertHidemaruLinenNoToCandidateIndex(m_hidemaru_line_no);
+}
+
+INT_PTR	RefineSearch::GetSelectionCandidateCount() {
+	auto marked_count = GetMarkedCount();
+	if (0<marked_count) {
+		return marked_count;
+	}
+	if (m_hidemaru_line_no <= 0) {
+		return 0;
+	}
+	return 1;
+}
+
+INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
+	auto marked_count = GetMarkedCount();
+	if (0 < marked_count) {
+		return ConvertMarkIndexToCandidatesIndex(selected_index);
+	}
+	if (selected_index == 0) {
+		return ConvertHidemaruLinenNoToCandidateIndex(m_hidemaru_line_no);
+	}
+	return NOT_FOUND_INDEX;
 }

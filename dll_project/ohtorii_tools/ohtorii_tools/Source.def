@@ -3,33 +3,35 @@ EXPORTS
     Push
     Pop
     GetCurrentContext
-    GenerateKindCandidates
+	GetSelectionCount
+	GetSelectionText
+	GetSelectionSourceName
+	GetSelectionDescription
 
-    RefineSearch
+    RefineSearchDo
     RefineSearchGetResult
-
-    ChangeSelected
-    GetSelectionCount
+    RefineSearchChangeMarked
+    RefineSearchGetMarkedCount
     RefineSearchConvertSelectedIndexToHidemaruLineno
 	RefineSearchConvertHidemaruLinenNoToCandidateIndex
-    GetSelectedFilename
-    GetSelectedFilenameFromHidemaruLineNo
-    WriteToFile
-    DllDetachFunc_After_Hm866
-    
+	RefineSearchSetHidemaruLineno
+	RefineSearchGetFirstSelectionCandidateIndex
+	
 
     SourcesCreate
     SourcesGetDefaultKind
 	SourcesGetCandidateType
 	
-
 	CandidatesGetSourceName
 	CandidatesGetText
 	CandidatesGetUserData
-
-    CandidatesAppendW
 	CandidatesAppend	
 
     KindsClear
     KindsCreate
 	KindsGetHidemaruLabelName
+	KindsGenerateCandidates
+
+
+	WriteToFile
+    DllDetachFunc_After_Hm866

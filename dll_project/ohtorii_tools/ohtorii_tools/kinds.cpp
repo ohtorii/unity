@@ -5,12 +5,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 //	global variable
 ///////////////////////////////////////////////////////////////////////////////
-static WCHAR	gs_empty[] = { 0 };
+static 			WCHAR	gs_empty[]		= { 0 };
+static const	WCHAR	*gs_prefix		=_T("action.");
+static const	size_t	gs_prefix_size	= 7;
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //	static function
 ///////////////////////////////////////////////////////////////////////////////
+static bool ContainsAction(const WCHAR*str) {
+	return std::equal(gs_prefix, gs_prefix + gs_prefix_size, str);
+}
+
 static bool StringToBool(const WCHAR* str) {
 	if (_wcsicmp(str, _T("false")) == 0) {
 		return false;
@@ -21,30 +27,12 @@ static bool StringToBool(const WCHAR* str) {
 	return true;
 }
 
-static void Tokenize(const std::wstring& str, std::vector<std::wstring>& tokens, const std::wstring& delimiters = _T(" "))
-{
-	tokens.clear();
-	// Skip delimiters at beginning.
-	std::wstring::size_type lastPos = str.find_first_not_of(delimiters, 0);
-	// Find first "non-delimiter".
-	std::wstring::size_type pos = str.find_first_of(delimiters, lastPos);
-
-	while (std::wstring::npos != pos || std::wstring::npos != lastPos)
-	{
-		// Found a token, add it to the vector.
-		tokens.push_back(str.substr(lastPos, pos - lastPos));
-		// Skip delimiters.  Note the "not_of"
-		lastPos = str.find_first_not_of(delimiters, pos);
-		// Find next "non-delimiter"
-		pos = str.find_first_of(delimiters, lastPos);
-	}
-}
 
 static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* filename) {
 	WCHAR buf[2 * 1024];
 	//[action.*]セクションのパース
-	static const std::wstring	prefix(_T("action."));
-	const		size_t			prefix_size = prefix.size();
+	//static const std::wstring	prefix(_T("action."));
+	//const		size_t			prefix_size = prefix.size();
 	
 	GetPrivateProfileSectionNames(buf, _countof(buf), filename);
 	
@@ -52,7 +40,7 @@ static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* fi
 	while (((i + 1) < _countof(buf)) && (buf[i] != 0) && (buf[i + 1] != 0)) {
 		WCHAR* top = &buf[i];
 		//OutputDebugString(top);
-		if (std::equal(prefix.begin(), prefix.end(), top)) {
+		if (ContainsAction(top)) {
 			dst.push_back(top);
 			//OutputDebugString(top);
 		}
@@ -65,7 +53,8 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	*/
 	WCHAR buf[2*1024];
 
-	dst.m_name.assign(section_name);
+	//memo: "action.nop" -> "nop"
+	dst.m_name.assign(section_name+gs_prefix_size);
 
 	GetPrivateProfileString(section_name, _T("function"), _T(""), buf, _countof(buf), filename);
 	dst.m_function.assign(buf);
@@ -175,7 +164,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 
 		{
 			GetPrivateProfileString(_T("property"), _T("inheritance"), _T(""), buf, _countof(buf), cname);
-			Tokenize(buf,dst.m_inheritance,_T(" \t"));
+			Tokenize(dst.m_inheritance,buf,_T(" \t"));
 			if(0){
 				//debug
 				OutputDebugString(_T("==== Inheritance ===="));
@@ -213,14 +202,21 @@ Kind* Kinds::FindKind(const WCHAR* kind_name) {
 }
 
 const WCHAR* Kinds::GetHidemaruLabelName(const WCHAR* kind_name){
+	OutputDebugString(_T("GetHidemaruLabelName"));
 	auto*kind = FindKind(kind_name);
 	if (kind == nullptr) {
+		OutputDebugString(_T("kind == nullptr"));
 		return gs_empty;
 	}
+	OutputDebugString(_T("kind->m_default_action="));
+	OutputDebugString(kind->m_default_action.c_str());
 	auto *action = kind->FindAction(kind->m_default_action.c_str());
 	if (action == nullptr) {
-			return gs_empty;
+		OutputDebugString(_T("action == nullptr"));
+		return gs_empty;
 	}
+	OutputDebugString(_T("action->m_function="));
+	OutputDebugString(action->m_function.c_str());
 	return action->m_function.c_str();
 }
 
@@ -236,14 +232,14 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	std::wstring	first_source_name;
 	{
 		RefineSearch*	search = instance->QueryRefineSearch();
-		const auto		num_selection = search->GetSelectionCount();
+		const auto		num_selection = search->GetMarkedCount();
 		if (num_selection == 0) {
 			OutputDebugString(_T("@2"));
 			return false;
 		}
 
 		for (auto select = 0; select < num_selection; ++select) {
-			Candidate* candidate = search->GetSelectedCandidate(select);
+			Candidate* candidate = search->GetMarkedCandidate(select);
 			if (candidate == nullptr) {
 				OutputDebugString(_T("@2.1"));
 				continue;

@@ -10,16 +10,17 @@ struct Candidate {
 		m_fource_show = false;
 	};
 
-	Candidate(const WCHAR*source_name,const WCHAR*text) :
+	/*Candidate(const WCHAR*source_name,const WCHAR*text) :
 		m_source_name(source_name) ,
 		m_text(text)
 	{
 		m_selected = false;
 		m_fource_show = false;
-	};
-	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*user_data) :
+	};*/
+	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description, const WCHAR*user_data) :
 		m_source_name(source_name),
 		m_text(text), 
+		m_description(description),
 		m_user_data(user_data) 
 	{
 		m_selected = false;
@@ -29,6 +30,8 @@ struct Candidate {
 	std::wstring			m_source_name;
 	///ファイルリストから読み込んだファイル名
 	std::wstring			m_text;	
+	///説明
+	std::wstring			m_description;
 	///ユーザーデータ
 	std::wstring			m_user_data;
 	///このテキストが秀丸エディタ側で選択されているかどうか
@@ -53,14 +56,15 @@ struct SourceCandidate{
 class Candidates {
 public:
 	Candidates();
-	bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate);
-	bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*user_data);
+	//bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate);
+	bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description=_T(""), const WCHAR*user_data= _T(""));
 	//const std::vector<SourceCandidate>&	GetSources()const { return m_sources; }
 	const std::vector<Candidate>&	GetCandidates()const	{ return m_candidates; }
 	std::vector<Candidate>&			GetCandidates()			{ return m_candidates; }
 
 	const WCHAR* GetSourceName(INT_PTR index)const;
 	const WCHAR* GetText(INT_PTR index)const;
+	const WCHAR* GetDescription(INT_PTR index)const;
 	const WCHAR* GetUserData(INT_PTR index)const;
 
 private:

@@ -1,9 +1,30 @@
 ﻿#include "stdafx.h"
 
 
+/////////////////////////////////////////////////////////////////////////////
+//Kind制作者が利用する関数
+/////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR GetSelectionCount() {
+	return Unity::Instance()->QueryRefineSearch()->GetSelectionCandidateCount();
+}
+
+extern "C" WCHAR* GetSelectionText(INT_PTR selected_index) {
+	auto index=Unity::Instance()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);	
+	return const_cast<WCHAR*>(Unity::Instance()->QueryCandidates()->GetText(index));
+}
+
+extern "C" WCHAR* GetSelectionSourceName(INT_PTR selected_index) {
+	auto index = Unity::Instance()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);	
+	return const_cast<WCHAR*>(Unity::Instance()->QueryCandidates()->GetSourceName(index));
+}
+
+extern "C" WCHAR* GetSelectionDescription(INT_PTR selected_index) {
+	auto index = Unity::Instance()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);	
+	return const_cast<WCHAR*>(Unity::Instance()->QueryCandidates()->GetDescription(index));
+}
 
 /////////////////////////////////////////////////////////////////////////////
-//絞り込み検索
+//Unity
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR Push() {
 	return Unity::Push();
@@ -17,12 +38,16 @@ extern "C" INT_PTR GetCurrentContext() {
 	return Unity::GetCurrentInstanceIndex();
 }
 
-extern "C" INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, INT_PTR is_selected) {	
-	return Unity::Instance()->QueryRefineSearch()->ChangeSelected(hidemaru_line_no, is_selected);
+
+/////////////////////////////////////////////////////////////////////////////
+//絞り込み検索
+/////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR RefineSearchChangeMarked(INT_PTR hidemaru_line_no, INT_PTR is_selected) {	
+	return Unity::Instance()->QueryRefineSearch()->ChangeMarked(hidemaru_line_no, is_selected);
 }
 
-extern "C" INT_PTR GetSelectionCount() {
-	return Unity::Instance()->QueryRefineSearch()->GetSelectionCount();
+extern "C" INT_PTR RefineSearchGetMarkedCount() {
+	return Unity::Instance()->QueryRefineSearch()->GetMarkedCount();
 }
 
 extern "C" INT_PTR RefineSearchConvertSelectedIndexToHidemaruLineno(INT_PTR index) {
@@ -33,15 +58,20 @@ extern "C" INT_PTR RefineSearchConvertHidemaruLinenNoToCandidateIndex(INT_PTR hi
 	return Unity::Instance()->QueryRefineSearch()->ConvertHidemaruLinenNoToCandidateIndex(hidemaru_line_no);
 }
 
-extern "C" WCHAR* GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
-	return Unity::Instance()->QueryRefineSearch()->GetSelectedFilenameFromHidemaruLineNo(hidemaru_line_no);
-}
+/*extern "C" WCHAR* GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
+	return Unity::Instance()->QueryRefineSearch()->GetMarkedFilenameFromHidemaruLineNo(hidemaru_line_no);
+}*/
 
-extern "C" WCHAR* GetSelectedFilename(INT_PTR index) {
+/*extern "C" WCHAR* GetSelectedFilename(INT_PTR index) {
 	return Unity::Instance()->QueryRefineSearch()->GetSelectedFilename(index);
+}*/
+
+extern "C" INT_PTR RefineSearchSetHidemaruLineno(INT_PTR hidemaru_line_no) {
+	Unity::Instance()->QueryRefineSearch()->SetHidemaruLineno(hidemaru_line_no);
+	return true;
 }
 
-extern "C" INT_PTR RefineSearch(WCHAR* search_words) {
+extern "C" INT_PTR RefineSearchDo(WCHAR* search_words) {
 	return Unity::Instance()->QueryRefineSearch()->Do(search_words);
 }
 
@@ -49,9 +79,19 @@ extern "C" WCHAR* RefineSearchGetResult() {
 	return Unity::Instance()->QueryRefineSearch()->GetResult();
 }
 
-extern "C" INT_PTR GenerateKindCandidates(INT_PTR instance_index) {
-	return Unity::Instance()->QueryKinds()->GenerateKindCandidates(instance_index);
+extern "C" INT_PTR RefineSearchGetFirstSelectionCandidateIndex() {
+	return Unity::Instance()->QueryRefineSearch()->GetFirstSelectionCandidateIndex();
 }
+
+extern "C" INT_PTR	RefineSearchGetSelectionCandidateCount() {
+	return GetSelectionCount();
+	//return Unity::Instance()->QueryRefineSearch()->GetSelectionCandidateCount();
+}
+
+extern "C" INT_PTR	RefineSearchGetSelectionCandidateIndex(INT_PTR selected_index) {
+	return Unity::Instance()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 //source
@@ -114,6 +154,10 @@ extern "C" INT_PTR KindsClear() {
 
 extern "C" WCHAR* KindsCreate(WCHAR* kind_ini) {
 	return Unity::Instance()->QueryKinds()->Create(kind_ini);
+}
+
+extern "C" INT_PTR KindsGenerateCandidates(INT_PTR instance_index) {
+	return Unity::Instance()->QueryKinds()->GenerateKindCandidates(instance_index);
 }
 
 extern "C" WCHAR* KindsGetHidemaruLabelName(WCHAR* kind_name) {

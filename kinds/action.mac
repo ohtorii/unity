@@ -1,7 +1,15 @@
 ﻿/*アクションの実行
 */
-$request=getarg(0);
-call $request;
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+
+debuginfo 1;
+debuginfo "======= action.mac =========";
+debuginfo "$label="+$label;
+debuginfo "$arg="+$arg;
+
+call $label, $arg;
 endmacro $$return;
 
 
@@ -31,18 +39,34 @@ is_multi_selectable=false
 )";
 
 do_action:
+	$$action=$$1;
 	debuginfo 1;
-	debuginfo "action.mac: do_action!!!!";
-	return;
+	debuginfo "action.mac: do_action $$action="+$$action;
+	call $$action;
+	return $$return;
 
 do:
 	debuginfo 1;
 	debuginfo "action.mac: DO!!!!";
+	
+	
 	/*
-	candidate=$$1;
-	execmacro candidate.kind, "do_action", candidate.default_action
-		
-	if(アクションのis_quitを取得する){
+	=========== アクション取得 ============
+	candidate=選択した候補を取得する
+	
+	$$kind = candidate.kind
+	$$label_name=candidate.name;
+	
+	=========== 選択ファイルに対してアクションを実行する ============
+	選択ファイルを取得するためにコンテキストを１つ戻す（ただしオブジェクトの破棄を行わない）
+	Pop
+	
+	execmacro $$kind.filename, str(#g_dll_ohtorii_tools), "do_action", $$label_name;
+	
+	コンテキストを１つ進める
+	Push
+	
+	if($$kind.action.is_quit){
 		quitフラグを立てる（）
 		setstaticvariable "unity.is_quit", "1",0;
 

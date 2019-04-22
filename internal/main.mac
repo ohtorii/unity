@@ -315,15 +315,14 @@ RefineSearchMain:
 				return 0;
 			}*/
 			return 1;
-			
-		}else if($$keycode=="27"){				return 0;}		//Escapeが押された
-		else if($$keycode=="16"){				up;}			//ctrl-p
-		else if($$keycode=="14"){				down;}			//ctrl-n
-		else if($$keycode=="18"){				call Mark;} 	//ctrl-space
-		else if(##ctrl&&($$keycode=="32")){ 	call Mark;} 	//ctrl-space
-		else if($$keycode == "29"){ 			up;}			//[↑]
-		else if($$keycode == "31"){ 			down;}			//[↓]
-		else if($$keycode=="9"){								//tab
+		}else if($$keycode=="27"){				return 0;}			//Escapeが押された
+		else if($$keycode=="16"){				call CursorUp;} 	//ctrl-p
+		else if($$keycode=="14"){				call CursorDown;}	//ctrl-n
+		else if($$keycode=="18"){				call Mark;} 		//ctrl-space
+		else if(##ctrl&&($$keycode=="32")){ 	call Mark;} 		//ctrl-space
+		else if($$keycode == "29"){ 			call CursorUp;} 	//[↑]
+		else if($$keycode == "31"){ 			call CursorDown;}	//[↓]
+		else if($$keycode=="9"){									//tab
 			/*	アクションの選択
 			*/
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
@@ -357,6 +356,16 @@ RefineSearchMain:
 	}
 	return -1;
 	
+	
+CursorUp:
+	up;
+	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
+	return true;
+	
+CursorDown:
+	down;
+	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
+	return true;
 
 Mark:
 	//カーソル行に色を塗る
@@ -364,13 +373,13 @@ Mark:
 	$$marker=getcolormarker(0x0001,"gather");
 	if($$marker=="000000FF"){
 		//マーク削除
-		##ret=dllfunc(#g_dll_ohtorii_tools,"ChangeSelected",lineno,false);
+		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,false);
 		selectline 0;
 		deletecolormarker "gather";
 		escape;
 	}else{
 		//マークする
-		##ret=dllfunc(#g_dll_ohtorii_tools,"ChangeSelected",lineno,true);
+		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,true);
 		selectline 0;
 		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
 		escape;
@@ -389,7 +398,7 @@ Filter:
 	disabledraw;
 	selectall;
 	//backspace;
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"RefineSearch",$$pattern);
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchDo",$$pattern);
 	insert(dllfuncstrw(#g_dll_ohtorii_tools,"RefineSearchGetResult"));
 	call HilightWorld $$pattern;
 
@@ -397,7 +406,7 @@ Filter:
 	//選択行をマークする
 	//
 	##i = 0;
-	##count = dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##count = dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetMarkedCount");
 	while(##i<##count){
 		##selected_lineno = dllfuncw(#g_dll_ohtorii_tools,"RefineSearchConvertSelectedIndexToHidemaruLineno",##i);
 		if(0 < ##selected_lineno){
@@ -511,7 +520,7 @@ LoadKindAll:
 		
 	##i=0;
 	while(##i<##kinds_num){
-		execmacro $$kinds[##i],"get_property";
+		execmacro $$kinds[##i],str(#g_dll_ohtorii_tools),"get_property";
 		$$kind_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsCreate",getresultex(-1));
 		if($$kind_name==""){
 			return false;

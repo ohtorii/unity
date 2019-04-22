@@ -20,13 +20,24 @@ endmacro $$return;
 
 
 main:
-	//memo: 現在は複数選択を無視する（後で考える
-	##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchConvertHidemaruLinenNoToCandidateIndex",lineno);
-	if(##candidate_index<0){
+	/*
+	選択あり	初めに選択されたアイテム
+	選択無し	カーソル位置のアイテム
+	*/
+	
+	##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetFirstSelectionCandidateIndex");
+	if(##candidate_index==-1){
 		return "0";
 	}
 	$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",##candidate_index);
 	$$default_kind=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",$$source_name);
 	$$hidemaru_label_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsGetHidemaruLabelName",$$default_kind);
-	execmacro $g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac", "do_action", $$hidemaru_label_name;
+	
+	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
+	
+	debuginfo 1;
+	debuginfo "$$kind_filename="+$$kind_filename;
+	debuginfo "$$hidemaru_label_name="+$$hidemaru_label_name;
+	
+	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$hidemaru_label_name;
 	return getresultex(-1);

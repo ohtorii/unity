@@ -2,7 +2,8 @@
 */
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
-call $label;
+$arg=getarg(2);
+call $label, $arg;
 endmacro $$return;
 
 get_property:

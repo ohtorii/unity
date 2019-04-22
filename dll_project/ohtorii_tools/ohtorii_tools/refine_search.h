@@ -7,14 +7,14 @@ struct Output {
 	void Clear() {
 		m_text.clear();
 		m_hidemaru_lineno_to_candidate_index.clear();
-		m_hidemaru_selected_lineno.clear();
+		m_hidemaru_maeked_lineno.clear();
 	};
 
 	void Reserve(size_t size) {
 		const size_t text_line_char = 80;
 		m_text.reserve(size*text_line_char);
 		m_hidemaru_lineno_to_candidate_index.reserve(size);
-		m_hidemaru_selected_lineno.reserve(size);
+		m_hidemaru_maeked_lineno.reserve(size);
 	};
 
 	//秀丸エディタへ返す文字列(Ex. "foo.txt\nbar.txt\nhoge.cpp")
@@ -27,8 +27,8 @@ struct Output {
 	*/
 	std::vector<__int64>					m_hidemaru_lineno_to_candidate_index;
 
-	//秀丸エディタで選択している行番号(インデックスは1始まり)
-	std::vector<__int64>					m_hidemaru_selected_lineno;
+	//秀丸エディタでマークしている行番号(インデックスは1始まり)
+	std::vector<__int64>					m_hidemaru_maeked_lineno;
 };
 
 
@@ -36,52 +36,85 @@ class Unity;
 
 class RefineSearch {
 public:
-	RefineSearch(Unity*instance) : m_instance(instance) {
-	}
+	RefineSearch(Unity*instance);
 	bool Do(const WCHAR* search_words);
 	WCHAR* GetResult();
 
-	/*行を「選択・選択解除」する
-	hidemaru_line_no	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
-	　					ファイルの先頭が１です。
+	/*秀丸エディタの行番号を設定する
 	*/
-	INT_PTR ChangeSelected(INT_PTR hidemaru_line_no, bool is_selected);
-	
-	
-	/*選択されているファイル名を取得する（秀丸エディタの行番号バージョン）
-	return	成功	ファイル名
-			失敗	空文字
-	*/
-	WCHAR* GetSelectedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no);
+	void SetHidemaruLineno(INT_PTR hidemaru_line_no);
 
+	////////////////////////////////////////////////////////////////////////////
+	//変換
+	////////////////////////////////////////////////////////////////////////////
 	/**秀丸エディタの行番号から候補リストのインデックスを取得する
 	return	成功	0以上の数値
 			失敗	-1
 	*/
 	INT_PTR ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no);
 
-	/*選択行の個数を取得する
-	*/
-	INT_PTR GetSelectionCount();
 
-	/*選択行を取得する
-	return	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
-	　		ファイルの先頭が１です。
+	////////////////////////////////////////////////////////////////////////////
+	//マーク
+	////////////////////////////////////////////////////////////////////////////
+	/*行を「マークする・マーク解除する」
+	hidemaru_line_no	秀丸エディタのカーソル位置の、エディタ的に計算した行番号です。
+	　					ファイルの先頭が１です。
 	*/
-	INT_PTR ConvertSelectedIndexToHidemaruLineno(INT_PTR selected_index);
+	INT_PTR ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected);
+	
+	
+	/*マークされているファイル名を取得する（秀丸エディタの行番号バージョン）
+	return	成功	ファイル名
+			失敗	空文字
+	*/
+	//WCHAR* GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no);
+	
+	/*マークされた行数を取得する
+	*/
+	INT_PTR GetMarkedCount();
 
-	/*選択されているファイル名を取得する	
+	/*マークのインデックスから秀丸エディタの行番号へ変換する
+	return	秀丸エディタの行番号
 	*/
-	WCHAR* GetSelectedFilename(INT_PTR seleted_index);
+	INT_PTR ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index);
 
-	/*選択されている候補の情報を取得する	
+	/*マークインデックスから候補インデックスへ変換する
 	*/
-	Candidate* GetSelectedCandidate(INT_PTR seleted_index);
+	INT_PTR ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index);
+
+	/*マークしたファイル名を取得する
+	*/
+	//WCHAR* GetSelectedFilename(INT_PTR marked_index);
+
+	/*マークした候補の情報を取得する
+	*/
+	Candidate* GetMarkedCandidate(INT_PTR marked_index);	
+
+	////////////////////////////////////////////////////////////////////////////
+	//選択
+	////////////////////////////////////////////////////////////////////////////
+	
+	/** 最初に選択した候補のインデックスを取得する
+	return	not -1	候補インデックス
+			-1		無し
+	*/
+	INT_PTR	GetFirstSelectionCandidateIndex();
+
+	/** 選択した候補数を取得する
+	*/
+	INT_PTR	GetSelectionCandidateCount();
+
+	/** 選択した候補のインデックスを取得する
+	*/
+	INT_PTR	GetSelectionCandidateIndex(INT_PTR selected_index);
 
 private:
 	Unity*				m_instance;
 	///検索結果
 	Output				m_output;
+	///秀丸エディタの行番号
+	INT_PTR				m_hidemaru_line_no;
 
 	void Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates);
 };

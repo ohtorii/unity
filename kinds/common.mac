@@ -10,29 +10,22 @@
 （リクエストの種類）
 	- get_property
 	- do_action
-	//- get_default_action	後で実装
 
 （リクエスト毎の引数）
 	- get_property
-		[0] get_property
+		[0]	ohtorii_tools_dll_handle
+		[1] "get_property"
 
 	- do_action
-		[0] 		do_action
-		[1] 		アクション名
-		[2 ... 9]	予約
-		[10]		ファイル数
-		[10+1]		ファイル名 1
-		[10+2]		ファイル名 2
-						:
-						:
-		[10+N] 		ファイル名 N
-
-	//* get_default_action
-	//	[1]	なし
+		[0]	ohtorii_tools_dll_handle
+		[1]	"do_action"
+		[2]	アクション名
 */
 
-$request=getarg(0);
-call $request;
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
 endmacro $$return;
 
 
@@ -44,7 +37,7 @@ get_property:
 	return R"([property]
 name=common
 description=common actions.
-default_action=nop
+default_action=echo
 '継承するアクション（空白で区切る）
 inheritance=file url
 
@@ -102,19 +95,9 @@ ex	Input the escaped candidate text into command line.
 
 
 do_action:
-	debuginfo 1;
-	debuginfo "common.mac: do_action!!!";
-	return true;
-	
-	/*call SplitFilelist, getarg(2);
-	if(! ##return){
-		return false;
-	}*/
-	call MakeFileList;
-	$$action = getarg(1);
+	$$action=$$1;
 	call $$action;
-	return ##return;
-
+	return $$return;
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -124,6 +107,9 @@ nop:
 	return ;
 
 append:
+	/*
+	
+	*/
 	##i=0;
 	while(##i<#g_filelist_num){
 		if(1<=##i){
@@ -135,7 +121,28 @@ append:
 	return ;
 
 echo:
-	//debug　用途なので後回し
+	//debug用途
+	##output_dll=loaddll("HmOutputPane.dll");
+	if(!result){
+		return;
+	}
+	
+	//アウトプット枠クリア
+	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
+	
+	//文字列を表示する
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i<##count){
+		$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionSourceName",	##i);
+		$$text			=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",		##i);
+		$$description	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionDescription",##i);
+		
+		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) %s %s\n",##i+1,##count,$$source_name,$$text,$$description));
+		##i = ##i + 1;
+	}
+	freedll ##output_dll;
 	return ;
 
 ex:

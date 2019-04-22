@@ -5,13 +5,14 @@ Candidates::Candidates() {
 
 }
 
-bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate) {
+/*bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate) {
 	m_candidates.emplace_back(source_name, candidate);
 	return true;
-}
+}*/
 
-bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*user_data) {
-	m_candidates.emplace_back(source_name, candidate, user_data);
+bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description, const WCHAR*user_data)
+{
+	m_candidates.emplace_back(source_name, candidate, description, user_data);
 	return true;
 }
 
@@ -21,6 +22,10 @@ const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
 
 const WCHAR* Candidates::GetText(INT_PTR index)const {
 	return m_candidates.at(index).m_text.c_str();
+}
+
+const WCHAR* Candidates::GetDescription(INT_PTR index)const {
+	return m_candidates.at(index).m_description.c_str();
 }
 
 const WCHAR* Candidates::GetUserData(INT_PTR index)const {
