@@ -110,21 +110,21 @@ append:
 	/*
 	
 	*/
-	##i=0;
+	/*##i=0;
 	while(##i<#g_filelist_num){
 		if(1<=##i){
 			insertreturn;
 		}
 		insert($g_filelist[##i]);
 		##i = ##i + 1;
-	}
+	}*/
 	return ;
 
 echo:
 	//debug用途
 	##output_dll=loaddll("HmOutputPane.dll");
 	if(!result){
-		return;
+		return "0";
 	}
 	
 	//アウトプット枠クリア
@@ -143,40 +143,42 @@ echo:
 		##i = ##i + 1;
 	}
 	freedll ##output_dll;
-	return ;
+	return "1";
 
 ex:
 	return ;
 
 insert:
 	##i=0;
-	while(##i<#g_filelist_num){
+	/*while(##i<#g_filelist_num){
 		if(1<=##i){
 			insertreturn;
 			up;
 		}
 		insertfix($g_filelist[##i]);
 		##i = ##i + 1;
-	}
+	}*/
 	return ;
 
 append_directory:
-	call FileListToDirectoryList;
+	/*call FileListToDirectoryList;
 	if(! ##return){
 		return ;
 	}
-	call append;
+	call append;*/
 	return ;
 
 insert_directory:
-	call FileListToDirectoryList;
+	/*call FileListToDirectoryList;
 	if(! ##return){
 		return ;
 	}
-	call insert;
+	call insert;*/
 	return ;
 
 preview:
+	return ;
+	
 	$$text="";
 	{
 		##old_hidemaru=hidemaruhandle(0);
@@ -201,7 +203,7 @@ preview:
 	{
 		//アウトプット枠クリア
 		##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-		##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
+		##ret=sendmessage(##h,0x111 /*WM_COMMAND*/,1009,0);//1009=クリア
 		//ファイル内容を出力する
 		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$text);
 		if(false){
@@ -219,13 +221,13 @@ preview:
 	return ;
 
 yank:
-	call MakeClipboardString;
-	setclipboard $$return;
+	/*call MakeClipboardString;
+	setclipboard $$return;*/
 	return ;
 
 yank_escape:
-	call MakeClipboardString;
-	setclipboard quote($$return);
+	/*call MakeClipboardString;
+	setclipboard quote($$return);*/
 	return ;
 
 

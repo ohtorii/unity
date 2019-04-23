@@ -24,8 +24,11 @@ EXPORTS
 	
 	CandidatesGetSourceName
 	CandidatesGetText
-	CandidatesGetUserData
 	CandidatesAppend	
+	CandidatesSetUserDataString
+	CandidatesSetUserDataNumeric
+	CandidatesGetUserDataString
+	CandidatesGetUserDataNumeric
 
     KindsClear
     KindsCreate

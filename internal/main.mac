@@ -31,6 +31,7 @@ Source
 秀丸エディタ独自のソース
 		outline				アウトラインの一覧
 		project				プロジェクトのファイル一覧
+		output_panel		アウトプット枠
 
 秀丸エディタ化するソース名
 		buffer				開かれているバッファの一覧
@@ -207,7 +208,7 @@ Start:
 	if(! ##return){
 		return false;
 	}
-
+	setstaticvariable "$g_root_macro_directory", $g_root_macro_directory,0;
 	call LoadDll;
 	if(! ##return){
 		return false;

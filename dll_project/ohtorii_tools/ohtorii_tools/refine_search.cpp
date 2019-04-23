@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 
-#define NOT_FOUND_INDEX	(-1)
 
 ///////////////////////////////////////////////////////////////////////////////
 //	global variable
@@ -43,6 +42,12 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 		const auto& candidate = candidates.at(candidate_index);
 		if (MatchAll(candidate.m_text, tokens)) {
 			m_output.m_text.insert(m_output.m_text.end(), candidate.m_text.begin(), candidate.m_text.end());
+			
+			if (! candidate.m_description.empty()) {
+				m_output.m_text.push_back(_T('\t'));
+				m_output.m_text.insert(m_output.m_text.end(), candidate.m_description.begin(), candidate.m_description.end());
+			}
+
 			m_output.m_text.push_back(_T('\n'));
 
 			m_output.m_hidemaru_lineno_to_candidate_index.push_back(candidate_index);
@@ -138,7 +143,7 @@ INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)
 	catch (std::exception) {
 		//pass
 	}
-	return NOT_FOUND_INDEX;
+	return UNITY_NOT_FOUND_INDEX;
 }
 
 
@@ -159,7 +164,7 @@ INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)
 
 INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {	
 	if (hidemaru_line_no <= 0) {
-		return NOT_FOUND_INDEX;
+		return UNITY_NOT_FOUND_INDEX;
 	}
 	--hidemaru_line_no;//0Žn‚Ü‚è‚É‚·‚é
 	try {
@@ -168,13 +173,13 @@ INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_li
 	catch (std::exception) {
 		//pass
 	}
-	return NOT_FOUND_INDEX;
+	return UNITY_NOT_FOUND_INDEX;
 }
 
 INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 	INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(marked_index);
 	if (hidemaru_line_no <= 0) {
-		return NOT_FOUND_INDEX;
+		return UNITY_NOT_FOUND_INDEX;
 	}
 	--hidemaru_line_no;//0Žn‚Ü‚è‚É‚·‚é
 	try {
@@ -182,7 +187,7 @@ INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 	}catch(std::exception) {
 		//pass
 	}
-	return NOT_FOUND_INDEX;
+	return UNITY_NOT_FOUND_INDEX;
 }
 
 /*WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR marked_index) {
@@ -197,7 +202,7 @@ INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 
 Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {	
 	const auto candidate_index = ConvertMarkIndexToCandidatesIndex(marked_index);
-	if (candidate_index == NOT_FOUND_INDEX) {
+	if (candidate_index == UNITY_NOT_FOUND_INDEX) {
 		return nullptr;
 	}
 	try {
@@ -236,5 +241,5 @@ INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
 	if (selected_index == 0) {
 		return ConvertHidemaruLinenNoToCandidateIndex(m_hidemaru_line_no);
 	}
-	return NOT_FOUND_INDEX;
+	return UNITY_NOT_FOUND_INDEX;
 }

@@ -124,12 +124,24 @@ extern "C" const WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
 /////////////////////////////////////////////////////////////////////////////
 //候補
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR CandidatesAppendW(WCHAR*source_name, WCHAR*candidate, const WCHAR*user_data){
-	return Unity::Instance()->QueryCandidates()->AppendCandidate(source_name, candidate, user_data);
-}
-
 extern "C" INT_PTR CandidatesAppend(WCHAR*source_name, WCHAR*candidate) {
 	return Unity::Instance()->QueryCandidates()->AppendCandidate(source_name, candidate);
+}
+
+extern "C" INT_PTR CandidatesSetUserDataString(INT_PTR index, const WCHAR* key, const WCHAR*data) {
+	return Unity::Instance()->QueryCandidates()->SetUserData(index, key,data);
+}
+
+extern "C" INT_PTR CandidatesSetUserDataNumeric(INT_PTR index, const WCHAR* key, INT_PTR data) {
+	return Unity::Instance()->QueryCandidates()->SetUserData(index, key, data);
+}
+
+extern "C" const WCHAR*	CandidatesGetUserDataString(INT_PTR index, const WCHAR* key, const WCHAR*	default_data) {
+	return Unity::Instance()->QueryCandidates()->GetUserData(index, key, default_data);
+}
+
+extern "C" INT_PTR		CandidatesGetUserDataNumeric(INT_PTR index, const WCHAR* key, INT_PTR default_data) {
+	return Unity::Instance()->QueryCandidates()->GetUserData(index,key,default_data);
 }
 
 extern "C" WCHAR* CandidatesGetSourceName(INT_PTR index) {
@@ -138,10 +150,6 @@ extern "C" WCHAR* CandidatesGetSourceName(INT_PTR index) {
 
 extern "C" WCHAR* CandidatesGetText(INT_PTR index) {
 	return const_cast<WCHAR*>(Unity::Instance()->QueryCandidates()->GetText(index));
-}
-
-extern "C" WCHAR* CandidatesGetUserData(INT_PTR index) {
-	return const_cast<WCHAR*>(Unity::Instance()->QueryCandidates()->GetUserData(index));
 }
 
 /////////////////////////////////////////////////////////////////////////////

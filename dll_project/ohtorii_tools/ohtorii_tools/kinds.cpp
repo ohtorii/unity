@@ -282,8 +282,8 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		auto* candidates = Unity::Instance()->QueryCandidates();
 		for (const auto& action : kind->m_actions) {
 			if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
-				candidate = action.m_name + _T("\t") + action.m_description;
-				candidates->AppendCandidate(/*kind->m_name.c_str()*/_T("action"), candidate.c_str());
+				auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());
+				candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
 			}
 		}
 	}
