@@ -17,8 +17,8 @@ public:
 	~Unity();
 
 	static Unity* Instance(size_t index= UNITY_USE_URRENT_INSTANCE);
-	static bool Push();
-	static bool Pop();
+	static bool PushContext(bool exist_context_then_delete =true);
+	static bool PopContext(bool exist_context_then_delete = true);
 	static size_t GetCurrentInstanceIndex();
 	static void Destroy();
 	

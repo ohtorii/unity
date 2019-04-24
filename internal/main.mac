@@ -208,7 +208,10 @@ Start:
 	if(! ##return){
 		return false;
 	}
+	
 	setstaticvariable "$g_root_macro_directory", $g_root_macro_directory,0;
+	setstaticvariable "$is_quit", "1",0;
+	
 	call LoadDll;
 	if(! ##return){
 		return false;
@@ -218,20 +221,6 @@ Start:
 		return false;
 	}
 	call RefineSearch $$source_filename, "";
-	if(false){
-		//debug
-		debuginfo 1;
-		debuginfo "==== action. ====";
-		debuginfo "$g_fixed_action_kind="+$g_fixed_action_kind;
-		debuginfo "$g_fixed_action     ="+$g_fixed_action;
-		debuginfo "==== selection files. ====";
-		debuginfo "#g_fixed_filenames_num="+str(#g_fixed_filenames_num);
-		##i=0;
-		while(##i<#g_fixed_filenames_num){
-			debuginfo str(##i) + "] " + $g_fixed_filenames[##i];
-			##i = ##i + 1;
-		}
-	}
 	call FreeDll;
 	call CloseFileIfOpen;
 	if(! ##return){
@@ -268,12 +257,14 @@ RefineSearch:
 
 
 PushRefineSearch:
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"Push");
+	##exist_context_then_delete=true;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
 	return ##ret;
 	
 	
 PopRefineSearch:
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"Pop");
+	##exist_context_then_delete=true;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"PopContext", ##exist_context_then_delete);
 	return ##ret;
 	
 	

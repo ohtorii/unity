@@ -27,22 +27,35 @@ Unity* Unity::Instance(size_t index) {
 	return m_instances.at(index);
 }
 
-bool Unity::Push() {
+bool Unity::PushContext(bool exist_context_then_delete) {
 	if (m_instances.size() <= (m_current_instance_index+1)) {
 		return false;
 	}
 	++m_current_instance_index;
-	m_instances.at(m_current_instance_index) = new Unity;
+
+	if (m_instances.at(m_current_instance_index)) {
+		if (exist_context_then_delete) {
+			delete m_instances[m_current_instance_index];
+			m_instances[m_current_instance_index] = nullptr;
+			m_instances[m_current_instance_index] = new Unity;
+		}else {
+			//pass
+		}
+	}else {
+		m_instances[m_current_instance_index] = new Unity;
+	}
 	return true;
 }
 
-bool Unity::Pop() {
+bool Unity::PopContext(bool exist_context_then_delete) {
 	if (m_current_instance_index == 0) {
 		//これ以上popできない
 		return false;
 	}
-	delete m_instances.at(m_current_instance_index);
-	m_instances[m_current_instance_index] = nullptr;
+	if (exist_context_then_delete) {
+		delete m_instances.at(m_current_instance_index);
+		m_instances[m_current_instance_index] = nullptr;
+	}
 	--m_current_instance_index;
 	return true;
 }

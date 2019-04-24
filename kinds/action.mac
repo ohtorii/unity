@@ -50,11 +50,13 @@ do:
 	debuginfo 1;
 	debuginfo "action.mac: DO!!!!";
 	
+	/////////////////////////////////////////////////////////////////////////
+	//アクションを取得する
+	/////////////////////////////////////////////////////////////////////////
 	##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetFirstSelectionCandidateIndex");
 	if(##candidate_index==-1){
 		return "0";
 	}
-	
 	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",##candidate_index);
 	$$action_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetText",##candidate_index);
 	$$user_data_kind=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetUserDataString",##candidate_index,"__kind__","");
@@ -62,28 +64,34 @@ do:
 	
 	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$user_data_kind+".mac";
 	
+	
+	/////////////////////////////////////////////////////////////////////////
+	//選択ファイルに対してアクションを実行する
+	/////////////////////////////////////////////////////////////////////////
+	//選択ファイルを取得するためにコンテキストを１つ戻す（ただしオブジェクトの破棄を行わない）
+	##exist_context_then_delete=false;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"PopContext", ##exist_context_then_delete);
+	if(! ##ret){
+		return "0";
+	}
+	
 	//call "echo";
 	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$action_name;
-	return getresultex(-1);
+	$$action_result = getresultex(-1);
+		
+	//コンテキストを元に戻す
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
+	if(! ##ret){
+		return "0";
+	}
 	
-	/*
-	
-	=========== 選択ファイルに対してアクションを実行する ============
-	選択ファイルを取得するためにコンテキストを１つ戻す（ただしオブジェクトの破棄を行わない）
-	Pop
-	
-	execmacro $$kind.filename, str(#g_dll_ohtorii_tools), "do_action", $$label_name;
-	
-	コンテキストを元に戻す
-	Push
-	
-	if($$kind.action.is_quit){
+	/*if($$kind.action.is_quit){
 		quitフラグを立てる（）
 		setstaticvariable "$is_quit", "1",0;
 
-	}
-	*/
-	return;
+	}*/
+	
+	return $$action_result;
 
 
 echo:

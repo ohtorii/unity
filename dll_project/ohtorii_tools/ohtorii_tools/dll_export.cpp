@@ -26,12 +26,12 @@ extern "C" WCHAR* GetSelectionDescription(INT_PTR selected_index) {
 /////////////////////////////////////////////////////////////////////////////
 //Unity
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR Push() {
-	return Unity::Push();
+extern "C" INT_PTR PushContext(INT_PTR exist_context_then_delete) {
+	return Unity::PushContext(exist_context_then_delete);
 }
 
-extern "C" INT_PTR Pop() {
-	return Unity::Pop();
+extern "C" INT_PTR PopContext(INT_PTR exist_context_then_delete) {
+	return Unity::PopContext(exist_context_then_delete);
 }
 
 extern "C" INT_PTR GetCurrentContext() {
