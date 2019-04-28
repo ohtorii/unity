@@ -1,0 +1,56 @@
+﻿/* file_mru
+*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+
+
+get_property:
+	return R"([property]
+name=file_mru
+default_action=preview
+'継承するアクション（空白区切り）
+'inheritance=file_base 
+'openable file_vimfiler_base cdable uri
+
+[action.preview]
+function=preview
+description=Preview the candidate text.
+is_quit=false
+is_multi_selectable=false
+)";
+
+
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+preview:
+	//debug用途
+	##output_dll=loaddll("HmOutputPane.dll");
+	if(!result){
+		return "0";
+	}
+
+	//アウトプット枠クリア
+	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
+
+	//文字列を表示する
+	##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),"previewをオーバーライドしたよ！");
+	
+	/*##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i<##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$text);
+		##i = ##i + 1;
+	}*/
+	freedll ##output_dll;
+	return "1";
+	

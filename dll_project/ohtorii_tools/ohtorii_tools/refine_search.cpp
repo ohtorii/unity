@@ -38,17 +38,21 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 	//一致する行を返す
 	size_t			hidemaru_lineno = 1;//memo: 秀丸エディタの行番号は1スタート
 	const size_t	size			= candidates.size();
+	bool			first_match = true;
 	for (size_t candidate_index = 0; candidate_index < size; ++candidate_index) {
 		const auto& candidate = candidates.at(candidate_index);
 		if (MatchAll(candidate.m_text, tokens)) {
+			if (first_match) {
+				first_match = false;
+			}else {
+				m_output.m_text.push_back(_T('\n'));
+			}
 			m_output.m_text.insert(m_output.m_text.end(), candidate.m_text.begin(), candidate.m_text.end());
 			
 			if (! candidate.m_description.empty()) {
 				m_output.m_text.push_back(_T('\t'));
 				m_output.m_text.insert(m_output.m_text.end(), candidate.m_description.begin(), candidate.m_description.end());
-			}
-
-			m_output.m_text.push_back(_T('\n'));
+			}			
 
 			m_output.m_hidemaru_lineno_to_candidate_index.push_back(candidate_index);
 			if (candidate.m_selected) {

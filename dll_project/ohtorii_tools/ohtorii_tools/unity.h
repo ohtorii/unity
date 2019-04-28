@@ -16,10 +16,12 @@ public:
 	Unity();
 	~Unity();
 
-	static Unity* Instance(size_t index= UNITY_USE_URRENT_INSTANCE);
+	static std::weak_ptr<Unity> Instance(size_t index= UNITY_USE_URRENT_INSTANCE);
 	static bool PushContext(bool exist_context_then_delete =true);
 	static bool PopContext(bool exist_context_then_delete = true);
 	static size_t GetCurrentInstanceIndex();
+	static bool SerializeCurrentContext(const WCHAR*output_filename);
+	static bool DeSerializeToCurrentContext(const WCHAR*input_filename);
 	static void Destroy();
 	
 	/*ファイルリストのファイル名を設定する
@@ -41,8 +43,11 @@ public:
 	File*			QueryFile();
 	Candidates*		QueryCandidates();
 	RefineSearch*	QueryRefineSearch();
-	Kinds*			QueryKinds();
-
+	Kinds*			QueryKinds();	
+	
+	template<class Archive> void serialize(Archive & archive) {
+		archive(m_candidates,m_refine_search);
+	};
 
 protected:
 private:
@@ -50,7 +55,7 @@ private:
 	Unity &operator=(const Unity&);
 
 
-	static	std::array<Unity*,4>	m_instances;
+	static	std::array<std::shared_ptr<Unity>,4>	m_instances;
 	static	size_t					m_current_instance_index;
 
 	Sources				m_sources;

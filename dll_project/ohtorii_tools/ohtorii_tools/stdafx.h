@@ -4,7 +4,7 @@
 //
 
 #pragma once
-
+#define NOMINMAX
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Windows ヘッダーからほとんど使用されていない部分を除外する
@@ -14,6 +14,16 @@
 
 
 // プログラムに必要な追加ヘッダーをここで参照してください
+#include <cereal/types/unordered_map.hpp>
+#include <cereal/types/unordered_set.hpp>
+#include <cereal/types/array.hpp>
+#include <cereal/types/vector.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/xml.hpp>
+#include <fstream>
+
 #include<vector>
 #include<string>
 #include<algorithm>

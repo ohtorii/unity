@@ -5,7 +5,7 @@ class File{
 public:
 	File();
 	~File();
-	void AddAfterDelete(const WCHAR*filename);
+	void RegistAfterDelete(const WCHAR*filename);
 	bool CreateTempFile(std::wstring&out);
 	bool WriteToFile(const WCHAR* filename, const WCHAR* string);
 

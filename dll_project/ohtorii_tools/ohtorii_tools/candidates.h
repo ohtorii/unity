@@ -2,7 +2,6 @@
 #include<string>
 #include<vector>
 
-
 ///åÛï‚
 struct Candidate {
 	Candidate();
@@ -23,6 +22,17 @@ struct Candidate {
 
 	const WCHAR*	GetUserData(const WCHAR* key, const WCHAR*	default_data=_T(""));
 	INT_PTR			GetUserData(const WCHAR* key, INT_PTR		default_data=0);
+
+	template<class Archive> void serialize(Archive & archive) {
+		archive(
+			m_source_name ,
+			m_text,
+			m_description,
+			m_user_data_string, 
+			m_user_data_numeric, 
+			m_selected, 
+			m_fource_show);
+	};
 
 	///É\Å[ÉXñº
 	std::wstring			m_source_name;
@@ -87,6 +97,10 @@ public:
 	const WCHAR* GetSourceName(INT_PTR index)const;
 	const WCHAR* GetText(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
+
+	template<class Archive> void serialize(Archive & archive) {
+		archive(m_candidates);
+	};
 
 private:
 	/*SourceCandidate* AppendIfNotExist(const WCHAR* source_name);

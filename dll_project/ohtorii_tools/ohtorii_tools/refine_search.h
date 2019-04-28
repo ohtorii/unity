@@ -17,6 +17,14 @@ struct Output {
 		m_hidemaru_maeked_lineno.reserve(size);
 	};
 
+	template<class Archive> void serialize(Archive & archive) {
+		archive(
+			m_text,
+			m_hidemaru_lineno_to_candidate_index,
+			m_hidemaru_maeked_lineno
+		);
+	};
+
 	//秀丸エディタへ返す文字列(Ex. "foo.txt\nbar.txt\nhoge.cpp")
 	std::vector<std::wstring::value_type>	m_text;
 
@@ -25,10 +33,10 @@ struct Output {
 	(使用例)
 	候補のインデックス = m_hidemaru_lineno_to_candidate_index[秀丸エディタの行番号];
 	*/
-	std::vector<__int64>					m_hidemaru_lineno_to_candidate_index;
+	std::vector<INT_PTR>					m_hidemaru_lineno_to_candidate_index;
 
 	//秀丸エディタでマークしている行番号(インデックスは1始まり)
-	std::vector<__int64>					m_hidemaru_maeked_lineno;
+	std::vector<INT_PTR>					m_hidemaru_maeked_lineno;
 };
 
 
@@ -36,7 +44,7 @@ class Unity;
 
 class RefineSearch {
 public:
-	RefineSearch(Unity*instance);
+	RefineSearch(Unity* instance);
 	bool Do(const WCHAR* search_words);
 	WCHAR* GetResult();
 
@@ -108,6 +116,13 @@ public:
 	/** 選択した候補のインデックスを取得する
 	*/
 	INT_PTR	GetSelectionCandidateIndex(INT_PTR selected_index);
+
+	template<class Archive> void serialize(Archive & archive) {
+		archive(
+			m_output, 
+			m_hidemaru_line_no
+		);
+	};
 
 private:
 	Unity*				m_instance;

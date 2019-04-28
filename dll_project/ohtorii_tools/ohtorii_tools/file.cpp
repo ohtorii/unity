@@ -8,7 +8,7 @@ File::~File(){
 	
 }
 
-void File::AddAfterDelete(const WCHAR*filename){
+void File::RegistAfterDelete(const WCHAR*filename){
 	
 }
 

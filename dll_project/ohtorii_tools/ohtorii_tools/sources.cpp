@@ -44,7 +44,7 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 	
 
 	{
-		File*			file = Unity::Instance()->QueryFile();
+		File*			file = Unity::Instance().lock()->QueryFile();
 		std::wstring	temp_filename;
 
 		if (!file->CreateTempFile(temp_filename)) {
@@ -52,7 +52,7 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 		}
 
 		const WCHAR*cname = temp_filename.c_str();
-		file->AddAfterDelete(cname);
+		file->RegistAfterDelete(cname);
 		if (!file->WriteToFile(cname, source_ini)) {
 			return gs_empty;
 		}

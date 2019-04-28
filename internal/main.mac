@@ -202,15 +202,16 @@ return	アクションが最後まで実行されたかどうか(bool)
 */
 Start:
 	$$source_filename	=$$1;
-
+	
+	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_old_hidemaru), 1;
 	//call NewfileIfExist;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
 	
-	setstaticvariable "$g_root_macro_directory", $g_root_macro_directory,0;
-	setstaticvariable "$is_quit", "1",0;
+	setstaticvariable "$unity.g_root_macro_directory", $g_root_macro_directory,0;
+	setstaticvariable "$unity.is_quit", "1",0;
 	
 	call LoadDll;
 	if(! ##return){
@@ -302,11 +303,22 @@ RefineSearchMain:
 		##ctrl =iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
 			/*ディフォルトアクションの実行*/
-			execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory;
-			/*if(getresultex(-1)=="0"){
-				return 0;
-			}*/
-			return 1;
+			##is_quit_old	=val(getstaticvariable("$unity.is_quit",0));
+			execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools);
+			$$search_result	=getresultex(-1);
+			##is_quit		=val(getstaticvariable("$unity.is_quit",0));
+			//setstaticvariable "$unity.is_quit",str(##is_quit_old),0;	//値を元に戻す
+			if($$search_result=="1"){
+				//成功
+				if(##is_quit){
+					return 1;
+				}else{
+					//画面を更新して再度絞り込み検索を行う。
+					call Filter $$key_buffer;
+				}
+			}else{
+				return 0;		//失敗
+			}
 		}else if($$keycode=="27"){				return 0;}			//Escapeが押された
 		else if($$keycode=="16"){				call CursorUp;} 	//ctrl-p
 		else if($$keycode=="14"){				call CursorDown;}	//ctrl-n
@@ -322,9 +334,13 @@ RefineSearchMain:
 			if(##return==false){
 				return -1;
 			}
+			##is_quit_old	=val(getstaticvariable("$unity.is_quit",0));
 			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac",str(##current_context);
-			##search_result=##return;
-			
+			##search_result	=##return;
+			##is_quit		=val(getstaticvariable("$unity.is_quit",0));
+			//setstaticvariable "$unity.is_quit",str(##is_quit_old),0;	//値を元に戻す
+			debuginfo 1;
+			debuginfo "##is_quit="+getstaticvariable("$unity.is_quit",0);
 			call PopRefineSearch;
 			if(##return==false){
 				return -1;
@@ -334,8 +350,15 @@ RefineSearchMain:
 				//画面を更新して再度絞り込み検索を行う。
 				call Filter $$key_buffer;
 			}else if(##search_result==1){
-				return 1;
+				//成功
+				if(##is_quit){
+					return 1;
+				}else{
+					//画面を更新して再度絞り込み検索を行う。
+				call Filter $$key_buffer;
+				}
 			}else{
+				//失敗
 				return -1;
 			}
 		}else{

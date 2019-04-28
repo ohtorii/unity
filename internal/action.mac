@@ -9,8 +9,11 @@
 //==========================================================================
 //グローバル変数
 //==========================================================================
-#g_dll_ohtorii_tools=val(getarg(0));
-$g_root_macro_directory=getarg(1);
+#g_target_hidemaruhandle=val(getstaticvariable("$unity.g_target_hidemaruhandle",1));
+$g_root_macro_directory =getstaticvariable("$unity.g_root_macro_directory", 0);
+
+#g_dll_ohtorii_tools	=val(getarg(0));
+
 
 //==========================================================================
 //メイン処理
@@ -24,15 +27,100 @@ main:
 	if(##candidate_index==-1){
 		return "0";
 	}
-	$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",##candidate_index);
-	$$default_kind=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",$$source_name);
-	$$hidemaru_label_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsGetHidemaruLabelName",$$default_kind);
+	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
+	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",		$$source_name);
+	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,"KindsGetDefaultActionLabelName",	$$default_kind);
+	$$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
 	
-	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
+	/*memo
+	is_quitはexecmacro呼び出しで上書きする。
+	*/
+	call IsQuit $$default_kind;
+	##is_quit = ##return;
+	setstaticvariable "$unity.is_quit", str(##is_quit),0;
 	
-	/*debuginfo 1;
-	debuginfo "$$kind_filename="+$$kind_filename;
-	debuginfo "$$hidemaru_label_name="+$$hidemaru_label_name;*/
+	//execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$default_action;
+	call exec_action, $$kind_filename, $$default_action;
 	
-	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$hidemaru_label_name;
-	return getresultex(-1);
+	/*memo
+	is_quitはexecmacro呼び出しで上書きされるためこれ以上何もしない。
+	*/
+	
+	$$ret=$$return;
+	return $$ret;
+
+
+exec_action:
+	$$kind_filename	=$$1;
+	$$action_name	=$$2;
+	
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
+	$$serialize_filename=getresultex(-1);
+	if($$serialize_filename==""){
+		return "0";
+	}
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$serialize_filename);
+	if(! ##ret){
+		return "0";
+	}
+	
+	//現在のコンテキストをserializeする
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SerializeCurrentContext", $$serialize_filename);
+	if(! ##ret){
+		return "0";
+	}
+	
+	//操作対象となる秀丸エディタへ切り替える
+	##current_hidemaruhandle=hidemaruhandle(0);
+	setactivehidemaru(#g_target_hidemaruhandle);
+	
+	//切り替えた秀丸エディタへohtorii_toolsを読み込む
+	call LoadDll;
+	##dll_ohtorii_tools=##return;
+	if(##dll_ohtorii_tools==0){
+		return "0";
+	}
+	//deserialize
+	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$serialize_filename);
+	if(! ##ret){
+		return "0";
+	}
+	
+	execmacro $$kind_filename, str(##dll_ohtorii_tools), "do_action", $$action_name;
+	$$action_result = getresultex(-1);
+
+	//ohtorii_toolsを破棄する
+	call FreeDll ##dll_ohtorii_tools;
+	
+	//元の秀丸エディタへ切り替える
+	setactivehidemaru(##current_hidemaruhandle);
+	return $$action_result;
+	
+	
+IsQuit:
+	$$default_kind = $$1;
+	##kind_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindKindIndex",	$$default_kind);
+	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,	"KindGetDefaultAction", ##kind_index);
+	##action_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindActionIndex", ##kind_index, $$default_action);
+	##is_quit		=dllfuncw(#g_dll_ohtorii_tools, 	"KindsIsActionQuit",	##kind_index,##action_index);
+	return ##is_quit;
+
+LoadDll:
+	if(platform&0x00080000){
+		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
+	}else{
+		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x86.dll");
+	}
+	if (##dll_ohtorii_tools==0) {
+		message "dll\\ohtorii_tools.dllのロードに失敗しました";
+		return 0;
+	}
+	return ##dll_ohtorii_tools;
+
+FreeDll:
+	##dll_ohtorii_tools=##1;
+	if(##dll_ohtorii_tools!=0){
+		freedll ##dll_ohtorii_tools;
+		##dll_ohtorii_tools=0;
+	}
+	return;

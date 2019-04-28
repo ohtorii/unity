@@ -37,9 +37,9 @@ get_property:
 	return R"([property]
 name=common
 description=common actions.
-default_action=echo
-'継承するアクション（空白で区切る）
-inheritance=file url
+default_action=append
+'継承するアクション（空白区切り）
+inheritance=
 
 'アクション(action.より右側の文字（nop）はメニュー表示で使用する名前)
 [action.nop]
@@ -70,11 +70,11 @@ function=append
 description=Insert the candidate word or text after the cursor.
 
 [action.insert_directory]
-function=insert_directory	
+function=insert_directory
 description=Insert the candidate directory before the cursor.
 
 [action.append_directory]
-function=append_directory	
+function=append_directory
 description=Insert the candidate directory after the cursor.
 
 [action.preview]
@@ -86,6 +86,7 @@ is_multi_selectable=false
 [action.echo]
 function=echo
 description=Echo candidates for debug.
+is_quit=false
 )";
 
 /*対応する動作無し
@@ -104,21 +105,22 @@ do_action:
 //	Action.
 ////////////////////////////////////////////////////////////////////////////
 nop:
-	return ;
+	return "1";
 
 append:
-	/*
-	
-	*/
-	/*##i=0;
-	while(##i<#g_filelist_num){
+	begingroupundo;
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i < ##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
 		if(1<=##i){
 			insertreturn;
 		}
-		insert($g_filelist[##i]);
+		insert($$text);
 		##i = ##i + 1;
-	}*/
-	return ;
+	}
+	endgroupundo;
+	return "1";
 
 echo:
 	//debug用途
@@ -126,11 +128,11 @@ echo:
 	if(!result){
 		return "0";
 	}
-	
+
 	//アウトプット枠クリア
 	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
 	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
-	
+
 	//文字列を表示する
 	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i=0;
@@ -138,7 +140,7 @@ echo:
 		$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionSourceName",	##i);
 		$$text			=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",		##i);
 		$$description	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionDescription",##i);
-		
+
 		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) %s %s\n",##i+1,##count,$$source_name,$$text,$$description));
 		##i = ##i + 1;
 	}
@@ -146,19 +148,22 @@ echo:
 	return "1";
 
 ex:
-	return ;
+	return  "1";
 
 insert:
+	begingroupundo;
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i=0;
-	/*while(##i<#g_filelist_num){
+	while(##i < ##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
 		if(1<=##i){
 			insertreturn;
-			up;
 		}
-		insertfix($g_filelist[##i]);
+		insertfix($$text);
 		##i = ##i + 1;
-	}*/
-	return ;
+	}
+	endgroupundo;
+	return "1";
 
 append_directory:
 	/*call FileListToDirectoryList;
@@ -166,7 +171,7 @@ append_directory:
 		return ;
 	}
 	call append;*/
-	return ;
+	return  "1";
 
 insert_directory:
 	/*call FileListToDirectoryList;
@@ -174,61 +179,40 @@ insert_directory:
 		return ;
 	}
 	call insert;*/
-	return ;
+	return  "1";
 
 preview:
-	return ;
-	
-	$$text="";
-	{
-		##old_hidemaru=hidemaruhandle(0);
-		openfile "/h /n " + $g_filelist[0];
-		if(!result){
-			return;
-		}
-		##new_hidemaru=hidemaruhandle(0);
-
-		selectall;
-		$$text=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
-
-		setactivehidemaru	##old_hidemaru;
-		closehidemaruforced ##new_hidemaru;
-	}
-
+	//debug用途
 	##output_dll=loaddll("HmOutputPane.dll");
 	if(!result){
-		return;
+		return "0";
 	}
 
-	{
-		//アウトプット枠クリア
-		##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-		##ret=sendmessage(##h,0x111 /*WM_COMMAND*/,1009,0);//1009=クリア
-		//ファイル内容を出力する
+	//アウトプット枠クリア
+	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
+
+	//文字列を表示する
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i<##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
 		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$text);
-		if(false){
-			//WM_KEYDOWN
-			##ret=sendmessage(##h, 0x0100, 0x11, 0x011D0001);
-			##ret=sendmessage(##h, 0x0100, 0x24, 0x01470001);
-			//WM_KEYUP
-			##ret=sendmessage(##h, 0x0101, 0x24, 0xc1470001);
-			##ret=sendmessage(##h, 0x0101, 0x11, 0xc11d0001);
-		}
-
+		##i = ##i + 1;
 	}
-
 	freedll ##output_dll;
-	return ;
+	return "1";
+
 
 yank:
 	/*call MakeClipboardString;
 	setclipboard $$return;*/
-	return ;
+	return  "1";
 
 yank_escape:
 	/*call MakeClipboardString;
 	setclipboard quote($$return);*/
-	return ;
+	return  "1";
 
 
 
@@ -303,7 +287,7 @@ SplitFilelist:
 
 
 FileListToDirectoryList:
-	/* ファイルリストをディレクトリイストへ変更する
+	/* ファイルリストをディレクトリリストへ変更する
 	*/
 	call LoadDll "ht_tools.dll";
 	if(##return==0){

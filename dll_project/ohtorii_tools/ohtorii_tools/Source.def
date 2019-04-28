@@ -3,6 +3,8 @@ EXPORTS
     PushContext
     PopContext
     GetCurrentContext
+	SerializeCurrentContext
+	DeSerializeToCurrentContext
 	GetSelectionCount
 	GetSelectionText
 	GetSelectionSourceName
@@ -30,11 +32,23 @@ EXPORTS
 	CandidatesGetUserDataString
 	CandidatesGetUserDataNumeric
 
+	KindGetKindName
+	KindGetKindDescription
+	KindGetDefaultAction
+
     KindsClear
     KindsCreate
-	KindsGetHidemaruLabelName
+	KindsGetDefaultActionLabelName
 	KindsGenerateCandidates
+	KindsFindKindIndex
+	KindsFindActionIndex		
+	KindsGetActionName
+	KindsGetActionLabelName
+	KindsGetActionDescription
+	KindsIsActionQuit
+	KindsIsActionMultiSelectable
 
 
+	FileRegistAfterDeleteFile
 	WriteToFile
     DllDetachFunc_After_Hm866

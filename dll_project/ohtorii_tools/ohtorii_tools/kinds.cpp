@@ -57,7 +57,7 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	dst.m_name.assign(section_name+gs_prefix_size);
 
 	GetPrivateProfileString(section_name, _T("function"), _T(""), buf, _countof(buf), filename);
-	dst.m_function.assign(buf);
+	dst.m_label.assign(buf);
 
 	GetPrivateProfileString(section_name, _T("description"), _T(""), buf, _countof(buf), filename);
 	dst.m_description.assign(buf);
@@ -136,7 +136,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 	//std::vector<std::wstring>	inheritance;
 
 	{
-		File*			file = Unity::Instance()->QueryFile();
+		File*			file = Unity::Instance().lock()->QueryFile();
 		std::wstring	temp_filename;
 
 		if (!file->CreateTempFile(temp_filename)) {
@@ -144,7 +144,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 		}
 
 		const WCHAR*cname = temp_filename.c_str();
-		file->AddAfterDelete(cname);
+		file->RegistAfterDelete(cname);
 		if (!file->WriteToFile(cname, kind_ini)) {
 			return gs_empty;
 		}
@@ -189,19 +189,126 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 	}
 
 	name.assign(dst.m_name);
-	m_kinds.emplace(name, dst);
+	m_kinds.emplace_back(dst);
 	return const_cast<WCHAR*>(name.c_str());
 }
 
-Kind* Kinds::FindKind(const WCHAR* kind_name) {
-	auto it=m_kinds.find(kind_name);
+Kind* Kinds::FindKind(const WCHAR* kind_name) {	
+	auto it = std::find_if(
+				m_kinds.begin(), 
+				m_kinds.end(), 
+				[kind_name](const auto&item) {return item.m_name.compare(kind_name) == 0; }
+				);
 	if (it == m_kinds.end()) {
 		return nullptr;
 	}
-	return &(it->second);
+	return &(*it);
 }
 
-const WCHAR* Kinds::GetHidemaruLabelName(const WCHAR* kind_name){
+size_t Kinds::FindKindIndex(const WCHAR* kind_name) {
+	const auto num = m_kinds.size();
+	for (size_t i = 0; i < num; ++i) {
+		if (m_kinds.at(i).m_name.compare(kind_name) == 0) {
+			return i;
+		}
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
+
+size_t Kinds::FindActionIndex(size_t kind_index, const WCHAR* action_name) {
+	const auto & actions = m_kinds.at(kind_index).m_actions;
+	const auto num = actions.size();
+	for (size_t i = 0; i < num; ++i) {
+		if (actions.at(i).m_name.compare(action_name) == 0) {
+			return i;
+		}
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
+
+/****************************************************************************
+	Kind
+****************************************************************************/
+const WCHAR* Kinds::GetKindName(size_t kind_index) {
+	try {
+		return m_kinds.at(kind_index).m_name.c_str();
+	}catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+
+const WCHAR* Kinds::GetKindDescription(size_t kind_index) {
+	try {
+		return m_kinds.at(kind_index).m_description.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+
+const WCHAR* Kinds::GetDefaultAction(size_t kind_index) {
+	try {
+		return m_kinds.at(kind_index).m_default_action.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+
+/****************************************************************************
+	Action
+****************************************************************************/
+const WCHAR* Kinds::GetActionName(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_name.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+const WCHAR* Kinds::GetActionLabelName(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_label.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+const WCHAR* Kinds::GetActionDescription(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_description.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+bool Kinds::IsActionQuit(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_quit;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+bool Kinds::IsActionMultiSelectable(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_multi_selectable;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
+
+const WCHAR* Kinds::GetDefaultActionLabelName(const WCHAR* kind_name){
 	OutputDebugString(_T("GetHidemaruLabelName"));
 	auto*kind = FindKind(kind_name);
 	if (kind == nullptr) {
@@ -216,14 +323,14 @@ const WCHAR* Kinds::GetHidemaruLabelName(const WCHAR* kind_name){
 		return gs_empty;
 	}
 	OutputDebugString(_T("action->m_function="));
-	OutputDebugString(action->m_function.c_str());
-	return action->m_function.c_str();
+	OutputDebugString(action->m_label.c_str());
+	return action->m_label.c_str();
 }
 
 bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	OutputDebugString(_T("GenerateKindCandidates"));
-	Unity*instance = Unity::Instance(instance_index);
-	if (instance == nullptr) {
+	std::weak_ptr<Unity> instance = Unity::Instance(instance_index);
+	if (instance.expired()) {
 		OutputDebugString(_T("@1"));
 		return false;
 	}
@@ -231,7 +338,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	bool			is_multi_select = false;
 	std::wstring	first_source_name;
 	{
-		RefineSearch*	search = instance->QueryRefineSearch();
+		RefineSearch*	search = instance.lock()->QueryRefineSearch();
 		const auto		num_selection = search->GetMarkedCount();
 		if (num_selection == 0) {
 			OutputDebugString(_T("@2"));
@@ -263,14 +370,14 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}	
 
 	//ソース名からディフォルトカインドを取り出す
-	auto* source= instance->QuerySources()->FindSource(first_source_name.c_str());
+	auto* source= instance.lock()->QuerySources()->FindSource(first_source_name.c_str());
 	if (source == nullptr) {
 		OutputDebugString((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
 		return false;
 	}
 	const auto &default_kind = source->m_default_kind;
 
-	auto* kind = instance->QueryKinds()->FindKind(default_kind.c_str());
+	auto* kind = instance.lock()->QueryKinds()->FindKind(default_kind.c_str());
 	if (kind == nullptr) {
 		OutputDebugString(_T("@5"));
 		return false;
@@ -279,7 +386,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	//現在のインスタンスへ候補を追加する
 	{
 		std::wstring candidate;
-		auto* candidates = Unity::Instance()->QueryCandidates();
+		auto* candidates = Unity::Instance().lock()->QueryCandidates();
 		for (const auto& action : kind->m_actions) {
 			if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
 				auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());

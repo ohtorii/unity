@@ -1,15 +1,11 @@
 ﻿/*アクションの実行
 */
-$g_root_macro_directory=getstaticvariable( "$g_root_macro_directory", 0 );
+#g_target_hidemaruhandle=val(getstaticvariable("$unity.g_target_hidemaruhandle",1));
+$g_root_macro_directory =getstaticvariable("$unity.g_root_macro_directory", 0);
+
 #g_dll_ohtorii_tools=val(getarg(0));
-$label=getarg(1);
-$arg=getarg(2);
-
-debuginfo 1;
-debuginfo "======= action.mac =========";
-debuginfo "$label="+$label;
-debuginfo "$arg="+$arg;
-
+$label				=getarg(1);
+$arg				=getarg(2);
 call $label, $arg;
 endmacro $$return;
 
@@ -21,7 +17,7 @@ endmacro $$return;
 get_property:
 	return R"([property]
 name=action
-description=action.
+description=Do action.
 default_action=do
 inheritance=
 
@@ -32,23 +28,19 @@ name=do
 '秀丸マクロのラベル名
 function=do
 'アクションの説明
-description=Do.
+'description=Do.
 'アクション実行後に終了するかどうか
-is_quit=false
+'is_quit=false
 'アクションを複数選択に対して実行するかどうか
 is_multi_selectable=false
 )";
 
 do_action:
 	$$action=$$1;
-	debuginfo 1;
-	debuginfo "action.mac: do_action $$action="+$$action;
 	call $$action;
 	return $$return;
 
 do:
-	debuginfo 1;
-	debuginfo "action.mac: DO!!!!";
 	
 	/////////////////////////////////////////////////////////////////////////
 	//アクションを取得する
@@ -57,10 +49,10 @@ do:
 	if(##candidate_index==-1){
 		return "0";
 	}
-	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",##candidate_index);
-	$$action_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetText",##candidate_index);
+	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
+	$$action_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetText",			##candidate_index);
 	$$user_data_kind=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetUserDataString",##candidate_index,"__kind__","");
-	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",$$source_name);
+	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",		$$source_name);
 	
 	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$user_data_kind+".mac";
 	
@@ -68,53 +60,100 @@ do:
 	/////////////////////////////////////////////////////////////////////////
 	//選択ファイルに対してアクションを実行する
 	/////////////////////////////////////////////////////////////////////////
-	//選択ファイルを取得するためにコンテキストを１つ戻す（ただしオブジェクトの破棄を行わない）
+	//選択ファイルを取得するためにコンテキストを１つ戻す（オブジェクトは破棄しない）
 	##exist_context_then_delete=false;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PopContext", ##exist_context_then_delete);
 	if(! ##ret){
 		return "0";
 	}
 	
-	//call "echo";
-	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$action_name;
-	$$action_result = getresultex(-1);
-		
+	call exec_action, $$kind_filename, $$action_name;
+	$$action_result=$$return;
+	
 	//コンテキストを元に戻す
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
 	if(! ##ret){
 		return "0";
 	}
 	
-	/*if($$kind.action.is_quit){
-		quitフラグを立てる（）
-		setstaticvariable "$is_quit", "1",0;
-
-	}*/
+	call IsQuit $$user_data_kind;
+	##is_quit = ##return;
+	setstaticvariable "$unity.is_quit", str(##is_quit),0;
 	
 	return $$action_result;
 
 
-echo:
-	//debug用途
-	##output_dll=loaddll("HmOutputPane.dll");
-	if(!result){
+exec_action:
+	$$kind_filename	=$$1;
+	$$action_name	=$$2;
+	
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
+	$$serialize_filename=getresultex(-1);
+	if($$serialize_filename==""){
+		return "0";
+	}
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$serialize_filename);
+	if(! ##ret){
 		return "0";
 	}
 	
-	//アウトプット枠クリア
-	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
-	
-	//文字列を表示する
-	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	##i=0;
-	while(##i<##count){
-		$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionSourceName",	##i);
-		$$text			=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",		##i);
-		$$description	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionDescription",##i);
-		
-		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) %s %s\n",##i+1,##count,$$source_name,$$text,$$description));
-		##i = ##i + 1;
+	//現在のコンテキストをserializeする
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SerializeCurrentContext", $$serialize_filename);
+	if(! ##ret){
+		return "0";
 	}
-	freedll ##output_dll;
-	return "1";
+	
+	//操作対象となる秀丸エディタへ切り替える
+	##current_hidemaruhandle=hidemaruhandle(0);
+	setactivehidemaru(#g_target_hidemaruhandle);
+	
+	//切り替えた秀丸エディタへohtorii_toolsを読み込む
+	call LoadDll;
+	##dll_ohtorii_tools=##return;
+	if(##dll_ohtorii_tools==0){
+		return "0";
+	}
+	//deserialize
+	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$serialize_filename);
+	if(! ##ret){
+		return "0";
+	}
+	
+	execmacro $$kind_filename, str(##dll_ohtorii_tools), "do_action", $$action_name;
+	$$action_result = getresultex(-1);
+
+	//ohtorii_toolsを破棄する
+	call FreeDll ##dll_ohtorii_tools;
+	
+	//元の秀丸エディタへ切り替える
+	setactivehidemaru(##current_hidemaruhandle);
+	return $$action_result;
+	
+
+IsQuit:
+	$$default_kind = $$1;
+	##kind_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindKindIndex",	$$default_kind);
+	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,	"KindGetDefaultAction", ##kind_index);
+	##action_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindActionIndex", ##kind_index, $$default_action);
+	##is_quit		=dllfuncw(#g_dll_ohtorii_tools, 	"KindsIsActionQuit",	##kind_index,##action_index);
+	return ##is_quit;
+
+LoadDll:
+	if(platform&0x00080000){
+		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
+	}else{
+		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x86.dll");
+	}
+	if (##dll_ohtorii_tools==0) {
+		message "dll\\ohtorii_tools.dllのロードに失敗しました";
+		return 0;
+	}
+	return ##dll_ohtorii_tools;
+
+FreeDll:
+	##dll_ohtorii_tools=##1;
+	if(##dll_ohtorii_tools!=0){
+		freedll ##dll_ohtorii_tools;
+		##dll_ohtorii_tools=0;
+	}
+	return;
