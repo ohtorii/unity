@@ -1,0 +1,27 @@
+﻿/*
+    C:\TEMP\TEST.TXT"　->　"TEST" を返す。 
+*/
+
+$filename=getarg(0);
+call LoadDllFuzzy "ht_tools.dll";
+#dll=##return;
+if(#dll==0){
+	endmacro "";
+}
+$basename = dllfuncstr(#dll,"GetFileBaseName", $filename); 
+freedll #dll;
+endmacro $basename;
+
+
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;
+

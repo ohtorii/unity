@@ -28,13 +28,13 @@ public:
 	Kind(	const std::wstring				&name,
 			const std::wstring				&description,
 			const std::wstring				&default_action,
-			const std::vector<std::wstring>	&inheritance);
+			const std::vector<std::wstring>	&base_kind);
 	Action* FindAction(const WCHAR* action_name);
 
 	std::wstring				m_name;
 	std::wstring				m_description;
 	std::wstring				m_default_action;
-	std::vector<std::wstring>	m_inheritance;
+	std::vector<std::wstring>	m_base_kind;
 	/// m_actions[アクション名]=Action;
 	//std::unordered_map<std::wstring, Action>		m_actions;
 	//並び順が重要なので std::vector<> を利用

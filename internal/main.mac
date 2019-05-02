@@ -177,7 +177,7 @@ main:
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
 	$$source=$$1;
-	$$source="file_mru";
+	$$source="tab";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
 	if(existfile($$source_filename)==false){
 		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
@@ -220,6 +220,17 @@ Start:
 	call LoadKindAll;
 	if(! ##return){
 		return false;
+	}
+	if(true){
+		//debug
+		//
+		//二つ目の候補を追加
+		//
+		$$args="";
+		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\sources\\file_mru.mac", $$args;
+		if(getresultex(-1)=="0"){
+			return 0;
+		}
 	}
 	call RefineSearch $$source_filename, "";
 	call FreeDll;

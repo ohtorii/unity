@@ -4,6 +4,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 //	global variable
 ///////////////////////////////////////////////////////////////////////////////
+static WCHAR	gs_empty[] = { 0 };
+
 std::array<std::shared_ptr<Unity>, 4>	Unity::m_instances{ {nullptr,nullptr,nullptr,nullptr} };
 size_t					Unity::m_current_instance_index = 0;
 Kinds					Unity::m_kinds;
@@ -126,14 +128,19 @@ Kinds*			Unity::QueryKinds() {
 	return &m_kinds;
 }
 
+Inheritance*	Unity::QueryInheritance() {
+	return &m_inheritance;
+}
 
-Unity::Unity() : m_refine_search(this){
+
+Unity::Unity() : m_refine_search(this), m_inheritance(this){
 	
 }
 
 Unity::~Unity(){
 	
 }
+
 
 #if 0
 INT_PTR Unity::SetCandidateList(WCHAR* source_filename,WCHAR*source_name,WCHAR*source_description){

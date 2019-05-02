@@ -39,7 +39,7 @@ name=common
 description=common actions.
 default_action=append
 '継承するアクション（空白区切り）
-inheritance=
+base_kind=
 
 'アクション(action.より右側の文字（nop）はメニュー表示で使用する名前)
 [action.nop]

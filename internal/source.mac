@@ -50,7 +50,7 @@ main:
 	*/
 	$$candidate_type=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
 	if($$candidate_type=="list"){
-		call GatherCandidates $$source_filename, $$arg;
+		call GatherCandidatesFromList $$source_filename, $$arg;
 		return ##return;
 	}else if($$candidate_type=="function"){
 		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
@@ -68,29 +68,45 @@ main:
 	return false;
 
 
-GatherCandidates:
-	/* 候補リストを生成する。
-	
-	あとで
-	*/
-	return false;
-	
-	
-	/*	以下、旧コード
-	*/
-	
+GatherCandidatesFromList:
 	$$source_filename=$$1;
 	$$arg=$$2;
 	
 	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
-	$$list=getresultex(-1);
-
-	execmacro currentmacrodirectory+"\\create_temp_file.mac","candidates",".txt";
-	$$candidates_filename=getresultex(-1);
-	if($$candidates_filename==""){
-		return "";
+	$$candidates=getresultex(-1);
+	
+	execmacro currentmacrodirectory+"\\get_file_basename.mac",$$source_filename; 
+	$$source_name=getresultex(-1);
+	if($$source_name==""){
+		return false;
 	}
-
+	
+	call LoadDengaku;
+	##dll=##return;
+	if(##dll==0){
+		return false;
+	}
+	
+	##success=true;
+	$$token = dllfuncstr(##dll,"GETTOKEN",$$candidates,"\n\r");
+	while (1) {
+	    if($$token!=""){
+			##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, $$token);
+			if(##ret==-1){
+				##success=false;
+				break;
+			}
+		}
+	    if (dllfunc(##dll,"HASMORETOKENS") == 0) {
+			break;
+		}
+	    $$token = dllfuncstr(##dll,"GETTOKEN","","\n\r");
+	}
+	
+	call FreeDengaku  ##dll;
+	return ##success;
+	
+	/*
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$candidates_filename,$$list);
 	if(! ##ret){
 		deletefile $$candidates_filename;
@@ -102,3 +118,24 @@ GatherCandidates:
 		return false;
 	}
 	return true;
+*/
+
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;
+
+LoadDengaku:
+	call LoadDllFuzzy("DengakuDLL.dll");
+	return ##return;
+	
+FreeDengaku:
+	freedll ##1;
+	return;

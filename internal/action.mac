@@ -23,13 +23,21 @@ endmacro $$return;
 
 
 main:
+/*
+$$kind_name=FindCommonKindFromSelectionCandidates();	//選択から共通のカインドを見付ける
+if($$kind_name==""){
+	return "0";
+}
+$$action=dllfuncstrw(#g_dll_ohtorii_tools,"KindsGetDefaultActionLabelName", $$kind_name);
+
+*/
 	##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetFirstSelectionCandidateIndex");
 	if(##candidate_index==-1){
 		return "0";
 	}
-	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
-	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",		$$source_name);
-	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,"KindsGetDefaultActionLabelName",	$$default_kind);
+	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",		##candidate_index);
+	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",			$$source_name);
+	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,"KindsGetDefaultActionLabelName", $$default_kind);
 	$$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
 	
 	/*memo

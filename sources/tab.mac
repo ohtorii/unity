@@ -11,8 +11,8 @@ get_property:
 	return R"([property]
 name=tab
 description=candidates from tab list
-default_kind=window
-candidate_type=function
+default_kind=tab
+candidate_type=list
 )";
 
 gather_candidates:
@@ -38,5 +38,7 @@ gather_candidates:
 	
 
 	*/
-	return;
+	return 
+@"Tab1
+Tab2";
 	

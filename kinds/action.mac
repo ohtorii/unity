@@ -19,7 +19,7 @@ get_property:
 name=action
 description=Do action.
 default_action=do
-inheritance=
+base_kind=
 
 'アクション
 [action.do]

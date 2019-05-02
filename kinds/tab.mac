@@ -1,0 +1,38 @@
+﻿/* tab
+*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+
+
+get_property:
+	return R"([property]
+name=tab
+default_action=preview
+'継承するアクション（空白区切り）
+base_kind=common
+'openable file_vimfiler_base cdable uri
+
+[action.preview]
+function=preview
+description=Preview the candidate text.
+is_quit=false
+is_multi_selectable=false
+)";
+
+
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+preview:
+	//ウインドウを切り替える
+	//少し待つ
+	//元のウインドウに切り替える
+	return "1";
+	

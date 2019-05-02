@@ -99,11 +99,11 @@ Kind::Kind() {
 Kind::Kind(const std::wstring		&name,
 	const std::wstring				&description,
 	const std::wstring				&default_action,
-	const std::vector<std::wstring>	&inheritance):
+	const std::vector<std::wstring>	&base_kind):
 	m_name(name),
 	m_description(description),
 	m_default_action(default_action),
-	m_inheritance(inheritance)
+	m_base_kind(base_kind)
 {
 
 }
@@ -133,7 +133,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 
 //	std::wstring	description;
 	//std::wstring	default_action;
-	//std::vector<std::wstring>	inheritance;
+	//std::vector<std::wstring>	base_kind;
 
 	{
 		File*			file = Unity::Instance().lock()->QueryFile();
@@ -163,12 +163,12 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 		dst.m_default_action.assign(buf);
 
 		{
-			GetPrivateProfileString(_T("property"), _T("inheritance"), _T(""), buf, _countof(buf), cname);
-			Tokenize(dst.m_inheritance,buf,_T(" \t"));
+			GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), buf, _countof(buf), cname);
+			Tokenize(dst.m_base_kind,buf,_T(" \t"));
 			if(0){
 				//debug
 				OutputDebugString(_T("==== Inheritance ===="));
-				for (const auto&item : dst.m_inheritance) {
+				for (const auto&item : dst.m_base_kind) {
 					OutputDebugString(item.c_str());
 				}
 			}
@@ -334,7 +334,14 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		OutputDebugString(_T("@1"));
 		return false;
 	}
-		
+	
+	{
+		auto*inheritance=instance.lock()->QueryInheritance();
+		inheritance->Generate();
+		return false;
+
+	}
+
 	bool			is_multi_select = false;
 	std::wstring	first_source_name;
 	{

@@ -8,7 +8,7 @@
 #include"candidates.h"
 #include"refine_search.h"
 #include"kinds.h"
-
+#include"inheritance.h"
 
 
 class Unity{
@@ -44,7 +44,8 @@ public:
 	Candidates*		QueryCandidates();
 	RefineSearch*	QueryRefineSearch();
 	Kinds*			QueryKinds();	
-	
+	Inheritance*	QueryInheritance();
+
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_candidates,m_refine_search);
 	};
@@ -62,8 +63,10 @@ private:
 	File				m_file;
 	Candidates			m_candidates;
 	RefineSearch		m_refine_search;
+	Inheritance			m_inheritance;
+
 	///カインドはインスタンス共通で利用するため静的領域とする
-	static Kinds		m_kinds;
+	static Kinds		m_kinds;	
 
 	//std::vector<Candidate>	m_input;
 	//Output				m_output;

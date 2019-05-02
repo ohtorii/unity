@@ -38,5 +38,6 @@
 #include"file.h"
 #include"candidates.h"
 #include"refine_search.h"
+#include"inheritance.h"
 #include"utility.h"
 

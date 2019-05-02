@@ -14,7 +14,7 @@ get_property:
 name=file_mru
 default_action=preview
 '継承するアクション（空白区切り）
-'inheritance=file_base 
+base_kind=common
 'openable file_vimfiler_base cdable uri
 
 [action.preview]

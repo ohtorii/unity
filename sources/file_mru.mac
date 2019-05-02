@@ -12,7 +12,7 @@ get_property:
 	return R"([property]
 name=file_mru
 description=candidates from file MRU list
-default_kind=common
+default_kind=file_mru
 candidate_type=function
 )";
 

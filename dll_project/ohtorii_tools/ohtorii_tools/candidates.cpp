@@ -100,15 +100,33 @@ INT_PTR			Candidates::GetUserData(INT_PTR index, const WCHAR* key, INT_PTR		defa
 }
 
 const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
-	return m_candidates.at(index).m_source_name.c_str();
+	try {
+		return m_candidates.at(index).m_source_name.c_str();
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return nullptr;
 }
 
 const WCHAR* Candidates::GetText(INT_PTR index)const {
-	return m_candidates.at(index).m_text.c_str();
+	try{
+		return m_candidates.at(index).m_text.c_str();
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return nullptr;
 }
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {
-	return m_candidates.at(index).m_description.c_str();
+	try{
+		return m_candidates.at(index).m_description.c_str();
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return nullptr;
 }
 
 /*
