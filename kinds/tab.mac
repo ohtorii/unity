@@ -15,7 +15,6 @@ name=tab
 default_action=preview
 '継承するアクション（空白区切り）
 base_kind=common
-'openable file_vimfiler_base cdable uri
 
 [action.preview]
 function=preview
