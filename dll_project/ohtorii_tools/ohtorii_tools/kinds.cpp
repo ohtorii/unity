@@ -109,16 +109,30 @@ Kind::Kind(const std::wstring		&name,
 }
 
 Action* Kind::FindAction(const WCHAR* action_name) {
-	size_t size = m_actions.size();
+	/*size_t size = m_actions.size();
 	for (size_t i = 0; i < size; ++i) {
 		auto&item=m_actions.at(i);
 		if (wcscmp(item.m_name.c_str(), action_name) == 0) {
 			return &m_actions.at(i);
 		}
+	}*/
+	auto index = FindActionIndex(action_name);
+	if (index == UNITY_NOT_FOUND_INDEX) {
+		return nullptr;
 	}
-	return nullptr;
+	return &m_actions.at(index);
 }
 
+size_t	Kind::FindActionIndex(const WCHAR* action_name) {
+	size_t size = m_actions.size();
+	for (size_t i = 0; i < size; ++i) {
+		auto&item = m_actions.at(i);
+		if (wcscmp(item.m_name.c_str(), action_name) == 0) {
+			return i;
+		}
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 //	class Kinds

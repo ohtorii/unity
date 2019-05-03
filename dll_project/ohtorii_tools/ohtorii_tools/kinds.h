@@ -30,7 +30,7 @@ public:
 			const std::wstring				&default_action,
 			const std::vector<std::wstring>	&base_kind);
 	Action* FindAction(const WCHAR* action_name);
-
+	size_t	FindActionIndex(const WCHAR* action_name);
 	std::wstring				m_name;
 	std::wstring				m_description;
 	std::wstring				m_default_action;
