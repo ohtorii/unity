@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "ohtorii_tools"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.vs": true,
+			"**/.vscode": true,
+			"**/*.vcxproj.filters": true,
+			"**/*.vcxproj.user": true,
+			"**/Debug": true,
+			"**/Release": true,
+			"**/x64": true
+		}
+	}
+}
