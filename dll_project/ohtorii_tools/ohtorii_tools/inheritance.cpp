@@ -1,4 +1,4 @@
-#include"stdafx.h"
+ï»¿#include"stdafx.h"
 
 
 Inheritance::Inheritance(Unity*instance) : m_instance(instance){
@@ -6,8 +6,8 @@ Inheritance::Inheritance(Unity*instance) : m_instance(instance){
 }
 
 bool Inheritance::Generate() {
-	/**‘I‘ğ‚³‚ê‚½Œó•â‚Å—˜—p‚µ‚Ä‚¢‚é‹¤’ÊƒJƒCƒ“ƒh
-	(—á)
+	/**é¸æŠã•ã‚ŒãŸå€™è£œã§åˆ©ç”¨ã—ã¦ã„ã‚‹å…±é€šã‚«ã‚¤ãƒ³ãƒ‰
+	(ä¾‹)
 	common_kinds[0]="common";
 	common_kinds[1]="cdable";
 	*/
@@ -52,12 +52,12 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 	
 	//
 	//memo
-	//	*reference_counter[]‚Ìg‚¢•û
-	//	  reference_counter[ƒJƒCƒ“ƒh–¼]=QÆ”
+	//	*reference_counter[]ã®ä½¿ã„æ–¹
+	//	  reference_counter[ã‚«ã‚¤ãƒ³ãƒ‰å]=å‚ç…§æ•°
 	//
-	//	*unum_selection<=QÆ”v‚ÌƒAƒCƒeƒ€‚ª‹¤’ÊƒJƒCƒ“ƒh‚Å‚·B
-	//		Šî’êƒJƒCƒ“ƒh‚É“¯ˆêƒJƒCƒ“ƒhi—á‚¦‚Îcommonj‚ª•¡”‰ñoŒ»‚·‚é‚±‚Æ‚ª‚ ‚é‚½‚ßA
-	//		QÆ”‚Ínum_selection‚æ‚è‘å‚«‚­‚È‚é‚±‚Æ‚ª‚ ‚éB
+	//	*ã€Œnum_selection<=å‚ç…§æ•°ã€ã®ã‚¢ã‚¤ãƒ†ãƒ ãŒå…±é€šã‚«ã‚¤ãƒ³ãƒ‰ã§ã™ã€‚
+	//		åŸºåº•ã‚«ã‚¤ãƒ³ãƒ‰ã«åŒä¸€ã‚«ã‚¤ãƒ³ãƒ‰ï¼ˆä¾‹ãˆã°commonï¼‰ãŒè¤‡æ•°å›å‡ºç¾ã™ã‚‹ã“ã¨ãŒã‚ã‚‹ãŸã‚ã€
+	//		å‚ç…§æ•°ã¯num_selectionã‚ˆã‚Šå¤§ãããªã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚
 	//
 	std::vector<ReferenceCounter>	reference_counter;
 
@@ -69,7 +69,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 		auto*sources		= m_instance->QuerySources();
 		auto*kinds			= m_instance->QueryKinds();
 		//
-		// ‹¤’ÊƒJƒCƒ“ƒh‚ğW‚ß‚é
+		// å…±é€šã‚«ã‚¤ãƒ³ãƒ‰ã‚’é›†ã‚ã‚‹
 		//
 		if(true){
 			//debug
@@ -102,7 +102,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 		}
 	}
 
-	// ‹¤’Ê‚ÌƒJƒCƒ“ƒh‚ğŒ©•t‚¯‚é
+	// å…±é€šã®ã‚«ã‚¤ãƒ³ãƒ‰ã‚’è¦‹ä»˜ã‘ã‚‹
 	for (const auto&item : reference_counter) {
 		if (num_selection <= item.m_counter) {
 			out_common_kinds.emplace_back(item.m_kind);
@@ -128,7 +128,7 @@ void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_ref
 		++(it->m_counter);
 	}
 
-	//Šî’êƒJƒCƒ“ƒh‚ğÄ‹A“I‚Éˆ—‚·‚é
+	//åŸºåº•ã‚«ã‚¤ãƒ³ãƒ‰ã‚’å†å¸°çš„ã«å‡¦ç†ã™ã‚‹
 	for (const auto &base_kind_name : kind->m_base_kind) {
 		FindCommonKindRecursive(out_reference_counter,base_kind_name);
 	}
@@ -137,15 +137,15 @@ void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_ref
 void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 {
 	/*memo
-	m_resolve_actions‚ğ¶¬‚·‚é
+	m_resolve_actionsã‚’ç”Ÿæˆã™ã‚‹
 
 	e.g.
-	i“ü—Íj
+	ï¼ˆå…¥åŠ›ï¼‰
 	common_kinds
 		[1/2]file_mru
 		[2/2]common
 
-	io—Íj
+	ï¼ˆå‡ºåŠ›ï¼‰
 	m_resolve_actions
 		[1/9]common.nop(0)
 		[2/9]common.yank(1)
@@ -154,11 +154,11 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 		[5/9]common.append(4)
 		[6/9]common.insert_directory(5)
 		[7/9]common.append_directory(6)
-		[8/9]file_mru.preview(7)				<--file_mru‚Ìpreview‚ğŒÄ‚Ño‚·B
+		[8/9]file_mru.preview(7)				<--file_mruã®previewã‚’å‘¼ã³å‡ºã™ã€‚
 		[9/9]common.echo(8)
 	*/
 	m_resolve_actions.clear();
-	/*Šî’êƒJƒCƒ“ƒh‚©‚çˆ—‚·‚é‚½‚ß”z—ñ‚ğ‹t‡‚É‚·‚éB*/
+	/*åŸºåº•ã‚«ã‚¤ãƒ³ãƒ‰ã‹ã‚‰å‡¦ç†ã™ã‚‹ãŸã‚é…åˆ—ã‚’é€†é †ã«ã™ã‚‹ã€‚*/
 	std::reverse(common_kinds.begin(), common_kinds.end());
 
 	auto*kinds = m_instance->QueryKinds();
@@ -175,11 +175,11 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 									[&kind_name, &action](const auto &item) {return /*(item.m_kind==kind_name) &&*/ (item.m_action_name==action.m_name); });
 			
 			if (it == m_resolve_actions.end()) {
-				//V‹K’Ç‰Á
+				//æ–°è¦è¿½åŠ 
 				m_resolve_actions.push_back({ kind_name, action_index, action.m_name});
 			}
 			else {
-				//Šù‘¶‚ÌƒAƒNƒVƒ‡ƒ“‚ğ”h¶ƒJƒCƒ“ƒh‚Åã‘‚«‚·‚é
+				//æ—¢å­˜ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’æ´¾ç”Ÿã‚«ã‚¤ãƒ³ãƒ‰ã§ä¸Šæ›¸ãã™ã‚‹
 				it->m_kind = kind_name;
 			}
 			++action_index;

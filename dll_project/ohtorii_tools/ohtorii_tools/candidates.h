@@ -1,22 +1,22 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<vector>
 
-///Œó•â
+///å€™è£œ
 struct Candidate {
 	Candidate();
 	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description);
-	/**Œó•â‚Ìƒ†[ƒU[ƒf[ƒ^‚ğİ’è‚·‚éi•¶š—ñ”Åj
-	“¯ˆêƒL[‚ª‚ ‚éê‡‚Íã‘‚«‚µ‚Ü‚·B
-	return bool	true	¬Œ÷
-				false	¸”s
+	/**å€™è£œã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ï¼ˆæ–‡å­—åˆ—ç‰ˆï¼‰
+	åŒä¸€ã‚­ãƒ¼ãŒã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ãã—ã¾ã™ã€‚
+	return bool	true	æˆåŠŸ
+				false	å¤±æ•—
 	*/
 	bool SetUserData(const WCHAR* key, const WCHAR*data);
 
-	/**Œó•â‚Ìƒ†[ƒU[ƒf[ƒ^‚ğİ’è‚·‚éi”’l”Åj
-	“¯ˆêƒL[‚ª‚ ‚éê‡‚Íã‘‚«‚µ‚Ü‚·B
-	return bool	true	¬Œ÷
-				false	¸”s
+	/**å€™è£œã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ï¼ˆæ•°å€¤ç‰ˆï¼‰
+	åŒä¸€ã‚­ãƒ¼ãŒã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ãã—ã¾ã™ã€‚
+	return bool	true	æˆåŠŸ
+				false	å¤±æ•—
 	*/
 	bool SetUserData(const WCHAR* key, INT_PTR data);
 
@@ -34,19 +34,19 @@ struct Candidate {
 			m_fource_show);
 	};
 
-	///ƒ\[ƒX–¼
+	///ã‚½ãƒ¼ã‚¹å
 	std::wstring			m_source_name;
-	///ƒtƒ@ƒCƒ‹ƒŠƒXƒg‚©‚ç“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹–¼
+	///ãƒ•ã‚¡ã‚¤ãƒ«ãƒªã‚¹ãƒˆã‹ã‚‰èª­ã¿è¾¼ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«å
 	std::wstring			m_text;	
-	///à–¾
+	///èª¬æ˜
 	std::wstring			m_description;
-	///ƒ†[ƒU[ƒf[ƒ^i•¶š—ñj
+	///ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ï¼ˆæ–‡å­—åˆ—ï¼‰
 	std::unordered_map<std::wstring, std::wstring>	m_user_data_string;
-	///ƒ†[ƒU[ƒf[ƒ^i”’lj
+	///ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ï¼ˆæ•°å€¤ï¼‰
 	std::unordered_map<std::wstring, INT_PTR>		m_user_data_numeric;
-	///‚±‚ÌƒeƒLƒXƒg‚ªGŠÛƒGƒfƒBƒ^‘¤‚Å‘I‘ğ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	///ã“ã®ãƒ†ã‚­ã‚¹ãƒˆãŒç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿å´ã§é¸æŠã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool					m_selected;
-	///•K‚¸•\¦‚·‚éŒó•â‚©‚Ç‚¤‚©
+	///å¿…ãšè¡¨ç¤ºã™ã‚‹å€™è£œã‹ã©ã†ã‹
 	bool					m_fource_show;	
 };
 /*
@@ -68,22 +68,22 @@ public:
 	Candidates();
 	//bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate);
 	
-	/**Œó•â‚ğ’Ç‰Á‚·‚é
-	return Œó•â‚Ö‚ÌƒCƒ“ƒfƒbƒNƒX
+	/**å€™è£œã‚’è¿½åŠ ã™ã‚‹
+	return å€™è£œã¸ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	*/
 	INT_PTR AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description=_T(""));
 	
-	/**Œó•â‚Ìƒ†[ƒU[ƒf[ƒ^‚ğİ’è‚·‚éi•¶š—ñ”Åj
-	“¯ˆêƒL[‚ª‚ ‚éê‡‚Íã‘‚«‚µ‚Ü‚·B
-	return bool	true	¬Œ÷
-				false	¸”s
+	/**å€™è£œã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ï¼ˆæ–‡å­—åˆ—ç‰ˆï¼‰
+	åŒä¸€ã‚­ãƒ¼ãŒã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ãã—ã¾ã™ã€‚
+	return bool	true	æˆåŠŸ
+				false	å¤±æ•—
 	*/
 	bool SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data);
 
-	/**Œó•â‚Ìƒ†[ƒU[ƒf[ƒ^‚ğİ’è‚·‚éi”’l”Åj
-	“¯ˆêƒL[‚ª‚ ‚éê‡‚Íã‘‚«‚µ‚Ü‚·B
-	return bool	true	¬Œ÷
-				false	¸”s
+	/**å€™è£œã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ï¼ˆæ•°å€¤ç‰ˆï¼‰
+	åŒä¸€ã‚­ãƒ¼ãŒã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ãã—ã¾ã™ã€‚
+	return bool	true	æˆåŠŸ
+				false	å¤±æ•—
 	*/
 	bool SetUserData(INT_PTR index, const WCHAR* key, INT_PTR data);
 
@@ -106,10 +106,10 @@ private:
 	/*SourceCandidate* AppendIfNotExist(const WCHAR* source_name);
 	SourceCandidate* Find(const WCHAR* source_name);
 	*/
-	//memo: •À‚Ñ‡‚ªd—v‚È‚Ì‚Åvector<>‚ğ—˜—p
+	//memo: ä¸¦ã³é †ãŒé‡è¦ãªã®ã§vector<>ã‚’åˆ©ç”¨
 	//std::vector<SourceCandidate>	m_sources;
 
-	//memo: •À‚Ñ‡‚ªd—v‚È‚Ì‚Åvector<>‚ğ—˜—p
+	//memo: ä¸¦ã³é †ãŒé‡è¦ãªã®ã§vector<>ã‚’åˆ©ç”¨
 	std::vector<Candidate>	m_candidates;
 
 };

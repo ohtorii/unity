@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 
 void Tokenize(std::vector<std::wstring>& tokens, const std::wstring& str, const std::wstring& delimiters)

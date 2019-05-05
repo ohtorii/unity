@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<vector>
 
@@ -7,7 +7,7 @@ class Unity;
 
 
 
-/**ƒJƒCƒ“ƒh‚ÌŒp³î•ñ‚Ì¶¬‚ÆŠi”[
+/**ã‚«ã‚¤ãƒ³ãƒ‰ã®ç¶™æ‰¿æƒ…å ±ã®ç”Ÿæˆã¨æ ¼ç´
 */
 class Inheritance {
 public:	
@@ -21,18 +21,18 @@ private:
 	};
 
 	struct ResolveAction {
-		/**ƒJƒCƒ“ƒh–¼
+		/**ã‚«ã‚¤ãƒ³ãƒ‰å
 		(e.g.)	"file_mru"
 				"common"
 		*/
 		std::wstring	m_kind;
 
-		/*ƒAƒNƒVƒ‡ƒ“‚Ö‚ÌƒCƒ“ƒfƒbƒNƒX
+		/*ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã¸ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 		Kind::m_actions[m_action_index];
 		*/
 		size_t			m_action_index;
 
-		/**ƒAƒNƒVƒ‡ƒ“–¼
+		/**ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å
 		Kind::m_actions[m_action_index]==m_action\name;
 
 		(e.g.)	"preview"
@@ -41,14 +41,14 @@ private:
 		std::wstring	m_action_name;	
 	};
 
-	//memo: •À‚Ñ‡‚ªd—v‚È‚Ì‚Åstd::vector<>‚ğ—˜—p
+	//memo: ä¸¦ã³é †ãŒé‡è¦ãªã®ã§std::vector<>ã‚’åˆ©ç”¨
 	void FindCommonKind(std::vector<std::wstring> &out_common_kinds);	
 	void FindCommonKindRecursive(std::vector<ReferenceCounter>	&out_reference_counter, const std::wstring&kind_name);
 
 	void MakeResolveActions(std::vector<std::wstring> &common_kinds);
 
 	Unity	*m_instance;
-	/**ƒAƒNƒVƒ‡ƒ“‚ÌŒó•âˆê——
+	/**ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®å€™è£œä¸€è¦§
 	*/
 	std::vector<ResolveAction>	m_resolve_actions;
 };

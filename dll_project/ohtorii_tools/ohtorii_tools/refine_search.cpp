@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 
 
@@ -35,8 +35,8 @@ void RefineSearch::SetHidemaruLineno(INT_PTR hidemaru_line_no) {
 }
 
 void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {
-	//ˆê’v‚·‚és‚ğ•Ô‚·
-	size_t			hidemaru_lineno = 1;//memo: GŠÛƒGƒfƒBƒ^‚Ìs”Ô†‚Í1ƒXƒ^[ƒg
+	//ä¸€è‡´ã™ã‚‹è¡Œã‚’è¿”ã™
+	size_t			hidemaru_lineno = 1;//memo: ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·ã¯1ã‚¹ã‚¿ãƒ¼ãƒˆ
 	const size_t	size			= candidates.size();
 	bool			first_match = true;
 	for (size_t candidate_index = 0; candidate_index < size; ++candidate_index) {
@@ -72,12 +72,12 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 
 	auto& candidates= m_instance->QueryCandidates()->GetCandidates();
 	
-	//memo: std::vector<>‚Ìƒƒ‚ƒŠ—\–ñ		
+	//memo: std::vector<>ã®ãƒ¡ãƒ¢ãƒªäºˆç´„		
 	m_output.Reserve(candidates.size());
 	m_output.Clear();
 
 	Filter(tokens, candidates);
-	//ƒeƒLƒXƒg‚ÌI’[‚ğ’Ç‰Á
+	//ãƒ†ã‚­ã‚¹ãƒˆã®çµ‚ç«¯ã‚’è¿½åŠ 
 	m_output.m_text.push_back(_T('\0'));
 	return true;
 }
@@ -90,7 +90,7 @@ WCHAR* RefineSearch::GetResult() {
 INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 	try {
 		bool		has_change		= false;
-		const auto	candidate_index = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no - 1);//-1‚µ‚Ä0n‚Ü‚è‚É‚·‚é
+		const auto	candidate_index = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no - 1);//-1ã—ã¦0å§‹ã¾ã‚Šã«ã™ã‚‹
 		auto&		candidates		= m_instance->QueryCandidates()->GetCandidates();
 		const bool	now				= candidates.at(candidate_index).m_selected;
 		
@@ -155,7 +155,7 @@ INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)
 	if (hidemaru_line_no <= 0) {
 		return gs_empty;
 	}
-	--hidemaru_line_no;//0n‚Ü‚è‚É‚·‚é
+	--hidemaru_line_no;//0å§‹ã¾ã‚Šã«ã™ã‚‹
 	try {
 		const auto filelist_lineno = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
 		return &(m_instance->QueryCandidates()->GetCandidates().at(filelist_lineno).m_text.at(0));
@@ -170,7 +170,7 @@ INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_li
 	if (hidemaru_line_no <= 0) {
 		return UNITY_NOT_FOUND_INDEX;
 	}
-	--hidemaru_line_no;//0n‚Ü‚è‚É‚·‚é
+	--hidemaru_line_no;//0å§‹ã¾ã‚Šã«ã™ã‚‹
 	try {
 		return m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
 	}
@@ -185,7 +185,7 @@ INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 	if (hidemaru_line_no <= 0) {
 		return UNITY_NOT_FOUND_INDEX;
 	}
-	--hidemaru_line_no;//0n‚Ü‚è‚É‚·‚é
+	--hidemaru_line_no;//0å§‹ã¾ã‚Šã«ã™ã‚‹
 	try {
 		return m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
 	}catch(std::exception) {

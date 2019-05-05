@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<vector>
 #include<unordered_map>
@@ -9,15 +9,15 @@ public:
 	Action();
 	//Action();
 
-	///•\¦‚Ég—p‚·‚é–¼‘O
+	///è¡¨ç¤ºã«ä½¿ç”¨ã™ã‚‹åå‰
 	std::wstring		m_name;
-	///GŠÛƒ}ƒNƒ‚Ìƒ‰ƒxƒ‹–¼
+	///ç§€ä¸¸ãƒã‚¯ãƒ­ã®ãƒ©ãƒ™ãƒ«å
 	std::wstring		m_label;
-	///ƒAƒNƒVƒ‡ƒ“‚Ìà–¾
+	///ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®èª¬æ˜
 	std::wstring		m_description;
-	///ƒAƒNƒVƒ‡ƒ“ÀsŒã‚ÉI—¹‚·‚é‚©‚Ç‚¤‚©
+	///ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å®Ÿè¡Œå¾Œã«çµ‚äº†ã™ã‚‹ã‹ã©ã†ã‹
 	bool				m_is_quit;
-	///ƒAƒNƒVƒ‡ƒ“‚ğ•¡”‘I‘ğ‚É‘Î‚µ‚ÄÀs‚·‚é‚©‚Ç‚¤‚©
+	///ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’è¤‡æ•°é¸æŠã«å¯¾ã—ã¦å®Ÿè¡Œã™ã‚‹ã‹ã©ã†ã‹
 	bool				m_is_multi_selectable;
 
 };
@@ -35,9 +35,9 @@ public:
 	std::wstring				m_description;
 	std::wstring				m_default_action;
 	std::vector<std::wstring>	m_base_kind;
-	/// m_actions[ƒAƒNƒVƒ‡ƒ“–¼]=Action;
+	/// m_actions[ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å]=Action;
 	//std::unordered_map<std::wstring, Action>		m_actions;
-	//•À‚Ñ‡‚ªd—v‚È‚Ì‚Å std::vector<> ‚ğ—˜—p
+	//ä¸¦ã³é †ãŒé‡è¦ãªã®ã§ std::vector<> ã‚’åˆ©ç”¨
 	std::vector<Action>		m_actions;
 };
 
@@ -48,19 +48,19 @@ public:
 	
 	WCHAR* Create(const WCHAR* kind_ini);
 	
-	///ƒJƒCƒ“ƒh‚ğŒ©•t‚¯‚é
+	///ã‚«ã‚¤ãƒ³ãƒ‰ã‚’è¦‹ä»˜ã‘ã‚‹
 	Kind* FindKind(const WCHAR* kind_name);
 	
-	///ƒJƒCƒ“ƒh‚ğŒ©•t‚¯‚é
+	///ã‚«ã‚¤ãƒ³ãƒ‰ã‚’è¦‹ä»˜ã‘ã‚‹
 	size_t FindKindIndex(const WCHAR* kind_name);
 
-	///‘I‘ğ‚©‚çƒJƒCƒ“ƒh‚Ìí—Ş‚ğ¶¬‚·‚é
+	///é¸æŠã‹ã‚‰ã‚«ã‚¤ãƒ³ãƒ‰ã®ç¨®é¡ã‚’ç”Ÿæˆã™ã‚‹
 	bool GenerateKindCandidates(INT_PTR instance_index);
 
-	/// GŠÛ‚Ìƒ‰ƒxƒ‹–¼‚ğæ“¾‚·‚é
+	/// ç§€ä¸¸ã®ãƒ©ãƒ™ãƒ«åã‚’å–å¾—ã™ã‚‹
 	const WCHAR* GetDefaultActionLabelName(const WCHAR* kind_name);
 
-	// ƒAƒNƒVƒ‡ƒ“‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚é
+	// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹
 	size_t FindActionIndex(size_t kind_index, const WCHAR* action_name);
 
 	/***********************************************************************

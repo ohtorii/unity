@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include"define.h"
 
 
-//GŠÛƒGƒfƒBƒ^‚Ö•Ô‚·î•ñ
+//ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã¸è¿”ã™æƒ…å ±
 struct Output {
 	void Clear() {
 		m_text.clear();
@@ -25,17 +25,17 @@ struct Output {
 		);
 	};
 
-	//GŠÛƒGƒfƒBƒ^‚Ö•Ô‚·•¶š—ñ(Ex. "foo.txt\nbar.txt\nhoge.cpp")
+	//ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã¸è¿”ã™æ–‡å­—åˆ—(Ex. "foo.txt\nbar.txt\nhoge.cpp")
 	std::vector<std::wstring::value_type>	m_text;
 
-	/*uGŠÛƒGƒfƒBƒ^‚Ìs”Ô†v‚©‚çuŒó•âƒŠƒXƒg‚ÌƒCƒ“ƒfƒbƒNƒXv‚ğæ“¾‚·‚éƒe[ƒuƒ‹
+	/*ã€Œç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·ã€ã‹ã‚‰ã€Œå€™è£œãƒªã‚¹ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€ã‚’å–å¾—ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«
 
-	(g—p—á)
-	Œó•â‚ÌƒCƒ“ƒfƒbƒNƒX = m_hidemaru_lineno_to_candidate_index[GŠÛƒGƒfƒBƒ^‚Ìs”Ô†];
+	(ä½¿ç”¨ä¾‹)
+	å€™è£œã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ = m_hidemaru_lineno_to_candidate_index[ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·];
 	*/
 	std::vector<INT_PTR>					m_hidemaru_lineno_to_candidate_index;
 
-	//GŠÛƒGƒfƒBƒ^‚Åƒ}[ƒN‚µ‚Ä‚¢‚és”Ô†(ƒCƒ“ƒfƒbƒNƒX‚Í1n‚Ü‚è)
+	//ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã§ãƒãƒ¼ã‚¯ã—ã¦ã„ã‚‹è¡Œç•ªå·(ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯1å§‹ã¾ã‚Š)
 	std::vector<INT_PTR>					m_hidemaru_maeked_lineno;
 };
 
@@ -48,72 +48,72 @@ public:
 	bool Do(const WCHAR* search_words);
 	WCHAR* GetResult();
 
-	/*GŠÛƒGƒfƒBƒ^‚Ìs”Ô†‚ğİ’è‚·‚é
+	/*ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetHidemaruLineno(INT_PTR hidemaru_line_no);
 
 	////////////////////////////////////////////////////////////////////////////
-	//•ÏŠ·
+	//å¤‰æ›
 	////////////////////////////////////////////////////////////////////////////
-	/**GŠÛƒGƒfƒBƒ^‚Ìs”Ô†‚©‚çŒó•âƒŠƒXƒg‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚é
-	return	¬Œ÷	0ˆÈã‚Ì”’l
-			¸”s	-1
+	/**ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·ã‹ã‚‰å€™è£œãƒªã‚¹ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹
+	return	æˆåŠŸ	0ä»¥ä¸Šã®æ•°å€¤
+			å¤±æ•—	-1
 	*/
 	INT_PTR ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no);
 
 
 	////////////////////////////////////////////////////////////////////////////
-	//ƒ}[ƒN
+	//ãƒãƒ¼ã‚¯
 	////////////////////////////////////////////////////////////////////////////
-	/*s‚ğuƒ}[ƒN‚·‚éEƒ}[ƒN‰ğœ‚·‚év
-	hidemaru_line_no	GŠÛƒGƒfƒBƒ^‚ÌƒJ[ƒ\ƒ‹ˆÊ’u‚ÌAƒGƒfƒBƒ^“I‚ÉŒvZ‚µ‚½s”Ô†‚Å‚·B
-	@					ƒtƒ@ƒCƒ‹‚Ìæ“ª‚ª‚P‚Å‚·B
+	/*è¡Œã‚’ã€Œãƒãƒ¼ã‚¯ã™ã‚‹ãƒ»ãƒãƒ¼ã‚¯è§£é™¤ã™ã‚‹ã€
+	hidemaru_line_no	ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®ã®ã€ã‚¨ãƒ‡ã‚£ã‚¿çš„ã«è¨ˆç®—ã—ãŸè¡Œç•ªå·ã§ã™ã€‚
+	ã€€					ãƒ•ã‚¡ã‚¤ãƒ«ã®å…ˆé ­ãŒï¼‘ã§ã™ã€‚
 	*/
 	INT_PTR ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected);
 	
 	
-	/*ƒ}[ƒN‚³‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚éiGŠÛƒGƒfƒBƒ^‚Ìs”Ô†ƒo[ƒWƒ‡ƒ“j
-	return	¬Œ÷	ƒtƒ@ƒCƒ‹–¼
-			¸”s	‹ó•¶š
+	/*ãƒãƒ¼ã‚¯ã•ã‚Œã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹ï¼ˆç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·ãƒãƒ¼ã‚¸ãƒ§ãƒ³ï¼‰
+	return	æˆåŠŸ	ãƒ•ã‚¡ã‚¤ãƒ«å
+			å¤±æ•—	ç©ºæ–‡å­—
 	*/
 	//WCHAR* GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no);
 	
-	/*ƒ}[ƒN‚³‚ê‚½s”‚ğæ“¾‚·‚é
+	/*ãƒãƒ¼ã‚¯ã•ã‚ŒãŸè¡Œæ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	INT_PTR GetMarkedCount();
 
-	/*ƒ}[ƒN‚ÌƒCƒ“ƒfƒbƒNƒX‚©‚çGŠÛƒGƒfƒBƒ^‚Ìs”Ô†‚Ö•ÏŠ·‚·‚é
-	return	GŠÛƒGƒfƒBƒ^‚Ìs”Ô†
+	/*ãƒãƒ¼ã‚¯ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‹ã‚‰ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·ã¸å¤‰æ›ã™ã‚‹
+	return	ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·
 	*/
 	INT_PTR ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index);
 
-	/*ƒ}[ƒNƒCƒ“ƒfƒbƒNƒX‚©‚çŒó•âƒCƒ“ƒfƒbƒNƒX‚Ö•ÏŠ·‚·‚é
+	/*ãƒãƒ¼ã‚¯ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‹ã‚‰å€™è£œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¸å¤‰æ›ã™ã‚‹
 	*/
 	INT_PTR ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index);
 
-	/*ƒ}[ƒN‚µ‚½ƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚·‚é
+	/*ãƒãƒ¼ã‚¯ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã™ã‚‹
 	*/
 	//WCHAR* GetSelectedFilename(INT_PTR marked_index);
 
-	/*ƒ}[ƒN‚µ‚½Œó•â‚Ìî•ñ‚ğæ“¾‚·‚é
+	/*ãƒãƒ¼ã‚¯ã—ãŸå€™è£œã®æƒ…å ±ã‚’å–å¾—ã™ã‚‹
 	*/
 	Candidate* GetMarkedCandidate(INT_PTR marked_index);	
 
 	////////////////////////////////////////////////////////////////////////////
-	//‘I‘ğ
+	//é¸æŠ
 	////////////////////////////////////////////////////////////////////////////
 	
-	/** Å‰‚É‘I‘ğ‚µ‚½Œó•â‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚é
-	return	not -1	Œó•âƒCƒ“ƒfƒbƒNƒX
-			-1		–³‚µ
+	/** æœ€åˆã«é¸æŠã—ãŸå€™è£œã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹
+	return	not -1	å€™è£œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+			-1		ç„¡ã—
 	*/
 	INT_PTR	GetFirstSelectionCandidateIndex();
 
-	/** ‘I‘ğ‚µ‚½Œó•â”‚ğæ“¾‚·‚é
+	/** é¸æŠã—ãŸå€™è£œæ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	INT_PTR	GetSelectionCandidateCount();
 
-	/** ‘I‘ğ‚µ‚½Œó•â‚ÌƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚·‚é
+	/** é¸æŠã—ãŸå€™è£œã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	INT_PTR	GetSelectionCandidateIndex(INT_PTR selected_index);
 
@@ -126,9 +126,9 @@ public:
 
 private:
 	Unity*				m_instance;
-	///ŒŸõŒ‹‰Ê
+	///æ¤œç´¢çµæœ
 	Output				m_output;
-	///GŠÛƒGƒfƒBƒ^‚Ìs”Ô†
+	///ç§€ä¸¸ã‚¨ãƒ‡ã‚£ã‚¿ã®è¡Œç•ªå·
 	INT_PTR				m_hidemaru_line_no;
 
 	void Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates);

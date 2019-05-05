@@ -1,4 +1,4 @@
-#include"stdafx.h"
+Ôªø#include"stdafx.h"
 
 
 
@@ -30,7 +30,7 @@ static bool StringToBool(const WCHAR* str) {
 
 static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* filename) {
 	WCHAR buf[2 * 1024];
-	//[action.*]ÉZÉNÉVÉáÉìÇÃÉpÅ[ÉX
+	//[action.*]„Çª„ÇØ„Ç∑„Éß„É≥„ÅÆ„Éë„Éº„Çπ
 	//static const std::wstring	prefix(_T("action."));
 	//const		size_t			prefix_size = prefix.size();
 	
@@ -44,12 +44,12 @@ static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* fi
 			dst.push_back(top);
 			//OutputDebugString(top);
 		}
-		i += wcslen(top) + 1;//+1Ç≈'\0'Çì«Ç›îÚÇŒÇ∑
+		i += wcslen(top) + 1;//+1„Åß'\0'„ÇíË™≠„ÅøÈ£õ„Å∞„Åô
 	}
 }
 
 static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHAR* filename) {
-	/*ÉAÉNÉVÉáÉìÇÃÉZÉNÉVÉáÉìÇÉpÅ[ÉXÇ∑ÇÈ
+	/*„Ç¢„ÇØ„Ç∑„Éß„É≥„ÅÆ„Çª„ÇØ„Ç∑„Éß„É≥„Çí„Éë„Éº„Çπ„Åô„Çã
 	*/
 	WCHAR buf[2*1024];
 
@@ -142,7 +142,7 @@ void Kinds::Clear() {
 }
 
 WCHAR* Kinds::Create(const WCHAR* kind_ini) {
-	static std::wstring	name;	//staticÇ…Ç¬Ç¢Çƒ: èGä€ÉGÉfÉBÉ^Ç÷ï∂éöóÒÇï‘Ç∑ÇΩÇﬂê√ìIÇ»ÉÅÉÇÉäóÃàÊÇ∆Ç∑ÇÈ
+	static std::wstring	name;	//static„Å´„Å§„ÅÑ„Å¶: ÁßÄ‰∏∏„Ç®„Éá„Ç£„Çø„Å∏ÊñáÂ≠óÂàó„ÇíËøî„Åô„Åü„ÇÅÈùôÁöÑ„Å™„É°„É¢„É™È†òÂüü„Å®„Åô„Çã
 	Kind dst;
 
 //	std::wstring	description;
@@ -372,7 +372,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 				OutputDebugString(_T("@2.1"));
 				continue;
 			}
-			//Memo: ç≈èâÇ…ëIëÇ≥ÇÍÇΩÉ\Å[ÉXñº
+			//Memo: ÊúÄÂàù„Å´ÈÅ∏Êäû„Åï„Çå„Åü„ÇΩ„Éº„ÇπÂêç
 			OutputDebugString(_T("candidate->m_source_name="));
 			OutputDebugString(candidate->m_source_name.c_str());
 			first_source_name = candidate->m_source_name;
@@ -390,7 +390,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		}		
 	}	
 
-	//É\Å[ÉXñºÇ©ÇÁÉfÉBÉtÉHÉãÉgÉJÉCÉìÉhÇéÊÇËèoÇ∑
+	//„ÇΩ„Éº„ÇπÂêç„Åã„Çâ„Éá„Ç£„Éï„Ç©„É´„Éà„Ç´„Ç§„É≥„Éâ„ÇíÂèñ„ÇäÂá∫„Åô
 	auto* source= instance.lock()->QuerySources()->FindSource(first_source_name.c_str());
 	if (source == nullptr) {
 		OutputDebugString((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
@@ -404,7 +404,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		return false;
 	}
 
-	//åªç›ÇÃÉCÉìÉXÉ^ÉìÉXÇ÷åÛï‚Çí«â¡Ç∑ÇÈ
+	//ÁèæÂú®„ÅÆ„Ç§„É≥„Çπ„Çø„É≥„Çπ„Å∏ÂÄôË£ú„ÇíËøΩÂä†„Åô„Çã
 	{
 		std::wstring candidate;
 		auto* candidates = Unity::Instance().lock()->QueryCandidates();
