@@ -134,7 +134,7 @@ $g_space="\r\n\t 　";
 
 #g_open_newfile = false;
 #g_new_hidemaru = 0;
-#g_old_hidemaru = hidemaruhandle(0);
+#g_target_hidemaru = hidemaruhandle(0);
 
 //DLL
 #g_hmjre_dll 	= 0;
@@ -163,8 +163,9 @@ execmacro へ渡せる引数の上限は31個
 
 $g_old_searchbuffer = searchbuffer;
 #g_old_searchoption = searchoption;
-#g_old_hidemaru     = hidemaruhandle(0);
+#g_target_hidemaru  = hidemaruhandle(0);
 
+debuginfo 1;
 disablebreak;
 disablehistory 0xff;
 //disableinvert;カーソルキーが表示されなくなるためコメントアウトした。
@@ -177,7 +178,7 @@ main:
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
 	$$source=$$1;
-	$$source="tab";
+	$$source="file_mru";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
 	if(existfile($$source_filename)==false){
 		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
@@ -201,16 +202,21 @@ return	アクションが最後まで実行されたかどうか(bool)
 		true	実行されていない
 */
 Start:
+	debuginfo "==== Start ====";
+	
 	$$source_filename	=$$1;
 	
-	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_old_hidemaru), 1;
-	//call NewfileIfExist;
+	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_target_hidemaru), 1;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
 	
-	setstaticvariable "$unity.g_root_macro_directory", $g_root_macro_directory,0;
+	debuginfo "#g_target_hidemaru="+str(#g_target_hidemaru);
+	debuginfo "#g_new_hidemaru="+str(#g_new_hidemaru);
+	debuginfo "currenthidemaru="+str(hidemaruhandle(0));
+	
+	setstaticvariable "$unity.g_root_macro_directory", $g_root_macro_directory,1;
 	setstaticvariable "$unity.is_quit", "1",0;
 	
 	call LoadDll;
@@ -221,13 +227,13 @@ Start:
 	if(! ##return){
 		return false;
 	}
-	if(true){
+	if(false){
 		//debug
 		//
 		//二つ目の候補を追加
 		//
 		$$args="";
-		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\sources\\file_mru.mac", $$args;
+		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\sources\\tab.mac", $$args;
 		if(getresultex(-1)=="0"){
 			return 0;
 		}
@@ -238,11 +244,7 @@ Start:
 	if(! ##return){
 		return false;
 	}
-	
-	/*	後で実装
-	begingroupundo;
-	call DoActionToSelectionFiles;
-	endgroupundo;*/
+
 	return true;
 
 
@@ -255,6 +257,11 @@ RefineSearch:
 	*/
 	$$source_filename	= $$1;
 	$$args				= $$2;
+	
+	debuginfo 1;
+	debuginfo "RefineSearch";
+	debuginfo "  $$source_filename="+$$source_filename;
+	debuginfo "  $$args="+$$args;
 	
 	//ソースから候補を生成する
 	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
@@ -313,7 +320,6 @@ RefineSearchMain:
 
 		##ctrl =iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
-			/*ディフォルトアクションの実行*/
 			##is_quit_old	=val(getstaticvariable("$unity.is_quit",0));
 			execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools);
 			$$search_result	=getresultex(-1);
@@ -500,24 +506,12 @@ NewFile:
 	#g_new_hidemaru=hidemaruhandle(0);
 	return true;
 
-
-NewfileIfExist:
-	#g_open_newfile = false;
-	if(filetype=="new"){
-		return true;
-	}
-	//編集中のテキストを上書きしないための対応。
-	//新規ファイルを作成しそこへコマンドの実行結果を出力する。
-	call NewFile;
-	return ##return;
-
-
 CloseFileIfOpen:
 	if(#g_open_newfile){
-		setactivehidemaru	#g_old_hidemaru;
+		setactivehidemaru	#g_target_hidemaru;
 		closehidemaruforced #g_new_hidemaru;
 
-		#g_old_hidemaru=0;
+		#g_target_hidemaru=0;
 		#g_new_hidemaru=0;
 
 		#g_open_newfile=false;

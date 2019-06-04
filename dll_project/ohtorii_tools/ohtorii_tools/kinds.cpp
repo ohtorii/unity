@@ -349,13 +349,46 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		return false;
 	}
 	
+	//ここをつくる
+	
 	{
-		auto*inheritance=instance.lock()->QueryInheritance();
-		inheritance->Generate();
-		return false;
+		auto*inheritance = instance.lock()->QueryInheritance();
+		if (! inheritance->GenerateResolveActions()) {
+			return false;
+		}
+
+		auto* candidates = Unity::Instance().lock()->QueryCandidates();
+		if (candidates == nullptr) {
+			return false;
+		}
+		//現在のインスタンスへ候補を追加する
+		for (const auto&item : inheritance->GetResolveActions()) {
+			auto* kind = instance.lock()->QueryKinds()->FindKind(item.m_kind_name.c_str());
+			if (kind == nullptr) {
+				continue;
+			}
+			const auto & action = kind->m_actions.at(item.m_action_index);
+			
+			//item.m_kind_name
+			auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());
+			candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
+		}
+
+		
+		/*{
+			
+			for (const auto& action : kind->m_actions) {
+				if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
+					auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());
+					candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
+				}
+			}
+		}*/
+		return true;
 
 	}
 
+#if 0
 	bool			is_multi_select = false;
 	std::wstring	first_source_name;
 	{
@@ -405,8 +438,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}
 
 	//現在のインスタンスへ候補を追加する
-	{
-		std::wstring candidate;
+	{		
 		auto* candidates = Unity::Instance().lock()->QueryCandidates();
 		for (const auto& action : kind->m_actions) {
 			if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
@@ -417,4 +449,5 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}
 	OutputDebugString(_T("Finish"));
 	return true;
+#endif
 }

@@ -20,3 +20,16 @@ void Tokenize(std::vector<std::wstring>& tokens, const std::wstring& str, const 
 	}
 }
 
+void DebugLog(const WCHAR *fmt, ...)
+{
+	WCHAR     tmp[1024];
+	va_list  ap;
+
+	va_start(ap, fmt);
+	wvsprintf(tmp, fmt, ap);
+
+	// VisualStudioのデバッグウィンドウには必ず出力する
+	OutputDebugString(tmp);	
+
+	va_end(ap);
+}

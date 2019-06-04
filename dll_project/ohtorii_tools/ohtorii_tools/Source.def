@@ -48,6 +48,10 @@ EXPORTS
 	KindsIsActionQuit
 	KindsIsActionMultiSelectable
 
+	InheriatnceGenerateDefaultAction
+	InheriatnceGetDefaultActionKind
+	InheriatnceGetDefaultActionLabel
+
 
 	FileRegistAfterDeleteFile
 	WriteToFile

@@ -228,7 +228,17 @@ extern "C" INT_PTR	KindsIsActionMultiSelectable(INT_PTR kind_index, INT_PTR acti
 /////////////////////////////////////////////////////////////////////////////
 //Inheritance
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR InheriatnceGenerateDefaultAction(const WCHAR*source_name) {
+	return Unity::Instance().lock()->QueryInheritance()->GenerateDefaultAction(source_name);
+}
 
+extern "C" WCHAR*	InheriatnceGetDefaultActionKind() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryInheritance()->GetDefaultAction().m_kind_name.c_str());
+}
+
+extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryInheritance()->GetDefaultAction().m_label_name.c_str());
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //file
@@ -245,6 +255,7 @@ extern "C" INT_PTR FileRegistAfterDeleteFile(const WCHAR* filename) {
 
 extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {
 	/*ここで一時ファイルを削除する*/
+	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n);
 	Unity::Destroy();
 	return 0;
 }

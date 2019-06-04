@@ -30,7 +30,9 @@ std::weak_ptr<Unity> Unity::Instance(size_t index) {
 }
 
 bool Unity::PushContext(bool exist_context_then_delete) {
+	DebugLog(_T("Unity::PushContext(%d)"), m_current_instance_index);
 	if (m_instances.size() <= (m_current_instance_index+1)) {
+		DebugLog(_T("Unity::PopContext -> m_instances.size() <= (m_current_instance_index+1)"));
 		return false;
 	}
 	++m_current_instance_index;
@@ -49,8 +51,10 @@ bool Unity::PushContext(bool exist_context_then_delete) {
 }
 
 bool Unity::PopContext(bool exist_context_then_delete) {
+	DebugLog(_T("Unity::PopContext(%d)"), m_current_instance_index);
 	if (m_current_instance_index == 0) {
 		//これ以上popできない
+		OutputDebugString(_T("Unity::PopContext -> m_current_instance_index == 0"));
 		return false;
 	}
 	if (exist_context_then_delete) {
@@ -74,7 +78,8 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 		
 		{
 			cereal::BinaryOutputArchive archive(os);
-			archive(*(Instance().lock()));
+			//archive(*(Instance().lock()));
+			archive(Unity::m_instances,Unity::m_current_instance_index);
 		}
 		return true;
 	}catch (std::exception) {
@@ -91,7 +96,8 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 		}
 		{
 			cereal::BinaryInputArchive	archive(is);
-			archive(*(Instance().lock()));
+			//archive(*(Instance().lock()));
+			archive(Unity::m_instances, Unity::m_current_instance_index);
 		}
 		return true;
 	}
@@ -102,10 +108,13 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 }
 
 void Unity::Destroy() {
+	DebugLog(_T("Unity::Destroy() Start"));
 	for (size_t i = 0; i<m_instances.size() ; ++i) {
 		m_instances.at(i).reset();
 	}
+	m_kinds.Clear();
 	m_current_instance_index = 0;
+	DebugLog(_T("Unity::Destroy() Finish"));
 }
 
 Sources* Unity::QuerySources(){
@@ -134,11 +143,11 @@ Inheritance*	Unity::QueryInheritance() {
 
 
 Unity::Unity() : m_refine_search(this), m_inheritance(this){
-	
+	DebugLog(_T("Unity::Unity() %p"),this);
 }
 
 Unity::~Unity(){
-	
+	DebugLog(_T("Unity::~Unity() %p"),this);
 }
 
 

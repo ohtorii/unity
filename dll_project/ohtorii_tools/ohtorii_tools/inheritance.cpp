@@ -1,11 +1,13 @@
 ﻿#include"stdafx.h"
 
+static 			WCHAR	gs_empty[] = { 0 };
+
 
 Inheritance::Inheritance(Unity*instance) : m_instance(instance){
 	
 }
 
-bool Inheritance::Generate() {
+bool Inheritance::GenerateResolveActions() {
 	/**選択された候補で利用している共通カインド
 	(例)
 	common_kinds[0]="common";
@@ -39,12 +41,50 @@ bool Inheritance::Generate() {
 		OutputDebugString(buf);
 		for (size_t i = 0; i < num; ++i) {
 			const auto & action = m_resolve_actions.at(i);
-			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  [%zd/%zd]%s.%s(%zd)"), i + 1, num, action.m_kind.c_str(), action.m_action_name.c_str(), action.m_action_index);
+			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  [%zd/%zd]%s.%s(%zd)"), i + 1, num, action.m_kind_name.c_str(), action.m_action_name.c_str(), action.m_action_index);
 			OutputDebugString(buf);
 		}
 	}
 
 	return true;
+}
+
+size_t Inheritance::GetActionCount()const {
+	return m_resolve_actions.size();
+}
+
+const WCHAR*	Inheritance::GetKindName(size_t action_index)const {
+	try{
+		m_resolve_actions.at(action_index).m_kind_name.c_str();
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return gs_empty;
+}
+
+size_t			Inheritance::GetActionIndex(size_t action_index)const {
+	try {
+		m_resolve_actions.at(action_index).m_action_index;
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
+
+const WCHAR*	Inheritance::GetActionName(size_t action_index)const {
+	try {
+		m_resolve_actions.at(action_index).m_action_name.c_str();
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return gs_empty;
+}
+
+const std::vector<Inheritance::ResolveAction>&	Inheritance::GetResolveActions()const {
+	return m_resolve_actions;
 }
 
 void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
@@ -97,7 +137,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 		_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("==== reference_count ==== (num=%zd)"), reference_counter.size());
 		OutputDebugString(buf);
 		for (const auto&item : reference_counter) {
-			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  %s=%zd"), item.m_kind.c_str(), item.m_counter);
+			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  %s=%zd"), item.m_kind_name.c_str(), item.m_counter);
 			OutputDebugString(buf);
 		}
 	}
@@ -105,7 +145,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 	// 共通のカインドを見付ける
 	for (const auto&item : reference_counter) {
 		if (num_selection <= item.m_counter) {
-			out_common_kinds.emplace_back(item.m_kind);
+			out_common_kinds.emplace_back(item.m_kind_name);
 		}
 	}
 }
@@ -121,7 +161,7 @@ void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_ref
 		return;
 	}
 	
-	auto it = std::find_if(out_reference_counter.begin(), out_reference_counter.end(), [kind](const auto &item){return item.m_kind == kind->m_name; });
+	auto it = std::find_if(out_reference_counter.begin(), out_reference_counter.end(), [kind](const auto &item){return item.m_kind_name == kind->m_name; });
 	if (it == out_reference_counter.end()) {
 		out_reference_counter.push_back({ kind->m_name,1 });
 	} else {
@@ -147,19 +187,19 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 
 	（出力）
 	m_resolve_actions
-		[1/9]common.nop(0)
-		[2/9]common.yank(1)
-		[3/9]common.yank_escape(2)
-		[4/9]common.insert(3)
-		[5/9]common.append(4)
-		[6/9]common.insert_directory(5)
-		[7/9]common.append_directory(6)
-		[8/9]file_mru.preview(7)				<--file_mruのpreviewを呼び出す。
+		[1/9]file_mru.preview(0)			<--file_mruのpreviewを呼び出す。
+		[2/9]common.nop(0)
+		[3/9]common.yank(1)
+		[4/9]common.yank_escape(2)
+		[5/9]common.insert(3)
+		[6/9]common.append(4)
+		[7/9]common.insert_directory(5)
+		[8/9]common.append_directory(6)
 		[9/9]common.echo(8)
 	*/
 	m_resolve_actions.clear();
 	/*基底カインドから処理するため配列を逆順にする。*/
-	std::reverse(common_kinds.begin(), common_kinds.end());
+	//std::reverse(common_kinds.begin(), common_kinds.end());
 
 	auto*kinds = m_instance->QueryKinds();
 	for (const auto&kind_name:common_kinds) {
@@ -172,7 +212,7 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 		for (const auto& action:kind->m_actions) {
 			auto it = std::find_if(	m_resolve_actions.begin(), 
 									m_resolve_actions.end(), 
-									[&kind_name, &action](const auto &item) {return /*(item.m_kind==kind_name) &&*/ (item.m_action_name==action.m_name); });
+									[&kind_name, &action](const auto &item) {return /*(item.m_kind_name==kind_name) &&*/ (item.m_action_name==action.m_name); });
 			
 			if (it == m_resolve_actions.end()) {
 				//新規追加
@@ -180,9 +220,49 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 			}
 			else {
 				//既存のアクションを派生カインドで上書きする
-				it->m_kind = kind_name;
+				//it->m_kind_name = kind_name;
+				//indexを設定する。
+
+				//同名のアクションを見付けた。（派生カインドを優先するため何もしない）
+				//
 			}
 			++action_index;
 		}
 	}
+}
+
+bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
+	if (m_instance == nullptr) {
+		return false;
+	}
+
+	auto source = m_instance->QuerySources()->FindSource(source_name);
+	if (source == nullptr) {
+		return false;
+	}
+	return GenerateDefaultActionRecursive(source->m_default_kind.c_str());	
+}
+
+bool Inheritance::GenerateDefaultActionRecursive(const WCHAR* kind_name) {
+	auto kind = m_instance->QueryKinds()->FindKind(kind_name);
+	if (kind == nullptr) {
+		return false;
+	}
+
+	if (!kind->m_default_action.empty()) {
+		m_default_action.m_kind_name = kind->m_name;
+		m_default_action.m_label_name = kind->m_default_action;
+		return true;
+	}
+	//ディフォルトアクションが空なので基底カインドから探す
+	for (const auto&base_kind : kind->m_base_kind) {
+		if (GenerateDefaultActionRecursive(base_kind.c_str())) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Inheritance::DefaultAction&	Inheritance::GetDefaultAction() {
+	return m_default_action; 
 }

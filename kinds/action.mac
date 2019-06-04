@@ -1,7 +1,7 @@
 ﻿/*アクションの実行
 */
 #g_target_hidemaruhandle=val(getstaticvariable("$unity.g_target_hidemaruhandle",1));
-$g_root_macro_directory =getstaticvariable("$unity.g_root_macro_directory", 0);
+$g_root_macro_directory =getstaticvariable("$unity.g_root_macro_directory", 1);
 
 #g_dll_ohtorii_tools=val(getarg(0));
 $label				=getarg(1);
@@ -41,12 +41,14 @@ do_action:
 	return $$return;
 
 do:
-	
+	debuginfo 1;
+	debuginfo "kinds/action.mac";
 	/////////////////////////////////////////////////////////////////////////
 	//アクションを取得する
 	/////////////////////////////////////////////////////////////////////////
 	##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetFirstSelectionCandidateIndex");
 	if(##candidate_index==-1){
+		debuginfo "  do -> false @ 0";
 		return "0";
 	}
 	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
@@ -64,42 +66,53 @@ do:
 	##exist_context_then_delete=false;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PopContext", ##exist_context_then_delete);
 	if(! ##ret){
+		debuginfo "  do -> false @ 1";
 		return "0";
 	}
 	
+	debuginfo "  exec_action start.";
 	call exec_action, $$kind_filename, $$action_name;
 	$$action_result=$$return;
+	debuginfo "  exec_action finish.";
 	
 	//コンテキストを元に戻す
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
 	if(! ##ret){
+		debuginfo "  do -> false @ 2";
 		return "0";
 	}
 	
+	debuginfo "  IsQuit start.";
 	call IsQuit $$user_data_kind;
 	##is_quit = ##return;
-	setstaticvariable "$unity.is_quit", str(##is_quit),0;
+	debuginfo "  IsQuit finish.";
 	
+	setstaticvariable "$unity.is_quit", str(##is_quit),0;
+	debuginfo "  do -> true";
 	return $$action_result;
 
 
 exec_action:
+	debuginfo "kinds/action.mac exec_action";
 	$$kind_filename	=$$1;
 	$$action_name	=$$2;
 	
 	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
 	$$serialize_filename=getresultex(-1);
 	if($$serialize_filename==""){
+		debuginfo "  exec_action-> false";
 		return "0";
 	}
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$serialize_filename);
 	if(! ##ret){
+		debuginfo "  exec_action-> false";
 		return "0";
 	}
 	
 	//現在のコンテキストをserializeする
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"SerializeCurrentContext", $$serialize_filename);
 	if(! ##ret){
+		debuginfo "  exec_action-> false";
 		return "0";
 	}
 	
@@ -107,18 +120,29 @@ exec_action:
 	##current_hidemaruhandle=hidemaruhandle(0);
 	setactivehidemaru(#g_target_hidemaruhandle);
 	
+	debuginfo "  ##current_hidemaruhandle="+str(##current_hidemaruhandle);
+	debuginfo "  #g_target_hidemaruhandle="+str(#g_target_hidemaruhandle);
+	
 	//切り替えた秀丸エディタへohtorii_toolsを読み込む
 	call LoadDll;
 	##dll_ohtorii_tools=##return;
 	if(##dll_ohtorii_tools==0){
+		//元の秀丸エディタへ切り替える
+		setactivehidemaru(##current_hidemaruhandle);
+		debuginfo "  exec_action-> false";
 		return "0";
 	}
 	//deserialize
 	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$serialize_filename);
 	if(! ##ret){
+		//元の秀丸エディタへ切り替える
+		setactivehidemaru(##current_hidemaruhandle);
+		debuginfo "  exec_action-> false";
 		return "0";
 	}
 	
+	debuginfo "  $$kind_filename="+$$kind_filename;
+	debuginfo "  $$action_name="+$$action_name;
 	execmacro $$kind_filename, str(##dll_ohtorii_tools), "do_action", $$action_name;
 	$$action_result = getresultex(-1);
 
@@ -127,6 +151,7 @@ exec_action:
 	
 	//元の秀丸エディタへ切り替える
 	setactivehidemaru(##current_hidemaruhandle);
+	debuginfo "  exec_action-> true";
 	return $$action_result;
 	
 

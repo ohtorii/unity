@@ -12,14 +12,14 @@ endmacro $$return;
 get_property:
 	return R"([property]
 name=file_mru
-default_action=preview
+'default_action=preview
 '継承するアクション（空白区切り）
 base_kind=common
 'openable file_vimfiler_base cdable uri
 
 [action.preview]
 function=preview
-description=Preview the candidate text.
+description=Preview the file.
 is_quit=false
 is_multi_selectable=false
 )";
@@ -27,6 +27,9 @@ is_multi_selectable=false
 
 do_action:
 	$$action=$$1;
+	debuginfo 1;
+	debuginfo "file_mru:";
+	debuginfo "$$action="+$$action;
 	call $$action;
 	return $$return;
 
@@ -42,7 +45,7 @@ preview:
 	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
 
 	//文字列を表示する
-	##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),"previewをオーバーライドしたよ！");
+	##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),"previewをオーバーライドしたよ！"+time);
 	
 	/*##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i=0;
