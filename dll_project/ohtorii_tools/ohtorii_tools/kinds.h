@@ -9,6 +9,10 @@ public:
 	Action();
 	//Action();
 
+	template<class Archive> void serialize(Archive & archive) {
+		archive(m_name, m_label, m_description, m_is_quit, m_is_multi_selectable);
+	};
+
 	///表示に使用する名前
 	std::wstring		m_name;
 	///秀丸マクロのラベル名
@@ -29,6 +33,10 @@ public:
 			const std::wstring				&description,
 			const std::wstring				&default_action,
 			const std::vector<std::wstring>	&base_kind);
+	template<class Archive> void serialize(Archive & archive) {
+		archive(m_name,m_description,m_default_action,m_base_kind,m_actions);
+	};
+
 	Action* FindAction(const WCHAR* action_name);
 	size_t	FindActionIndex(const WCHAR* action_name);
 	std::wstring				m_name;
@@ -44,6 +52,11 @@ public:
 class Kinds {
 public:
 	//Kinds();
+
+	template<class Archive> void serialize(Archive & archive) {
+		archive(m_kinds);
+	};
+
 	void Clear();
 	
 	WCHAR* Create(const WCHAR* kind_ini);
