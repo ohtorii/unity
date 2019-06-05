@@ -63,7 +63,7 @@ exec_action:
 	$$kind_filename	=$$1;
 	$$action_name	=$$2;
 	
-	if(true){
+	if(false){
 		//元のコード（多分・・・）
 		debuginfo "  $$kind_filename="+$$kind_filename;
 		debuginfo "  $$action_name="+ $$action_name;
@@ -87,6 +87,7 @@ exec_action:
 		return "0";
 	}
 	
+	debuginfo "  SerializeToCurrentContext";
 	//現在のコンテキストをserializeする
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"SerializeCurrentContext", $$serialize_filename);
 	if(! ##ret){
@@ -175,15 +176,6 @@ Unity::~Unity() 00000000634F26C0
 	debuginfo "  #g_target_hidemaruhandle="+str(#g_target_hidemaruhandle);
 	debuginfo "  hidemaruhandle(0)="+str(hidemaruhandle(0));
 	
-
-	if(false){
-		//debug
-		
-		//元の秀丸エディタへ着替える
-		setactivehidemaru(##current_hidemaruhandle);
-		return "0";
-	}
-	
 	
 	//切り替えた秀丸エディタへohtorii_toolsを読み込む
 	call LoadDll;
@@ -194,6 +186,7 @@ Unity::~Unity() 00000000634F26C0
 		debuginfo " internal/action.mac exec_action -> false";
 		return "0";
 	}
+	debuginfo "  DeSerializeToCurrentContext";
 	//deserialize
 	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$serialize_filename);
 	if(! ##ret){
