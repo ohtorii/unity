@@ -23,6 +23,16 @@ extern "C" WCHAR* GetSelectionDescription(INT_PTR selected_index) {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates()->GetDescription(index));
 }
 
+extern "C" WCHAR* GetSelectionUserDataString(INT_PTR selected_index, WCHAR*key_name, WCHAR*default_value) {
+	auto index = Unity::Instance().lock()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates()->GetUserData(index,key_name, default_value));
+}
+
+extern "C" INT_PTR GetSelectionUserDataNumeric(INT_PTR selected_index, WCHAR*key_name, INT_PTR default_value) {
+	auto index = Unity::Instance().lock()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);
+	return Unity::Instance().lock()->QueryCandidates()->GetUserData(index, key_name, default_value);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //Unity
 /////////////////////////////////////////////////////////////////////////////
@@ -131,8 +141,8 @@ extern "C" const WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
 /////////////////////////////////////////////////////////////////////////////
 //候補
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR CandidatesAppend(WCHAR*source_name, WCHAR*candidate) {
-	return Unity::Instance().lock()->QueryCandidates()->AppendCandidate(source_name, candidate);
+extern "C" INT_PTR CandidatesAppend(WCHAR*source_name, WCHAR*candidate, WCHAR*description) {
+	return Unity::Instance().lock()->QueryCandidates()->AppendCandidate(source_name, candidate, description);
 }
 
 extern "C" INT_PTR CandidatesSetUserDataString(INT_PTR index, const WCHAR* key, const WCHAR*data) {

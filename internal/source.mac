@@ -32,7 +32,7 @@ endmacro "0";
 main:
 	$$source_filename=$$1;
 	$$arg=$$2;
-	
+
 	/*ソースのプロパティを取得する
 	*/
 	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
@@ -45,7 +45,7 @@ main:
 		return false;
 	}
 	$$ini="";//メモリ解放
-	
+
 	/*候補を作る
 	*/
 	$$candidate_type=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
@@ -71,27 +71,27 @@ main:
 GatherCandidatesFromList:
 	$$source_filename=$$1;
 	$$arg=$$2;
-	
+
 	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
 	$$candidates=getresultex(-1);
-	
-	execmacro currentmacrodirectory+"\\get_file_basename.mac",$$source_filename; 
+
+	execmacro currentmacrodirectory+"\\get_file_basename.mac",$$source_filename;
 	$$source_name=getresultex(-1);
 	if($$source_name==""){
 		return false;
 	}
-	
+
 	call LoadDengaku;
 	##dll=##return;
 	if(##dll==0){
 		return false;
 	}
-	
+
 	##success=true;
 	$$token = dllfuncstr(##dll,"GETTOKEN",$$candidates,"\n\r");
 	while (1) {
 	    if($$token!=""){
-			##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, $$token);
+			##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, $$token, "");
 			if(##ret==-1){
 				##success=false;
 				break;
@@ -102,10 +102,10 @@ GatherCandidatesFromList:
 		}
 	    $$token = dllfuncstr(##dll,"GETTOKEN","","\n\r");
 	}
-	
+
 	call FreeDengaku  ##dll;
 	return ##success;
-	
+
 	/*
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$candidates_filename,$$list);
 	if(! ##ret){
@@ -135,7 +135,7 @@ LoadDllFuzzy:
 LoadDengaku:
 	call LoadDllFuzzy("DengakuDLL.dll");
 	return ##return;
-	
+
 FreeDengaku:
 	freedll ##1;
 	return;

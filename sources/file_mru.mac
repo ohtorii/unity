@@ -28,8 +28,12 @@ gather_candidates:
 	$$arg=$$1;
 	##i=0;
 	while(##i<filehistcount){
-		##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", "file_mru", getfilehist(##i));
-		if(##ret==-1){
+		##cadidate_index=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", "file_mru", getfilehist(##i),"");
+		if(##cadidate_index==-1){
+			return "0";
+		}
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"CandidatesSetUserDataNumeric",##cadidate_index,"file_history_index",##i);
+		if(! ##ret){
 			return "0";
 		}
 		##i = ##i + 1;
