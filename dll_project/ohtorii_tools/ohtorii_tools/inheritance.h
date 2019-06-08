@@ -108,8 +108,10 @@ private:
 
 	//--------------------------------------------------------------------------
 	//		DefaultAction
-	//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------	
 	bool GenerateDefaultActionRecursive(const WCHAR* kind_name);
+	//toto: 適切なメソッド名へ変更する
+	bool GenerateDefaultActionRecursive2(const WCHAR* kind_name, const std::wstring&default_action);
 	///ディフォルトアクションの情報
 	DefaultAction				m_default_action;
 };

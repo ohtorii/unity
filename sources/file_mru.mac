@@ -18,10 +18,10 @@ candidate_type=function
 
 gather_candidates:
 	/*候補を集める*/
-	
+
 	/*
 	candidate_type=function
-	
+
 	返値	"1"		成功
 			"0"		失敗
 	*/

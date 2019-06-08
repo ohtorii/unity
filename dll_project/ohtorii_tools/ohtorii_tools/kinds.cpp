@@ -149,17 +149,21 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 	//std::wstring	default_action;
 	//std::vector<std::wstring>	base_kind;
 
+	DebugLog(_T("Kinds::Create"));
+
 	{
 		File*			file = Unity::Instance().lock()->QueryFile();
 		std::wstring	temp_filename;
 
 		if (!file->CreateTempFile(temp_filename)) {
+			DebugLog(_T("  return false@1"));
 			return gs_empty;
 		}
 
 		const WCHAR*cname = temp_filename.c_str();
 		file->RegistAfterDelete(cname);
 		if (!file->WriteToFile(cname, kind_ini)) {
+			DebugLog(_T("  return false@2"));
 			return gs_empty;
 		}
 
@@ -167,6 +171,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 		GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), cname);
 		dst.m_name.assign(buf);
 		if (dst.m_name.size() == 0) {
+			DebugLog(_T("  return false@3"));
 			return gs_empty;
 		}
 
@@ -179,11 +184,11 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 		{
 			GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), buf, _countof(buf), cname);
 			Tokenize(dst.m_base_kind,buf,_T(" \t"));
-			if(0){
+			if(1){
 				//debug
-				OutputDebugString(_T("==== Inheritance ===="));
+				OutputDebugString(_T("  ==== Inheritance ===="));
 				for (const auto&item : dst.m_base_kind) {
-					OutputDebugString(item.c_str());
+					DebugLog(_T("  %s"), item.c_str());
 				}
 			}
 		}
@@ -201,9 +206,10 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 			}
 		}
 	}
-
+	
 	name.assign(dst.m_name);
 	m_kinds.emplace_back(dst);
+	DebugLog(_T("  return=%s"), name.c_str());
 	return const_cast<WCHAR*>(name.c_str());
 }
 
@@ -345,20 +351,20 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	OutputDebugString(_T("GenerateKindCandidates"));
 	std::weak_ptr<Unity> instance = Unity::Instance(instance_index);
 	if (instance.expired()) {
-		OutputDebugString(_T("@1"));
+		OutputDebugString(_T("  return false @1"));
 		return false;
-	}
-	
-	//ここをつくる
+	}	
 	
 	{
 		auto*inheritance = instance.lock()->QueryInheritance();
 		if (! inheritance->GenerateResolveActions()) {
+			OutputDebugString(_T("  return false @2"));
 			return false;
 		}
 
 		auto* candidates = Unity::Instance().lock()->QueryCandidates();
 		if (candidates == nullptr) {
+			OutputDebugString(_T("  return false @3"));
 			return false;
 		}
 		//現在のインスタンスへ候補を追加する
@@ -384,6 +390,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 				}
 			}
 		}*/
+		OutputDebugString(_T("  return true"));
 		return true;
 
 	}

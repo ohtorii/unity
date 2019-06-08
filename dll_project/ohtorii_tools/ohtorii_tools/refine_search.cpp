@@ -51,6 +51,7 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 			
 			if (! candidate.m_description.empty()) {
 				m_output.m_text.push_back(_T('\t'));
+				m_output.m_text.push_back(_T('\t'));
 				m_output.m_text.insert(m_output.m_text.end(), candidate.m_description.begin(), candidate.m_description.end());
 			}			
 

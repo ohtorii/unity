@@ -1,0 +1,64 @@
+﻿/**/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+
+
+get_property:
+	return R"([property]
+name=cdable
+default_action=hidemaru_filer
+base_kind=
+
+[action.command_prompt]
+function=command_prompt
+description=Open the file at the command prompt.
+
+[action.hidemaru_filer]
+function=hidemaru_filer
+description=Open the file at the Hidemaru filer classic.
+)";
+
+
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+/*
+実装	昨日
+		function! s:kind.action_table.cd.func(candidate) abort "{{{
+		function! s:kind.action_table.lcd.func(candidate) abort "{{{
+		function! s:kind.action_table.project_cd.func(candidate) abort "{{{
+		function! s:kind.action_table.tabnew_cd.func(candidate) abort "{{{
+		function! s:kind.action_table.tabnew_lcd.func(candidate) abort "{{{
+		function! s:kind.action_table.narrow.func(candidate) abort "{{{
+		function! s:kind.action_table.vimshell.func(candidate) abort "{{{			→ コマンドプロンプト
+		function! s:kind.action_table.tabvimshell.func(candidate) abort "{{{
+△		function! s:kind.action_table.vimfiler.func(candidate) abort "{{{			-> 秀丸ファイラー
+		function! s:kind.action_table.tabvimfiler.func(candidate) abort "{{{
+		function! s:cdable_action_rec.func(candidate) abort
+		function! s:cdable_action_rec_parent.func(candidate) abort
+		function! s:cdable_action_rec_project.func(candidate) abort
+		function! s:cdable_action_rec_async.func(candidate) abort
+		function! s:cdable_action_rec_parent_async.func(candidate) abort
+		function! s:cdable_action_rec_project_async.func(candidate) abort
+		function! s:external_cd(candidate) abort "{{{
+		function! s:move_vimfiler_cursor(candidate) abort "{{{
+		function! s:check_is_directory(directory) abort
+
+*/
+
+command_prompt:
+	debuginfo 1;
+	debuginfo "[cdable] command_prompt";
+	return "1";
+
+hidemaru_filer:
+	debuginfo 1;
+	debuginfo "[cdable] hidemaru_filer";
+	return "1";

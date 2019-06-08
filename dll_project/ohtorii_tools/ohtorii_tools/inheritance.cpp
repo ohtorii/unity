@@ -13,6 +13,8 @@ bool Inheritance::GenerateResolveActions() {
 	common_kinds[0]="common";
 	common_kinds[1]="cdable";
 	*/
+	OutputDebugString(_T("Inheritance::::GenerateResolveActions()"));
+
 	std::vector<std::wstring> common_kinds;
 	FindCommonKind(common_kinds);
 	if (true) {
@@ -45,7 +47,7 @@ bool Inheritance::GenerateResolveActions() {
 			OutputDebugString(buf);
 		}
 	}
-
+	OutputDebugString(_T("  return true"));
 	return true;
 }
 
@@ -88,6 +90,8 @@ const std::vector<Inheritance::ResolveAction>&	Inheritance::GetResolveActions()c
 }
 
 void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
+	OutputDebugString(_T("Inheritance:: FindCommonKind"));
+
 	out_common_kinds.clear();
 	
 	//
@@ -114,7 +118,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 		if(true){
 			//debug
 			WCHAR	buf[256];
-			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("num_selection=%zd"), num_selection);
+			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  num_selection=%zd"), num_selection);
 			OutputDebugString(buf);
 		}
 		for (INT_PTR selected_index = 0; selected_index < num_selection; ++selected_index) {
@@ -151,13 +155,18 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 }
 
 void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_reference_counter, const std::wstring&kind_name) {
+	DebugLog(_T("%s"), _T("Inheritance::FindCommonKindRecursive"));
+	DebugLog(_T("kind_name=%s"), kind_name.c_str());
+
 	if (kind_name.empty()) {
+		DebugLog(_T("  return@1"));
 		return;
 	}
 
 	auto*kinds= m_instance->QueryKinds();
 	auto*kind = kinds->FindKind(kind_name.c_str());
 	if (!kind) {
+		DebugLog(_T("  return@2"));
 		return;
 	}
 	
@@ -240,7 +249,37 @@ bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
 	if (source == nullptr) {
 		return false;
 	}
-	return GenerateDefaultActionRecursive(source->m_default_kind.c_str());	
+	//
+	const auto & default_kind = source->m_default_kind;
+	auto kind = m_instance->QueryKinds()->FindKind(default_kind.c_str());
+	if (kind == nullptr) {
+		return false;
+	}
+	if (kind->m_default_action.empty()) {
+		return GenerateDefaultActionRecursive(default_kind.c_str());
+	}
+	return GenerateDefaultActionRecursive2(default_kind.c_str(), kind->m_default_action);
+}
+
+bool Inheritance::GenerateDefaultActionRecursive2(const WCHAR* kind_name, const std::wstring&default_action) {
+	auto kind = m_instance->QueryKinds()->FindKind(kind_name);
+	if (kind == nullptr) {
+		return false;
+	}
+	
+	auto action = kind->FindAction(default_action.c_str());
+	if (action) {
+		m_default_action.m_kind_name	= kind->m_name;
+		m_default_action.m_label_name	= action->m_label;
+		return true;
+	}
+	//基底カインドから更に探す
+	for (const auto&base_kind : kind->m_base_kind) {
+		if (GenerateDefaultActionRecursive2(base_kind.c_str(), default_action)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Inheritance::GenerateDefaultActionRecursive(const WCHAR* kind_name) {
@@ -250,8 +289,8 @@ bool Inheritance::GenerateDefaultActionRecursive(const WCHAR* kind_name) {
 	}
 
 	if (!kind->m_default_action.empty()) {
-		m_default_action.m_kind_name = kind->m_name;
-		m_default_action.m_label_name = kind->m_default_action;
+		m_default_action.m_kind_name	= kind->m_name;
+		m_default_action.m_label_name	= kind->m_default_action;
 		return true;
 	}
 	//ディフォルトアクションが空なので基底カインドから探す
