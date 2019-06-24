@@ -34,12 +34,23 @@ struct Candidate {
 			m_fource_show);
 	};
 
+	struct ChildCandidate {
+		ChildCandidate(){};
+		ChildCandidate(const WCHAR*text, const WCHAR*description) : m_text(text), m_description(description){};
+		///候補
+		std::wstring			m_text;
+		///説明
+		std::wstring			m_description;
+	};
+
 	///ソース名
 	std::wstring			m_source_name;
-	///ファイルリストから読み込んだファイル名
+	///候補
 	std::wstring			m_text;	
 	///説明
 	std::wstring			m_description;
+	///子候補
+	std::vector <ChildCandidate>	m_child;
 	///ユーザーデータ（文字列）
 	std::unordered_map<std::wstring, std::wstring>	m_user_data_string;
 	///ユーザーデータ（数値）
@@ -72,7 +83,12 @@ public:
 	return 候補へのインデックス
 	*/
 	INT_PTR AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description=_T(""));
-	
+
+	/**候補の子供を追加する
+	return 候補へのインデックス
+	*/
+	INT_PTR AppendChildCandidate(INT_PTR candidate_index, const WCHAR*candidate, const WCHAR*description = _T(""));
+
 	/**候補のユーザーデータを設定する（文字列版）
 	同一キーがある場合は上書きします。
 	return bool	true	成功

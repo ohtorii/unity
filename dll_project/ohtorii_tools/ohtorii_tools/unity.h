@@ -69,7 +69,7 @@ private:
 	static Kinds		m_kinds;	
 
 	//std::vector<Candidate>	m_input;
-	//Output				m_output;
+	//HidemaruView				m_hidemaru_view;
 	
 	
 	//bool LoadTextFile(const WCHAR*filename);

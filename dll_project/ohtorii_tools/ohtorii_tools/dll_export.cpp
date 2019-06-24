@@ -109,6 +109,9 @@ extern "C" INT_PTR	RefineSearchGetSelectionCandidateIndex(INT_PTR selected_index
 	return Unity::Instance().lock()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);
 }
 
+extern "C" INT_PTR	RefineSearchMoveHidemaruCursorLineNo(INT_PTR current_line_no, INT_PTR delta) {
+	return Unity::Instance().lock()->QueryRefineSearch()->MoveHidemaruCursorLineNo(current_line_no, delta);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //source
@@ -143,6 +146,10 @@ extern "C" const WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR CandidatesAppend(WCHAR*source_name, WCHAR*candidate, WCHAR*description) {
 	return Unity::Instance().lock()->QueryCandidates()->AppendCandidate(source_name, candidate, description);
+}
+
+extern "C" INT_PTR CandidatesAppendChild(INT_PTR candidate_index, WCHAR*candidate, WCHAR*description) {
+	return Unity::Instance().lock()->QueryCandidates()->AppendChildCandidate(candidate_index, candidate, description);
 }
 
 extern "C" INT_PTR CandidatesSetUserDataString(INT_PTR index, const WCHAR* key, const WCHAR*data) {

@@ -3,38 +3,85 @@
 
 
 //秀丸エディタへ返す情報
-struct Output {
+struct HidemaruView {
 	void Clear() {
-		m_text.clear();
-		m_hidemaru_lineno_to_candidate_index.clear();
+		m_hidemaru_text.clear();
+		m_hidemaru_lineno_to_candidate_list_index.clear();		
 		m_hidemaru_maeked_lineno.clear();
 	};
 
 	void Reserve(size_t size) {
 		const size_t text_line_char = 80;
-		m_text.reserve(size*text_line_char);
-		m_hidemaru_lineno_to_candidate_index.reserve(size);
+		m_hidemaru_text.reserve(size*text_line_char);
+		m_hidemaru_lineno_to_candidate_list_index.reserve(size);		
 		m_hidemaru_maeked_lineno.reserve(size);
 	};
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
-			m_text,
-			m_hidemaru_lineno_to_candidate_index,
-			m_hidemaru_maeked_lineno
+			m_hidemaru_text,
+			m_hidemaru_lineno_to_candidate_list_index,	
+			m_hidemaru_maeked_lineno,
+			m_collapsed
 		);
 	};
+	
+	/*子供を折りたたんだ候補*/
+	struct CollapsedCandidate {
+		std::vector<INT_PTR>	m_index_to_hidemaru_lineno;
+		std::vector<INT_PTR>	m_hidemaru_lineno_to_index;
+		
+		void Clear() {
+			m_index_to_hidemaru_lineno.clear();
+			m_hidemaru_lineno_to_index.clear();
+		}
+
+		void Reserve(size_t size) {
+			m_index_to_hidemaru_lineno.reserve(size);
+			m_hidemaru_lineno_to_index.reserve(size);
+		}
+
+		template<class Archive> void serialize(Archive & archive) {
+			archive(
+				m_index_to_hidemaru_lineno,
+				m_hidemaru_lineno_to_index
+			);
+		};
+
+		void OnChangeHidemaruLineNo(INT_PTR hidemaru_lineno, INT_PTR collapsed_index) {
+			m_hidemaru_lineno_to_index.push_back(collapsed_index);
+		}
+
+		void OnChangeCollapsedIndex(INT_PTR hidemaru_lineno,INT_PTR collapsed_index) {
+			m_index_to_hidemaru_lineno.push_back(hidemaru_lineno);
+		}
+
+		INT_PTR CalcHidemaruCursorLineNo(INT_PTR hidemaru_lineno, INT_PTR candidate_delta) {
+			auto hidemar_line_index = hidemaru_lineno - 1;	//0開始にする
+			try{
+				auto next = m_hidemaru_lineno_to_index.at(hidemar_line_index) + candidate_delta;
+				return m_index_to_hidemaru_lineno.at(next);
+			}
+			catch (std::exception) {
+				//pass
+			}
+			return UNITY_NOT_FOUND_INDEX;
+		}
+	};
+	CollapsedCandidate		m_collapsed;
 
 	//秀丸エディタへ返す文字列(Ex. "foo.txt\nbar.txt\nhoge.cpp")
-	std::vector<std::wstring::value_type>	m_text;
+	std::vector<std::wstring::value_type>	m_hidemaru_text;	
 
-	/*「秀丸エディタの行番号」から「候補リストのインデックス」を取得するテーブル
+	/*	廃止予定
+	
+	「秀丸エディタの行番号」から「候補リストのインデックス」を取得するテーブル
 
 	(使用例)
-	候補のインデックス = m_hidemaru_lineno_to_candidate_index[秀丸エディタの行番号];
+	候補のインデックス = m_hidemaru_lineno_to_candidate_list_index[秀丸エディタの行番号];
 	*/
-	std::vector<INT_PTR>					m_hidemaru_lineno_to_candidate_index;
-
+	std::vector<INT_PTR>					m_hidemaru_lineno_to_candidate_list_index;
+		
 	//秀丸エディタでマークしている行番号(インデックスは1始まり)
 	std::vector<INT_PTR>					m_hidemaru_maeked_lineno;
 };
@@ -119,15 +166,20 @@ public:
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
-			m_output, 
+			m_hidemaru_view, 
 			m_hidemaru_line_no
 		);
 	};
 
+	/**秀丸エディタのカーソルを上下に移動する
+	candidate_delta	候補の増分
+	*/
+	INT_PTR MoveHidemaruCursorLineNo(INT_PTR current_line_no, INT_PTR candidate_delta);
+
 private:
 	Unity*				m_instance;
 	///検索結果
-	Output				m_output;
+	HidemaruView				m_hidemaru_view;
 	///秀丸エディタの行番号
 	INT_PTR				m_hidemaru_line_no;
 

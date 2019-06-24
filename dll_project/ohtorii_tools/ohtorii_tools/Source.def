@@ -20,6 +20,7 @@ EXPORTS
 	RefineSearchConvertHidemaruLinenNoToCandidateIndex
 	RefineSearchSetHidemaruLineno
 	RefineSearchGetFirstSelectionCandidateIndex
+	RefineSearchMoveHidemaruCursorLineNo
 	
 
     SourcesCreate
@@ -28,7 +29,8 @@ EXPORTS
 	
 	CandidatesGetSourceName
 	CandidatesGetText
-	CandidatesAppend	
+	CandidatesAppend
+	CandidatesAppendChild
 	CandidatesSetUserDataString
 	CandidatesSetUserDataNumeric
 	CandidatesGetUserDataString

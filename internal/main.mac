@@ -178,7 +178,8 @@ main:
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
 	$$source=$$1;
-	$$source="file_mru";
+	//$$source="file_mru";
+	$$source="window";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
 	if(existfile($$source_filename)==false){
 		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
@@ -203,22 +204,22 @@ return	アクションが最後まで実行されたかどうか(bool)
 */
 Start:
 	debuginfo "==== Start ====";
-	
+
 	$$source_filename	=$$1;
-	
+
 	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_target_hidemaru), 1;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
-	
+
 	debuginfo "#g_target_hidemaru="+str(#g_target_hidemaru);
 	debuginfo "#g_new_hidemaru="+str(#g_new_hidemaru);
 	debuginfo "currenthidemaru="+str(hidemaruhandle(0));
-	
+
 	setstaticvariable "$unity.g_root_macro_directory", $g_root_macro_directory,1;
 	setstaticvariable "$unity.is_quit", "1",0;
-	
+
 	call LoadDll;
 	if(! ##return){
 		return false;
@@ -233,7 +234,7 @@ Start:
 		//二つ目の候補を追加
 		//
 		$$args="";
-		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\sources\\tab.mac", $$args;
+		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\sources\\window.mac", $$args;
 		if(getresultex(-1)=="0"){
 			return 0;
 		}
@@ -257,12 +258,12 @@ RefineSearch:
 	*/
 	$$source_filename	= $$1;
 	$$args				= $$2;
-	
+
 	debuginfo 1;
 	debuginfo "RefineSearch";
 	debuginfo "  $$source_filename="+$$source_filename;
 	debuginfo "  $$args="+$$args;
-	
+
 	//ソースから候補を生成する
 	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
 	if(getresultex(-1)=="0"){
@@ -279,14 +280,14 @@ PushRefineSearch:
 	##exist_context_then_delete=true;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
 	return ##ret;
-	
-	
+
+
 PopRefineSearch:
 	##exist_context_then_delete=true;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PopContext", ##exist_context_then_delete);
 	return ##ret;
-	
-	
+
+
 RefineSearchMain:
 	/*
 	return	0 	キャンセル
@@ -294,17 +295,17 @@ RefineSearchMain:
 			-1	エラー
 	*/
 	$$keybord_buffer="";
-	
+
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 	$$cursor_pos=getresultex(-1);
 	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 	$$key_buffer=getresultex(-1);
-	
+
 	deletecolormarkerall "gather";
 
 	//事前に実行してDLL側のデータを作る。
 	call Filter $$key_buffer;
-	
+
 	$$prev_pattern="999";
 	##prev_tickcount=0;
 	while(true){
@@ -387,17 +388,31 @@ RefineSearchMain:
 		}
 	}
 	return -1;
-	
-	
+
+
+CursorMoveCommon:
+	##delta = ##1;
+	##next_line_no=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchMoveHidemaruCursorLineNo",lineno,##delta);
+	if(##next_line_no == -1){
+		return false;
+	}
+	moveto2 column,##next_line_no;
+	if(! result){
+		return false;
+	}
+	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
+	return result;
+
+
 CursorUp:
-	up;
-	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
-	return true;
-	
+	call CursorMoveCommon -1;
+	return ##return;
+
+
 CursorDown:
-	down;
-	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
-	return true;
+	call CursorMoveCommon 1;
+	return ##return;
+
 
 Mark:
 	//カーソル行に色を塗る
@@ -416,7 +431,7 @@ Mark:
 		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
 		escape;
 	}
-	
+
 	enabledraw;
 	return;
 
@@ -426,6 +441,8 @@ Filter:
 	*/
 	call TrimString $$1;
 	$$pattern=$$return;
+
+	##old_lineno=lineno;
 
 	disabledraw;
 	selectall;
@@ -450,15 +467,25 @@ Filter:
 		##i = ##i + 1;
 	}
 
+	//行数が増減するためカーソル位置を候補の位置に移動する
+	moveto2 0,##old_lineno;
+	call CursorMoveCommon 0;
+	if(##return){
+		##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
+	}else{
+		//とりあえず先頭(1)に移動しておく
+		##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",1);
+	}
+
 	enabledraw;
 	return result;
-	
+
 
 HilightWorld:
 	/*
 	検索文字列をハイライト表示する
 	*/
-	
+
 	$$search_words=$$1;
 	call SearchWordsToHidemaruRegex $$search_words;
 	$$regex=$$return;
@@ -524,7 +551,7 @@ LoadKindAll:
 	/*全カインドをDLLへ読み込む*/
 	$$kinds[0]="";
 	##kinds_num=0;
-	
+
 	$$root = $g_root_macro_directory+"\\kinds\\";
 	##n = dllfunc(#g_dengaku_dll,"ENUMFILE",$$root+"*.mac");
 	while (1) {
@@ -535,9 +562,9 @@ LoadKindAll:
 		$$kinds[##kinds_num]=$$root+$$file;
 		##kinds_num = ##kinds_num + 1;
 	}
-	
+
 	##n=dllfuncw(#g_dll_ohtorii_tools,"KindsClear");
-		
+
 	##i=0;
 	while(##i<##kinds_num){
 		execmacro $$kinds[##i],str(#g_dll_ohtorii_tools),"get_property";

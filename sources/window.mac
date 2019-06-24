@@ -1,0 +1,71 @@
+﻿/* ウインドウ一覧
+*/
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=window
+description=candidates from tab list
+default_kind=window
+candidate_type=function
+)";
+
+gather_candidates:
+	/*
+	タブグループ１[0x0000111]	<- 選択対象
+		foo.txt
+		bar.txt
+	タブグループ２[0x0000112]	<- 選択対象
+		hoge.txt
+
+	0x....はウインドウハンドル
+
+	*/
+	$$source_name="window";
+
+	/*$$win1=	"タブグループ１\n"	+
+			"\tfoo.txt\n"		+
+			"\tbar.txt"			;*/
+	##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "タブグループ1", "説明１");
+	if(##candidate_index == -1){
+		return "0";
+	}
+
+	##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendChild", ##candidate_index, "foo.txt", "説明２");
+	if(##candidate_child_index==-1){
+		return "0";
+	}
+	##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendChild", ##candidate_index, "bar.txt", "説明３");
+	if(##candidate_child_index==-1){
+		return "0";
+	}
+
+
+	/*$$win2=	"タブグループ2\n"	+
+			"\thoge.txt"		;*/
+	##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "タブグループ2", "説明４");
+	if(##candidate_index==-1){
+		return "0";
+	}
+	##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendChild", ##candidate_index, "hoge.txt", "説明５");
+	if(##candidate_child_index==-1){
+		return "0";
+	}
+
+	/*$$win2=	"タブグループ3\n"	+
+			"\thoge.txt"		;*/
+	##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "タブグループ3", "説明6");
+	if(##candidate_index==-1){
+		return "0";
+	}
+	##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendChild", ##candidate_index, "hoge.txt", "説明7");
+	if(##candidate_child_index==-1){
+		return "0";
+	}
+
+	return "1";

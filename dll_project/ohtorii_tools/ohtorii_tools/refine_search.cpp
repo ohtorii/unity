@@ -36,33 +36,63 @@ void RefineSearch::SetHidemaruLineno(INT_PTR hidemaru_line_no) {
 
 void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {
 	//一致する行を返す
-	size_t			hidemaru_lineno = 1;//memo: 秀丸エディタの行番号は1スタート
+	size_t			current_hidemaru_lineno = 1;//memo: 秀丸エディタの行番号は1スタート
 	const size_t	size			= candidates.size();
-	bool			first_match = true;
-	for (size_t candidate_index = 0; candidate_index < size; ++candidate_index) {
-		const auto& candidate = candidates.at(candidate_index);
-		if (MatchAll(candidate.m_text, tokens)) {
-			if (first_match) {
-				first_match = false;
-			}else {
-				m_output.m_text.push_back(_T('\n'));
-			}
-			m_output.m_text.insert(m_output.m_text.end(), candidate.m_text.begin(), candidate.m_text.end());
-			
-			if (! candidate.m_description.empty()) {
-				m_output.m_text.push_back(_T('\t'));
-				m_output.m_text.push_back(_T('\t'));
-				m_output.m_text.insert(m_output.m_text.end(), candidate.m_description.begin(), candidate.m_description.end());
-			}			
+	bool			first_match 	= true;
+	auto &			hidemaru_text	= m_hidemaru_view.m_hidemaru_text;
+	INT_PTR			collapsed_index = 0;
 
-			m_output.m_hidemaru_lineno_to_candidate_index.push_back(candidate_index);
-			if (candidate.m_selected) {
-				m_output.m_hidemaru_maeked_lineno.push_back(hidemaru_lineno);
-			}
-
-			++hidemaru_lineno;
+	for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
+		const auto& candidate = candidates.at(candidate_list_index);
+		if (! MatchAll(candidate.m_text, tokens)) {
+			continue;
 		}
+
+		if (first_match) {
+			//開始行には改行を挿入しない
+			first_match = false;
+		}else {
+			hidemaru_text.push_back(_T('\n'));
+		}
+
+		//
+		//候補と詳細のテキストを追加する
+		//
+		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());		
+		if (! candidate.m_description.empty()) {
+			hidemaru_text.push_back(_T('\t'));
+			hidemaru_text.push_back(_T('\t'));
+			hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
+		}
+		if (candidate.m_selected) {
+			m_hidemaru_view.m_hidemaru_maeked_lineno.push_back(current_hidemaru_lineno);
+		}
+		m_hidemaru_view.m_collapsed.OnChangeCollapsedIndex(current_hidemaru_lineno, collapsed_index);
+		m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
+		m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
+		
+
+		//
+		//子供のテキストと詳細を追加する
+		//
+		for(const auto&child: candidate.m_child) {
+			hidemaru_text.push_back(_T('\n'));
+			hidemaru_text.push_back(_T('\t'));
+			hidemaru_text.insert(hidemaru_text.end(), child.m_text.begin(), child.m_text.end());
+			if (! child.m_description.empty()) {
+				hidemaru_text.push_back(_T('\t'));
+				hidemaru_text.push_back(_T('\t'));
+				hidemaru_text.insert(hidemaru_text.end(), child.m_description.begin(), child.m_description.end());
+			}
+			m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
+			m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
+			++current_hidemaru_lineno;
+		}
+		
+		++collapsed_index;
+		++current_hidemaru_lineno;
 	}
+	
 	//OutputDebugString(L"==== Find finish ====");
 }
 
@@ -74,24 +104,24 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 	auto& candidates= m_instance->QueryCandidates()->GetCandidates();
 	
 	//memo: std::vector<>のメモリ予約		
-	m_output.Reserve(candidates.size());
-	m_output.Clear();
+	m_hidemaru_view.Reserve(candidates.size());
+	m_hidemaru_view.Clear();
 
 	Filter(tokens, candidates);
 	//テキストの終端を追加
-	m_output.m_text.push_back(_T('\0'));
+	m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
 	return true;
 }
 
 WCHAR* RefineSearch::GetResult() {
-	return &m_output.m_text.at(0);
+	return &m_hidemaru_view.m_hidemaru_text.at(0);
 }
 
 
 INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 	try {
 		bool		has_change		= false;
-		const auto	candidate_index = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no - 1);//-1して0始まりにする
+		const auto	candidate_index = m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no - 1);//-1して0始まりにする
 		auto&		candidates		= m_instance->QueryCandidates()->GetCandidates();
 		const bool	now				= candidates.at(candidate_index).m_selected;
 		
@@ -104,9 +134,9 @@ INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 			}
 			else {
 				//select -> unselect
-				auto find_it = std::find(m_output.m_hidemaru_maeked_lineno.begin(), m_output.m_hidemaru_maeked_lineno.end(), hidemaru_line_no);
-				if (find_it != m_output.m_hidemaru_maeked_lineno.end()) {
-					m_output.m_hidemaru_maeked_lineno.erase(find_it);
+				auto find_it = std::find(m_hidemaru_view.m_hidemaru_maeked_lineno.begin(), m_hidemaru_view.m_hidemaru_maeked_lineno.end(), hidemaru_line_no);
+				if (find_it != m_hidemaru_view.m_hidemaru_maeked_lineno.end()) {
+					m_hidemaru_view.m_hidemaru_maeked_lineno.erase(find_it);
 					has_change = true;
 				}
 			}
@@ -114,7 +144,7 @@ INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 		else {
 			if (is_selected) {
 				//unselect -> select
-				m_output.m_hidemaru_maeked_lineno.push_back(hidemaru_line_no);
+				m_hidemaru_view.m_hidemaru_maeked_lineno.push_back(hidemaru_line_no);
 				has_change = true;
 			}
 			else {
@@ -124,7 +154,7 @@ INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 		}
 
 		if (has_change) {
-			std::sort(m_output.m_hidemaru_maeked_lineno.begin(), m_output.m_hidemaru_maeked_lineno.end());
+			std::sort(m_hidemaru_view.m_hidemaru_maeked_lineno.begin(), m_hidemaru_view.m_hidemaru_maeked_lineno.end());
 		}
 
 		return true;
@@ -137,13 +167,13 @@ INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 
 
 INT_PTR RefineSearch::GetMarkedCount() {
-	return m_output.m_hidemaru_maeked_lineno.size();
+	return m_hidemaru_view.m_hidemaru_maeked_lineno.size();
 }
 
 
 INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index) {
 	try {
-		return m_output.m_hidemaru_maeked_lineno.at(marked_index);
+		return m_hidemaru_view.m_hidemaru_maeked_lineno.at(marked_index);
 	}
 	catch (std::exception) {
 		//pass
@@ -151,29 +181,13 @@ INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)
 	return UNITY_NOT_FOUND_INDEX;
 }
 
-
-/*WCHAR* 	RefineSearch::GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
-	if (hidemaru_line_no <= 0) {
-		return gs_empty;
-	}
-	--hidemaru_line_no;//0始まりにする
-	try {
-		const auto filelist_lineno = m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
-		return &(m_instance->QueryCandidates()->GetCandidates().at(filelist_lineno).m_text.at(0));
-	}
-	catch (std::exception) {
-		//pass
-	}
-	return gs_empty;
-}*/
-
 INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {	
 	if (hidemaru_line_no <= 0) {
 		return UNITY_NOT_FOUND_INDEX;
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
-		return m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
+		return m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no);
 	}
 	catch (std::exception) {
 		//pass
@@ -188,22 +202,12 @@ INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
-		return m_output.m_hidemaru_lineno_to_candidate_index.at(hidemaru_line_no);
+		return m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no);
 	}catch(std::exception) {
 		//pass
 	}
 	return UNITY_NOT_FOUND_INDEX;
 }
-
-/*WCHAR* 	RefineSearch::GetSelectedFilename(INT_PTR marked_index) {
-	Candidate*candidate = GetMarkedCandidate(marked_index);
-	if (candidate == nullptr) {
-		return gs_empty;
-	}
-	return &candidate->m_text.at(0);
-	//INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(index);
-	//return GetMarkedFilenameFromHidemaruLineNo(hidemaru_line_no);
-}*/
 
 Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {	
 	const auto candidate_index = ConvertMarkIndexToCandidatesIndex(marked_index);
@@ -248,3 +252,20 @@ INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
 	}
 	return UNITY_NOT_FOUND_INDEX;
 }
+
+INT_PTR RefineSearch::MoveHidemaruCursorLineNo(INT_PTR current_lineno, INT_PTR candidate_delta) {	
+	return m_hidemaru_view.m_collapsed.CalcHidemaruCursorLineNo(current_lineno,candidate_delta);
+
+	/*const auto candidate_list_index = ConvertHidemaruLinenNoToCandidateIndex(current_line_no);
+	if(candidate_list_index==UNITY_NOT_FOUND_INDEX){
+		return UNITY_NOT_FOUND_INDEX;
+	}
+	const auto next_candidate_index = candidate_list_index + candidate_delta;
+	try{
+		return m_hidemaru_view.m_candidate_view_index_to_hidemaru_lineno.at(next_candidate_index);
+	}catch(std::exception){
+		//pass
+	}
+	return UNITY_NOT_FOUND_INDEX;*/
+}
+

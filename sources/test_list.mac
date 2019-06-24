@@ -1,0 +1,21 @@
+﻿/* テスト（candidate_type==list）
+*/
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=tab
+description=test list.
+default_kind=tab
+candidate_type=list
+)";
+
+gather_candidates:
+	return
+@"Test1
+Test2";

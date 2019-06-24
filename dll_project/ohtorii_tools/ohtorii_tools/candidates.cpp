@@ -61,6 +61,18 @@ INT_PTR Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candida
 	return m_candidates.size() - 1;
 }
 
+INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*candidate, const WCHAR*description) {
+	try{
+		auto &child = m_candidates.at(candidate_index).m_child;
+		child.emplace_back(candidate, description);
+		return child.size() - 1;
+	}
+	catch (std::range_error) {
+		//pass
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
+
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
 	try {
 		return m_candidates.at(index).SetUserData(key, data);

@@ -1,4 +1,4 @@
-﻿/* tab
+﻿/* window
 */
 
 #g_dll_ohtorii_tools=val(getarg(0));
@@ -11,14 +11,12 @@ endmacro $$return;
 
 get_property:
 	return R"([property]
-name=tab
+name=window
 default_action=preview
-'継承するアクション（空白区切り）
-base_kind=common
 
 [action.preview]
 function=preview
-description=Preview the candidate text.
+description=Preview window.
 is_quit=false
 is_multi_selectable=false
 )";
@@ -34,4 +32,3 @@ preview:
 	//少し待つ
 	//元のウインドウに切り替える
 	return "1";
-	
