@@ -1,36 +1,99 @@
 ﻿#pragma once
 #include"define.h"
 
+/* データ構造
+
+＊候補リスト(candidate list)
+	┌───┬───────────┐
+	│ index│  候補の内容          │
+	├───┼───────────┤
+	│  0   │  候補A               │
+	│      │      サブ候補A1      │
+	│      │      サブ候補A2      │
+	├───┼───────────┤
+	│  1   │  候補B               │
+	│      │      サブ候補B1      │
+	├───┼───────────┤
+	│  2   │  候補C               │
+	│      │      サブ候補C1      │
+	├───┼───────────┤
+	│  3   │  候補D               │
+	└───┴───────────┘
+	＊対応するメンバ変数
+	  Candidates::m_candidates
+
+
+＊秀丸エディタの表示
+	┌────┬───────┬───────────┬───────────────┐
+	│  行番号│候補          │候補リストインデックス│折りたたんだ候補のインデックス│
+	├────┼───────┼───────────┼───────────────┤
+	│  1     │候補B         │    1                 │    0                         │
+	├────┼───────┼───────────┼───────────────┤
+	│  2     │    サブ候補B1│    1                 │    0                         │
+	├────┼───────┼───────────┼───────────────┤
+	│  3     │候補D         │    3                 │    1                         │
+	└────┴───────┴───────────┴───────────────┘
+	＊対応するメンバ変数
+	  HidemaruView::
+
+
+＊折りたたんだ候補リスト
+	┌────┬─────────┬──────────┐
+	│  index │候補インデックス  │秀丸エディタの行番号│
+	├────┼─────────┼──────────┤
+	│  0     │1                 │1                   │
+	├────┼─────────┼──────────┤
+	│  1     │3                 │3                   │
+	└────┴─────────┴──────────┘
+	＊対応するメンバ変数
+	　HidemaruView::CollapsedCandidate::m_index_to_hidemaru_lineno
+	　HidemaruView::CollapsedCandidate::m_hidemaru_lineno_to_index
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+
 
 //秀丸エディタへ返す情報
 struct HidemaruView {
 	void Clear() {
 		m_hidemaru_text.clear();
-		m_hidemaru_lineno_to_candidate_list_index.clear();		
+		m_hidemaru_lineno_to_candidate_list_index.clear();
 		m_hidemaru_maeked_lineno.clear();
 	};
 
 	void Reserve(size_t size) {
 		const size_t text_line_char = 80;
 		m_hidemaru_text.reserve(size*text_line_char);
-		m_hidemaru_lineno_to_candidate_list_index.reserve(size);		
+		m_hidemaru_lineno_to_candidate_list_index.reserve(size);
 		m_hidemaru_maeked_lineno.reserve(size);
 	};
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
 			m_hidemaru_text,
-			m_hidemaru_lineno_to_candidate_list_index,	
+			m_hidemaru_lineno_to_candidate_list_index,
 			m_hidemaru_maeked_lineno,
 			m_collapsed
 		);
 	};
-	
+
 	/*子供を折りたたんだ候補*/
 	struct CollapsedCandidate {
+		///候補インデックスから秀丸エディタの行番号へ変換するテーブル
 		std::vector<INT_PTR>	m_index_to_hidemaru_lineno;
+		///秀丸エディタの行番号から候補インデックスへ変換するテーブル
 		std::vector<INT_PTR>	m_hidemaru_lineno_to_index;
-		
+
 		void Clear() {
 			m_index_to_hidemaru_lineno.clear();
 			m_hidemaru_lineno_to_index.clear();
@@ -71,17 +134,17 @@ struct HidemaruView {
 	CollapsedCandidate		m_collapsed;
 
 	//秀丸エディタへ返す文字列(Ex. "foo.txt\nbar.txt\nhoge.cpp")
-	std::vector<std::wstring::value_type>	m_hidemaru_text;	
+	std::vector<std::wstring::value_type>	m_hidemaru_text;
 
 	/*	廃止予定
-	
+
 	「秀丸エディタの行番号」から「候補リストのインデックス」を取得するテーブル
 
 	(使用例)
 	候補のインデックス = m_hidemaru_lineno_to_candidate_list_index[秀丸エディタの行番号];
 	*/
 	std::vector<INT_PTR>					m_hidemaru_lineno_to_candidate_list_index;
-		
+
 	//秀丸エディタでマークしている行番号(インデックスは1始まり)
 	std::vector<INT_PTR>					m_hidemaru_maeked_lineno;
 };
@@ -117,14 +180,14 @@ public:
 	　					ファイルの先頭が１です。
 	*/
 	INT_PTR ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected);
-	
-	
+
+
 	/*マークされているファイル名を取得する（秀丸エディタの行番号バージョン）
 	return	成功	ファイル名
 			失敗	空文字
 	*/
 	//WCHAR* GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no);
-	
+
 	/*マークされた行数を取得する
 	*/
 	INT_PTR GetMarkedCount();
@@ -144,12 +207,12 @@ public:
 
 	/*マークした候補の情報を取得する
 	*/
-	Candidate* GetMarkedCandidate(INT_PTR marked_index);	
+	Candidate* GetMarkedCandidate(INT_PTR marked_index);
 
 	////////////////////////////////////////////////////////////////////////////
 	//選択
 	////////////////////////////////////////////////////////////////////////////
-	
+
 	/** 最初に選択した候補のインデックスを取得する
 	return	not -1	候補インデックス
 			-1		無し
@@ -166,7 +229,7 @@ public:
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
-			m_hidemaru_view, 
+			m_hidemaru_view,
 			m_hidemaru_line_no
 		);
 	};
