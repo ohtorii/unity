@@ -60,19 +60,7 @@ struct Candidate {
 	///必ず表示する候補かどうか
 	bool					m_fource_show;	
 };
-/*
-struct SourceCandidate{
-	SourceCandidate() {
-	}
-	SourceCandidate(const WCHAR*source_name) : 
-		m_source_name(source_name)
-	{
 
-	}
-	std::wstring			m_source_name;
-	std::vector<Candidate>	m_candidates;
-};
-*/
 
 class Candidates {
 public:

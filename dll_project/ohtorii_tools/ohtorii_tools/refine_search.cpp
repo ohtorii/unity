@@ -114,6 +114,9 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 }
 
 WCHAR* RefineSearch::GetResult() {
+	if(m_hidemaru_view.m_hidemaru_text.empty()){
+		return gs_empty;
+	}
 	return &m_hidemaru_view.m_hidemaru_text.at(0);
 }
 

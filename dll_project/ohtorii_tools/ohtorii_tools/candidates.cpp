@@ -67,7 +67,7 @@ INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*ca
 		child.emplace_back(candidate, description);
 		return child.size() - 1;
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return UNITY_NOT_FOUND_INDEX;
@@ -76,7 +76,7 @@ INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*ca
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
 	try {
 		return m_candidates.at(index).SetUserData(key, data);
-	}catch (std::range_error) {
+	}catch (std::exception) {
 		//pass
 	}
 	return false;
@@ -85,7 +85,7 @@ bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) 
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, INT_PTR data) {
 	try {
 		return m_candidates.at(index).SetUserData(key, data);
-	}catch (std::range_error) {
+	}catch (std::exception) {
 		//pass
 	}
 	return false;
@@ -95,7 +95,7 @@ const WCHAR*	Candidates::GetUserData(INT_PTR index, const WCHAR* key, const WCHA
 	try {
 		return m_candidates.at(index).GetUserData(key, default_data);
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return default_data;
@@ -105,7 +105,7 @@ INT_PTR			Candidates::GetUserData(INT_PTR index, const WCHAR* key, INT_PTR		defa
 	try {
 		return m_candidates.at(index).GetUserData(key, default_data);
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return default_data;
@@ -115,7 +115,7 @@ const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
 	try {
 		return m_candidates.at(index).m_source_name.c_str();
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return nullptr;
@@ -125,7 +125,7 @@ const WCHAR* Candidates::GetText(INT_PTR index)const {
 	try{
 		return m_candidates.at(index).m_text.c_str();
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return nullptr;
@@ -135,7 +135,7 @@ const WCHAR* Candidates::GetDescription(INT_PTR index)const {
 	try{
 		return m_candidates.at(index).m_description.c_str();
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return nullptr;

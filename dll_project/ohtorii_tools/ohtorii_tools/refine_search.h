@@ -34,7 +34,7 @@
 	│  3     │候補D         │    3                 │    1                         │
 	└────┴───────┴───────────┴───────────────┘
 	＊対応するメンバ変数
-	  HidemaruView::
+	  HidemaruView::m_hidemaru_lineno_to_candidate_list_index
 
 
 ＊折りたたんだ候補リスト
@@ -48,17 +48,6 @@
 	＊対応するメンバ変数
 	　HidemaruView::CollapsedCandidate::m_index_to_hidemaru_lineno
 	　HidemaruView::CollapsedCandidate::m_hidemaru_lineno_to_index
-
-
-
-
-
-
-
-
-
-
-
 */
 
 

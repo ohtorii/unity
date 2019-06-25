@@ -59,7 +59,7 @@ const WCHAR*	Inheritance::GetKindName(size_t action_index)const {
 	try{
 		m_resolve_actions.at(action_index).m_kind_name.c_str();
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return gs_empty;
@@ -69,7 +69,7 @@ size_t			Inheritance::GetActionIndex(size_t action_index)const {
 	try {
 		m_resolve_actions.at(action_index).m_action_index;
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return UNITY_NOT_FOUND_INDEX;
@@ -79,7 +79,7 @@ const WCHAR*	Inheritance::GetActionName(size_t action_index)const {
 	try {
 		m_resolve_actions.at(action_index).m_action_name.c_str();
 	}
-	catch (std::range_error) {
+	catch (std::exception) {
 		//pass
 	}
 	return gs_empty;

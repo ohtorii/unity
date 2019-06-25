@@ -25,14 +25,15 @@ gather_candidates:
 	返値	"1"		成功
 			"0"		失敗
 	*/
-	$$arg=$$1;
+	//$$arg=$$1;
+	$$user_dataname = "file_history_index";
 	##i=0;
 	while(##i<filehistcount){
 		##cadidate_index=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", "file_mru", getfilehist(##i),"");
 		if(##cadidate_index==-1){
 			return "0";
 		}
-		##ret = dllfuncw(#g_dll_ohtorii_tools,"CandidatesSetUserDataNumeric",##cadidate_index,"file_history_index",##i);
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"CandidatesSetUserDataNumeric",##cadidate_index,$$user_dataname,##i);
 		if(! ##ret){
 			return "0";
 		}

@@ -26,3 +26,7 @@ _neomru.vim-master
 /dll_project/ohtorii_tools/ohtorii_tools/x64/Debug
 /.vs
 .vscode
+*.db-shm
+*.db-wal
+*.lastcodeanalysissucceeded
+*.ilk
