@@ -1,5 +1,6 @@
 LIBRARY
 EXPORTS
+	Initialize
     PushContext
     PopContext
     GetCurrentContext

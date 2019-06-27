@@ -97,19 +97,24 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 }
 
 bool RefineSearch::Do(const WCHAR* search_words) {
-	std::vector<std::wstring> tokens;
-	tokens.reserve(16);
-	Tokenize(tokens, const_cast<WCHAR*>(search_words), _T(" \t\n"));
+	try{
+		std::vector<std::wstring> tokens;
+		tokens.reserve(16);
+		Tokenize(tokens, const_cast<WCHAR*>(search_words), _T(" \t\n"));
 
-	auto& candidates= m_instance->QueryCandidates()->GetCandidates();
+		auto& candidates= m_instance->QueryCandidates()->GetCandidates();
 	
-	//memo: std::vector<>のメモリ予約		
-	m_hidemaru_view.Reserve(candidates.size());
-	m_hidemaru_view.Clear();
+		//memo: std::vector<>のメモリ予約		
+		m_hidemaru_view.Reserve(candidates.size());
+		m_hidemaru_view.Clear();
 
-	Filter(tokens, candidates);
-	//テキストの終端を追加
-	m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
+		Filter(tokens, candidates);
+		//テキストの終端を追加
+		m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
+	}
+	catch (std::exception) {
+		return false;
+	}
 	return true;
 }
 
@@ -211,7 +216,7 @@ INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 	}
 	return UNITY_NOT_FOUND_INDEX;
 }
-
+/*
 Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {	
 	const auto candidate_index = ConvertMarkIndexToCandidatesIndex(marked_index);
 	if (candidate_index == UNITY_NOT_FOUND_INDEX) {
@@ -225,7 +230,7 @@ Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {
 	}
 	return nullptr;
 }
-
+*/
 INT_PTR	RefineSearch::GetFirstSelectionCandidateIndex() {
 	if (GetMarkedCount()) {
 		const INT_PTR first_item = 0;
@@ -258,17 +263,5 @@ INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
 
 INT_PTR RefineSearch::MoveHidemaruCursorLineNo(INT_PTR current_lineno, INT_PTR candidate_delta) {	
 	return m_hidemaru_view.m_collapsed.CalcHidemaruCursorLineNo(current_lineno,candidate_delta);
-
-	/*const auto candidate_list_index = ConvertHidemaruLinenNoToCandidateIndex(current_line_no);
-	if(candidate_list_index==UNITY_NOT_FOUND_INDEX){
-		return UNITY_NOT_FOUND_INDEX;
-	}
-	const auto next_candidate_index = candidate_list_index + candidate_delta;
-	try{
-		return m_hidemaru_view.m_candidate_view_index_to_hidemaru_lineno.at(next_candidate_index);
-	}catch(std::exception){
-		//pass
-	}
-	return UNITY_NOT_FOUND_INDEX;*/
 }
 

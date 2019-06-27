@@ -224,6 +224,7 @@ Start:
 	if(! ##return){
 		return false;
 	}
+	##n=dllfuncw(#g_dll_ohtorii_tools,"Initialize");
 	call LoadKindAll;
 	if(! ##return){
 		return false;

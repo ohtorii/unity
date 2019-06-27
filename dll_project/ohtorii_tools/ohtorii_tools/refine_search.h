@@ -196,7 +196,7 @@ public:
 
 	/*マークした候補の情報を取得する
 	*/
-	Candidate* GetMarkedCandidate(INT_PTR marked_index);
+	//Candidate* GetMarkedCandidate(INT_PTR marked_index);
 
 	////////////////////////////////////////////////////////////////////////////
 	//選択
