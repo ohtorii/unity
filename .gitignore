@@ -32,3 +32,4 @@ _neomru.vim-master
 *.ilk
 dll_project/ohtorii_tools/x64/Debug/ohtorii_tools_x64.dll
 dll_project/ohtorii_tools/x64/Release/UnitTest.dll
+sources/tags

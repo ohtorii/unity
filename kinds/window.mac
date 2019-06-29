@@ -28,7 +28,22 @@ do_action:
 	return $$return;
 
 preview:
+	##current_hidemaru	= hidemaruhandle(0);
+	##first_item_index	= 0;
+	##not_found 		= 0;
+	$$user_dataname	= "hidemaru_handle";
+
 	//ウインドウを切り替える
+	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionUserDataNumeric",##first_item_index,$$user_dataname,##not_found);
+
+	debuginfo 1;
+	debuginfo "##hidemaru_handle="+str(##hidemaru_handle);
+
+	setactivehidemaru ##hidemaru_handle;
+
 	//少し待つ
+	sleep 1500;
+
 	//元のウインドウに切り替える
+	setactivehidemaru ##current_hidemaru;
 	return "1";

@@ -532,6 +532,13 @@ NewFile:
 	}
 	#g_open_newfile=true;
 	#g_new_hidemaru=hidemaruhandle(0);
+
+	/* 2019/06/29 秀丸エディタのクラッシュ回避用コード
+	(See)
+	https://www.maruo.co.jp/hidesoft/4/x09005_.html?a=4#9014
+	*/
+	config "xFoldingTwigBar:0";
+
 	return true;
 
 CloseFileIfOpen:
