@@ -190,16 +190,23 @@ INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)
 }
 
 INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {	
+	DebugLog(_T("ConvertHidemaruLinenNoToCandidateIndex"));
+	DebugLog(_T("  hidemaru_line_no=%d"),hidemaru_line_no);
+	
 	if (hidemaru_line_no <= 0) {
+		DebugLog(_T("  return -1@1"));
 		return UNITY_NOT_FOUND_INDEX;
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
-		return m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no);
+		auto value = m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no);
+		DebugLog(_T("  return value=%d"),value);
+		return value;
 	}
 	catch (std::exception) {
 		//pass
 	}
+	DebugLog(_T("  return -1@2"));
 	return UNITY_NOT_FOUND_INDEX;
 }
 
@@ -252,6 +259,11 @@ INT_PTR	RefineSearch::GetSelectionCandidateCount() {
 
 INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
 	auto marked_count = GetMarkedCount();
+
+	DebugLog(_T("GetSelectionCandidateIndex"));
+	DebugLog(_T("  marked_count=%d"),marked_count);
+	DebugLog(_T("  selected_index=%d"),selected_index);
+	
 	if (0 < marked_count) {
 		return ConvertMarkIndexToCandidatesIndex(selected_index);
 	}

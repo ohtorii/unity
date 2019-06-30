@@ -398,9 +398,6 @@ CursorMoveCommon:
 		return false;
 	}
 	moveto2 column,##next_line_no;
-	if(! result){
-		return false;
-	}
 	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
 	return result;
 
@@ -468,15 +465,13 @@ Filter:
 		##i = ##i + 1;
 	}
 
-	//行数が増減するためカーソル位置を候補の位置に移動する
+	//
+	//行位置を維持する対策。
+	//
+	//まずは、行数が増減するためカーソル位置を前候補の位置に移動する
 	moveto2 0,##old_lineno;
+	//次に正しい行番号へ移動する。(そのためにdelt=0としている)
 	call CursorMoveCommon 0;
-	if(##return){
-		##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
-	}else{
-		//とりあえず先頭(1)に移動しておく
-		##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",1);
-	}
 
 	enabledraw;
 	return result;

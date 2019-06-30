@@ -37,12 +37,12 @@ extern "C" INT_PTR GetSelectionUserDataNumeric(INT_PTR selected_index, WCHAR*key
 //Unity
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR Initialize() {
-	_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+	/*_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
 	
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
 	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
-	OutputDebugString(_T("call Initialize()"));
+	OutputDebugString(_T("call Initialize()"));*/
 	return true;
 }
 
@@ -283,7 +283,7 @@ extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {
 	/*Todo ここで一時ファイルを削除する*/
 	Unity::Destroy();
 
-	_ASSERTE(_CrtCheckMemory());
-	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n);
+	/*_ASSERTE(_CrtCheckMemory());
+	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n);*/
 	return 0;
 }
