@@ -178,8 +178,8 @@ main:
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
 	$$source=$$1;
-	//$$source="file_mru";
-	$$source="window";
+	$$source="file_mru";
+	//$$source="window";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
 	if(existfile($$source_filename)==false){
 		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
@@ -472,7 +472,7 @@ Filter:
 	moveto2 0,##old_lineno;
 	//次に正しい行番号へ移動する。(そのためにdelt=0としている)
 	call CursorMoveCommon 0;
-
+	refreshtabstop;
 	enabledraw;
 	return result;
 
@@ -528,11 +528,12 @@ NewFile:
 	#g_open_newfile=true;
 	#g_new_hidemaru=hidemaruhandle(0);
 
-	/* 2019/06/29 秀丸エディタのクラッシュ回避用コード
-	(See)
-	https://www.maruo.co.jp/hidesoft/4/x09005_.html?a=4#9014
-	*/
+	/* 折りたたみを表示しない*/
 	config "xFoldingTwigBar:0";
+	/*TSVモード*/
+	config "xTabMode:0x0001";
+	config "xGuideLine:0x00";
+	config "xOrikaeshiLine:0";
 
 	return true;
 

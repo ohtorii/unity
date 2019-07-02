@@ -72,9 +72,6 @@ exec_action:
 		return $$action_result;
 	}
 
-
-
-
 	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
 	$$serialize_filename=getresultex(-1);
 	if($$serialize_filename==""){
@@ -94,77 +91,6 @@ exec_action:
 		debuginfo " internal/action.mac exec_action -> false";
 		return "0";
 	}
-/*
-＊アクションを選択してエンターするとクラッシュする原因について。
-　多分、ここで元の秀丸エディタへ切り替えているのが原因だと思われる。
-
-以下、ログ
-==== Start ====
-#g_target_hidemaru=1511944
-#g_new_hidemaru=1772664
-currenthidemaru=1772664
-Unity::Unity() 000000006ADE7C00
-RefineSearch
-  $$source_filename=d:\users\ikeuc_000\documents\github\unity\sources\file_mru.mac
-  $$args=
-Unity::PushContext(0)
-Unity::Unity() 000000006CB6AE90
-RefineSearch
-  $$source_filename=d:\users\ikeuc_000\documents\github\unity\sources\action.mac
-  $$args=0
-GenerateKindCandidates
-num_selection=1
-==== reference_count ==== (num=2)
-  file_mru=1
-  common=1
-==== common_kinds ==== (num=2)
-  [1/2]file_mru
-  [2/2]common
-==== m_resolve_actions ==== (num=9)
-  [1/9]file_mru.preview(0)
-  [2/9]common.nop(0)
-  [3/9]common.yank(1)
-  [4/9]common.yank_escape(2)
-  [5/9]common.insert(3)
-  [6/9]common.append(4)
-  [7/9]common.insert_directory(5)
-  [8/9]common.append_directory(6)
-  [9/9]common.echo(8)
-internal/action.mac
-GetHidemaruLabelName
-kind->m_default_action=
-do
-action->m_function=
-do
-internal/action.mac exec_action
-  ##current_hidemaruhandle=1772664
-  #g_target_hidemaruhandle=1511944
-  hidemaruhandle(0)=1511944
-Unity::Unity() 000000006CB62C20
-Unity::Unity() 00000000634F1E00
-Unity::Unity() 00000000634F17E0
-Unity::~Unity() 000000006CB62C20
-  $$kind_filename=d:\users\ikeuc_000\documents\github\unity\kinds\action.mac
-  $$action_name=do
-kinds/action.mac
-Unity::PopContext(1)
-  exec_action start.
-kinds/action.mac exec_action
-  ##current_hidemaruhandle=1511944
-  #g_target_hidemaruhandle=1511944
-Unity::Unity() 00000000634F26C0
-Unity::Unity() 00000000634F1D20
-Unity::~Unity() 00000000634F17E0
-Unity::~Unity() 00000000634F1E00
-  $$kind_filename=d:\users\ikeuc_000\documents\github\unity\kinds\common.mac
-  $$action_name=echo
-  exec_action-> true
-  exec_action finish.
-Unity::PushContext(0)
-  IsQuit start.
-Unity::~Unity() 00000000634F26C0
-クラッシュ！！！！！
-*/
 
 	//
 	//操作対象となる秀丸エディタへ切り替える

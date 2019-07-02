@@ -61,7 +61,7 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());		
 		if (! candidate.m_description.empty()) {
 			hidemaru_text.push_back(_T('\t'));
-			hidemaru_text.push_back(_T('\t'));
+			//hidemaru_text.push_back(_T('\t'));
 			hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
 		}
 		if (candidate.m_selected) {
@@ -81,7 +81,7 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 			hidemaru_text.insert(hidemaru_text.end(), child.m_text.begin(), child.m_text.end());
 			if (! child.m_description.empty()) {
 				hidemaru_text.push_back(_T('\t'));
-				hidemaru_text.push_back(_T('\t'));
+				//hidemaru_text.push_back(_T('\t'));
 				hidemaru_text.insert(hidemaru_text.end(), child.m_description.begin(), child.m_description.end());
 			}
 			m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
