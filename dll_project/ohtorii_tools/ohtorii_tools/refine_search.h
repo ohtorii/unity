@@ -47,7 +47,7 @@
 	└────┴─────────┴──────────┘
 	＊対応するメンバ変数
 	　HidemaruView::CollapsedCandidate::m_index_to_hidemaru_lineno
-	　HidemaruView::CollapsedCandidate::m_hidemaru_lineno_to_index
+	　HidemaruView::CollapsedCandidate::m_hidemaru_line_index_to_index
 */
 
 
@@ -80,28 +80,28 @@ struct HidemaruView {
 	struct CollapsedCandidate {
 		///候補インデックスから秀丸エディタの行番号へ変換するテーブル
 		std::vector<INT_PTR>	m_index_to_hidemaru_lineno;
-		///秀丸エディタの行番号から候補インデックスへ変換するテーブル
-		std::vector<INT_PTR>	m_hidemaru_lineno_to_index;
+		///秀丸エディタの行インデックスから候補インデックスへ変換するテーブル
+		std::vector<INT_PTR>	m_hidemaru_line_index_to_index;
 
 		void Clear() {
 			m_index_to_hidemaru_lineno.clear();
-			m_hidemaru_lineno_to_index.clear();
+			m_hidemaru_line_index_to_index.clear();
 		}
 
 		void Reserve(size_t size) {
 			m_index_to_hidemaru_lineno.reserve(size);
-			m_hidemaru_lineno_to_index.reserve(size);
+			m_hidemaru_line_index_to_index.reserve(size);
 		}
 
 		template<class Archive> void serialize(Archive & archive) {
 			archive(
 				m_index_to_hidemaru_lineno,
-				m_hidemaru_lineno_to_index
+				m_hidemaru_line_index_to_index
 			);
 		};
 
 		void OnChangeHidemaruLineNo(INT_PTR hidemaru_lineno, INT_PTR collapsed_index) {
-			m_hidemaru_lineno_to_index.push_back(collapsed_index);
+			m_hidemaru_line_index_to_index.push_back(collapsed_index);
 		}
 
 		void OnChangeCollapsedIndex(INT_PTR hidemaru_lineno,INT_PTR collapsed_index) {
@@ -111,7 +111,7 @@ struct HidemaruView {
 		INT_PTR CalcHidemaruCursorLineNo(INT_PTR hidemaru_lineno, INT_PTR candidate_delta) {
 			auto hidemar_line_index = hidemaru_lineno - 1;	//0開始にする
 			try{
-				auto next = m_hidemaru_lineno_to_index.at(hidemar_line_index) + candidate_delta;
+				auto next = m_hidemaru_line_index_to_index.at(hidemar_line_index) + candidate_delta;
 				return m_index_to_hidemaru_lineno.at(next);
 			}
 			catch (std::exception) {

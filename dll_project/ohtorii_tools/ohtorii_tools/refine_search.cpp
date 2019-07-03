@@ -34,14 +34,17 @@ void RefineSearch::SetHidemaruLineno(INT_PTR hidemaru_line_no) {
 	m_hidemaru_line_no = hidemaru_line_no;
 }
 
-void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {
-	//一致する行を返す
+//一致する行を返す
+void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {	
+	m_hidemaru_view.Clear();
+	m_hidemaru_view.m_collapsed.Clear();
+
 	size_t			current_hidemaru_lineno = 1;//memo: 秀丸エディタの行番号は1スタート
 	const size_t	size			= candidates.size();
 	bool			first_match 	= true;
 	auto &			hidemaru_text	= m_hidemaru_view.m_hidemaru_text;
 	INT_PTR			collapsed_index = 0;
-
+	
 	for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
 		const auto& candidate = candidates.at(candidate_list_index);
 		if (! MatchAll(candidate.m_text, tokens)) {
@@ -77,6 +80,8 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 		//
 		for(const auto&child: candidate.m_child) {
 			hidemaru_text.push_back(_T('\n'));
+			++current_hidemaru_lineno;
+
 			hidemaru_text.push_back(_T('\t'));
 			hidemaru_text.insert(hidemaru_text.end(), child.m_text.begin(), child.m_text.end());
 			if (! child.m_description.empty()) {
@@ -85,8 +90,7 @@ void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::ve
 				hidemaru_text.insert(hidemaru_text.end(), child.m_description.begin(), child.m_description.end());
 			}
 			m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
-			m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
-			++current_hidemaru_lineno;
+			m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);			
 		}
 		
 		++collapsed_index;
@@ -105,9 +109,7 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 		auto& candidates= m_instance->QueryCandidates()->GetCandidates();
 	
 		//memo: std::vector<>のメモリ予約		
-		m_hidemaru_view.Reserve(candidates.size());
-		m_hidemaru_view.Clear();
-
+		m_hidemaru_view.Reserve(candidates.size());		
 		Filter(tokens, candidates);
 		//テキストの終端を追加
 		m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
