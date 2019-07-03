@@ -1,0 +1,36 @@
+﻿/*プロセス
+*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=process
+description=起動しているプロセスの一覧
+default_kind=common
+candidate_type=function
+)";
+
+gather_candidates:
+	/*
+	タブグループ１[0x0000111]	<- 選択対象
+		foo.txt
+		bar.txt
+	タブグループ２[0x0000112]	<- 選択対象
+		hoge.txt
+
+	0x....はウインドウハンドル
+
+	*/
+	$$source_name="process";
+
+	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendHeader", $$source_name, "イメージ名\tPID\tセッション名\tセッション#\tメモリ使用量", "");
+	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "System\t4\tServices\t0\t3,728K", "");
+	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "Secure\tSystem\t72 Services\t0\t39,304K", "");
+
+	return "1";
