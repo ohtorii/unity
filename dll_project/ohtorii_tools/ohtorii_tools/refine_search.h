@@ -234,6 +234,4 @@ private:
 	HidemaruView				m_hidemaru_view;
 	///秀丸エディタの行番号
 	INT_PTR				m_hidemaru_line_no;
-
-	void Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates);
 };

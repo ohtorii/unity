@@ -22,6 +22,87 @@ static bool MatchAll(const std::wstring &line, const std::vector<std::wstring>& 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+//	Filter
+///////////////////////////////////////////////////////////////////////////////
+class Filter {
+public:
+	Filter(HidemaruView& hidemaru_view) : m_hidemaru_view(hidemaru_view){
+
+	};
+
+	void Generate(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {
+		m_hidemaru_view.Clear();
+		m_hidemaru_view.m_collapsed.Clear();
+
+		size_t			current_hidemaru_lineno = 1;//memo: 秀丸エディタの行番号は1スタート
+		const size_t	size = candidates.size();
+		bool			first_match = true;
+		auto &			hidemaru_text = m_hidemaru_view.m_hidemaru_text;
+		INT_PTR			collapsed_index = 0;
+
+		for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
+			const auto& candidate = candidates.at(candidate_list_index);
+			if (!MatchAll(candidate.m_text, tokens)) {
+				continue;
+			}
+
+			if (first_match) {
+				//開始行には改行を挿入しない
+				first_match = false;
+			}
+			else {
+				hidemaru_text.push_back(_T('\n'));
+			}
+
+			//
+			//候補と詳細のテキストを追加する
+			//
+			hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());
+			if (!candidate.m_description.empty()) {
+				hidemaru_text.push_back(_T('\t'));
+				//hidemaru_text.push_back(_T('\t'));
+				hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
+			}
+			if (candidate.m_selected) {
+				m_hidemaru_view.m_hidemaru_maeked_lineno.push_back(current_hidemaru_lineno);
+			}
+			m_hidemaru_view.m_collapsed.OnChangeCollapsedIndex(current_hidemaru_lineno, collapsed_index);
+			m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
+			m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
+
+
+			//
+			//子供のテキストと詳細を追加する
+			//
+			for (const auto&child : candidate.m_child) {
+				hidemaru_text.push_back(_T('\n'));
+				++current_hidemaru_lineno;
+
+				hidemaru_text.push_back(_T('\t'));
+				hidemaru_text.insert(hidemaru_text.end(), child.m_text.begin(), child.m_text.end());
+				if (!child.m_description.empty()) {
+					hidemaru_text.push_back(_T('\t'));
+					//hidemaru_text.push_back(_T('\t'));
+					hidemaru_text.insert(hidemaru_text.end(), child.m_description.begin(), child.m_description.end());
+				}
+				m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
+				m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
+			}
+
+			++collapsed_index;
+			++current_hidemaru_lineno;
+		}
+
+		//テキストの終端を追加
+		m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
+	};
+
+private:
+	HidemaruView&m_hidemaru_view;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
 //	RefineSearch
 ///////////////////////////////////////////////////////////////////////////////
 RefineSearch::RefineSearch(Unity*instance) : 
@@ -34,71 +115,6 @@ void RefineSearch::SetHidemaruLineno(INT_PTR hidemaru_line_no) {
 	m_hidemaru_line_no = hidemaru_line_no;
 }
 
-//一致する行を返す
-void RefineSearch::Filter(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) {	
-	m_hidemaru_view.Clear();
-	m_hidemaru_view.m_collapsed.Clear();
-
-	size_t			current_hidemaru_lineno = 1;//memo: 秀丸エディタの行番号は1スタート
-	const size_t	size			= candidates.size();
-	bool			first_match 	= true;
-	auto &			hidemaru_text	= m_hidemaru_view.m_hidemaru_text;
-	INT_PTR			collapsed_index = 0;
-	
-	for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
-		const auto& candidate = candidates.at(candidate_list_index);
-		if (! MatchAll(candidate.m_text, tokens)) {
-			continue;
-		}
-
-		if (first_match) {
-			//開始行には改行を挿入しない
-			first_match = false;
-		}else {
-			hidemaru_text.push_back(_T('\n'));
-		}
-
-		//
-		//候補と詳細のテキストを追加する
-		//
-		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());		
-		if (! candidate.m_description.empty()) {
-			hidemaru_text.push_back(_T('\t'));
-			//hidemaru_text.push_back(_T('\t'));
-			hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
-		}
-		if (candidate.m_selected) {
-			m_hidemaru_view.m_hidemaru_maeked_lineno.push_back(current_hidemaru_lineno);
-		}
-		m_hidemaru_view.m_collapsed.OnChangeCollapsedIndex(current_hidemaru_lineno, collapsed_index);
-		m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
-		m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
-		
-
-		//
-		//子供のテキストと詳細を追加する
-		//
-		for(const auto&child: candidate.m_child) {
-			hidemaru_text.push_back(_T('\n'));
-			++current_hidemaru_lineno;
-
-			hidemaru_text.push_back(_T('\t'));
-			hidemaru_text.insert(hidemaru_text.end(), child.m_text.begin(), child.m_text.end());
-			if (! child.m_description.empty()) {
-				hidemaru_text.push_back(_T('\t'));
-				//hidemaru_text.push_back(_T('\t'));
-				hidemaru_text.insert(hidemaru_text.end(), child.m_description.begin(), child.m_description.end());
-			}
-			m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(current_hidemaru_lineno, collapsed_index);
-			m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);			
-		}
-		
-		++collapsed_index;
-		++current_hidemaru_lineno;
-	}
-	
-	//OutputDebugString(L"==== Find finish ====");
-}
 
 bool RefineSearch::Do(const WCHAR* search_words) {
 	try{
@@ -110,9 +126,9 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 	
 		//memo: std::vector<>のメモリ予約		
 		m_hidemaru_view.Reserve(candidates.size());		
-		Filter(tokens, candidates);
-		//テキストの終端を追加
-		m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
+		
+		Filter filter(m_hidemaru_view);
+		filter.Generate(tokens, candidates);		
 	}
 	catch (std::exception) {
 		return false;
