@@ -1,6 +1,7 @@
 ﻿/*プロセス
 */
 
+$g_source_name="process";
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
 $arg=getarg(2);
@@ -27,10 +28,68 @@ gather_candidates:
 	0x....はウインドウハンドル
 
 	*/
-	$$source_name="process";
 
-	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendHeader", $$source_name, "イメージ名\tPID\tセッション名\tセッション#\tメモリ使用量", "");
-	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "System\t4\tServices\t0\t3,728K", "");
-	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, "Secure\tSystem\t72 Services\t0\t39,304K", "");
+	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendHeader", $g_source_name, "イメージ名\tPID\tメモリ使用量\t説明", "");
+	call create_process_candidates;
+	return $$return;
 
+
+create_process_candidates:
+	/*プロセスの候補を作成する。
+
+	＊以下VBSを秀丸マクロへ移植
+	Set process = CreateObject("WbemScripting.SWbemLocator").ConnectServer.ExecQuery("Select * From Win32_Process")
+	For Each item In process
+	  WScript.Echo item.Name & "," & item.ProcessId & "," & item.WorkingSetSize/1024
+	  'item.Description, item.ProcessId "," & item.ExecutablePath
+	Next
+	*/
+	##obj=createobject("WbemScripting.SWbemLocator");
+	if(! getresultex(10)){
+		debuginfo "Failed:createobject";
+		return "0";
+	}
+	##ConnectServer=member(##obj,"ConnectServer");
+	if(! getresultex(10)){
+		debuginfo "Failed:ConnectServer";
+		return "0";
+	}
+	##Win32_Process=callmethod_returnobj(##ConnectServer,"ExecQuery","Select * From Win32_Process");
+	if(! getresultex(10)){
+		debuginfo "Failed:ExecQuery";
+		return "0";
+	}
+	while(1){
+		##item=getcollection(##Win32_Process);
+		if(##item==0){
+			break;
+		}
+		$$name=getpropstr( ##item, "Name" );
+		if(! getresultex(10)){
+			debuginfo "Failed:Name";
+			return "0";
+		}
+		$$process_id=str(getpropnum( ##item, "ProcessId" ));//uint32
+		if(! getresultex(10)){
+			debuginfo "Failed:ProcessId";
+			return "0";
+		}
+		/*$$session_id=str(getpropnum( ##item, "SessionId" ));//uint32
+		if(! getresultex(10)){
+			debuginfo "Failed:SessionId";
+			return "0";
+		}*/
+		$$working_set_size="N/A";
+		/*$$working_set_size=str(getpropnum( ##item, "WorkingSetSize" ));//uint64
+		if(! getresultex(10)){
+			debuginfo "Failed:WorkingSetSize";
+			return "0";
+		}*/
+		$$command_line=getpropstr(##item,"CommandLine");
+		$$command_line=getpropstr(##item,"OSCreationClassName");
+		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $g_source_name, $$name+"\t"+$$process_id+"\t"+$$working_set_size+"\t"+$$command_line, "");
+	}
+	##item=getcollection(##Win32_Process,3);
+	releaseobject(##obj);
 	return "1";
+
