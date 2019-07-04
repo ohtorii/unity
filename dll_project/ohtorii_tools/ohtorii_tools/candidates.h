@@ -28,15 +28,20 @@ struct Candidate {
 			m_source_name ,
 			m_text,
 			m_description,
+			m_child,
 			m_user_data_string, 
 			m_user_data_numeric, 
-			m_selected, 
-			m_fource_show);
+			m_header,
+			m_selectable,
+			m_selected);
 	};
 
 	struct ChildCandidate {
 		ChildCandidate(){};
 		ChildCandidate(const WCHAR*text, const WCHAR*description) : m_text(text), m_description(description){};
+		template<class Archive> void serialize(Archive & archive) {
+			archive(m_text,m_description);
+		};
 		///候補
 		std::wstring			m_text;
 		///説明
@@ -45,7 +50,7 @@ struct Candidate {
 
 	///ソース名
 	std::wstring			m_source_name;
-	///候補
+	///候補のテキスト
 	std::wstring			m_text;	
 	///説明
 	std::wstring			m_description;
@@ -55,17 +60,23 @@ struct Candidate {
 	std::unordered_map<std::wstring, std::wstring>	m_user_data_string;
 	///ユーザーデータ（数値）
 	std::unordered_map<std::wstring, INT_PTR>		m_user_data_numeric;
+	///候補のヘッダーかどうか
+	bool					m_header;
+	///選択可能な候補かどうか
+	bool					m_selectable;
 	///このテキストが秀丸エディタ側で選択されているかどうか
 	bool					m_selected;
-	///必ず表示する候補かどうか
-	bool					m_fource_show;	
 };
 
 
 class Candidates {
 public:
 	Candidates();
-	//bool AppendCandidate(const WCHAR*source_name, const WCHAR*candidate);
+	
+	/**ヘッダーを追加する
+	return 候補へのインデックス
+	*/
+	INT_PTR AppendCandidateHeader(const WCHAR*source_name, const WCHAR*header, const WCHAR*description=_T(""));
 	
 	/**候補を追加する
 	return 候補へのインデックス
