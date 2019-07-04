@@ -30,6 +30,7 @@ EXPORTS
 	
 	CandidatesGetSourceName
 	CandidatesGetText
+	CandidatesAppendHeader
 	CandidatesAppend
 	CandidatesAppendChild
 	CandidatesSetUserDataString
