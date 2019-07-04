@@ -154,6 +154,10 @@ extern "C" const WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
 /////////////////////////////////////////////////////////////////////////////
 //候補
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR CandidatesAppendHeader(WCHAR*source_name, WCHAR*header, WCHAR*description) {
+	return Unity::Instance().lock()->QueryCandidates()->AppendCandidateHeader(source_name, header, description);
+}
+
 extern "C" INT_PTR CandidatesAppend(WCHAR*source_name, WCHAR*candidate, WCHAR*description) {
 	return Unity::Instance().lock()->QueryCandidates()->AppendCandidate(source_name, candidate, description);
 }
