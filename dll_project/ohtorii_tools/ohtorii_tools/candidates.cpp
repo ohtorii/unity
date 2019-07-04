@@ -5,8 +5,9 @@
 //Candidate
 /////////////////////////////////////////////////////////////////////////////
 Candidate::Candidate() {
+	m_header = false;
+	m_selectable = true;
 	m_selected = false;
-	m_fource_show = false;
 }
 
 Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description) :
@@ -14,8 +15,9 @@ Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*desc
 	m_text(text),
 	m_description(description)
 {
+	m_header=false;
+	m_selectable=true;
 	m_selected = false;
-	m_fource_show = false;
 }
 
 bool Candidate::SetUserData(const WCHAR* key, const WCHAR*data) {
@@ -50,10 +52,13 @@ Candidates::Candidates() {
 
 }
 
-/*bool Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate) {
-	m_candidates.emplace_back(source_name, candidate);
-	return true;
-}*/
+INT_PTR Candidates::AppendCandidateHeader(const WCHAR*source_name, const WCHAR*header, const WCHAR*description){
+	m_candidates.emplace_back(source_name, header, description);
+	auto &dst=m_candidates.back();
+	dst.m_header=true;
+	dst.m_selectable=false;
+	return m_candidates.size() - 1;
+}
 
 INT_PTR Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description)
 {
