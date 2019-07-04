@@ -39,15 +39,30 @@ public:
 		m_hidemaru_view.m_collapsed.Clear();
 
 		const size_t	size = candidates.size();		
-		
+		INT_PTR			header_candidate_index=UNITY_NOT_FOUND_INDEX;
 		
 
 		for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
 			const auto& candidate = candidates.at(candidate_list_index);
-			if (!MatchAll(candidate.m_text, tokens)) {
+						
+			if (candidate.m_header) {
+				//memo: ヘッダー部は検索処理に含めない
+				header_candidate_index=candidate_list_index;
 				continue;
 			}
-			InserCandidate(candidate,candidate_list_index);			
+
+			if (MatchAll(candidate.m_text, tokens)) {
+				if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
+					//ヘッダー部を挿入する
+					const auto& header_candidate= candidates.at(header_candidate_index);
+					if(header_candidate.m_source_name == candidate.m_source_name){
+						InserCandidate(header_candidate, header_candidate_index);
+					}
+					header_candidate_index= UNITY_NOT_FOUND_INDEX;
+				}
+				//検索にマッチした候補を挿入する
+				InserCandidate(candidate, candidate_list_index);
+			}
 		}
 
 		//テキストの終端を追加
