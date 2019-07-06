@@ -33,7 +33,7 @@ gather_candidates:
 	while( ##i < tabgrouptotal ) {
 		##grouptop			= gettabhandle( true, ##i, 0 );
 		##hidemaru_handle	= ##grouptop;
-		##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, sprintf("タブグループ%d[%d]",tabgroup[##grouptop],##hidemaru_handle), "");
+		##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, sprintf("タブグループ%d",tabgroup[##grouptop]), "");
 		if(##candidate_index == -1){
 			return "0";
 		}
@@ -53,7 +53,6 @@ gather_candidates:
 			if(updated[##handle]){
 				$$name=$$name+"  *";
 			}
-			$$name=sprintf("%s\t[%d]",$$name,##handle);
 			##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendChild", ##candidate_index, $$name, "");
 			if(##candidate_child_index==-1){
 				return "0";
