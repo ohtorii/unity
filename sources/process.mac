@@ -29,7 +29,7 @@ gather_candidates:
 
 	*/
 
-	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendHeader", $g_source_name, "イメージ名\tPID\tメモリ使用量\t説明", "");
+	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendHeader", $g_source_name, "イメージ名", "PID\tメモリ使用量");
 	call create_process_candidates;
 	return $$return;
 
@@ -65,31 +65,53 @@ create_process_candidates:
 			break;
 		}
 		$$name=getpropstr( ##item, "Name" );
-		if(! getresultex(10)){
+		/*if(! getresultex(10)){
 			debuginfo "Failed:Name";
 			return "0";
-		}
+		}*/
 		$$process_id=str(getpropnum( ##item, "ProcessId" ));//uint32
-		if(! getresultex(10)){
-			debuginfo "Failed:ProcessId";
-			return "0";
-		}
-		/*$$session_id=str(getpropnum( ##item, "SessionId" ));//uint32
-		if(! getresultex(10)){
-			debuginfo "Failed:SessionId";
-			return "0";
-		}*/
-		$$working_set_size="N/A";
-		/*$$working_set_size=str(getpropnum( ##item, "WorkingSetSize" ));//uint64
-		if(! getresultex(10)){
-			debuginfo "Failed:WorkingSetSize";
-			return "0";
-		}*/
-		$$command_line=getpropstr(##item,"CommandLine");
-		$$command_line=getpropstr(##item,"OSCreationClassName");
-		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $g_source_name, $$name+"\t"+$$process_id+"\t"+$$working_set_size+"\t"+$$command_line, "");
+
+		call number_format val(getpropstr( ##item, "WorkingSetSize" ))/1024;
+		$$working_set_size=$$return + "K";
+
+		//$$command_line=getpropstr(##item,"CommandLine");
+		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $g_source_name, $$name, $$process_id+"\t"+$$working_set_size);
 	}
 	##item=getcollection(##Win32_Process,3);
 	releaseobject(##obj);
 	return "1";
 
+number_format:
+	/*３桁ごとのカンマ区切り文字列に変換する
+	1234567 -> "1,234,567"
+	*/
+	##sep=3;
+
+	##number = ##1;
+	$$n=str(##number);
+
+	##len=strlen($$n);
+	//debuginfo "##len="+str(##len);
+	##remain=##len%##sep;//余り
+	//debuginfo "##remain="+str(##remain);
+
+	//(memo) $$result="1"
+	$$result = leftstr($$n,##remain);
+
+	/*(memo)
+	[##i=0]	$$result="1,234"
+	[##i=1]	$$result="1,234,567"
+	*/
+	##loop=##len/##sep;
+	##i=0;
+	while(##i<##loop){
+		$$part = midstr($$n,##remain+(##i*3),##sep);
+		if($$result==""){
+			$$result = $$result + $$part;
+		}else{
+			$$result = $$result + "," + $$part;
+		}
+
+		##i = ##i + 1;
+	}
+	return $$result;
