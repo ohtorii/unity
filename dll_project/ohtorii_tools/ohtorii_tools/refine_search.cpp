@@ -90,13 +90,15 @@ private:
 			//hidemaru_text.push_back(_T('\t'));
 			hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
 		}
+		
 		if (candidate.m_selected) {
 			m_hidemaru_view.m_hidemaru_maeked_lineno.push_back(m_current_hidemaru_lineno);
-		}
+		}				
 		m_hidemaru_view.m_collapsed.OnChangeCollapsedIndex(m_current_hidemaru_lineno, m_collapsed_index);
 		m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(m_current_hidemaru_lineno, m_collapsed_index);
-		m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
-
+		m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.push_back(candidate_list_index);
+		
+		
 
 		//
 		//子供のテキストと詳細を追加する
@@ -113,7 +115,7 @@ private:
 				hidemaru_text.insert(hidemaru_text.end(), child.m_description.begin(), child.m_description.end());
 			}
 			m_hidemaru_view.m_collapsed.OnChangeHidemaruLineNo(m_current_hidemaru_lineno, m_collapsed_index);
-			m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.push_back(candidate_list_index);
+			m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.push_back(candidate_list_index);
 		}
 
 		++m_collapsed_index;
@@ -126,12 +128,54 @@ private:
 	HidemaruView&	m_hidemaru_view;
 };
 
+///////////////////////////////////////////////////////////////////////////////
+//	CollapsedCandidate
+///////////////////////////////////////////////////////////////////////////////
+CollapsedCandidate::CollapsedCandidate(Unity *instance) {
+	m_instance = instance;
+}
+	
+void CollapsedCandidate::Clear() {
+	m_collapsed_index_to_hidemaru_lineno.clear();
+	m_hidemaru_line_index_to_collapsed_index.clear();
+}
+
+void CollapsedCandidate::Reserve(size_t size) {
+	m_collapsed_index_to_hidemaru_lineno.reserve(size);
+	m_hidemaru_line_index_to_collapsed_index.reserve(size);
+}	
+
+void CollapsedCandidate::OnChangeHidemaruLineNo(INT_PTR hidemaru_lineno, INT_PTR collapsed_index) {
+	m_hidemaru_line_index_to_collapsed_index.push_back(collapsed_index);
+}
+
+void CollapsedCandidate::OnChangeCollapsedIndex(INT_PTR hidemaru_lineno, INT_PTR collapsed_index) {
+	m_collapsed_index_to_hidemaru_lineno.push_back(hidemaru_lineno);
+}
+
+/*
+return	秀丸エディタの行番号
+*/
+INT_PTR CollapsedCandidate::CalcHidemaruCursorLineNo(INT_PTR hidemaru_lineno, INT_PTR collapsed_delta) {
+	auto hidemar_line_index = hidemaru_lineno - 1;	//0開始にする
+	try {
+		auto next_collapsed_index	= m_hidemaru_line_index_to_collapsed_index.at(hidemar_line_index) + collapsed_delta;				
+		auto result_lineno			= m_collapsed_index_to_hidemaru_lineno.at(next_collapsed_index);
+		return result_lineno;
+	}
+	catch (std::exception) {
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //	RefineSearch
 ///////////////////////////////////////////////////////////////////////////////
 RefineSearch::RefineSearch(Unity*instance) : 
 	m_instance(instance), 
+	m_hidemaru_view(instance),
 	m_hidemaru_line_no(0) 
 {
 }
@@ -172,7 +216,7 @@ WCHAR* RefineSearch::GetResult() {
 INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 	try {
 		bool		has_change		= false;
-		const auto	candidate_index = m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no - 1);//-1して0始まりにする
+		const auto	candidate_index = m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(hidemaru_line_no - 1);//-1して0始まりにする
 		auto&		candidates		= m_instance->QueryCandidates()->GetCandidates();
 		const bool	now				= candidates.at(candidate_index).m_selected;
 		
@@ -242,7 +286,7 @@ INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_li
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
-		auto value = m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no);
+		auto value = m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(hidemaru_line_no);
 		DebugLog(_T("  return value=%d"),value);
 		return value;
 	}
@@ -260,7 +304,7 @@ INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
-		return m_hidemaru_view.m_hidemaru_lineno_to_candidate_list_index.at(hidemaru_line_no);
+		return m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(hidemaru_line_no);
 	}catch(std::exception) {
 		//pass
 	}
@@ -316,7 +360,39 @@ INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
 	return UNITY_NOT_FOUND_INDEX;
 }
 
-INT_PTR RefineSearch::MoveHidemaruCursorLineNo(INT_PTR current_lineno, INT_PTR candidate_delta) {	
-	return m_hidemaru_view.m_collapsed.CalcHidemaruCursorLineNo(current_lineno,candidate_delta);
+INT_PTR RefineSearch::MoveHidemaruCursorLineNo(INT_PTR current_lineno, INT_PTR candidate_delta) {			
+	//DebugLog(_T("Enter MoveHidemaruCursorLineNo %d, %d"), current_lineno, candidate_delta);
+	try {
+		auto next_lineno			= m_hidemaru_view.m_collapsed.CalcHidemaruCursorLineNo(current_lineno, candidate_delta);
+		auto next_line_index		= next_lineno - 1;
+		auto next_candidate_index	= m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(next_line_index);
+		if (m_instance->QueryCandidates()->GetCandidates().at(next_candidate_index).m_selectable) {
+			//DebugLog(_T("  result=%d"), next_lineno);
+			return next_lineno;
+		}
+
+		//
+		//選択不可の候補なので次の候補を探す。
+		//
+
+		if (candidate_delta == 0) {
+			//無限ループの防止
+			//DebugLog(_T("  無限ループ防止"));
+			return UNITY_NOT_FOUND_INDEX;
+		}
+		INT_PTR next_candidate_delta = 0;
+		if (0 < candidate_delta) {
+			next_candidate_delta = candidate_delta + 1;
+		} else {
+			next_candidate_delta = candidate_delta - 1;
+		}
+		return MoveHidemaruCursorLineNo(current_lineno,next_candidate_delta);
+	}
+	catch (std::exception) {
+		//pass
+	}
+
+	//DebugLog(_T("  UNITY_NOT_FOUND_INDEX"));
+	return UNITY_NOT_FOUND_INDEX;	
 }
 
