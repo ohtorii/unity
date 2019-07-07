@@ -178,8 +178,9 @@ main:
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
 	$$source=$$1;
-	$$source="file_mru";
-	//$$source="window";
+	//$$source="file_mru";
+	$$source="window";
+	//$$source="process";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
 	if(existfile($$source_filename)==false){
 		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
@@ -393,7 +394,9 @@ RefineSearchMain:
 
 CursorMoveCommon:
 	##delta = ##1;
+	debuginfo "lineno="+str(lineno);
 	##next_line_no=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchMoveHidemaruCursorLineNo",lineno,##delta);
+	debuginfo "##next_line_no="+str(##next_line_no);
 	if(##next_line_no == -1){
 		return false;
 	}

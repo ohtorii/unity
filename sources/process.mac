@@ -1,7 +1,6 @@
 ﻿/*プロセス
 */
 
-$g_source_name="process";
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
 $arg=getarg(2);
@@ -29,7 +28,10 @@ gather_candidates:
 
 	*/
 
-	##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppendHeader", $g_source_name, "イメージ名", "PID\tメモリ使用量");
+	##success	= dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateHeader", "イメージ名", "PID\tメモリ使用量");
+	if(!##success){
+		return "0";
+	}
 	call create_process_candidates;
 	return $$return;
 
@@ -75,7 +77,10 @@ create_process_candidates:
 		$$working_set_size=$$return + "K";
 
 		//$$command_line=getpropstr(##item,"CommandLine");
-		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $g_source_name, $$name, $$process_id+"\t"+$$working_set_size);
+		##success = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$name, $$process_id+"\t"+$$working_set_size);
+		if(! ##success){
+			return "0";
+		}
 	}
 	##item=getcollection(##Win32_Process,3);
 	releaseobject(##obj);
@@ -91,9 +96,7 @@ number_format:
 	$$n=str(##number);
 
 	##len=strlen($$n);
-	//debuginfo "##len="+str(##len);
 	##remain=##len%##sep;//余り
-	//debuginfo "##remain="+str(##remain);
 
 	//(memo) $$result="1"
 	$$result = leftstr($$n,##remain);

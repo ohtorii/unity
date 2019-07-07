@@ -2,6 +2,37 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
+//Source制作者が利用する関数
+/////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR SetCurrentSourceName(WCHAR* source_name) {
+	return InterfaceSugar::Instance().SetCurrenSourceName(source_name);
+}
+
+extern "C" INT_PTR ClearCurrentSourceName() {
+	return InterfaceSugar::Instance().ClearCurrentSourceName();
+}
+
+extern "C" INT_PTR AppendCandidateHeader(WCHAR*header, WCHAR*description) {
+	return InterfaceSugar::Instance().AppendCandidateHeader(header, description);
+}
+
+extern "C" INT_PTR AppendCandidate(WCHAR*candidate, WCHAR*description) {
+	return InterfaceSugar::Instance().AppendCandidate(candidate, description);
+}
+
+extern "C" INT_PTR AppendUserDataString(const WCHAR* key, WCHAR* data) {
+	return InterfaceSugar::Instance().AppendUserDataString(key, data);
+}
+
+extern "C" INT_PTR AppendUserDataNumeric(const WCHAR* key, INT_PTR data) {
+	return InterfaceSugar::Instance().AppendUserDataNumeric(key,data);
+}
+
+extern "C" INT_PTR AppendChildCandidate(WCHAR*candidate, WCHAR*description) {
+	return InterfaceSugar::Instance().AppendChildCandidate(candidate, description);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 //Kind制作者が利用する関数
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR GetSelectionCount() {

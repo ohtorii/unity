@@ -48,6 +48,9 @@
     <ClInclude Include="inheritance.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="interface_sugar.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -81,6 +84,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="inheritance.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="interface_sugar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

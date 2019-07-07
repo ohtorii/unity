@@ -45,27 +45,34 @@ main:
 		return false;
 	}
 	$$ini="";//メモリ解放
-
 	/*候補を作る
 	*/
-	$$candidate_type=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
+	##ret		=false;
+	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", $$source_name);
+	if(!##success){
+		return false;
+	}
+
+	$$candidate_type = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
 	if($$candidate_type=="list"){
 		call GatherCandidatesFromList $$source_filename, $$arg;
-		return ##return;
+		##ret = ##return;
 	}else if($$candidate_type=="function"){
 		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
-		if(getresultex(-1)=="1"){
-			return true;
+		if(getresultex(-1)=="0"){
+			##ret=false;
+		}else{
+			##ret=true;
 		}
-		return false;
 	}else{
 		//未知の型名
 		message sprintf("$$candidate_type が未知の型名だよ。\n"+
 						"$$candidate_type=%s\n"	+
 						"\n\n[todo]親切なメッセージにする", $$candidate_type);
-		return false;
+		##ret=false;
 	}
-	return false;
+	##success = dllfuncw(#g_dll_ohtorii_tools, "ClearCurrentSourceName");
+	return ##ret;
 
 
 GatherCandidatesFromList:

@@ -107,7 +107,10 @@ private:
 			hidemaru_text.push_back(_T('\n'));
 			++m_current_hidemaru_lineno;
 
-			hidemaru_text.push_back(_T('\t'));
+			hidemaru_text.push_back(_T(' '));
+			hidemaru_text.push_back(_T(' '));
+			hidemaru_text.push_back(_T(' '));
+			hidemaru_text.push_back(_T(' '));
 			hidemaru_text.insert(hidemaru_text.end(), child.m_text.begin(), child.m_text.end());
 			if (!child.m_description.empty()) {
 				hidemaru_text.push_back(_T('\t'));

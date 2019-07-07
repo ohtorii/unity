@@ -1,11 +1,13 @@
 LIBRARY
 EXPORTS
-	Initialize
-    PushContext
-    PopContext
-    GetCurrentContext
-	SerializeCurrentContext
-	DeSerializeToCurrentContext
+	SetCurrentSourceName
+	ClearCurrentSourceName
+	AppendCandidateHeader
+	AppendCandidate
+	AppendUserDataString
+	AppendUserDataNumeric
+	AppendChildCandidate
+
 	GetSelectionCount
 	GetSelectionText
 	GetSelectionUserDataString
@@ -23,6 +25,12 @@ EXPORTS
 	RefineSearchGetFirstSelectionCandidateIndex
 	RefineSearchMoveHidemaruCursorLineNo
 	
+	Initialize
+    PushContext
+    PopContext
+    GetCurrentContext
+	SerializeCurrentContext
+	DeSerializeToCurrentContext
 
     SourcesCreate
     SourcesGetDefaultKind
@@ -57,7 +65,6 @@ EXPORTS
 	InheriatnceGenerateDefaultAction
 	InheriatnceGetDefaultActionKind
 	InheriatnceGetDefaultActionLabel
-
 
 	FileRegistAfterDeleteFile
 	WriteToFile

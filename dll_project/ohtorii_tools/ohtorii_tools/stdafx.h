@@ -44,4 +44,4 @@
 #include"refine_search.h"
 #include"inheritance.h"
 #include"utility.h"
-
+#include"interface_sugar.h"
