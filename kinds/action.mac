@@ -54,11 +54,11 @@ do:
 	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
 	$$action_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetText",			##candidate_index);
 	$$user_data_kind=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetUserDataString",##candidate_index,"__kind__","");
-	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",		$$source_name);
-	
+	//$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",		$$source_name);
+
 	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$user_data_kind+".mac";
-	
-	
+
+
 	/////////////////////////////////////////////////////////////////////////
 	//選択ファイルに対してアクションを実行する
 	/////////////////////////////////////////////////////////////////////////
@@ -69,25 +69,25 @@ do:
 		debuginfo "  do -> false @ 1";
 		return "0";
 	}
-	
+
 	debuginfo "  exec_action start.";
 	call exec_action, $$kind_filename, $$action_name;
 	$$action_result=$$return;
 	debuginfo "  exec_action finish.";
-	
+
 	//コンテキストを元に戻す
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
 	if(! ##ret){
 		debuginfo "  do -> false @ 2";
 		return "0";
 	}
-	
+
 	debuginfo "  IsQuit start.";
-	call IsQuit $$user_data_kind;
-	##is_quit = ##return;
-	debuginfo "  IsQuit finish.";
-	
-	setstaticvariable "$unity.is_quit", str(##is_quit),0;
+	execmacro $g_root_macro_directory+"\\internal\\is_quit.mac", str(#g_dll_ohtorii_tools),$$user_data_kind, $$action_name;
+	$$is_quit = getresultex(-1);
+	debuginfo "  IsQuit finish. $$is_quit="+$$is_quit;
+
+	setstaticvariable "$unity.is_quit", $$is_quit,1;
 	debuginfo "  do -> true";
 	return $$action_result;
 
@@ -103,15 +103,6 @@ exec_action:
 	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$action_name;
 	$$action_result = getresultex(-1);
 	return $$action_result;
-
-
-IsQuit:
-	$$default_kind = $$1;
-	##kind_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindKindIndex",	$$default_kind);
-	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,	"KindGetDefaultAction", ##kind_index);
-	##action_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindActionIndex", ##kind_index, $$default_action);
-	##is_quit		=dllfuncw(#g_dll_ohtorii_tools, 	"KindsIsActionQuit",	##kind_index,##action_index);
-	return ##is_quit;
 
 
 LoadDll:

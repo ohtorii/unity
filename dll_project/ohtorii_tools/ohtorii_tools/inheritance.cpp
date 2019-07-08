@@ -13,7 +13,7 @@ bool Inheritance::GenerateResolveActions() {
 	common_kinds[0]="common";
 	common_kinds[1]="cdable";
 	*/
-	OutputDebugString(_T("Inheritance::::GenerateResolveActions()"));
+	DebugLog(_T("Inheritance::::GenerateResolveActions()"));
 
 	std::vector<std::wstring> common_kinds;
 	FindCommonKind(common_kinds);
@@ -24,10 +24,10 @@ bool Inheritance::GenerateResolveActions() {
 		WCHAR	buf[256];
 		const auto num = common_kinds.size();
 		_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("==== common_kinds ==== (num=%zd)"), num);
-		OutputDebugString(buf);
+		DebugLog(buf);
 		for (size_t i = 0; i < num ; ++i) {
 			_snwprintf_s(buf, _countof(buf),_TRUNCATE, _T("  [%zd/%zd]%s"), i+1,num,common_kinds.at(i).c_str());
-			OutputDebugString(buf);
+			DebugLog(buf);
 		}
 	}
 
@@ -40,14 +40,14 @@ bool Inheritance::GenerateResolveActions() {
 		WCHAR	buf[256];
 		const auto num = m_resolve_actions.size();
 		_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("==== m_resolve_actions ==== (num=%zd)"), num);
-		OutputDebugString(buf);
+		DebugLog(buf);
 		for (size_t i = 0; i < num; ++i) {
 			const auto & action = m_resolve_actions.at(i);
 			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  [%zd/%zd]%s.%s(%zd)"), i + 1, num, action.m_kind_name.c_str(), action.m_action_name.c_str(), action.m_action_index);
-			OutputDebugString(buf);
+			DebugLog(buf);
 		}
 	}
-	OutputDebugString(_T("  return true"));
+	DebugLog(_T("  return true"));
 	return true;
 }
 
@@ -90,7 +90,7 @@ const std::vector<Inheritance::ResolveAction>&	Inheritance::GetResolveActions()c
 }
 
 void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
-	OutputDebugString(_T("Inheritance:: FindCommonKind"));
+	DebugLog(_T("Inheritance:: FindCommonKind"));
 
 	out_common_kinds.clear();
 	
@@ -119,7 +119,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 			//debug
 			WCHAR	buf[256];
 			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  num_selection=%zd"), num_selection);
-			OutputDebugString(buf);
+			DebugLog(buf);
 		}
 		for (INT_PTR selected_index = 0; selected_index < num_selection; ++selected_index) {
 			auto candidate_index = refine_search->GetSelectionCandidateIndex(selected_index);
@@ -139,10 +139,10 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 		//debug
 		WCHAR	buf[256];
 		_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("==== reference_count ==== (num=%zd)"), reference_counter.size());
-		OutputDebugString(buf);
+		DebugLog(buf);
 		for (const auto&item : reference_counter) {
 			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  %s=%zd"), item.m_kind_name.c_str(), item.m_counter);
-			OutputDebugString(buf);
+			DebugLog(buf);
 		}
 	}
 

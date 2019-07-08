@@ -39,10 +39,10 @@ static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* fi
 	size_t i = 0;
 	while (((i + 1) < _countof(buf)) && (buf[i] != 0) && (buf[i + 1] != 0)) {
 		WCHAR* top = &buf[i];
-		//OutputDebugString(top);
+		//DebugLog(top);
 		if (ContainsAction(top)) {
 			dst.push_back(top);
-			//OutputDebugString(top);
+			//DebugLog(top);
 		}
 		i += wcslen(top) + 1;//+1で'\0'を読み飛ばす
 	}
@@ -186,7 +186,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 			Tokenize(dst.m_base_kind,buf,_T(" \t"));
 			if(1){
 				//debug
-				OutputDebugString(_T("  ==== Inheritance ===="));
+				DebugLog(_T("  ==== Inheritance ===="));
 				for (const auto&item : dst.m_base_kind) {
 					DebugLog(_T("  %s"), item.c_str());
 				}
@@ -236,12 +236,17 @@ size_t Kinds::FindKindIndex(const WCHAR* kind_name) {
 }
 
 size_t Kinds::FindActionIndex(size_t kind_index, const WCHAR* action_name) {
-	const auto & actions = m_kinds.at(kind_index).m_actions;
-	const auto num = actions.size();
-	for (size_t i = 0; i < num; ++i) {
-		if (actions.at(i).m_name.compare(action_name) == 0) {
-			return i;
+	try {
+		const auto & actions = m_kinds.at(kind_index).m_actions;
+		const auto num = actions.size();
+		for (size_t i = 0; i < num; ++i) {
+			if (actions.at(i).m_name.compare(action_name) == 0) {
+				return i;
+			}
 		}
+	}
+	catch (std::exception) {
+		//pass
 	}
 	return UNITY_NOT_FOUND_INDEX;
 }
@@ -329,42 +334,42 @@ bool Kinds::IsActionMultiSelectable(size_t kind_index, size_t action_index) {
 
 
 const WCHAR* Kinds::GetDefaultActionLabelName(const WCHAR* kind_name){
-	OutputDebugString(_T("GetHidemaruLabelName"));
+	DebugLog(_T("GetHidemaruLabelName"));
 	auto*kind = FindKind(kind_name);
 	if (kind == nullptr) {
-		OutputDebugString(_T("kind == nullptr"));
+		DebugLog(_T("kind == nullptr"));
 		return gs_empty;
 	}
-	OutputDebugString(_T("kind->m_default_action="));
-	OutputDebugString(kind->m_default_action.c_str());
+	DebugLog(_T("kind->m_default_action="));
+	DebugLog(kind->m_default_action.c_str());
 	auto *action = kind->FindAction(kind->m_default_action.c_str());
 	if (action == nullptr) {
-		OutputDebugString(_T("action == nullptr"));
+		DebugLog(_T("action == nullptr"));
 		return gs_empty;
 	}
-	OutputDebugString(_T("action->m_function="));
-	OutputDebugString(action->m_label.c_str());
+	DebugLog(_T("action->m_function="));
+	DebugLog(action->m_label.c_str());
 	return action->m_label.c_str();
 }
 
 bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
-	OutputDebugString(_T("GenerateKindCandidates"));
+	DebugLog(_T("GenerateKindCandidates"));
 	std::weak_ptr<Unity> instance = Unity::Instance(instance_index);
 	if (instance.expired()) {
-		OutputDebugString(_T("  return false @1"));
+		DebugLog(_T("  return false @1"));
 		return false;
 	}	
 	
 	{
 		auto*inheritance = instance.lock()->QueryInheritance();
 		if (! inheritance->GenerateResolveActions()) {
-			OutputDebugString(_T("  return false @2"));
+			DebugLog(_T("  return false @2"));
 			return false;
 		}
 
 		auto* candidates = Unity::Instance().lock()->QueryCandidates();
 		if (candidates == nullptr) {
-			OutputDebugString(_T("  return false @3"));
+			DebugLog(_T("  return false @3"));
 			return false;
 		}
 		//現在のインスタンスへ候補を追加する
@@ -390,7 +395,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 				}
 			}
 		}*/
-		OutputDebugString(_T("  return true"));
+		DebugLog(_T("  return true"));
 		return true;
 
 	}
@@ -402,25 +407,25 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		RefineSearch*	search = instance.lock()->QueryRefineSearch();
 		const auto		num_selection = search->GetMarkedCount();
 		if (num_selection == 0) {
-			OutputDebugString(_T("@2"));
+			DebugLog(_T("@2"));
 			return false;
 		}
 
 		for (auto select = 0; select < num_selection; ++select) {
 			Candidate* candidate = search->GetMarkedCandidate(select);
 			if (candidate == nullptr) {
-				OutputDebugString(_T("@2.1"));
+				DebugLog(_T("@2.1"));
 				continue;
 			}
 			//Memo: 最初に選択されたソース名
-			OutputDebugString(_T("candidate->m_source_name="));
-			OutputDebugString(candidate->m_source_name.c_str());
+			DebugLog(_T("candidate->m_source_name="));
+			DebugLog(candidate->m_source_name.c_str());
 			first_source_name = candidate->m_source_name;
 			break;
 		}
 
 		if (first_source_name.empty()) {
-			OutputDebugString(_T("@3"));
+			DebugLog(_T("@3"));
 			return false;
 		}
 		if (2 <= num_selection) {
@@ -433,14 +438,14 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	//ソース名からディフォルトカインドを取り出す
 	auto* source= instance.lock()->QuerySources()->FindSource(first_source_name.c_str());
 	if (source == nullptr) {
-		OutputDebugString((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
+		DebugLog((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
 		return false;
 	}
 	const auto &default_kind = source->m_default_kind;
 
 	auto* kind = instance.lock()->QueryKinds()->FindKind(default_kind.c_str());
 	if (kind == nullptr) {
-		OutputDebugString(_T("@5"));
+		DebugLog(_T("@5"));
 		return false;
 	}
 
@@ -454,7 +459,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 			}
 		}
 	}
-	OutputDebugString(_T("Finish"));
+	DebugLog(_T("Finish"));
 	return true;
 #endif
 }

@@ -22,6 +22,8 @@ void Tokenize(std::vector<std::wstring>& tokens, const std::wstring& str, const 
 
 void DebugLog(const WCHAR *fmt, ...)
 {
+	return;
+
 	WCHAR     tmp[1024];
 	va_list  ap;
 

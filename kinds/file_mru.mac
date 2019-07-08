@@ -12,7 +12,7 @@ endmacro $$return;
 get_property:
 	return R"([property]
 name=file_mru
-'default_action=hidemaru_filer
+default_action=hidemaru_filer
 base_kind=file
 
 [action.remove]
@@ -30,9 +30,6 @@ do_action:
 
 
 remove:
-	debuginfo 1;
-	debuginfo "[file_mru] remove";
-
 	##history_index[0]	=0;
 	##history_index_num	=0;
 	##not_found			=-1;

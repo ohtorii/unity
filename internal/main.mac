@@ -178,8 +178,8 @@ main:
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
 	$$source=$$1;
-	//$$source="file_mru";
-	$$source="window";
+	$$source="file_mru";
+	//$$source="window";
 	//$$source="process";
 	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
 	if(existfile($$source_filename)==false){
@@ -204,8 +204,6 @@ return	アクションが最後まで実行されたかどうか(bool)
 		true	実行されていない
 */
 Start:
-	debuginfo "==== Start ====";
-
 	$$source_filename	=$$1;
 
 	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_target_hidemaru), 1;
@@ -214,12 +212,8 @@ Start:
 		return false;
 	}
 
-	debuginfo "#g_target_hidemaru="+str(#g_target_hidemaru);
-	debuginfo "#g_new_hidemaru="+str(#g_new_hidemaru);
-	debuginfo "currenthidemaru="+str(hidemaruhandle(0));
-
 	setstaticvariable "$unity.g_root_macro_directory", $g_root_macro_directory,1;
-	setstaticvariable "$unity.is_quit", "1",0;
+	setstaticvariable "$unity.is_quit", "1",1;
 
 	call LoadDll;
 	if(! ##return){
@@ -262,9 +256,6 @@ RefineSearch:
 	$$args				= $$2;
 
 	debuginfo 1;
-	debuginfo "RefineSearch";
-	debuginfo "  $$source_filename="+$$source_filename;
-	debuginfo "  $$args="+$$args;
 
 	//ソースから候補を生成する
 	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
@@ -323,11 +314,11 @@ RefineSearchMain:
 
 		##ctrl =iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
-			##is_quit_old	=val(getstaticvariable("$unity.is_quit",0));
+			##is_quit_old	=val(getstaticvariable("$unity.is_quit",1));
 			execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools);
 			$$search_result	=getresultex(-1);
-			##is_quit		=val(getstaticvariable("$unity.is_quit",0));
-			//setstaticvariable "$unity.is_quit",str(##is_quit_old),0;	//値を元に戻す
+			##is_quit		=val(getstaticvariable("$unity.is_quit",1));
+			//setstaticvariable "$unity.is_quit",str(##is_quit_old),1;	//値を元に戻す
 			if($$search_result=="1"){
 				//成功
 				if(##is_quit){
@@ -354,13 +345,13 @@ RefineSearchMain:
 			if(##return==false){
 				return -1;
 			}
-			##is_quit_old	=val(getstaticvariable("$unity.is_quit",0));
+			##is_quit_old	=val(getstaticvariable("$unity.is_quit",1));
 			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac",str(##current_context);
 			##search_result	=##return;
-			##is_quit		=val(getstaticvariable("$unity.is_quit",0));
-			//setstaticvariable "$unity.is_quit",str(##is_quit_old),0;	//値を元に戻す
+			##is_quit		=val(getstaticvariable("$unity.is_quit",1));
+			//setstaticvariable "$unity.is_quit",str(##is_quit_old),1;	//値を元に戻す
 			debuginfo 1;
-			debuginfo "##is_quit="+getstaticvariable("$unity.is_quit",0);
+			debuginfo "##is_quit="+getstaticvariable("$unity.is_quit",1);
 			call PopRefineSearch;
 			if(##return==false){
 				return -1;
@@ -394,9 +385,7 @@ RefineSearchMain:
 
 CursorMoveCommon:
 	##delta = ##1;
-	debuginfo "lineno="+str(lineno);
 	##next_line_no=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchMoveHidemaruCursorLineNo",lineno,##delta);
-	debuginfo "##next_line_no="+str(##next_line_no);
 	if(##next_line_no == -1){
 		return false;
 	}

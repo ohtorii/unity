@@ -17,10 +17,12 @@ base_kind=
 [action.command_prompt]
 function=command_prompt
 description=Open the file at the command prompt.
+is_quit=false
 
 [action.hidemaru_filer]
 function=hidemaru_filer
 description=Open the file at the Hidemaru filer classic.
+is_quit=false
 )";
 
 

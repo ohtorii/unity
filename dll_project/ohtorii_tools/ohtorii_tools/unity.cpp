@@ -54,7 +54,7 @@ bool Unity::PopContext(bool exist_context_then_delete) {
 	DebugLog(_T("Unity::PopContext(%d)"), m_current_instance_index);
 	if (m_current_instance_index == 0) {
 		//これ以上popできない
-		OutputDebugString(_T("Unity::PopContext -> m_current_instance_index == 0"));
+		DebugLog(_T("Unity::PopContext -> m_current_instance_index == 0"));
 		return false;
 	}
 	if (exist_context_then_delete) {

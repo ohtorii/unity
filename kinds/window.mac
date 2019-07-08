@@ -37,10 +37,6 @@ preview:
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
 	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionUserDataNumeric",##first_item_index,$$user_dataname,##not_found);
 
-	debuginfo 1;
-	debuginfo "$$text="+$$text;
-	debuginfo "##hidemaru_handle="+str(##hidemaru_handle);
-
 	setactivehidemaru ##hidemaru_handle;
 
 	//少し待つ
