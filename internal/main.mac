@@ -346,7 +346,7 @@ RefineSearchMain:
 				return -1;
 			}
 			##is_quit_old	=val(getstaticvariable("$unity.is_quit",1));
-			call RefineSearch $g_root_macro_directory+"\\sources\\action.mac",str(##current_context);
+			call RefineSearch currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
 			##search_result	=##return;
 			##is_quit		=val(getstaticvariable("$unity.is_quit",1));
 			//setstaticvariable "$unity.is_quit",str(##is_quit_old),1;	//値を元に戻す
