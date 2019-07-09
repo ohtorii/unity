@@ -23,16 +23,9 @@ base_kind=
 
 'アクション
 [action.do]
-'表示に使用する名前
 name=do
-'秀丸マクロのラベル名
 function=do
-'アクションの説明
-'description=Do.
-'アクション実行後に終了するかどうか
-'is_quit=false
-'アクションを複数選択に対して実行するかどうか
-is_multi_selectable=false
+description=Call action.
 )";
 
 do_action:
@@ -54,8 +47,6 @@ do:
 	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
 	$$action_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetText",			##candidate_index);
 	$$user_data_kind=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetUserDataString",##candidate_index,"__kind__","");
-	//$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetDefaultKind",		$$source_name);
-
 	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$user_data_kind+".mac";
 
 
@@ -97,30 +88,8 @@ exec_action:
 	$$kind_filename	=$$1;
 	$$action_name	=$$2;
 
-	//元のコード（多分・・・）
 	debuginfo "  $$kind_filename="+$$kind_filename;
 	debuginfo "  $$action_name="+ $$action_name;
 	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$action_name;
 	$$action_result = getresultex(-1);
 	return $$action_result;
-
-
-LoadDll:
-	if(platform&0x00080000){
-		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
-	}else{
-		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x86.dll");
-	}
-	if (##dll_ohtorii_tools==0) {
-		message "dll\\ohtorii_tools.dllのロードに失敗しました";
-		return 0;
-	}
-	return ##dll_ohtorii_tools;
-
-FreeDll:
-	##dll_ohtorii_tools=##1;
-	if(##dll_ohtorii_tools!=0){
-		freedll ##dll_ohtorii_tools;
-		##dll_ohtorii_tools=0;
-	}
-	return;
