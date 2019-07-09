@@ -1,7 +1,14 @@
 ﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
 
 usage:
-  unity.mac currentmacrodirectory mode
+	unity.mac root_dir sources
+
+引数
+	root_dir	unityマクロのルートディレクトリ
+	sources 	タブ区切りのソース名
+				(例)"file_mru\tprocess"
+
+
 
 ==============================================================================
 Source
@@ -177,17 +184,7 @@ main:
 	/***************************************************
 	[注意] ファイル名決め打ち、後で修正。
 	****************************************************/
-	$$source=$$1;
-	$$source="file_mru";
-	//$$source="window";
-	//$$source="process";
-	$$source_filename=$g_root_macro_directory+"\\sources\\"+$$source+".mac";
-	if(existfile($$source_filename)==false){
-		message $$source+"が見つかりません。\n\n[todo]ユーザーの行動を促すメッセージを表示する";
-		return false;
-	}
-
-	call Start $$source_filename;
+	call Start $$1;
 	##ret = ##return;
 
 	//
@@ -204,7 +201,10 @@ return	アクションが最後まで実行されたかどうか(bool)
 		true	実行されていない
 */
 Start:
-	$$source_filename	=$$1;
+	$$source_list	=$$1;
+	if($$source_list==""){
+		return false;
+	}
 
 	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_target_hidemaru), 1;
 	call NewFile;
@@ -235,7 +235,23 @@ Start:
 			return 0;
 		}
 	}
-	call RefineSearch $$source_filename, "";
+
+	{//ソースを読み込む
+		//$g_sources	= "";
+		##num_source= split($g_sources,$$source_list, "\t");
+		##i			= 0;
+		debuginfo "##num_source="+str(##num_source);
+		while(##i<##num_source){
+			$$source_filename=$g_root_macro_directory+"\\sources\\"+$g_sources[##i]+".mac";
+			debuginfo"$$g_sources[##i]="+$g_sources[##i];
+			execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, "";
+			if(getresultex(-1)=="0"){
+				return 0;
+			}
+			##i = ##i + 1;
+		}
+	}
+	call RefineSearch "", "";
 	call FreeDll;
 	call CloseFileIfOpen;
 	if(! ##return){
@@ -248,6 +264,9 @@ Start:
 //#region 絞り込み検索
 RefineSearch:
 	/*
+	引数	$$1		ソースのファイル名
+		$$2		引数
+
 	return	0 	キャンセル
 			1 	確定
 			-1	エラー
@@ -257,10 +276,11 @@ RefineSearch:
 
 	debuginfo 1;
 
+	//
 	//ソースから候補を生成する
-	execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
-	if(getresultex(-1)=="0"){
-		return 0;
+	//
+	if($$source_filename!=""){
+		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
 	}
 
 	//絞り込み検索を行う

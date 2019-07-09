@@ -4,4 +4,7 @@ usage:
   unity.mac mode
 
 */
-execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,getarg(0);
+//execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,getarg(0);
+execmacro currentmacrodirectory+"\\internal\\gui.mac", currentmacrodirectory+"\\sources";
+$sources=getresultex(-1);
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources;

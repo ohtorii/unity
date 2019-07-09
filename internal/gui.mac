@@ -1,0 +1,165 @@
+﻿/* ソース選択のgui
+
+引数	ソースのディレクトリ
+	(例) "c:\hidemaru\makuro\unity\sources"
+
+返値	ソース名をタブ区切りで返す
+	(例) "file_mru\twindow"
+*/
+
+//ソースのファイルが格納されているディレクトリ
+$g_sources_dir=getarg(0);
+
+#g_dengaku_dll=0;
+#g_dialog_width=80;
+
+//ソース名のコントロール名
+//配列長は #g_source_names_num
+$g_source_checkctrl_names[0]="";
+
+//ディスクから読み込んだソース名と個数
+$g_source_names[0]="";
+#g_source_names_num=0;
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//	メイン処理
+////////////////////////////////////////////////////////////////////////////////
+call main;
+endmacro $$return;
+
+
+main:
+	call LoadDll;
+	if(! ##return){
+		return "";
+	}
+	call LoadSources;
+	if(! ##return){
+		return "";
+	}
+	call Start;
+	$$ret=$$return;
+	call UnloadDllAll;
+	return $$ret;
+
+
+Start:
+	call CreateDialog;
+	if(! ##return){
+		return "";
+	}
+	call MessageLoop;
+	$$select_sources=$$return;
+	call EndDialog;
+	return $$select_sources;
+
+
+CreateDialog:
+	if( dllfunc(#g_dengaku_dll,"NEWDIALOG", "ソース選択",#g_dialog_width,"0 0 center 'ＭＳ ゴシック'") == 0){
+		message "ダイアログ生成に失敗";
+		return false;
+	}
+
+	//
+	//ソース一覧の作成
+	//
+	##i=0;
+	while(##i<#g_source_names_num){
+		$$source_name = $g_source_names[##i];
+		$$check_ctrl_name = "check_"+$$source_name;
+		if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"check", $$check_ctrl_name, $$source_name) == 0){
+			message "チェックコントールの作成に失敗";
+			return false;
+		}
+		$g_source_checkctrl_names[##i]=$$check_ctrl_name;
+		##i = ##i + 1;
+	}
+
+
+	if (!dllfunc(#g_dengaku_dll,"SHOWDIALOG",hidemaruhandle(0),1)){
+		message "SHOWDIALOG に失敗しました";
+		return false;
+	}
+	return true;
+
+
+MessageLoop:
+	while(1){
+		$$notify = dllfuncstr(#g_dengaku_dll,"WAITCTRLNOTIFY",10);
+		if($$notify == "0"){
+			//キャンセル
+			return "";
+		}else if($$notify == "1"){
+			//Enter キー押下
+			call GetSelectSources;
+			return $$return;
+		}
+	}
+	return "";
+
+GetSelectSources:
+	/*選択されたソースを取得する
+	返値	選択されたソースをタブ区切りで返す
+		(例) "file_mru\tprocess"
+	*/
+	$$select_sources="";
+	##i=0;
+	while(##i<#g_source_names_num){
+		$$state = dllfuncstr(#g_dengaku_dll, "GETCTRLSTATE",$g_source_checkctrl_names[##i]);
+		if($$state=="1"){
+			if($$select_sources==""){
+				//初めて追加する場合
+				$$select_sources=$g_source_names[##i];
+			}else{
+				$$select_sources=$$select_sources+"\t"+$g_source_names[##i];
+			}
+		}
+		##i = ##i + 1;
+	}
+	return $$select_sources;
+
+
+EndDialog:
+	##n=dllfunc(#g_dengaku_dll,"ENDDIALOG");
+	return ;
+
+
+LoadSources:
+	//仮実装
+	//$g_sources_dirを利用する
+	$g_source_names[0]="file_mru";
+	$g_source_names[1]="window";
+	$g_source_names[2]="process";
+	#g_source_names_num=3;
+	return true;
+
+
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;
+
+LoadDll:
+	call LoadDllFuzzy("DengakuDLL.dll");
+	#g_dengaku_dll=##return;
+	if(#g_dengaku_dll==0){
+		return false;
+	}
+	return true;
+
+
+UnloadDllAll:
+	if(#g_dengaku_dll){
+		freedll(#g_dengaku_dll);
+		#g_dengaku_dll=0;
+	}
+	return;
