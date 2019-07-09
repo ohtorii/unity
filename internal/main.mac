@@ -522,6 +522,10 @@ NewFile:
 
 	/* 折りたたみを表示しない*/
 	config "xFoldingTwigBar:0";
+	/*見出しバー表示*/
+	config "xOutlineBar:1";
+	/*行番号表示*/
+	config "xShowLineNo:0";
 	/*TSVモード*/
 	config "xTabMode:0x0001";
 	config "xGuideLine:0x00";
