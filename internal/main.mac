@@ -224,20 +224,8 @@ Start:
 	if(! ##return){
 		return false;
 	}
-	if(false){
-		//debug
-		//
-		//二つ目の候補を追加
-		//
-		$$args="";
-		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $g_root_macro_directory+"\\sources\\window.mac", $$args;
-		if(getresultex(-1)=="0"){
-			return 0;
-		}
-	}
 
 	{//ソースを読み込む
-		//$g_sources	= "";
 		##num_source= split($g_sources,$$source_list, "\t");
 		##i			= 0;
 		debuginfo "##num_source="+str(##num_source);
@@ -363,7 +351,8 @@ RefineSearchMain:
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
 			call PushRefineSearch;
 			if(##return==false){
-				return -1;
+				//(Memo)TABを連続で押すとこの処理に入るので無視する。
+				continue;
 			}
 			##is_quit_old	=val(getstaticvariable("$unity.is_quit",1));
 			call RefineSearch currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
