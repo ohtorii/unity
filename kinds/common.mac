@@ -252,40 +252,6 @@ LoadDll:
 	return ##dll;
 
 
-SplitFilelist:
-	/* ファイルリストをグローバル変数に格納します。
-
-	（格納先のグローバル変数）
-	$g_filelist;		//ファイル名
-	#g_filelist_num;	//ファイル名の個数
-	*/
-
-	call LoadDll "DengakuDLL.dll";
-	if(##return==0){
-		return false;
-	}
-	##dll=##return;
-
-	#g_filelist_num=0;
-	$$token = dllfuncstr(##dll,"GETTOKEN",$$1,"\t");
-	while (1) {
-		if($$token != ""){
-			$g_filelist[#g_filelist_num] = $$token;
-			#g_filelist_num = #g_filelist_num + 1;
-		}
-		if (dllfunc(##dll,"HASMORETOKENS") == 0) {
-			break;
-		}
-		$$token = dllfuncstr(##dll,"GETTOKEN","","\t");
-	}
-	freedll ##dll;
-
-	if(#g_filelist_num==0){
-		return false;
-	}
-	return true;
-
-
 FileListToDirectoryList:
 	/* ファイルリストをディレクトリリストへ変更する
 	*/
