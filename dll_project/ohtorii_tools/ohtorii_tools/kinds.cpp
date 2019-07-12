@@ -374,6 +374,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		}
 		//現在のインスタンスへ候補を追加する
 		for (const auto&item : inheritance->GetResolveActions()) {
+			DebugLog(_T("  item.m_kind_name.c_str()=%s"),item.m_kind_name.c_str());
 			auto* kind = instance.lock()->QueryKinds()->FindKind(item.m_kind_name.c_str());
 			if (kind == nullptr) {
 				continue;
