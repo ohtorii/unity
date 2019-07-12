@@ -14,18 +14,18 @@ endmacro $$return;
 get_property:
 	return R"([property]
 name=file_base
-description=file actions.
+description=File actions.
 default_action=open
 base_kind=
 
 [action.open]
 function=open
-description=Open files
+description=Open files.
 is_multi_selectable=true
 
 [action.preview]
 function=preview
-description=preview file
+description=Preview file.
 is_quit=false
 is_multi_selectable=false
 )";
@@ -58,8 +58,20 @@ do_action:
 //	Action.
 ////////////////////////////////////////////////////////////////////////////
 open:
-	debuginfo 1;
-	debuginfo "[file_base] open";
+	##new_hidemaru_handle=0;
+	##current_hidemaru_handle=hidemaruhandle(0);
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i < ##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+
+		openfile $$text;
+		##new_hidemaru_handle = hidemaruhandle(0);
+		setactivehidemaru(##current_hidemaru_handle);
+
+		##i = ##i + 1;
+	}
+	setstaticvariable "$unity.hidemaruhandle_to_focus_at_end_of_process",str(##new_hidemaru_handle), 1;
 	return "1";
 
 preview:

@@ -12,7 +12,7 @@ endmacro $$return;
 get_property:
 	return R"([property]
 name=file_mru
-default_action=hidemaru_filer
+default_action=open
 base_kind=file
 
 [action.remove]

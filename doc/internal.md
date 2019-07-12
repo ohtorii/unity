@@ -28,4 +28,16 @@
 |行インデックス|0開始の値|行インデックス=行番号-1|
  
  	
+# 静的変数
+## $unity.target_hidemaruhandle (int)
+文字列などを挿入する操作対象となる秀丸ハンドル
 
+## $unity.root_macro_directory (string)
+マクロのルートディレクトリ
+
+## $unity.is_quit (bool)
+処理を終了するかどうか
+
+## $unity.hidemaruhandle_to_focus_at_end_of_process (int)
+unity終了後にフォーカスするウインドウ
+0 = 無効なハンドル

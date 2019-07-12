@@ -192,7 +192,11 @@ main:
 	//
 	call FreeDll;
 	call CloseFileIfOpen;
-
+	$$forcus_hidemaru_handle=getstaticvariable("$unity.hidemaruhandle_to_focus_at_end_of_process",1);
+	##forcus_hidemaru_handle=val($$forcus_hidemaru_handle);
+	if(##forcus_hidemaru_handle!=0){
+		setactivehidemaru ##forcus_hidemaru_handle;
+	}
 	return ##ret;
 
 /*
@@ -206,13 +210,14 @@ Start:
 		return false;
 	}
 
-	setstaticvariable "$unity.g_target_hidemaruhandle", str(#g_target_hidemaru), 1;
+	setstaticvariable "$unity.hidemaruhandle_to_focus_at_end_of_process",str(0), 1;
+	setstaticvariable "$unity.target_hidemaruhandle", str(#g_target_hidemaru), 1;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
 
-	setstaticvariable "$unity.g_root_macro_directory", $g_root_macro_directory,1;
+	setstaticvariable "$unity.root_macro_directory", $g_root_macro_directory,1;
 	setstaticvariable "$unity.is_quit", "1",1;
 
 	call LoadDll;

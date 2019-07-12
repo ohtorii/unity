@@ -9,8 +9,8 @@
 //==========================================================================
 //グローバル変数
 //==========================================================================
-#g_target_hidemaruhandle=val(getstaticvariable("$unity.g_target_hidemaruhandle",1));
-$g_root_macro_directory =getstaticvariable("$unity.g_root_macro_directory", 1);
+#g_target_hidemaruhandle=val(getstaticvariable("$unity.target_hidemaruhandle",1));
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
 #g_dll_ohtorii_tools	=val(getarg(0));
 
