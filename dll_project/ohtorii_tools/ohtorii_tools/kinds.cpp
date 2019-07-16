@@ -380,9 +380,8 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 				continue;
 			}
 			const auto & action = kind->m_actions.at(item.m_action_index);
-			
-			//item.m_kind_name
-			auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());
+						
+			auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), (item.m_kind_name+_T("\t")+action.m_description).c_str());
 			candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
 		}
 
