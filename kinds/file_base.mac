@@ -1,5 +1,16 @@
 ﻿/**/
 
+////////////////////////////////////////////////////////////////////////////
+//	グローバル変数
+////////////////////////////////////////////////////////////////////////////
+#g_dll_ht_tools		=0;
+$g_separator="\x0B";	//垂直タブ
+$g_marker="#layer0";
+
+
+////////////////////////////////////////////////////////////////////////////
+//	メイン処理
+////////////////////////////////////////////////////////////////////////////
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
 $arg=getarg(2);
@@ -22,6 +33,14 @@ base_kind=
 function=open
 description=Open files.
 is_multi_selectable=true
+
+[action.insert_directory]
+function=insert_directory
+description=Insert the candidate directory before the cursor.
+
+[action.overwrite_directory]
+function=overwrite_directory
+description=Owerwrite the candidate directory before the cursor.
 
 [action.preview]
 function=preview
@@ -74,27 +93,187 @@ open:
 	setstaticvariable "$unity.hidemaruhandle_to_focus_at_end_of_process",str(##new_hidemaru_handle), 1;
 	return "1";
 
-preview:
-	/*ファイル内容のプレビュー
-	*/
-	##output_dll=loaddll("HmOutputPane.dll");
-	if(!result){
+
+insert_directory:
+	call LoadHtToolsDll;
+	if(! ##return){
 		return "0";
 	}
 
-	//アウトプット枠クリア
-	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
+	call Foreach "insert_directory_proc";
+	$$ret=$$return;
 
-	//文字列を表示する
-	##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),"previewをオーバーライドしたよ！"+time);
+	call FreeHtToolsDll;
+	return $$ret;
 
-	/*##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	##i=0;
-	while(##i<##count){
-		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
-		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$text);
-		##i = ##i + 1;
-	}*/
+
+overwrite_directory:
+	call LoadHtToolsDll;
+	if(! ##return){
+		return "0";
+	}
+
+	call Foreach "overwrite_directory_proc";
+	$$ret=$$return;
+
+	call FreeHtToolsDll;
+	return $$ret;
+
+
+preview:
+	/*ファイル内容のプレビュー
+	*/
+
+	##first_item_index	= 0;
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	$$command = sprintf(R"(PowerShell.exe -Command "& {Get-Content "%s" | Select-Object -first 20}")", $$text);
+	runex $$command
+			, 1 			//sync	  0:async 1:sync
+			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+			, 7, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+			, 1, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+			, 2 			//show	  0:auto 1:show 2:hide
+			, 1 			//nodraw  0:draw 1:no draw
+			, 0 			//unicode 0:ansi 2:unicode
+			;
+
+	call LoadHtToolsDll;
+	if(! ##return){
+		return "0";
+	}
+	##output_dll=loaddll("HmOutputPane.dll");
+	if(!result){
+		call FreeHtToolsDll;
+		return "0";
+	}
+	##parent=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+	##edit = dllfunc(#g_dll_ht_tools, "FINDWINDOW", ##parent, "Edit","");
+	if(##edit){
+		#ret = sendmessage(##edit, 0x0115 /*WM_VSCROLL */, 6 /*SB_TOP*/, 0);
+	}
+	call FreeHtToolsDll;
 	freedll ##output_dll;
 	return "1";
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Proc.
+////////////////////////////////////////////////////////////////////////////
+overwrite_directory_proc:
+	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
+		//ディレクトリ区切りあり
+		overwrite(dllfuncstr(#g_dll_ht_tools,"GetParentFolder",$$2));
+	}else{
+		//ディレクトリ区切りなし
+		overwrite($$2);
+	}
+	return ;
+
+
+insert_directory_proc:
+	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
+		//ディレクトリ区切りあり
+		insert(dllfuncstr(#g_dll_ht_tools,"GetParentFolder",$$2));
+	}else{
+		//ディレクトリ区切りなし
+		insert($$2);
+	}
+	return ;
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Utility.
+////////////////////////////////////////////////////////////////////////////
+Foreach:
+	$$label=$$1;
+	disabledraw;
+	begingroupundo;
+
+	##old = compatiblemode;
+	setcompatiblemode ##old | 0x00100000;
+
+	##old_column=column;
+	##old_lineno=column;
+	call ForeachSelection, $$label;
+
+	##new_column=column;
+	##new_lineno=column;
+
+	//垂直タブを空白へ変換＆選択
+	moveto2 ##new_lineno,##new_column;
+	beginsel;
+	moveto2 ##old_lineno,##old_column;
+	endsel;
+	call ReplacePaint, $g_separator, " ", $g_marker;
+	// 跡地を範囲選択
+	selectcolormarker $g_marker;
+	deletecolormarkerall $g_marker;
+	setcompatiblemode ##old;
+
+	endgroupundo;
+	return "1";
+
+
+ForeachSelection:
+	$$label = $$1;
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i < ##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+		if(1<=##i){
+			call $$label, true, $g_separator;
+		}
+		call $$label, false, $$text;
+		##i = ##i + 1;
+	}
+	return ;
+
+
+ReplacePaint:
+	// 全置換して塗る
+	// $$1 = 検索パターン
+	// $$2 = 置換文字列 (固定長、改行不可)
+	// $$3 = レイヤ名
+	replacedown $$1, $$2, nohilight,inselect;
+	while (result) {
+		colormarker 0xFFFFFF, 0x663333, 11, 2, 0, $$3, lineno, column - strlen($$2), lineno, column;
+		finddown;
+	}
+	return;
+
+
+GetParentFolder:
+	return dllfuncstr(#g_dll_ht_tools, "GetParentFolder", $$1);
+
+
+
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;
+
+
+LoadHtToolsDll:
+	if(#g_dll_ht_tools!=0){
+		return true;
+	}
+	call LoadDllFuzzy "ht_tools.dll";
+	#g_dll_ht_tools=##return;
+	if(#g_dll_ht_tools!=0){
+		return true;
+	}
+	return false;
+
+FreeHtToolsDll:
+	freedll(#g_dll_ht_tools);
+	#g_dll_ht_tools=0;
+	return ;
