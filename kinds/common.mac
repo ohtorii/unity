@@ -26,12 +26,11 @@
 ////////////////////////////////////////////////////////////////////////////
 //	グローバル変数
 ////////////////////////////////////////////////////////////////////////////
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
+
 #g_dll_ohtorii_tools=0;
 #g_dll_dengaku		=0;
 #g_dll_output_panel	=0;
-
-$g_separator="\x0B";	//垂直タブ
-$g_marker="#layer0";
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -39,8 +38,12 @@ $g_marker="#layer0";
 ////////////////////////////////////////////////////////////////////////////
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
-$arg=getarg(2);
-call $label, $arg;
+$arg1=getarg(2);
+$arg2=getarg(3);
+$arg3=getarg(4);
+$arg4=getarg(5);
+$arg5=getarg(6);
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6;
 endmacro $$return;
 
 
@@ -145,12 +148,13 @@ echo:
 	return  "1";*/
 
 insert:
-	call Foreach "insert_proc";
-	return $$return;
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "insert_proc";
+	return getresultex(-1);
+
 
 overwrite:
-	call Foreach "overwrite_proc";
-	return $$return;
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "overwrite_proc";
+	return getresultex(-1);
 
 
 preview:
@@ -165,34 +169,22 @@ preview:
 	//アウトプット枠クリア
 	##h=dllfunc(#g_dll_output_panel,"GetWindowHandle",hidemaruhandle(0));
 	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
-
-	call Foreach "preview_proc";
-	$$ret=$$return;
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "preview_proc";
+	$$ret=getresultex(-1);
 	freedll #g_dll_output_panel;
 	return $$ret;
 
 
 yank:
 	setclipboard "";
-	call Foreach "yank_proc";
-	return  "1";
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "yank_proc";
+	return getresultex(-1);
 
 
 yank_escape:
-	if(#g_dll_dengaku==0){
-		call LoadDllFuzzy "DengakuDLL.dll";
-		#g_dll_dengaku=##return;
-		if(#g_dll_dengaku==0){
-			return "0";
-		}
-	}
-
 	setclipboard "";
-	call Foreach "yank_escape_proc";
-	$$ret=$$return;
-	freedll #g_dll_dengaku;
-	return  "1";
-
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "yank_escape_proc";
+	return getresultex(-1);
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -217,7 +209,7 @@ preview_proc:
 
 
 yank_proc:
-	##is_separetor = ##1;
+	##is_separetor = val($$1);
 	if(##is_separetor){
 		addclipboard "\x0D\x0A";
 	}else{
@@ -227,7 +219,7 @@ yank_proc:
 
 
 yank_escape_proc:
-	##is_separetor = ##1;
+	##is_separetor = val($$1);
 	if(##is_separetor){
 		addclipboard "\x0D\x0A";
 	}else{
@@ -240,65 +232,14 @@ yank_escape_proc:
 ////////////////////////////////////////////////////////////////////////////
 //	Utility.
 ////////////////////////////////////////////////////////////////////////////
-Foreach:
-	$$label=$$1;
-	disabledraw;
-	begingroupundo;
-
-	##old = compatiblemode;
-	setcompatiblemode ##old | 0x00100000;
-
-	##old_column=column;
-	##old_lineno=column;
-	call ForeachSelection, $$label;
-
-	##new_column=column;
-	##new_lineno=column;
-
-	//垂直タブを空白へ変換＆選択
-	moveto2 ##new_lineno,##new_column;
-	beginsel;
-	moveto2 ##old_lineno,##old_column;
-	endsel;
-	call ReplacePaint, $g_separator, " ", $g_marker;
-	// 跡地を範囲選択
-	selectcolormarker $g_marker;
-	deletecolormarkerall $g_marker;
-	setcompatiblemode ##old;
-
-	endgroupundo;
-	return "1";
-
-
-ForeachSelection:
-	$$label = $$1;
-	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	##i=0;
-	while(##i < ##count){
-		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
-		if(1<=##i){
-			call $$label, true, $g_separator;
-		}
-		call $$label, false, $$text;
-		##i = ##i + 1;
-	}
-	return ;
-
-
-ReplacePaint:
-	// 全置換して塗る
-	// $$1 = 検索パターン
-	// $$2 = 置換文字列 (固定長、改行不可)
-	// $$3 = レイヤ名
-	replacedown $$1, $$2, nohilight,inselect;
-	while (result) {
-		colormarker 0xFFFFFF, 0x663333, 11, 2, 0, $$3, lineno, column - strlen($$2), lineno, column;
-		finddown;
-	}
-	return;
-
-
 Escape:
+	if(#g_dll_dengaku==0){
+		call LoadDllFuzzy "DengakuDLL.dll";
+		#g_dll_dengaku=##return;
+		if(#g_dll_dengaku==0){
+			return "";
+		}
+	}
 	$$r=$$1;
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\\",	"\\\\", -1);
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\"",	"\\\"", -1);
@@ -308,6 +249,10 @@ Escape:
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\n",   "\\n", -1);
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x0b", "\\v", -1);
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\r",   "",    -1);
+
+	freedll #g_dll_dengaku;
+	#g_dll_dengaku=0;
+
 	return $$r;
 
 

@@ -1,0 +1,82 @@
+﻿/*
+
+引数
+0	ohtorii_dllのハンドル
+1	コールバックのファイル名
+2	コールバックのラベル名
+*/
+#g_dll_ohtorii_tools	=val(getarg(0));
+$g_callback_filename	=getarg(1);
+$g_callback_labelname	=getarg(2);
+
+
+$g_separator="\x0B";	//垂直タブ
+$g_marker="#layer0";
+
+
+
+call ForeachJoin;
+endmacro $$return;
+
+
+ForeachJoin:
+	disabledraw;
+	begingroupundo;
+
+	##old = compatiblemode;
+	setcompatiblemode ##old | 0x00100000;
+
+	##old_column=column;
+	##old_lineno=column;
+	call ForeachSelection;
+
+	##new_column=column;
+	##new_lineno=column;
+
+	//垂直タブを空白へ変換＆選択
+	moveto2 ##new_lineno,##new_column;
+	beginsel;
+	moveto2 ##old_lineno,##old_column;
+	endsel;
+	call ReplacePaint, $g_separator, " ", $g_marker;
+	// 跡地を範囲選択
+	selectcolormarker $g_marker;
+	deletecolormarkerall $g_marker;
+	setcompatiblemode ##old;
+
+	endgroupundo;
+	return "1";
+
+
+ForeachSelection:
+	$$label 		=$g_callback_labelname;
+	$$dll_handle	=str(#g_dll_ohtorii_tools);
+
+	$$separator 	="1";
+	$$not_separator ="0";
+
+	##count	=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i		=0;
+	while(##i < ##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+		if(1<=##i){
+			execmacro $g_callback_filename, $$dll_handle, $$label, $$separator, $g_separator;
+		}
+		execmacro  $g_callback_filename, $$dll_handle, $$label, $$not_separator, $$text;
+		##i = ##i + 1;
+	}
+	return ;
+
+
+ReplacePaint:
+	// 全置換して塗る
+	// $$1 = 検索パターン
+	// $$2 = 置換文字列 (固定長、改行不可)
+	// $$3 = レイヤ名
+	replacedown $$1, $$2, nohilight,inselect;
+	while (result) {
+		colormarker 0xFFFFFF, 0x663333, 11, 2, 0, $$3, lineno, column - strlen($$2), lineno, column;
+		finddown;
+	}
+	escapeinselect;
+	return;
