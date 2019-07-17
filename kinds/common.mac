@@ -27,12 +27,12 @@
 //	グローバル変数
 ////////////////////////////////////////////////////////////////////////////
 #g_dll_ohtorii_tools=0;
-#g_dll_ht_tools		=0;
 #g_dll_dengaku		=0;
 #g_dll_output_panel	=0;
 
 $g_separator="\x0B";	//垂直タブ
 $g_marker="#layer0";
+
 
 ////////////////////////////////////////////////////////////////////////////
 //	メイン処理
@@ -85,14 +85,6 @@ description=Insert the candidate word or text before the cursor.
 [action.overwrite]
 function=overwrite
 description=Owerwrite the candidate word or text before the cursor.
-
-[action.insert_directory]
-function=insert_directory
-description=Insert the candidate directory before the cursor.
-
-[action.overwrite_directory]
-function=overwrite_directory
-description=Owerwrite the candidate directory before the cursor.
 
 [action.preview]
 function=preview
@@ -160,26 +152,6 @@ overwrite:
 	call Foreach "overwrite_proc";
 	return $$return;
 
-overwrite_directory:
-	call LoadDll;
-	if(! ##return){
-		return false;
-	}
-	call Foreach "overwrite_directory_proc";
-	$$ret=$$return;
-	call FreeDll;
-	return $$ret;
-
-insert_directory:
-	call LoadDll;
-	if(! ##return){
-		return false;
-	}
-	call Foreach "insert_directory_proc";
-	$$ret=$$return;
-	call FreeDll;
-	return $$ret;
-
 
 preview:
 	//debug用途
@@ -233,27 +205,6 @@ insert_proc:
 overwrite_proc:
 	overwrite($$2);
 	return;
-
-overwrite_directory_proc:
-	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
-		//ディレクトリ区切りあり
-		overwrite(dllfuncstr(#g_dll_ht_tools,"GetParentFolder",$$2));
-	}else{
-		//ディレクトリ区切りなし
-		overwrite($$2);
-	}
-	return ;
-
-insert_directory_proc:
-	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
-		//ディレクトリ区切りあり
-		overwrite(dllfuncstr(#g_dll_ht_tools,"GetParentFolder",$$2));
-	}else{
-		//ディレクトリ区切りなし
-		overwrite($$2);
-	}
-	return ;
-
 
 preview_proc:
 	##is_separetor = ##1;
@@ -345,10 +296,6 @@ ReplacePaint:
 		finddown;
 	}
 	return;
-
-
-GetParentFolder:
-	return dllfuncstr(#g_dll_ht_tools, "GetParentFolder", $$1);
 
 
 Escape:
