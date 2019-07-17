@@ -8,58 +8,6 @@ usage:
 	sources 	タブ区切りのソース名
 				(例)"file_mru\tprocess"
 
-
-
-==============================================================================
-Source
-==============================================================================
-実装済	機能				説明
-		file				カレントディレクトリのファイルとディレクトリ一覧
-		file/new			ファイルの新規作成
-○		file_mru			最近開いたファイルの一覧
-		file_rec			カレントディレクトリの全てのファイルの一覧
-		file_rec/async		file_rec の非同期処理版
-		directory			カレントディレクトリのディレクトリ一覧
-		directory/new		ディレクトリの新規作成
-○		directory_mru		最近開いたディレクトリの一覧
-△		tab					タブの一覧
-		source				unite-source の一覧
-△		window				現在のウィンドウのタブ一覧
-		command				定義されているコマンドの一覧
-		function			Vim の組み込み関数と unite.vim、neocomplcache で定義されている関数の一覧
-		mapping				定義されているキーマッピングの一覧
-		grep				外部コマンド "grep" の結果を出力
-		find				外部コマンド "find" の結果を出力
-		menu				g:unite_source_menu_menus に登録されてあるメニューの一覧
-		history/yank		ヤンクされたワードの一覧
-		process				起動しているプロセスの一覧
-
-
-秀丸エディタ独自のソース
-		outline				アウトラインの一覧
-		project				プロジェクトのファイル一覧
-		output_panel		アウトプット枠
-
-秀丸エディタ化するソース名
-		buffer				開かれているバッファの一覧
-		buffer_tab			現在のタブで開かれたバッファの一覧
-		line				現在のバッファの行を出力
-		vimgrep				:vimgrep の結果を出力
-
-秀丸エディタに存在しないソース
-		bookmark			ブックマークの一覧（秀丸マクロに命令が存在しない）
-		runtimepath			runtimepath に追加されているパスの一覧
-		launcher			$PATH にある実行ファイルの一覧
-		register			レジスタの一覧
-		alias				g:unite_source_alias_aliases の一覧
-		output				Vim のコマンドの出力結果を出力する（e.g. :mes）
-		line/fast			10000行以上のバッファ時に使用する line
-		jump				:jump の結果の出力
-		change				:change の結果を出力
-		jump_point			file:line に一致するデータを出力
-		file_point			ファイル名か URI に一致するデータを出力する
-
-
 ==============================================================================
 Action
 ==============================================================================
