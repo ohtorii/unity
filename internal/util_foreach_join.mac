@@ -27,23 +27,24 @@ ForeachJoin:
 	setcompatiblemode ##old | 0x00100000;
 
 	##old_column=column;
-	##old_lineno=column;
+	##old_lineno=lineno;
 	call ForeachSelection;
 
 	##new_column=column;
-	##new_lineno=column;
+	##new_lineno=lineno;
 
 	//垂直タブを空白へ変換＆選択
-	moveto2 ##new_lineno,##new_column;
+	moveto2 ##new_column,##new_lineno;
 	beginsel;
-	moveto2 ##old_lineno,##old_column;
+	moveto2 ##old_column,##old_lineno;
 	endsel;
 	call ReplacePaint, $g_separator, " ", $g_marker;
 	// 跡地を範囲選択
 	selectcolormarker $g_marker;
 	deletecolormarkerall $g_marker;
 	setcompatiblemode ##old;
-
+	//カーソル位置を元に戻す
+	moveto2 ##old_column,##old_lineno;
 	endgroupundo;
 	return "1";
 

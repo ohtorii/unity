@@ -2,7 +2,9 @@
 
 ////////////////////////////////////////////////////////////////////////////
 //	グローバル変数
-////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
+
 #g_dll_ht_tools		=0;
 $g_separator="\x0B";	//垂直タブ
 $g_marker="#layer0";
@@ -13,8 +15,12 @@ $g_marker="#layer0";
 ////////////////////////////////////////////////////////////////////////////
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
-$arg=getarg(2);
-call $label, $arg;
+$arg1=getarg(2);
+$arg2=getarg(3);
+$arg3=getarg(4);
+$arg4=getarg(5);
+$arg5=getarg(6);
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5 ;
 endmacro $$return;
 
 
@@ -94,29 +100,13 @@ open:
 
 
 insert_directory:
-	call LoadHtToolsDll;
-	if(! ##return){
-		return "0";
-	}
-
-	call Foreach "insert_directory_proc";
-	$$ret=$$return;
-
-	call FreeHtToolsDll;
-	return $$ret;
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "insert_directory_proc";
+	return getresultex(-1);
 
 
 overwrite_directory:
-	call LoadHtToolsDll;
-	if(! ##return){
-		return "0";
-	}
-
-	call Foreach "overwrite_directory_proc";
-	$$ret=$$return;
-
-	call FreeHtToolsDll;
-	return $$ret;
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "overwrite_directory_proc";
+	return getresultex(-1);
 
 
 preview:
@@ -146,6 +136,8 @@ preview:
 		return "0";
 	}
 
+	//
+	//todo 	秀丸エディタでスクロールが実装されるまでの仮実装
 	//アウトプット枠を先頭にスクロールする
 	##parent=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
 	##edit = dllfunc(#g_dll_ht_tools, "FINDWINDOW", ##parent, "Edit","");
@@ -163,7 +155,9 @@ preview:
 overwrite_directory_proc:
 	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
 		//ディレクトリ区切りあり
-		overwrite(dllfuncstr(#g_dll_ht_tools,"GetParentFolder",$$2));
+		execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$2;
+		$$parent_folder=getresultex(-1);
+		insert($$parent_folder);
 	}else{
 		//ディレクトリ区切りなし
 		overwrite($$2);
@@ -174,7 +168,9 @@ overwrite_directory_proc:
 insert_directory_proc:
 	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
 		//ディレクトリ区切りあり
-		insert(dllfuncstr(#g_dll_ht_tools,"GetParentFolder",$$2));
+		execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$2;
+		$$parent_folder=getresultex(-1);
+		insert($$parent_folder);
 	}else{
 		//ディレクトリ区切りなし
 		insert($$2);
@@ -186,69 +182,6 @@ insert_directory_proc:
 ////////////////////////////////////////////////////////////////////////////
 //	Utility.
 ////////////////////////////////////////////////////////////////////////////
-Foreach:
-	$$label=$$1;
-	disabledraw;
-	begingroupundo;
-
-	##old = compatiblemode;
-	setcompatiblemode ##old | 0x00100000;
-
-	##old_column=column;
-	##old_lineno=column;
-	call ForeachSelection, $$label;
-
-	##new_column=column;
-	##new_lineno=column;
-
-	//垂直タブを空白へ変換＆選択
-	moveto2 ##new_lineno,##new_column;
-	beginsel;
-	moveto2 ##old_lineno,##old_column;
-	endsel;
-	call ReplacePaint, $g_separator, " ", $g_marker;
-	// 跡地を範囲選択
-	selectcolormarker $g_marker;
-	deletecolormarkerall $g_marker;
-	setcompatiblemode ##old;
-
-	endgroupundo;
-	return "1";
-
-
-ForeachSelection:
-	$$label = $$1;
-	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	##i=0;
-	while(##i < ##count){
-		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
-		if(1<=##i){
-			call $$label, true, $g_separator;
-		}
-		call $$label, false, $$text;
-		##i = ##i + 1;
-	}
-	return ;
-
-
-ReplacePaint:
-	// 全置換して塗る
-	// $$1 = 検索パターン
-	// $$2 = 置換文字列 (固定長、改行不可)
-	// $$3 = レイヤ名
-	replacedown $$1, $$2, nohilight,inselect;
-	while (result) {
-		colormarker 0xFFFFFF, 0x663333, 11, 2, 0, $$3, lineno, column - strlen($$2), lineno, column;
-		finddown;
-	}
-	return;
-
-
-GetParentFolder:
-	return dllfuncstr(#g_dll_ht_tools, "GetParentFolder", $$1);
-
-
-
 LoadDllFuzzy:
 	##dll=loaddll(macrodir+"\\"+$$1);
 	if(##dll!=0){

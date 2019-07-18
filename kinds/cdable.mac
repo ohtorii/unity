@@ -5,8 +5,12 @@ $g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
-$arg=getarg(2);
-call $label, $arg;
+$arg1=getarg(2);
+$arg2=getarg(3);
+$arg3=getarg(4);
+$arg4=getarg(5);
+$arg5=getarg(6);
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5 ;
 endmacro $$return;
 
 

@@ -111,13 +111,6 @@ $g_space="\r\n\t 　";
 //マクロのルートディレクトリ
 $g_root_macro_directory=getarg(0);
 
-/*アクションへ渡すことが出来る最大ファイル数
-(memo)
-execmacro へ渡せる引数の上限は31個
-ファイル名は引数の [11] 以降。
-*/
-//#g_max_file_num=30-11;
-
 
 /*****************************************************************************
 	メイン処理
@@ -136,11 +129,14 @@ setsearch $g_old_searchbuffer, #g_old_searchoption;
 endmacro;
 
 main:
-	/***************************************************
-	[注意] ファイル名決め打ち、後で修正。
-	****************************************************/
+	##old_column=column;
+	##old_lineno=lineno;
+
 	call Start $$1;
 	##ret = ##return;
+
+	//カーソル位置を元に戻す
+	moveto2 ##old_column,##old_lineno;
 
 	//
 	//後処理
@@ -152,6 +148,7 @@ main:
 	if(##forcus_hidemaru_handle!=0){
 		setactivehidemaru ##forcus_hidemaru_handle;
 	}
+
 	return ##ret;
 
 /*
