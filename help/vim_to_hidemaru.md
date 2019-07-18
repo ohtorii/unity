@@ -96,25 +96,17 @@ unityとunite.vimのソース＆アクション対応表です。
 
 |機能|説明|補足|実装済|
 |:--:|:--:|:--:|:--:|
-|cd||||
+|cd||秀丸エディタではカレントディレクトリを移動できないため未対応|×|
 |lcd||||
 |project_cd||||
 |tabnew_cd||||
 |tabnew_lcd||||
 |narrow||||
-|vimshell||コマンドプロンプトを開く|△|
+|vimshell||アクション名をcommand_promptへ変更。コマンドプロンプトを開くようにした。|△|
 |tabvimshell||||
 |vimfiler||秀丸ファイラーを開く|△|
+|explorer||新アクション。エクスプローラーを開く|△|
 |tabvimfiler||||
-|cdable_action_rec||||
-|cdable_action_rec_parent||||
-|cdable_action_rec_project||||
-|cdable_action_rec_async||||
-|cdable_action_rec_parent_async||||
-|cdable_action_rec_project_async||||
-|external_cd||||
-|move_vimfiler_cursor||||
-|check_is_directory||||
 
 ## file_mru
 |機能|説明|補足|実装済|

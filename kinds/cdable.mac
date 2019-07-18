@@ -1,5 +1,8 @@
 ﻿/**/
 
+
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
+
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
 $arg=getarg(2);
@@ -17,12 +20,20 @@ base_kind=
 [action.command_prompt]
 function=command_prompt
 description=Open the file at the command prompt.
-is_quit=false
+is_quit=true
+is_multi_selectable=false
+
+[action.explorer]
+function=explorer
+description=Open the file at the Explorer.
+is_quit=true
+is_multi_selectable=false
 
 [action.hidemaru_filer]
 function=hidemaru_filer
 description=Open the file at the Hidemaru filer classic.
-is_quit=false
+is_quit=true
+is_multi_selectable=false
 )";
 
 
@@ -43,24 +54,76 @@ do_action:
 		function! s:kind.action_table.tabvimshell.func(candidate) abort "{{{
 △		function! s:kind.action_table.vimfiler.func(candidate) abort "{{{			-> 秀丸ファイラー
 		function! s:kind.action_table.tabvimfiler.func(candidate) abort "{{{
-		function! s:cdable_action_rec.func(candidate) abort
-		function! s:cdable_action_rec_parent.func(candidate) abort
-		function! s:cdable_action_rec_project.func(candidate) abort
-		function! s:cdable_action_rec_async.func(candidate) abort
-		function! s:cdable_action_rec_parent_async.func(candidate) abort
-		function! s:cdable_action_rec_project_async.func(candidate) abort
-		function! s:external_cd(candidate) abort "{{{
-		function! s:move_vimfiler_cursor(candidate) abort "{{{
-		function! s:check_is_directory(directory) abort
 
 */
 
 command_prompt:
-	debuginfo 1;
-	debuginfo "[cdable] command_prompt";
+	##first_item_index	= 0;
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+	$$parent_folder=getresultex(-1);
+	runex "cmd"
+			, 0 			//sync	  0:async 1:sync
+			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+			, 0, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+			, 2, $$parent_folder 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+			, 1 			//show	  0:auto 1:show 2:hide
+			, 1 			//nodraw  0:draw 1:no draw
+			, 0 			//unicode 0:ansi 2:unicode
+			;
 	return "1";
 
-hidemaru_filer:
-	debuginfo 1;
-	debuginfo "[cdable] hidemaru_filer";
+
+explorer:
+	##first_item_index	= 0;
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+	$$parent_folder=getresultex(-1);
+	runex "explorer " + "\""+$$parent_folder+"\""
+			, 0 			//sync	  0:async 1:sync
+			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+			, 0, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+			, 0,"" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+			, 1 			//show	  0:auto 1:show 2:hide
+			, 1 			//nodraw  0:draw 1:no draw
+			, 0 			//unicode 0:ansi 2:unicode
+			;
 	return "1";
+
+
+hidemaru_filer:
+	call find_hidemaru_filer;
+	$$path = $$return;
+	if($$path==""){
+		return "0";
+	}
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+	$$parent_folder=getresultex(-1);
+
+	runex $$path+" " +"\""+$$parent_folder+"\""
+			, 0 			//sync	  0:async 1:sync
+			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+			, 0, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+			, 1 			//show	  0:auto 1:show 2:hide
+			, 1 			//nodraw  0:draw 1:no draw
+			, 0 			//unicode 0:ansi 2:unicode
+			;
+	return "1";
+
+
+find_hidemaru_filer:
+	$$x64="C:\\Program Files\\HmFilerClassic\\HmFilerClassic.exe";
+	$$x86="C:\\Program Files (x86)\\HmFilerClassic\\HmFilerClassic.exe";
+	if(existfile($$x64)){
+		return $$x64;
+	}
+	if(existfile($$x86)){
+		return $$x86;
+	}
+
+	return "";

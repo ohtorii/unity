@@ -1,0 +1,15 @@
+﻿/*親フォルダを取得する
+
+(例)
+c:\temp\test → c:\temp
+c:\temp\test\ → c:\temp
+c:\temp\test.txt → c:\temp
+*/
+call GetParentFolderName, getarg(0);
+endmacro $$return;
+
+GetParentFolderName:
+	##fso = createobject("Scripting.FileSystemObject");
+	$$parent = callmethod_returnstr( ##fso, "GetParentFolderName", $$1);
+	releaseobject ##fso;
+	return $$parent;

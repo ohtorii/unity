@@ -64,8 +64,7 @@ is_multi_selectable=false
 		function! s:kind.action_table.vimgrep.func(candidates) abort "{{{
 		function! s:kind.action_table.find.func(candidate) abort "{{{
 		function! s:kind.action_table.argadd.func(candidates) abort "{{{
-		function! s:execute_command(command, candidate) abort "{{{
-		function! s:kind.action_table.exrename.func(candidates) abort "{{{
+
 */
 
 do_action:
@@ -123,7 +122,6 @@ overwrite_directory:
 preview:
 	/*ファイル内容のプレビュー
 	*/
-
 	##first_item_index	= 0;
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
 	$$command = sprintf(R"(PowerShell.exe -Command "& {Get-Content "%s" | Select-Object -first 20}")", $$text);
@@ -147,6 +145,8 @@ preview:
 		call FreeHtToolsDll;
 		return "0";
 	}
+
+	//アウトプット枠を先頭にスクロールする
 	##parent=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
 	##edit = dllfunc(#g_dll_ht_tools, "FINDWINDOW", ##parent, "Edit","");
 	if(##edit){
