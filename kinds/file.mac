@@ -18,8 +18,8 @@ get_property:
 name=file
 description=file actions.
 default_action=open
-base_kind=file_base cdable common
-'openable file_vimfiler_base uri
+base_kind=file_base cdable common uri
+'openable file_vimfiler_base
 )";
 
 

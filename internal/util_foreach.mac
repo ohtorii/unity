@@ -1,0 +1,29 @@
+﻿/*
+
+引数
+0	ohtorii_dllのハンドル
+1	コールバックのファイル名
+2	コールバックのラベル名
+*/
+#g_dll_ohtorii_tools	=val(getarg(0));
+$g_callback_filename	=getarg(1);
+$g_callback_labelname	=getarg(2);
+
+
+
+call Foreach;
+endmacro $$return;
+
+
+Foreach:
+	$$label 		=$g_callback_labelname;
+	$$dll_handle	=str(#g_dll_ohtorii_tools);
+
+	##count	=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i		=0;
+	while(##i < ##count){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+		execmacro  $g_callback_filename, $$dll_handle, $$label, $$text;
+		##i = ##i + 1;
+	}
+	return "1";
