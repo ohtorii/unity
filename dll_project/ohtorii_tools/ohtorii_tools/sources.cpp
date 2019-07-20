@@ -90,6 +90,39 @@ Source* Sources::FindSource(const WCHAR*source_name) {
 	return &(it->second);
 }
 
+bool Sources::AppendFileNameAndSourceName(const WCHAR*file_name, const WCHAR*source_name) {
+	try {
+		m_file_name_to_source_name.emplace(file_name, source_name);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
+bool Sources::ExistFileName(const WCHAR*file_name)const {
+	auto it = m_file_name_to_source_name.find(file_name);
+	if (it == m_file_name_to_source_name.end()) {
+		return false;
+	}	
+	return true;
+}
+
+const WCHAR* Sources::FileNameToSourceName(const WCHAR*file_name)const {
+	try {
+		auto it = m_file_name_to_source_name.find(file_name);
+		if (it == m_file_name_to_source_name.end()) {
+			return gs_empty;
+		}
+		return it->second.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return gs_empty;
+}
+
 /*
 const WCHAR* Sources::GetCandidateType(const WCHAR*source_name) {
 	auto it=m_sources.find(source_name);

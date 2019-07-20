@@ -186,6 +186,7 @@
     <ClInclude Include="kinds.h" />
     <ClInclude Include="refine_search.h" />
     <ClInclude Include="sources.h" />
+    <ClInclude Include="status.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="interface_sugar.h" />
     <ClInclude Include="targetver.h" />
@@ -201,6 +202,7 @@
     <ClCompile Include="kinds.cpp" />
     <ClCompile Include="refine_search.cpp" />
     <ClCompile Include="sources.cpp" />
+    <ClCompile Include="status.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

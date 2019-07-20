@@ -30,7 +30,7 @@ main:
 		debuginfo "  [Failed]internal/action.mac return false.";
 		return "0";
 	}
-	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",		##candidate_index);
+	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",##candidate_index);
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"InheriatnceGenerateDefaultAction",$$source_name);
 	if(! ##ret){
 		debuginfo "  [Failed]internal/action.mac return 0";
@@ -40,16 +40,7 @@ main:
 	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionLabel");
 	$$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
 
-
-	/*memo
-	is_quitはexecmacro呼び出しで上書きする。
-	*/
-	execmacro currentmacrodirectory+"\\is_quit.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
-	$$is_quit = getresultex(-1);
-	debuginfo "  internal/action.mac $$is_quit="+$$is_quit;
-	setstaticvariable "$unity.is_quit", $$is_quit,1;
-
-	//execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$default_action;
+	call pre_action,$$default_kind, $$default_action;
 	call exec_action, $$kind_filename, $$default_action;
 
 	/*memo
@@ -59,6 +50,35 @@ main:
 	$$ret=$$return;
 	debuginfo "  [Success]internal/action.mac $$ret=" + $$ret;
 	return $$ret;
+
+
+pre_action:
+	/*アクションを呼び出す前の処理
+
+	主な処理内容：	内部状態を初期値に戻す。
+	*/
+	$$default_kind	=$$1;
+	$$default_action=$$2;
+
+	//is_quit
+	execmacro currentmacrodirectory+"\\is_quit.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
+	$$is_quit = getresultex(-1);
+	setstaticvariable "$unity.is_quit", $$is_quit,1;
+
+	//is_start
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusClearIsStart");
+	if(!##ret){
+		return false;
+	}
+	execmacro currentmacrodirectory+"\\is_start.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
+	if(getresultex(-1)=="0"){
+		##is_start=false;
+	}else{
+		##is_start=true;
+	}
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsStart",##is_start);
+	return ##ret;
+
 
 
 exec_action:
@@ -105,6 +125,7 @@ exec_action:
 	//deserialize
 	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$serialize_filename);
 	if(! ##ret){
+		call FreeDll;
 		//元の秀丸エディタへ切り替える
 		setactivehidemaru(##current_hidemaruhandle);
 		debuginfo " internal/action.mac exec_action -> false";
@@ -117,15 +138,14 @@ exec_action:
 	$$action_result = getresultex(-1);
 
 	call FreeDll;
-
 	//元の秀丸エディタへ切り替える
 	setactivehidemaru(##current_hidemaruhandle);
 	debuginfo " internal/action.mac exec_action -> true";
 	return $$action_result;
 
 
-//ohtorii_toolsを読み込む
 LoadDll:
+	//ohtorii_toolsを読み込む
 	if(platform&0x00080000){
 		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
 	}else{
@@ -137,8 +157,9 @@ LoadDll:
 	}
 	return ##dll_ohtorii_tools;
 
-//ohtorii_toolsを解放する
+
 FreeDll:
+	//ohtorii_toolsを読み込む
 	if(##dll_ohtorii_tools != 0){
 		freedll ##dll_ohtorii_tools;
 		##dll_ohtorii_tools=0;

@@ -1,0 +1,53 @@
+﻿/*ファイル
+*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg1=getarg(2);
+$arg2=getarg(3);
+$arg3=getarg(4);
+$arg4=getarg(5);
+$arg5=getarg(6);
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=file
+description=candidates from file list
+default_kind=file
+candidate_type=function
+)";
+
+/*
+\ 'ignore_globs' : [
+      \         '.', '..', '*~', '*.o', '*.exe', '*.bak',
+      \         'DS_Store', '*.pyc', '*.sw[po]', '*.class',
+      \         '.hg/**', '.git/**', '.bzr/**', '.svn/**',
+*/
+gather_candidates:
+	//////////////////////////////////////////////////////////////////////////
+	//ディレクトリを登録する
+	//////////////////////////////////////////////////////////////////////////
+	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", "directory");
+	if(!##success){
+		return false;
+	}
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "../","");
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "folder1/","");
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "folder2/","");
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "テスト中だよ😨","");
+
+	//////////////////////////////////////////////////////////////////////////
+	//ファイルを登録する
+	//////////////////////////////////////////////////////////////////////////
+	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", "file");
+	if(!##success){
+		return false;
+	}
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "file1.txt","");
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "file2.exe","");
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "ファイルのテスト","");
+
+	return "1";

@@ -129,10 +129,18 @@ EndDialog:
 LoadSources:
 	//仮実装
 	//$g_sources_dirを利用する
-	$g_source_names[0]="file_mru";
-	$g_source_names[1]="window";
-	$g_source_names[2]="process";
-	#g_source_names_num=3;
+	##i=0;
+	$g_source_names[##i]="file";
+	##i = ##i + 1;
+	$g_source_names[##i]="directory";
+	##i = ##i + 1;
+	$g_source_names[##i]="file_mru";
+	##i = ##i + 1;
+	$g_source_names[##i]="window";
+	##i = ##i + 1;
+	$g_source_names[##i]="process";
+	##i = ##i + 1;
+	#g_source_names_num=##i;
 	return true;
 
 

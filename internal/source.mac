@@ -33,9 +33,16 @@ main:
 	$$source_filename=$$1;
 	$$arg=$$2;
 
+	call LoadSourceIfNotExist $$source_filename;
+	$$source_name=$$return;
+	if($$source_name==""){
+		return false;
+	}
+
 	/*ソースのプロパティを取得する
 	*/
-	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
+
+	/*execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
 	$$ini=getresultex(-1);
 	if($$ini==""){
 		return false;
@@ -44,7 +51,12 @@ main:
 	if($$source_name==""){
 		return false;
 	}
-	$$ini="";//メモリ解放
+	$$ini="";//メモリ解放*/
+
+	debuginfo 1;
+	debuginfo "$$source_filename="+$$source_filename;
+	debuginfo "$$source_name="+$$source_name;
+
 	/*候補を作る
 	*/
 	##ret		=false;
@@ -68,11 +80,28 @@ main:
 		//未知の型名
 		message sprintf("$$candidate_type が未知の型名だよ。\n"+
 						"$$candidate_type=%s\n"	+
-						"\n\n[todo]親切なメッセージにする", $$candidate_type);
+						"$$source_filename=%s\n"+
+						"$$source_name=%s\n"	+
+						"\n\n[todo]親切なメッセージにする", $$candidate_type,$$source_filename,$$source_name);
 		##ret=false;
 	}
 	##success = dllfuncw(#g_dll_ohtorii_tools, "ClearCurrentSourceName");
 	return ##ret;
+
+
+LoadSourceIfNotExist:
+	$$source_filename=$$1;
+	##exist	= dllfuncw(#g_dll_ohtorii_tools, "SourcesExistFileName", $$source_filename);
+	if(##exist){
+		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools, "SourcesFileNameToSourceName", $$source_filename);
+		return $$source_name;
+	}
+	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
+	$$ini=getresultex(-1);
+	if($$ini==""){
+		return "";
+	}
+	return dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
 
 
 GatherCandidatesFromList:

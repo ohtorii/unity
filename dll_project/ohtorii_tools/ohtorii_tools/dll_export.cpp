@@ -64,6 +64,10 @@ extern "C" INT_PTR GetSelectionUserDataNumeric(INT_PTR selected_index, WCHAR*key
 	return Unity::Instance().lock()->QueryCandidates()->GetUserData(index, key_name, default_value);
 }
 
+extern "C" INT_PTR StartCandidate(WCHAR*source_name, WCHAR*arg) {	
+	return Unity::Instance().lock()->QueryStatus()->GetIsStart().Set(source_name,arg);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //Unity
 /////////////////////////////////////////////////////////////////////////////
@@ -166,20 +170,26 @@ extern "C" WCHAR* SourcesCreate(WCHAR* source_ini){
 	return Unity::Instance().lock()->QuerySources()->Create(source_ini);
 }
 
-extern "C" const WCHAR* SourcesGetCandidateType(WCHAR*souce_name) {
-	auto*source = Unity::Instance().lock()->QuerySources()->FindSource(souce_name);
-	if(source==nullptr){
-		return _T("");
-	}
-	return source->m_candidate_type.c_str();
+extern "C" WCHAR* SourcesGetCandidateType(WCHAR*souce_name) {
+	auto*source = Unity::Instance().lock()->QuerySources()->FindSource(souce_name);	
+	return const_cast<WCHAR*>(source->m_candidate_type.c_str());
 }
 
-extern "C" const WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
-	auto*source = Unity::Instance().lock()->QuerySources()->FindSource(souce_name);
-	if (source == nullptr) {
-		return _T("");
-	}
-	return source->m_default_kind.c_str();
+extern "C" WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
+	auto*source = Unity::Instance().lock()->QuerySources()->FindSource(souce_name);	
+	return const_cast<WCHAR*>(source->m_default_kind.c_str());
+}
+
+extern "C" INT_PTR SourcesAppendFileNameAndSourceName(const WCHAR*file_name, const WCHAR*source_name){
+	return Unity::Instance().lock()->QuerySources()->AppendFileNameAndSourceName(file_name, source_name);
+}
+
+extern "C" INT_PTR SourcesExistFileName(const WCHAR*file_name) {
+	return Unity::Instance().lock()->QuerySources()->ExistFileName(file_name);
+}
+
+extern "C" WCHAR* SourcesFileNameToSourceName(const WCHAR*file_name) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QuerySources()->FileNameToSourceName(file_name));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -287,6 +297,10 @@ extern "C" INT_PTR	KindsIsActionMultiSelectable(INT_PTR kind_index, INT_PTR acti
 	return Unity::Instance().lock()->QueryKinds()->IsActionMultiSelectable(kind_index, action_index);
 }
 
+extern "C" INT_PTR	KindsIsActionStart(INT_PTR kind_index, INT_PTR action_index) {
+	return Unity::Instance().lock()->QueryKinds()->IsActionStart(kind_index, action_index);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //Inheritance
 /////////////////////////////////////////////////////////////////////////////
@@ -300,6 +314,29 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionKind() {
 
 extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryInheritance()->GetDefaultAction().m_label_name.c_str());
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//Status
+/////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR StatusSetIsStart(INT_PTR is_start) {
+	return Unity::Instance().lock()->QueryStatus()->GetIsStart().SetEnable(is_start);
+}
+
+extern "C" INT_PTR StatusClearIsStart() {
+	return Unity::Instance().lock()->QueryStatus()->GetIsStart().Clear();
+}
+
+extern "C" INT_PTR StatusEnableIsStart() {
+	return Unity::Instance().lock()->QueryStatus()->GetIsStart().Enable();
+}
+
+extern "C" WCHAR* StatusGetIsStartSourceName() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus()->GetIsStart().m_source_name.c_str());
+}
+
+extern "C" WCHAR* StatusGetIsStartArg() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus()->GetIsStart().m_arg.c_str());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -322,3 +359,4 @@ extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {
 	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n);*/
 	return 0;
 }
+

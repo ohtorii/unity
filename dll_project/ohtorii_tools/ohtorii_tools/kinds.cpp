@@ -67,6 +67,9 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	
 	GetPrivateProfileString(section_name, _T("is_multi_selectable"), _T(""), buf, _countof(buf), filename);
 	dst.m_is_multi_selectable = StringToBool(buf);
+	
+	GetPrivateProfileString(section_name, _T("is_start"), _T(""), buf, _countof(buf), filename);
+	dst.m_is_start = StringToBool(buf);
 }
 
 static bool CheckAppendable(bool candidate_is_multi_select, bool action_is_multi_selectable) {
@@ -86,6 +89,7 @@ static bool CheckAppendable(bool candidate_is_multi_select, bool action_is_multi
 Action::Action() {
 	m_is_quit = false;
 	m_is_multi_selectable = false;
+	m_is_start = false;
 }
 
 
@@ -331,7 +335,15 @@ bool Kinds::IsActionMultiSelectable(size_t kind_index, size_t action_index) {
 	}
 	return false;
 }
-
+bool Kinds::IsActionStart(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_start;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
 
 const WCHAR* Kinds::GetDefaultActionLabelName(const WCHAR* kind_name){
 	DebugLog(_T("GetHidemaruLabelName"));

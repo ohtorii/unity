@@ -9,6 +9,8 @@
 #include"refine_search.h"
 #include"kinds.h"
 #include"inheritance.h"
+#include"status.h"
+
 
 
 class Unity{
@@ -45,9 +47,10 @@ public:
 	RefineSearch*	QueryRefineSearch();
 	Kinds*			QueryKinds();	
 	Inheritance*	QueryInheritance();
+	Status*			QueryStatus();
 
 	template<class Archive> void serialize(Archive & archive) {
-		archive(m_candidates,m_refine_search);
+		archive(m_candidates,m_refine_search, m_sources);
 	};
 
 protected:
@@ -64,6 +67,7 @@ private:
 	Candidates			m_candidates;
 	RefineSearch		m_refine_search;
 	Inheritance			m_inheritance;
+	static Status		m_status;
 
 	///カインドはインスタンス共通で利用するため静的領域とする
 	static Kinds		m_kinds;	

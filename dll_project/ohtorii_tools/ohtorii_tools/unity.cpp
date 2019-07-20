@@ -9,6 +9,8 @@ static WCHAR	gs_empty[] = { 0 };
 std::array<std::shared_ptr<Unity>, 4>	Unity::m_instances{ {nullptr,nullptr,nullptr,nullptr} };
 size_t					Unity::m_current_instance_index = 0;
 Kinds					Unity::m_kinds;
+Status					Unity::m_status;
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,7 +81,7 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 		{
 			cereal::BinaryOutputArchive archive(os);
 			//archive(*(Instance().lock()));
-			archive(Unity::m_instances,Unity::m_current_instance_index,Unity::m_kinds,InterfaceSugar::m_instance);
+			archive(Unity::m_instances,Unity::m_current_instance_index,Unity::m_kinds,Unity::m_status,InterfaceSugar::m_instance);
 		}
 		return true;
 	}catch (std::exception) {
@@ -96,8 +98,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 		}
 		{
 			cereal::BinaryInputArchive	archive(is);
-			//archive(*(Instance().lock()));
-			archive(Unity::m_instances, Unity::m_current_instance_index, Unity::m_kinds, InterfaceSugar::m_instance);
+			archive(Unity::m_instances, Unity::m_current_instance_index, Unity::m_kinds, Unity::m_status, InterfaceSugar::m_instance);
 		}
 		return true;
 	}
@@ -141,6 +142,9 @@ Inheritance*	Unity::QueryInheritance() {
 	return &m_inheritance;
 }
 
+Status* Unity::QueryStatus() {
+	return &m_status;
+}
 
 Unity::Unity() : m_refine_search(this), m_inheritance(this){
 	DebugLog(_T("Unity::Unity() %p"),this);

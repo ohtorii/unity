@@ -20,6 +20,10 @@
 複数選択に対応したアクションかどうか
 ディフォルト値	false
 
+## is_start
+ソースを生成してアクションを開始するかどうか
+ディフォルト値 false
+
 # 固有名詞
 ## 秀丸エディタ
 |固有名詞|説明|備考|
@@ -37,6 +41,7 @@
 
 ## $unity.is_quit (bool)
 処理を終了するかどうか
+
 
 ## $unity.hidemaruhandle_to_focus_at_end_of_process (int)
 unity終了後にフォーカスするウインドウ

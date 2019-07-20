@@ -1,0 +1,12 @@
+﻿#g_dll_ohtorii_tools=val(getarg(0));
+$g_kind 	= getarg(1);
+$g_action	= getarg(2);
+
+call IsQuit;
+endmacro str(##return);
+
+IsQuit:
+	##kind_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindKindIndex",	$g_kind);
+	##action_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindActionIndex", ##kind_index, $g_action);
+	##is_start		=dllfuncw(#g_dll_ohtorii_tools, 	"KindsIsActionStart",	##kind_index,##action_index);
+	return ##is_start;

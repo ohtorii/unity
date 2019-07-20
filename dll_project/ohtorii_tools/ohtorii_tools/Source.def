@@ -8,12 +8,17 @@ EXPORTS
 	AppendUserDataNumeric
 	AppendChildCandidate
 
+	
 	GetSelectionCount
 	GetSelectionText
 	GetSelectionUserDataString
 	GetSelectionUserDataNumeric
 	GetSelectionSourceName
 	GetSelectionDescription
+
+	
+	StartCandidate
+
 
     RefineSearchDo
     RefineSearchGetResult
@@ -25,6 +30,7 @@ EXPORTS
 	RefineSearchGetFirstSelectionCandidateIndex
 	RefineSearchMoveHidemaruCursorLineNo
 	
+	
 	Initialize
     PushContext
     PopContext
@@ -32,10 +38,15 @@ EXPORTS
 	SerializeCurrentContext
 	DeSerializeToCurrentContext
 
+
     SourcesCreate
     SourcesGetDefaultKind
 	SourcesGetCandidateType
-	
+	SourcesAppendFileNameAndSourceName
+	SourcesExistFileName;
+	SourcesFileNameToSourceName
+
+
 	CandidatesGetSourceName
 	CandidatesGetText
 	CandidatesAppendHeader
@@ -46,11 +57,13 @@ EXPORTS
 	CandidatesGetUserDataString
 	CandidatesGetUserDataNumeric
 
+	
 	KindGetKindName
 	KindGetKindDescription
 	KindGetDefaultAction
 
-    KindsClear
+    
+	KindsClear
     KindsCreate
 	KindsGetDefaultActionLabelName
 	KindsGenerateCandidates
@@ -61,10 +74,19 @@ EXPORTS
 	KindsGetActionDescription
 	KindsIsActionQuit
 	KindsIsActionMultiSelectable
+	KindsIsActionStart
 
+	
 	InheriatnceGenerateDefaultAction
 	InheriatnceGetDefaultActionKind
 	InheriatnceGetDefaultActionLabel
+
+	
+	StatusSetIsStart
+	StatusClearIsStart
+	StatusEnableIsStart
+	StatusGetIsStartSourceName
+	StatusGetIsStartArg
 
 	FileRegistAfterDeleteFile
 	WriteToFile

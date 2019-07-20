@@ -90,10 +90,10 @@ Unite-vimの説明。
 https://www.youtube.com/watch?v=Co4Np4SXOOc
 */
 
-//空白文字の定義
-$g_space="\r\n\t 　";
 
-
+/*****************************************************************************
+	グローバル変数
+*****************************************************************************/
 #g_open_newfile = false;
 #g_new_hidemaru = 0;
 #g_target_hidemaru = hidemaruhandle(0);
@@ -111,6 +111,21 @@ $g_space="\r\n\t 　";
 //マクロのルートディレクトリ
 $g_root_macro_directory=getarg(0);
 
+
+/*****************************************************************************
+	グローバル変数(const)
+*****************************************************************************/
+//command-lineへのパス（暫定）
+$g_command_line_path=$g_root_macro_directory+"\\..\\command-line\\command-line-internal";
+//空白文字の定義
+$g_space = "\r\n\t 　";
+
+//返値
+#g_result_cancel		=0;
+#g_result_success		=1;
+#g_result_continue		=2;
+#g_result_quit			=3;
+#g_result_faile 		=-1;
 
 /*****************************************************************************
 	メイン処理
@@ -176,8 +191,12 @@ Start:
 	if(! ##return){
 		return false;
 	}
-	##n=dllfuncw(#g_dll_ohtorii_tools,"Initialize");
+	//##n=dllfuncw(#g_dll_ohtorii_tools,"Initialize");
 	call LoadKindAll;
+	if(! ##return){
+		return false;
+	}
+	call LoadSourceAll;
 	if(! ##return){
 		return false;
 	}
@@ -267,77 +286,35 @@ RefineSearchMain:
 	$$prev_pattern="999";
 	##prev_tickcount=0;
 	while(true){
-		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\input-keys.mac", $$key_buffer, $$cursor_pos;
+		execmacro $g_command_line_path+"\\input-keys.mac", $$key_buffer, $$cursor_pos;
 		$$keybord_buffer=getresultex(-1);
-
-		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keycode"		, $$keybord_buffer;
+		execmacro $g_command_line_path+"\\parse_result.mac" , "keycode"		, $$keybord_buffer;
 		$$keycode=getresultex(-1);
-		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
+		execmacro $g_command_line_path+"\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 		$$cursor_pos=getresultex(-1);
-		execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
+		execmacro $g_command_line_path+"\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 		$$key_buffer=getresultex(-1);
 
 		##ctrl =iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
-			##is_quit_old	=val(getstaticvariable("$unity.is_quit",1));
-			execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools);
-			$$search_result	=getresultex(-1);
-			##is_quit		=val(getstaticvariable("$unity.is_quit",1));
-			//setstaticvariable "$unity.is_quit",str(##is_quit_old),1;	//値を元に戻す
-			if($$search_result=="1"){
-				//成功
-				if(##is_quit){
-					return 1;
-				}else{
-					//画面を更新して再度絞り込み検索を行う。
-					call Filter $$key_buffer;
-				}
-			}else{
-				return 0;		//失敗
-			}
-		}else if($$keycode=="27"){				return 0;}			//Escapeが押された
+			call Enter;
+			if(##return==#g_result_continue){continue;}
+			if(##return==#g_result_quit)	{return #g_result_success;}
+			return ##return;
+		}else if($$keycode=="27"){				return #g_result_cancel;}			//Escapeが押された
 		else if($$keycode=="16"){				call CursorUp;} 	//ctrl-p
 		else if($$keycode=="14"){				call CursorDown;}	//ctrl-n
-		else if($$keycode=="18"){				call Mark;} 		//ctrl-space
-		else if(##ctrl&&($$keycode=="32")){ 	call Mark;} 		//ctrl-space
+		else if($$keycode=="18"){				call Mark;call CursorDown;} 		//ctrl-space
+		else if(##ctrl&&($$keycode=="32")){ 	call Mark;call CursorDown;} 		//ctrl-space
 		else if($$keycode == "29"){ 			call CursorUp;} 	//[↑]
 		else if($$keycode == "31"){ 			call CursorDown;}	//[↓]
 		else if($$keycode=="9"){									//tab
-			/*	アクションの選択
-			*/
+			/*	アクションを選択する */
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
-			call PushRefineSearch;
-			if(##return==false){
-				//(Memo)TABを連続で押すとこの処理に入るので無視する。
-				continue;
-			}
-			##is_quit_old	=val(getstaticvariable("$unity.is_quit",1));
-			call RefineSearch currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
-			##search_result	=##return;
-			##is_quit		=val(getstaticvariable("$unity.is_quit",1));
-			//setstaticvariable "$unity.is_quit",str(##is_quit_old),1;	//値を元に戻す
-			debuginfo 1;
-			debuginfo "##is_quit="+getstaticvariable("$unity.is_quit",1);
-			call PopRefineSearch;
-			if(##return==false){
-				return -1;
-			}
-			if(##search_result==0){
-				//キャンセル
-				//画面を更新して再度絞り込み検索を行う。
-				call Filter $$key_buffer;
-			}else if(##search_result==1){
-				//成功
-				if(##is_quit){
-					return 1;
-				}else{
-					//画面を更新して再度絞り込み検索を行う。
-				call Filter $$key_buffer;
-				}
-			}else{
-				//失敗
-				return -1;
-			}
+			call NewCandidate currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
+			if(##return==#g_result_continue){continue;}
+			if(##return==#g_result_quit)	{return #g_result_success;}
+			return ##return;
 		}else{
 			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
 				call Filter $$key_buffer;
@@ -346,7 +323,81 @@ RefineSearchMain:
 			}
 		}
 	}
-	return -1;
+	return #g_result_faile;
+
+
+Enter:
+	/*Enterキーの処理
+	return	#g_result_quit
+			#g_result_faile
+			#g_result_continue
+	*/
+	execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools);
+	if(getresultex(-1) != "1"){
+		return #g_result_faile;		//失敗
+	}
+
+	//
+	//成功
+	//
+
+	##is_quit=val(getstaticvariable("$unity.is_quit",1));
+	if(##is_quit){
+		return #g_result_quit;
+	}
+
+	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StatusEnableIsStart");
+	if(##is_start){
+		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartSourceName");
+		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartArg");
+		call NewCandidate, $$source_name, $$arg;
+		return ##return;
+	}
+	//画面を更新して再度絞り込み検索を行う。
+	call Filter $$key_buffer;
+	return #g_result_continue;
+
+
+NewCandidate:
+	/*新規の候補選択
+	return	#g_result_quit
+			#g_result_faile
+			#g_result_continue
+	*/
+	$$source_filename	=$$1;
+	$$arg				=$$2;
+
+	call PushRefineSearch;
+	if(##return==false){
+		//(Memo)TABを連何度も押すとこの処理に入る。とりあえず無視する。
+		return #g_result_continue;
+	}
+
+	call RefineSearch $$source_filename	,$$arg;
+	##search_result	=##return;
+	##is_quit		=val(getstaticvariable("$unity.is_quit",1));
+
+	call PopRefineSearch;
+	if(##return==false){
+		return #g_result_faile;
+	}
+
+	if(##search_result==#g_result_cancel){
+		//キャンセル
+		//画面を更新して再度絞り込み検索を行う。
+		call Filter $$key_buffer;
+		return #g_result_continue;
+	}
+	if(##search_result==#g_result_success){
+		//成功
+		if(##is_quit){
+			return #g_result_quit;
+		}
+		//画面を更新して再度絞り込み検索を行う。
+		call Filter $$key_buffer;
+		return #g_result_continue;
+	}
+	return ##search_result;
 
 
 CursorMoveCommon:
@@ -536,6 +587,41 @@ LoadKindAll:
 		execmacro $$kinds[##i],str(#g_dll_ohtorii_tools),"get_property";
 		$$kind_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsCreate",getresultex(-1));
 		if($$kind_name==""){
+			return false;
+		}
+		##i = ##i + 1;
+	}
+	return true;
+
+//#region Source
+LoadSourceAll:
+	/*全ソースをDLLへ読み込む*/
+	$$sources[0]="";
+	##sources_num=0;
+
+	$$root = $g_root_macro_directory+"\\sources\\";
+	##n = dllfunc(#g_dengaku_dll,"ENUMFILE",$$root+"*.mac");
+	while (1) {
+		$$file = dllfuncstr(#g_dengaku_dll,"FINDNEXT");
+		if ($$file == "") {
+			break;
+		}
+		$$sources[##sources_num]=$$root+$$file;
+		##sources_num = ##sources_num + 1;
+	}
+
+	##i=0;
+	while(##i<##sources_num){
+		/*ソースのプロパティを取得する
+		*/
+		$$source_filename=$$sources[##i];
+		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
+		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",getresultex(-1));
+		if($$source_name==""){
+			return false;
+		}
+		##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceName",$$source_filename,$$source_name);
+		if(!##ret){
 			return false;
 		}
 		##i = ##i + 1;
