@@ -50,7 +50,7 @@ public:
 	Status*			QueryStatus();
 
 	template<class Archive> void serialize(Archive & archive) {
-		archive(m_candidates,m_refine_search, m_sources);
+		archive(m_candidates,m_refine_search);
 	};
 
 protected:
@@ -62,7 +62,7 @@ private:
 	static	std::array<std::shared_ptr<Unity>,4>	m_instances;
 	static	size_t					m_current_instance_index;
 
-	Sources				m_sources;
+	static Sources		m_sources;
 	File				m_file;
 	Candidates			m_candidates;
 	RefineSearch		m_refine_search;

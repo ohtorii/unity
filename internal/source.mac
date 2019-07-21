@@ -53,10 +53,6 @@ main:
 	}
 	$$ini="";//メモリ解放*/
 
-	debuginfo 1;
-	debuginfo "$$source_filename="+$$source_filename;
-	debuginfo "$$source_name="+$$source_name;
-
 	/*候補を作る
 	*/
 	##ret		=false;
@@ -101,8 +97,13 @@ LoadSourceIfNotExist:
 	if($$ini==""){
 		return "";
 	}
-	return dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
+	$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
 
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceName",$$source_filename,$$source_name);
+	if(!##ret){
+		return false;
+	}
+	return $$source_name;
 
 GatherCandidatesFromList:
 	$$source_filename=$$1;

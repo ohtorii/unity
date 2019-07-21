@@ -81,12 +81,12 @@ extern "C" INT_PTR Initialize() {
 	return true;
 }
 
-extern "C" INT_PTR PushContext(INT_PTR exist_context_then_delete) {
-	return Unity::PushContext(exist_context_then_delete);
+extern "C" INT_PTR PushContext(INT_PTR if_exist_context_then_delete) {
+	return Unity::PushContext(if_exist_context_then_delete);
 }
 
-extern "C" INT_PTR PopContext(INT_PTR exist_context_then_delete) {
-	return Unity::PopContext(exist_context_then_delete);
+extern "C" INT_PTR PopContext(INT_PTR if_exist_context_then_delete) {
+	return Unity::PopContext(if_exist_context_then_delete);
 }
 
 extern "C" INT_PTR GetCurrentContext() {

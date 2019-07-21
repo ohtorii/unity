@@ -370,6 +370,7 @@ NewCandidate:
 	call PushRefineSearch;
 	if(##return==false){
 		//(Memo)TABを連何度も押すとこの処理に入る。とりあえず無視する。
+		debuginfo "  [Failed]Push";
 		return #g_result_continue;
 	}
 

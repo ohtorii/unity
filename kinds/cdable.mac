@@ -136,7 +136,6 @@ hidemaru_filer:
 
 
 file:
-	narrow:
 	debuginfo 1;
 	debuginfo "call file";
 	return "1";
@@ -154,7 +153,6 @@ file:
 
 
 narrow:
-	narrow:
 	debuginfo 1;
 	debuginfo "call narrow";
 	return "1";

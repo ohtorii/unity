@@ -284,19 +284,16 @@ INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_li
 	DebugLog(_T("  hidemaru_line_no=%d"),hidemaru_line_no);
 	*/
 	if (hidemaru_line_no <= 0) {
-		DebugLog(_T("  return -1@1"));
 		return UNITY_NOT_FOUND_INDEX;
 	}
 	--hidemaru_line_no;//0始まりにする
 	try {
 		auto value = m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(hidemaru_line_no);
-		DebugLog(_T("  return value=%d"),value);
 		return value;
 	}
 	catch (std::exception) {
 		//pass
 	}
-	DebugLog(_T("  return -1@2"));
 	return UNITY_NOT_FOUND_INDEX;
 }
 

@@ -8,6 +8,7 @@ static WCHAR	gs_empty[] = { 0 };
 
 std::array<std::shared_ptr<Unity>, 4>	Unity::m_instances{ {nullptr,nullptr,nullptr,nullptr} };
 size_t					Unity::m_current_instance_index = 0;
+Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
 Status					Unity::m_status;
 
@@ -81,7 +82,13 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 		{
 			cereal::BinaryOutputArchive archive(os);
 			//archive(*(Instance().lock()));
-			archive(Unity::m_instances,Unity::m_current_instance_index,Unity::m_kinds,Unity::m_status,InterfaceSugar::m_instance);
+			archive(
+				Unity::m_instances,
+				Unity::m_current_instance_index,
+				Unity::m_sources,
+				Unity::m_kinds,
+				Unity::m_status,
+				InterfaceSugar::m_instance);
 		}
 		return true;
 	}catch (std::exception) {
@@ -98,7 +105,13 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 		}
 		{
 			cereal::BinaryInputArchive	archive(is);
-			archive(Unity::m_instances, Unity::m_current_instance_index, Unity::m_kinds, Unity::m_status, InterfaceSugar::m_instance);
+			archive(
+				Unity::m_instances, 
+				Unity::m_current_instance_index, 
+				Unity::m_sources,
+				Unity::m_kinds, 
+				Unity::m_status, 
+				InterfaceSugar::m_instance);
 		}
 		return true;
 	}
@@ -109,13 +122,11 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 }
 
 void Unity::Destroy() {
-	DebugLog(_T("Unity::Destroy() Start"));
 	for (size_t i = 0; i<m_instances.size() ; ++i) {
 		m_instances.at(i).reset();
 	}
 	m_kinds.Clear();
 	m_current_instance_index = 0;
-	DebugLog(_T("Unity::Destroy() Finish"));
 }
 
 Sources* Unity::QuerySources(){
@@ -147,9 +158,7 @@ Status* Unity::QueryStatus() {
 }
 
 Unity::Unity() : m_refine_search(this), m_inheritance(this){
-	DebugLog(_T("Unity::Unity() %p"),this);
 }
 
 Unity::~Unity(){
-	DebugLog(_T("Unity::~Unity() %p"),this);
 }
