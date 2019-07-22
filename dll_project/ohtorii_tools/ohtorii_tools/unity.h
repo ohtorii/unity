@@ -44,12 +44,12 @@ public:
 	
 	void AppendAfterDelete(const WCHAR*filename){}
 	
-	Sources* 		QuerySources();
-	File*			QueryFile();
-	Candidates*		QueryCandidates();
-	RefineSearch*	QueryRefineSearch();
-	Kinds*			QueryKinds();	
-	Inheritance*	QueryInheritance();
+	Sources& 		QuerySources();
+	File&			QueryFile();
+	Candidates&		QueryCandidates();
+	RefineSearch&	QueryRefineSearch();
+	Kinds&			QueryKinds();	
+	Inheritance&	QueryInheritance();
 	UserData&		QueryUserData();
 	Status&			QueryStatus();
 

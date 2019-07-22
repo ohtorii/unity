@@ -156,17 +156,17 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 	DebugLog(_T("Kinds::Create"));
 
 	{
-		File*			file = Unity::Instance().lock()->QueryFile();
+		auto&			file = Unity::Instance().lock()->QueryFile();
 		std::wstring	temp_filename;
 
-		if (!file->CreateTempFile(temp_filename)) {
+		if (!file.CreateTempFile(temp_filename)) {
 			DebugLog(_T("  return false@1"));
 			return gs_empty;
 		}
 
 		const WCHAR*cname = temp_filename.c_str();
-		file->RegistAfterDelete(cname);
-		if (!file->WriteToFile(cname, kind_ini)) {
+		file.RegistAfterDelete(cname);
+		if (!file.WriteToFile(cname, kind_ini)) {
 			DebugLog(_T("  return false@2"));
 			return gs_empty;
 		}
@@ -373,28 +373,24 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}	
 	
 	{
-		auto*inheritance = instance.lock()->QueryInheritance();
-		if (! inheritance->GenerateResolveActions()) {
+		auto&inheritance = instance.lock()->QueryInheritance();
+		if (! inheritance.GenerateResolveActions()) {
 			DebugLog(_T("  return false @2"));
 			return false;
 		}
 
-		auto* candidates = Unity::Instance().lock()->QueryCandidates();
-		if (candidates == nullptr) {
-			DebugLog(_T("  return false @3"));
-			return false;
-		}
+		auto& candidates = Unity::Instance().lock()->QueryCandidates();
 		//現在のインスタンスへ候補を追加する
-		for (const auto&item : inheritance->GetResolveActions()) {
+		for (const auto&item : inheritance.GetResolveActions()) {
 			DebugLog(_T("  item.m_kind_name.c_str()=%s"),item.m_kind_name.c_str());
-			auto* kind = instance.lock()->QueryKinds()->FindKind(item.m_kind_name.c_str());
+			auto* kind = instance.lock()->QueryKinds().FindKind(item.m_kind_name.c_str());
 			if (kind == nullptr) {
 				continue;
 			}
 			const auto & action = kind->m_actions.at(item.m_action_index);
 						
-			auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), (item.m_kind_name+_T("\t")+action.m_description).c_str());
-			candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
+			auto candidate_index = candidates.AppendCandidate(_T("action"), action.m_name.c_str(), (item.m_kind_name+_T("\t")+action.m_description).c_str());
+			candidates.SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
 		}
 
 		
@@ -448,14 +444,14 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}	
 
 	//ソース名からディフォルトカインドを取り出す
-	auto* source= instance.lock()->QuerySources()->FindSource(first_source_name.c_str());
+	auto* source= instance.lock()->QuerySources().FindSource(first_source_name.c_str());
 	if (source == nullptr) {
 		DebugLog((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
 		return false;
 	}
 	const auto &default_kind = source->m_default_kind;
 
-	auto* kind = instance.lock()->QueryKinds()->FindKind(default_kind.c_str());
+	auto* kind = instance.lock()->QueryKinds().FindKind(default_kind.c_str());
 	if (kind == nullptr) {
 		DebugLog(_T("@5"));
 		return false;

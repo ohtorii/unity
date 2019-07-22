@@ -105,13 +105,13 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 	//
 	std::vector<ReferenceCounter>	reference_counter;
 
-	const auto	num_selection	= m_instance->QueryRefineSearch()->GetSelectionCandidateCount();
+	const auto	num_selection	= m_instance->QueryRefineSearch().GetSelectionCandidateCount();
 
 	{
-		auto*refine_search	= m_instance->QueryRefineSearch();
-		auto*candidates		= m_instance->QueryCandidates();
-		auto*sources		= m_instance->QuerySources();
-		auto*kinds			= m_instance->QueryKinds();
+		auto&refine_search	= m_instance->QueryRefineSearch();
+		auto&candidates		= m_instance->QueryCandidates();
+		auto&sources		= m_instance->QuerySources();
+		//auto&kinds			= m_instance->QueryKinds();
 		//
 		// 共通カインドを集める
 		//
@@ -122,12 +122,12 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 			DebugLog(buf);
 		}
 		for (INT_PTR selected_index = 0; selected_index < num_selection; ++selected_index) {
-			auto candidate_index = refine_search->GetSelectionCandidateIndex(selected_index);
+			auto candidate_index = refine_search.GetSelectionCandidateIndex(selected_index);
 			if (candidate_index == UNITY_NOT_FOUND_INDEX) {
 				continue;
 			}
-			auto*source_name= candidates->GetSourceName(candidate_index);
-			auto*source		= sources->FindSource(source_name);
+			auto*source_name= candidates.GetSourceName(candidate_index);
+			auto*source		= sources.FindSource(source_name);
 			if (!source) {
 				continue;
 			}
@@ -163,8 +163,7 @@ void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_ref
 		return;
 	}
 
-	auto*kinds= m_instance->QueryKinds();
-	auto*kind = kinds->FindKind(kind_name.c_str());
+	auto*kind = m_instance->QueryKinds().FindKind(kind_name.c_str());
 	if (!kind) {
 		DebugLog(_T("  return@2"));
 		return;
@@ -210,9 +209,9 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 	/*基底カインドから処理するため配列を逆順にする。*/
 	//std::reverse(common_kinds.begin(), common_kinds.end());
 
-	auto*kinds = m_instance->QueryKinds();
+	auto&kinds = m_instance->QueryKinds();
 	for (const auto&kind_name:common_kinds) {
-		auto*kind=kinds->FindKind(kind_name.c_str());
+		auto*kind=kinds.FindKind(kind_name.c_str());
 		if (kind == nullptr) {
 			continue;
 		}
@@ -245,13 +244,13 @@ bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
 		return false;
 	}
 
-	auto source = m_instance->QuerySources()->FindSource(source_name);
+	auto source = m_instance->QuerySources().FindSource(source_name);
 	if (source == nullptr) {
 		return false;
 	}
 	//
 	const auto & source_default_kind = source->m_default_kind;
-	auto kind = m_instance->QueryKinds()->FindKind(source_default_kind.c_str());
+	auto kind = m_instance->QueryKinds().FindKind(source_default_kind.c_str());
 	if (kind == nullptr) {
 		return false;
 	}
@@ -267,7 +266,7 @@ bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
 }
 
 bool Inheritance::GenerateDefaultActionRecursive2(const WCHAR* kind_name, const std::wstring&default_action) {
-	auto kind = m_instance->QueryKinds()->FindKind(kind_name);
+	auto kind = m_instance->QueryKinds().FindKind(kind_name);
 	if (kind == nullptr) {
 		return false;
 	}
@@ -288,7 +287,7 @@ bool Inheritance::GenerateDefaultActionRecursive2(const WCHAR* kind_name, const 
 }
 
 bool Inheritance::GenerateDefaultActionRecursive(const WCHAR* kind_name) {
-	auto kind = m_instance->QueryKinds()->FindKind(kind_name);
+	auto kind = m_instance->QueryKinds().FindKind(kind_name);
 	if (kind == nullptr) {
 		return false;
 	}

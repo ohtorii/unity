@@ -197,7 +197,7 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 		tokens.reserve(16);
 		Tokenize(tokens, const_cast<WCHAR*>(search_words), _T(" \t\n"));
 
-		auto& candidates= m_instance->QueryCandidates()->GetCandidates();
+		auto& candidates= m_instance->QueryCandidates().GetCandidates();
 	
 		//memo: std::vector<>のメモリ予約		
 		m_hidemaru_view.Reserve(candidates.size());		
@@ -223,7 +223,7 @@ INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 	try {
 		bool		has_change		= false;
 		const auto	candidate_index = m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(hidemaru_line_no - 1);//-1して0始まりにする
-		auto&		candidates		= m_instance->QueryCandidates()->GetCandidates();
+		auto&		candidates		= m_instance->QueryCandidates().GetCandidates();
 		const bool	now				= candidates.at(candidate_index).m_selected;
 		
 		candidates.at(candidate_index).m_selected = is_selected;
@@ -320,7 +320,7 @@ Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {
 		return nullptr;
 	}
 	try {
-		return &(m_instance->QueryCandidates()->GetCandidates().at(candidate_index));
+		return &(m_instance->QueryCandidates().GetCandidates().at(candidate_index));
 	}
 	catch (std::exception) {
 		//pass
@@ -369,7 +369,7 @@ INT_PTR RefineSearch::MoveHidemaruCursorLineNo(INT_PTR current_lineno, INT_PTR c
 		auto next_lineno			= m_hidemaru_view.m_collapsed.CalcHidemaruCursorLineNo(current_lineno, candidate_delta);
 		auto next_line_index		= next_lineno - 1;
 		auto next_candidate_index	= m_hidemaru_view.m_hidemaru_line_index_to_candidate_index.at(next_line_index);
-		if (m_instance->QueryCandidates()->GetCandidates().at(next_candidate_index).m_selectable) {
+		if (m_instance->QueryCandidates().GetCandidates().at(next_candidate_index).m_selectable) {
 			//DebugLog(_T("  result=%d"), next_lineno);
 			return next_lineno;
 		}

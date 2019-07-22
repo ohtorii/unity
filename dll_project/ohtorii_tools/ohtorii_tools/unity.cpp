@@ -167,28 +167,28 @@ void Unity::Destroy() {
 	m_current_instance_index = 0;
 }
 
-Sources* Unity::QuerySources(){
-	return &m_sources;
+Sources& Unity::QuerySources(){
+	return m_sources;
 }
 
-File*	Unity::QueryFile(){
-	return &m_file;
+File&	Unity::QueryFile(){
+	return m_file;
 }
 
-Candidates*	Unity::QueryCandidates() {
-	return &m_candidates;
+Candidates&	Unity::QueryCandidates() {
+	return m_candidates;
 }
 
-RefineSearch*	Unity::QueryRefineSearch() {
-	return &m_refine_search;
+RefineSearch&	Unity::QueryRefineSearch() {
+	return m_refine_search;
 }
 
-Kinds*			Unity::QueryKinds() {
-	return &m_kinds;
+Kinds&			Unity::QueryKinds() {
+	return m_kinds;
 }
 
-Inheritance*	Unity::QueryInheritance() {
-	return &m_inheritance;
+Inheritance&	Unity::QueryInheritance() {
+	return m_inheritance;
 }
 
 UserData&		Unity::QueryUserData() {
