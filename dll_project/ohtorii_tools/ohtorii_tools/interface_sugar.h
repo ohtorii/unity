@@ -18,8 +18,9 @@ public:
 	bool ClearCurrentSourceName();
 	bool AppendCandidateHeader(const WCHAR*header, const WCHAR*description);
 	bool AppendCandidate(const WCHAR*candidate, const WCHAR*description);
-	bool AppendUserDataString(const WCHAR* key, const WCHAR* data);
-	bool AppendUserDataNumeric(const WCHAR* key, INT_PTR data);
+	bool SetCandidateDisplayText(const WCHAR*display_name);
+	bool SetCandidateUserDataString(const WCHAR* key, const WCHAR* data);
+	bool SetCandidateUserDataNumeric(const WCHAR* key, INT_PTR data);
 	bool AppendChildCandidate(const WCHAR* candidate, const WCHAR* description);
 protected:
 	static InterfaceSugar	m_instance;

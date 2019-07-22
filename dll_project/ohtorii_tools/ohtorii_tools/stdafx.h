@@ -25,7 +25,6 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/binary.hpp>
-#include <cereal/archives/xml.hpp>
 #include <fstream>
 
 #include<vector>
@@ -45,3 +44,5 @@
 #include"inheritance.h"
 #include"utility.h"
 #include"interface_sugar.h"
+#include"status.h"
+#include"user_data.h"

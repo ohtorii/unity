@@ -7,7 +7,7 @@
 class Source{
 public:
 	Source();
-	Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&candidate_type);
+	Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&default_action, const std::wstring&candidate_type);
 	~Source();
 
 	template<class Archive> void serialize(Archive & archive) {
@@ -15,6 +15,7 @@ public:
 			m_name, 
 			m_description,
 			m_default_kind,
+			m_default_action,
 			m_candidate_type);
 	};
 
@@ -31,6 +32,7 @@ public:
 	/*const*/ std::wstring		m_description;
 	///ディフォルトのカインド(Ex. file)
 	/*const*/ std::wstring		m_default_kind;
+	/*const*/ std::wstring		m_default_action;
 	///候補の種類
 	/*const*/ std::wstring		m_candidate_type;
 };
@@ -56,6 +58,8 @@ public:
 	bool ExistFileName(const WCHAR*file_name)const;
 	///ファイル名からソース名を得る
 	const WCHAR* FileNameToSourceName(const WCHAR*file_name)const;
+	//ソース名からファイル名を得る
+	const WCHAR* SourceNameToFileName(const WCHAR*source_name)const;
 
 protected:
 private:

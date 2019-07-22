@@ -347,10 +347,13 @@ Enter:
 	}
 
 	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StatusEnableIsStart");
+	debuginfo 1;
+	debuginfo "##is_start="+str(##is_start);
 	if(##is_start){
 		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartSourceName");
 		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartArg");
-		call NewCandidate, $$source_name, $$arg;
+		$$source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
+		call NewCandidate, $$source_filename, $$arg;
 		return ##return;
 	}
 	//画面を更新して再度絞り込み検索を行う。
@@ -364,8 +367,12 @@ NewCandidate:
 			#g_result_faile
 			#g_result_continue
 	*/
+	debuginfo "Enter NewCandidate";
 	$$source_filename	=$$1;
 	$$arg				=$$2;
+
+	debuginfo "  $$source_filename="+$$source_filename;
+	debuginfo "  $$arg="+$$arg;
 
 	call PushRefineSearch;
 	if(##return==false){

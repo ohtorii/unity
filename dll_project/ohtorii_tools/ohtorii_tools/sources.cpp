@@ -13,8 +13,8 @@ static WCHAR	gs_empty[] = { 0 };
 Source::Source(){
 	
 }
-Source::Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&candidate_type):
-	m_name(name),m_description(description),m_default_kind(default_kind),m_candidate_type(candidate_type)
+Source::Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&default_action, const std::wstring&candidate_type):
+	m_name(name),m_description(description),m_default_kind(default_kind), m_default_action(default_action),m_candidate_type(candidate_type)
 {
 
 }
@@ -40,6 +40,7 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 	static std::wstring	name;	//staticについて: 秀丸エディタへ文字列を返すため静的なメモリ領域とする
 	std::wstring	description;
 	std::wstring	default_kind;
+	std::wstring	default_action;
 	std::wstring	candidate_type;
 	
 
@@ -70,12 +71,15 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 		GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), buf, _countof(buf), cname);
 		default_kind.assign(buf);
 
+		GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf, _countof(buf), cname);
+		default_action.assign(buf);
+
 		GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), buf, _countof(buf), cname);
 		candidate_type.assign(buf);
 	}
 
 	size_t old_size = m_sources.size();
-	auto insert_it = m_sources.insert({ name, Source(name, description, default_kind, candidate_type) });
+	auto insert_it = m_sources.insert({ name, Source(name, description, default_kind, default_action, candidate_type) });
 	if (old_size < m_sources.size()) {
 		return (WCHAR*)name.c_str();
 	}
@@ -119,6 +123,15 @@ const WCHAR* Sources::FileNameToSourceName(const WCHAR*file_name)const {
 	}
 	catch (std::exception) {
 		//pass
+	}
+	return gs_empty;
+}
+
+const WCHAR* Sources::SourceNameToFileName(const WCHAR*source_name)const {
+	for(const auto& var :m_file_name_to_source_name){
+		if (var.second == source_name) {
+			return var.first.c_str();
+		}
 	}
 	return gs_empty;
 }

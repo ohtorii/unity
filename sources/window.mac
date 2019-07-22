@@ -56,7 +56,7 @@ gather_candidates:
 			return "0";
 		}
 
-		##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendUserDataNumeric",$$user_dataname,##hidemaru_handle);
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateUserDataNumeric",$$user_dataname,##hidemaru_handle);
 		if(! ##ret){
 			return "0";
 		}

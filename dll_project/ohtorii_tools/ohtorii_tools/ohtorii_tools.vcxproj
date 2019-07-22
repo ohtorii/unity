@@ -191,6 +191,7 @@
     <ClInclude Include="interface_sugar.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="unity.h" />
+    <ClInclude Include="user_data.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +212,7 @@
     </ClCompile>
     <ClCompile Include="interface_sugar.cpp" />
     <ClCompile Include="unity.cpp" />
+    <ClCompile Include="user_data.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>

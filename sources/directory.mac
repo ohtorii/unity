@@ -1,6 +1,8 @@
 ﻿/*ディレクトリ
 */
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
+#g_dll_dengaku=0;
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
 $arg1=getarg(2);
@@ -22,12 +24,44 @@ candidate_type=function
 
 /*
 \ 'ignore_globs' : [
-      \         '.hg/**', '.git/**', '.bzr/**', '.svn/**',
+      \         '.hg/**', '.git/**', '.bzr/**', '.svn/**', '.vs/**'
 */
 gather_candidates:
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "../","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "sub1/","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "sub2/","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "ディレクトリのテスト","");
+	$$root_dir=$$1;
+	execmacro $g_root_macro_directory+"\\internal\\load_dll.mac", "DengakuDLL.dll";
+	#g_dll_dengaku=val(getresultex(-1));
+	if(#g_dll_dengaku==0){
+		return "0";
+	}
 
+	call gather_candidates_main,$$root_dir;
+	$$ret=$$return;
+
+	freedll(#g_dll_dengaku);
+	#g_dll_dengaku=0;
+
+	return $$ret;
+
+
+gather_candidates_main:
+	$$root_dir=$$1;
+	if($$root_dir==""){
+		$$pattern="*.*";
+	}else{
+		$$pattern=$$root_dir+"\\*.*";
+	}
+	//////////////////////////////////////////////////////////////////////////
+	//ディレクトリを登録する
+	//////////////////////////////////////////////////////////////////////////
+	##r = dllfunc(#g_dll_dengaku,"ENUMDIR",$$pattern);
+	while (1) {
+		$$dir = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
+		if ($$dir == "") {
+			break;
+		}
+		if($$dir == "."){
+			continue;
+		}
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir+"/","");
+	}
 	return "1";

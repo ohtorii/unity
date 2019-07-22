@@ -9,6 +9,7 @@
 #include"refine_search.h"
 #include"kinds.h"
 #include"inheritance.h"
+#include"user_data.h"
 #include"status.h"
 
 
@@ -24,6 +25,8 @@ public:
 	static size_t GetCurrentInstanceIndex();
 	static bool SerializeCurrentContext(const WCHAR*output_filename);
 	static bool DeSerializeToCurrentContext(const WCHAR*input_filename);
+	static bool SerializeStatusContext(const WCHAR*output_filename);
+	static bool DeSerializeToStatusContext(const WCHAR*input_filename);
 	static void Destroy();
 	
 	/*ファイルリストのファイル名を設定する
@@ -47,10 +50,11 @@ public:
 	RefineSearch*	QueryRefineSearch();
 	Kinds*			QueryKinds();	
 	Inheritance*	QueryInheritance();
-	Status*			QueryStatus();
+	UserData&		QueryUserData();
+	Status&			QueryStatus();
 
 	template<class Archive> void serialize(Archive & archive) {
-		archive(m_candidates,m_refine_search);
+		archive(m_candidates,m_refine_search,m_user_data);
 	};
 
 protected:
@@ -59,14 +63,17 @@ private:
 	Unity &operator=(const Unity&);
 
 
-	static	std::array<std::shared_ptr<Unity>,4>	m_instances;
+	static	std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	m_instances;
 	static	size_t					m_current_instance_index;
 
 	static Sources		m_sources;
 	File				m_file;
 	Candidates			m_candidates;
 	RefineSearch		m_refine_search;
-	Inheritance			m_inheritance;
+	Inheritance			m_inheritance;	
+	UserData			m_user_data;
+
+	///状態
 	static Status		m_status;
 
 	///カインドはインスタンス共通で利用するため静的領域とする

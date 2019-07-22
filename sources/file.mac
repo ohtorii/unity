@@ -1,6 +1,10 @@
 ﻿/*ファイル
 */
 
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
+$g_user_data_name = "file.current_dir";
+
+#g_dll_dengaku=0;
 #g_dll_ohtorii_tools=val(getarg(0));
 $label=getarg(1);
 $arg1=getarg(2);
@@ -17,6 +21,7 @@ get_property:
 name=file
 description=candidates from file list
 default_kind=file
+default_action=file
 candidate_type=function
 )";
 
@@ -24,30 +29,79 @@ candidate_type=function
 \ 'ignore_globs' : [
       \         '.', '..', '*~', '*.o', '*.exe', '*.bak',
       \         'DS_Store', '*.pyc', '*.sw[po]', '*.class',
-      \         '.hg/**', '.git/**', '.bzr/**', '.svn/**',
+      \         '.hg/**', '.git/**', '.bzr/**', '.svn/**', '.vs/**',
 */
 gather_candidates:
+	$$root_dir=$$1;
+	execmacro $g_root_macro_directory+"\\internal\\load_dll.mac", "DengakuDLL.dll";
+	#g_dll_dengaku=val(getresultex(-1));
+	if(#g_dll_dengaku==0){
+		return "0";
+	}
+
+	call gather_candidates_main,$$root_dir;
+	$$ret=$$return;
+
+	freedll(#g_dll_dengaku);
+	#g_dll_dengaku=0;
+
+	return $$ret;
+
+
+gather_candidates_main:
+	$$sub_dir=$$1;//memo: ディレクトリ区切り(\)で終端しています。
+	/*memo: カレントディレクトリをユーザーデータに保持しています。
+	*/
+	if($$sub_dir==""){
+		$$current_dir=directory+"\\";
+		##r=dllfuncw(#g_dll_ohtorii_tools,"SetUserDataString",$g_user_data_name,$$current_dir);
+	}
+	$$parent_dir= dllfuncstrw(#g_dll_ohtorii_tools,"GetUserDataString",$g_user_data_name,"");
+	$$root_dir 	= $$parent_dir+$$sub_dir;
+	##r=dllfuncw(#g_dll_ohtorii_tools,"SetUserDataString",$g_user_data_name,$$root_dir);
+
+	$$pattern=$$root_dir+"*.*";
+
+
 	//////////////////////////////////////////////////////////////////////////
 	//ディレクトリを登録する
 	//////////////////////////////////////////////////////////////////////////
-	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", "directory");
-	if(!##success){
-		return false;
+	##r	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", "directory");
+	if(!##r){
+		return "0";
 	}
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "../","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "folder1/","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "folder2/","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "テスト中だよ😨","");
+	##r = dllfunc(#g_dll_dengaku,"ENUMDIR",$$pattern);
+	while (1) {
+		$$dir = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
+		if ($$dir == "") {
+			break;
+		}
+		if($$dir == "."){
+			continue;
+		}
+
+		$$dir=$$dir+"\\";
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$root_dir+$$dir,"");
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateDisplayText", $$dir);
+	}
+
 
 	//////////////////////////////////////////////////////////////////////////
 	//ファイルを登録する
 	//////////////////////////////////////////////////////////////////////////
-	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", "file");
-	if(!##success){
-		return false;
+	##r	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", "file");
+	if(!##r){
+		return "0";
 	}
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "file1.txt","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "file2.exe","");
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", "ファイルのテスト","");
+	##r = dllfunc(#g_dll_dengaku,"ENUMFILE",$$pattern);
+	while (1) {
+		$$file = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
+		if ($$file == "") {
+			break;
+		}
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$root_dir+$$file,"");
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateDisplayText", $$file);
+	}
 
 	return "1";
+

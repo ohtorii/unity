@@ -76,6 +76,7 @@ pre_action:
 	}else{
 		##is_start=true;
 	}
+	debuginfo "StatusSetIsStart.##is_start="+str(##is_start);
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsStart",##is_start);
 	return ##ret;
 
@@ -86,23 +87,9 @@ exec_action:
 	$$kind_filename	=$$1;
 	$$action_name	=$$2;
 
-	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
-	$$serialize_filename=getresultex(-1);
-	if($$serialize_filename==""){
-		debuginfo " internal/action.mac exec_action -> false";
-		return "0";
-	}
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$serialize_filename);
-	if(! ##ret){
-		debuginfo " internal/action.mac exec_action -> false";
-		return "0";
-	}
-
-	debuginfo "  SerializeToCurrentContext";
-	//現在のコンテキストをserializeする
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SerializeCurrentContext", $$serialize_filename);
-	if(! ##ret){
-		debuginfo " internal/action.mac exec_action -> false";
+	call SerializeCurrentContext;
+	$$current_contex_filename=$$return;
+	if($$current_contex_filename==""){
 		return "0";
 	}
 
@@ -123,7 +110,7 @@ exec_action:
 	}
 	debuginfo "  DeSerializeToCurrentContext";
 	//deserialize
-	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$serialize_filename);
+	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$current_contex_filename);
 	if(! ##ret){
 		call FreeDll;
 		//元の秀丸エディタへ切り替える
@@ -137,11 +124,62 @@ exec_action:
 	execmacro $$kind_filename, str(##dll_ohtorii_tools), "do_action", $$action_name;
 	$$action_result = getresultex(-1);
 
+	call SerializeStatusContext;
+	$$status_contex_filename=$$return;
+
 	call FreeDll;
-	//元の秀丸エディタへ切り替える
+
+	if($$status_contex_filename==""){
+		debuginfo " internal/action.mac SerializeStatusContext -> false";
+		return "0";
+	}
+
+	//
+	//元の秀丸エディタへ切り替えアクションで更新されたステータスを反映する。
+	//
 	setactivehidemaru(##current_hidemaruhandle);
+	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToStatusContext", $$status_contex_filename);
+	if(! ##ret){
+		debuginfo " internal/action.mac DeSerializeToStatusContext -> false";
+		return "0";
+	}
 	debuginfo " internal/action.mac exec_action -> true";
 	return $$action_result;
+
+
+SerializeMain:
+	$$FunctionName=$$1;
+
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
+	$$serialize_filename=getresultex(-1);
+	if($$serialize_filename==""){
+		debuginfo " internal/action.mac exec_action -> false";
+		return "";
+	}
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$serialize_filename);
+	if(! ##ret){
+		debuginfo " internal/action.mac exec_action -> false";
+		return "";
+	}
+
+	debuginfo "  SerializeToCurrentContext";
+	//現在のコンテキストをserializeする
+	##ret=dllfuncw(#g_dll_ohtorii_tools, $$FunctionName, $$serialize_filename);
+	if(! ##ret){
+		debuginfo " internal/action.mac exec_action -> false";
+		return "";
+	}
+	return $$serialize_filename;
+
+
+SerializeCurrentContext:
+	call SerializeMain, "SerializeCurrentContext";
+	return $$return;
+
+
+SerializeStatusContext:
+	call SerializeMain, "SerializeStatusContext";
+	return $$return;
 
 
 LoadDll:

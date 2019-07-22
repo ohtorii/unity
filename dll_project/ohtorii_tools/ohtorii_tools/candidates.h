@@ -1,11 +1,15 @@
 ﻿#pragma once
 #include<string>
 #include<vector>
+#include<unordered_map>
 
 ///候補
 struct Candidate {
 	Candidate();
 	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description);
+	
+	const std::wstring & GetDisplayText()const;
+
 	/**候補のユーザーデータを設定する（文字列版）
 	同一キーがある場合は上書きします。
 	return bool	true	成功
@@ -26,6 +30,7 @@ struct Candidate {
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
 			m_source_name ,
+			m_display_text,
 			m_text,
 			m_description,
 			m_child,
@@ -50,6 +55,8 @@ struct Candidate {
 
 	///ソース名
 	std::wstring			m_source_name;
+	///表示に利用するテキスト
+	std::wstring			m_display_text;
 	///候補のテキスト
 	std::wstring			m_text;	
 	///説明
@@ -83,8 +90,15 @@ public:
 	*/
 	INT_PTR AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description=_T(""));
 
+	/**表示に利用するテキストを設定する
+	return bool	true	成功
+				false	失敗
+	*/
+	bool SetDisplayText(INT_PTR index, const WCHAR* display_name);
+
 	/**候補の子供を追加する
 	return 候補へのインデックス
+
 	*/
 	INT_PTR AppendChildCandidate(INT_PTR candidate_index, const WCHAR*candidate, const WCHAR*description = _T(""));
 
@@ -111,6 +125,7 @@ public:
 
 	const WCHAR* GetSourceName(INT_PTR index)const;
 	const WCHAR* GetText(INT_PTR index)const;
+	const WCHAR* GetDisplayText(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
 	template<class Archive> void serialize(Archive & archive) {

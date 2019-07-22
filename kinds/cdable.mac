@@ -153,18 +153,16 @@ file:
 
 
 narrow:
-	debuginfo 1;
-	debuginfo "call narrow";
-	return "1";
-
-	/*##first_item_index	= 0;
+	debuginfo "Enter narrow";
+	##first_item_index	= 0;
 	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
 	$$source="file";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$folder);
+	debuginfo "  ##ret="+str(##ret);
 	if(##ret){
 		return "1";
 	}
-	return "0";*/
+	return "0";
 
 
 //////////////////////////////////////////////////////////////////////////////

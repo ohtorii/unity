@@ -4,13 +4,15 @@ EXPORTS
 	ClearCurrentSourceName
 	AppendCandidateHeader
 	AppendCandidate
-	AppendUserDataString
-	AppendUserDataNumeric
+	SetCandidateDisplayText
+	SetCandidateUserDataString
+	SetCandidateUserDataNumeric
 	AppendChildCandidate
 
 	
 	GetSelectionCount
 	GetSelectionText
+	GetSelectionDisplayText
 	GetSelectionUserDataString
 	GetSelectionUserDataNumeric
 	GetSelectionSourceName
@@ -31,13 +33,15 @@ EXPORTS
 	RefineSearchMoveHidemaruCursorLineNo
 	
 	
-	Initialize
     PushContext
     PopContext
     GetCurrentContext
 	SerializeCurrentContext
 	DeSerializeToCurrentContext
-
+	SerializeStatusContext
+	DeSerializeToStatusContext
+	SetUserDataString
+	GetUserDataString
 
     SourcesCreate
     SourcesGetDefaultKind
@@ -45,7 +49,7 @@ EXPORTS
 	SourcesAppendFileNameAndSourceName
 	SourcesExistFileName;
 	SourcesFileNameToSourceName
-
+	SourcesSourceNameToFileName
 
 	CandidatesGetSourceName
 	CandidatesGetText

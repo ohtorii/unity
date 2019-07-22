@@ -20,12 +20,16 @@ extern "C" INT_PTR AppendCandidate(WCHAR*candidate, WCHAR*description) {
 	return InterfaceSugar::Instance().AppendCandidate(candidate, description);
 }
 
-extern "C" INT_PTR AppendUserDataString(const WCHAR* key, WCHAR* data) {
-	return InterfaceSugar::Instance().AppendUserDataString(key, data);
+extern "C" INT_PTR SetCandidateDisplayText(WCHAR*display_name) {
+	return InterfaceSugar::Instance().SetCandidateDisplayText(display_name);
 }
 
-extern "C" INT_PTR AppendUserDataNumeric(const WCHAR* key, INT_PTR data) {
-	return InterfaceSugar::Instance().AppendUserDataNumeric(key,data);
+extern "C" INT_PTR SetCandidateUserDataString(const WCHAR* key, WCHAR* data) {
+	return InterfaceSugar::Instance().SetCandidateUserDataString(key, data);
+}
+
+extern "C" INT_PTR SetCandidateUserDataNumeric(const WCHAR* key, INT_PTR data) {
+	return InterfaceSugar::Instance().SetCandidateUserDataNumeric(key,data);
 }
 
 extern "C" INT_PTR AppendChildCandidate(WCHAR*candidate, WCHAR*description) {
@@ -42,6 +46,11 @@ extern "C" INT_PTR GetSelectionCount() {
 extern "C" WCHAR* GetSelectionText(INT_PTR selected_index) {
 	auto index=Unity::Instance().lock()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates()->GetText(index));
+}
+
+extern "C" WCHAR* GetSelectionDisplayText(INT_PTR selected_index) {
+	auto index = Unity::Instance().lock()->QueryRefineSearch()->GetSelectionCandidateIndex(selected_index);
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates()->GetDisplayText(index));
 }
 
 extern "C" WCHAR* GetSelectionSourceName(INT_PTR selected_index) {
@@ -65,22 +74,12 @@ extern "C" INT_PTR GetSelectionUserDataNumeric(INT_PTR selected_index, WCHAR*key
 }
 
 extern "C" INT_PTR StartCandidate(WCHAR*source_name, WCHAR*arg) {	
-	return Unity::Instance().lock()->QueryStatus()->GetIsStart().Set(source_name,arg);
+	return Unity::Instance().lock()->QueryStatus().GetIsStart().Set(source_name,arg);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 //Unity
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR Initialize() {
-	/*_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG | _CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
-	
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
-	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
-	OutputDebugString(_T("call Initialize()"));*/
-	return true;
-}
-
 extern "C" INT_PTR PushContext(INT_PTR if_exist_context_then_delete) {
 	return Unity::PushContext(if_exist_context_then_delete);
 }
@@ -99,6 +98,22 @@ extern "C" INT_PTR SerializeCurrentContext(WCHAR* out_filename) {
 
 extern "C" INT_PTR DeSerializeToCurrentContext(WCHAR* input_filename) {
 	return Unity::Instance().lock()->DeSerializeToCurrentContext(input_filename);
+}
+
+extern "C" INT_PTR SerializeStatusContext(WCHAR* out_filename) {
+	return Unity::Instance().lock()->SerializeStatusContext(out_filename);
+}
+
+extern "C" INT_PTR DeSerializeToStatusContext(WCHAR* input_filename) {
+	return Unity::Instance().lock()->DeSerializeToStatusContext(input_filename);
+}
+
+extern "C" INT_PTR SetUserDataString(WCHAR* key, WCHAR* data) {
+	return Unity::Instance().lock()->QueryUserData().SetUserData(key,data);
+}
+
+extern "C" WCHAR* GetUserDataString(WCHAR* key, const WCHAR*	default_data) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryUserData().GetUserData(key, default_data));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -190,6 +205,10 @@ extern "C" INT_PTR SourcesExistFileName(const WCHAR*file_name) {
 
 extern "C" WCHAR* SourcesFileNameToSourceName(const WCHAR*file_name) {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QuerySources()->FileNameToSourceName(file_name));
+}
+
+extern "C" WCHAR* SourcesSourceNameToFileName(const WCHAR*source_name) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QuerySources()->SourceNameToFileName(source_name));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -320,23 +339,23 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 //Status
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR StatusSetIsStart(INT_PTR is_start) {
-	return Unity::Instance().lock()->QueryStatus()->GetIsStart().SetEnable(is_start);
+	return Unity::Instance().lock()->QueryStatus().GetIsStart().SetEnable(is_start);
 }
 
 extern "C" INT_PTR StatusClearIsStart() {
-	return Unity::Instance().lock()->QueryStatus()->GetIsStart().Clear();
+	return Unity::Instance().lock()->QueryStatus().GetIsStart().Clear();
 }
 
 extern "C" INT_PTR StatusEnableIsStart() {
-	return Unity::Instance().lock()->QueryStatus()->GetIsStart().Enable();
+	return Unity::Instance().lock()->QueryStatus().GetIsStart().Enable();
 }
 
 extern "C" WCHAR* StatusGetIsStartSourceName() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus()->GetIsStart().m_source_name.c_str());
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().GetIsStart().m_source_name.c_str());
 }
 
 extern "C" WCHAR* StatusGetIsStartArg() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus()->GetIsStart().m_arg.c_str());
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().GetIsStart().m_arg.c_str());
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -250,15 +250,20 @@ bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
 		return false;
 	}
 	//
-	const auto & default_kind = source->m_default_kind;
-	auto kind = m_instance->QueryKinds()->FindKind(default_kind.c_str());
+	const auto & source_default_kind = source->m_default_kind;
+	auto kind = m_instance->QueryKinds()->FindKind(source_default_kind.c_str());
 	if (kind == nullptr) {
 		return false;
 	}
+		
 	if (kind->m_default_action.empty()) {
-		return GenerateDefaultActionRecursive(default_kind.c_str());
+		return GenerateDefaultActionRecursive(source_default_kind.c_str());
 	}
-	return GenerateDefaultActionRecursive2(default_kind.c_str(), kind->m_default_action);
+
+	if (source->m_default_action.empty()) {
+		return GenerateDefaultActionRecursive2(source_default_kind.c_str(), kind->m_default_action);
+	}
+	return GenerateDefaultActionRecursive2(source_default_kind.c_str(), source->m_default_action);
 }
 
 bool Inheritance::GenerateDefaultActionRecursive2(const WCHAR* kind_name, const std::wstring&default_action) {

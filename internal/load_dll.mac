@@ -1,0 +1,15 @@
+﻿$g_dll_name=getarg(0);
+call LoadDllFuzzy $g_dll_name;
+endmacro str(##return);
+
+LoadDllFuzzy:
+	##dll=loaddll(macrodir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	##dll=loaddll(hidemarudir+"\\"+$$1);
+	if(##dll!=0){
+		return ##dll;
+	}
+	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
+	return 0;

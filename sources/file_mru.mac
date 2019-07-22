@@ -36,7 +36,7 @@ gather_candidates:
 		if(! ##success){
 			return "0";
 		}
-		##success = dllfuncw(#g_dll_ohtorii_tools,"AppendUserDataNumeric",$$user_dataname,##i);
+		##success = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateUserDataNumeric",$$user_dataname,##i);
 		if(! ##success){
 			return "0";
 		}

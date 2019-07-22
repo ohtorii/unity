@@ -52,11 +52,15 @@ bool InterfaceSugar::AppendCandidate(const WCHAR*candidate, const WCHAR*descript
 	return true;
 }
 
-bool InterfaceSugar::AppendUserDataString(const WCHAR* key, const WCHAR* data) {
+bool InterfaceSugar::SetCandidateDisplayText(const WCHAR*display_name) {
+	return Unity::Instance().lock()->QueryCandidates()->SetDisplayText(m_current_candidate_index, display_name);
+}
+
+bool InterfaceSugar::SetCandidateUserDataString(const WCHAR* key, const WCHAR* data) {
 	return Unity::Instance().lock()->QueryCandidates()->SetUserData(m_current_candidate_index, key, data);
 }
 
-bool InterfaceSugar::AppendUserDataNumeric(const WCHAR* key, INT_PTR data) {
+bool InterfaceSugar::SetCandidateUserDataNumeric(const WCHAR* key, INT_PTR data) {
 	return Unity::Instance().lock()->QueryCandidates()->SetUserData(m_current_candidate_index, key, data);
 }
 

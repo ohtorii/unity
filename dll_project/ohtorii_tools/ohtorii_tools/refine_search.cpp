@@ -51,7 +51,7 @@ public:
 				continue;
 			}
 
-			if (MatchAll(candidate.m_text, tokens)) {
+			if (MatchAll(candidate.GetDisplayText(), tokens)) {
 				if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
 					//ヘッダー部を挿入する
 					const auto& header_candidate= candidates.at(header_candidate_index);
@@ -70,8 +70,8 @@ public:
 	};
 
 private:
-	void InserCandidate(const Candidate &candidate, size_t candidate_list_index) {		
-		auto &		hidemaru_text	= m_hidemaru_view.m_hidemaru_text;
+	void InserCandidate(const Candidate &candidate, size_t candidate_list_index) {
+		auto &		hidemaru_text = m_hidemaru_view.m_hidemaru_text;
 
 		if (m_first_match) {
 			//開始行には改行を挿入しない
@@ -84,11 +84,14 @@ private:
 		//
 		//候補と詳細のテキストを追加する
 		//
-		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());
-		if (!candidate.m_description.empty()) {
-			hidemaru_text.push_back(_T('\t'));
-			//hidemaru_text.push_back(_T('\t'));
-			hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
+		{
+			const auto &display_text = candidate.GetDisplayText();
+			hidemaru_text.insert(hidemaru_text.end(), display_text.begin(), display_text.end());
+			if (!candidate.m_description.empty()) {
+				hidemaru_text.push_back(_T('\t'));
+				//hidemaru_text.push_back(_T('\t'));
+				hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
+			}
 		}
 		
 		if (candidate.m_selected) {

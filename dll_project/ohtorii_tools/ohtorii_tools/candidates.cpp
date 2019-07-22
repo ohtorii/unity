@@ -20,6 +20,13 @@ Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*desc
 	m_selected = false;
 }
 
+const std::wstring & Candidate::GetDisplayText()const {
+	if (m_display_text.empty()) {
+		return m_text;
+	}
+	return m_display_text;
+}
+
 bool Candidate::SetUserData(const WCHAR* key, const WCHAR*data) {
 	return m_user_data_string.emplace(key, data).second;
 }
@@ -78,6 +85,17 @@ INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*ca
 	return UNITY_NOT_FOUND_INDEX;
 }
 
+bool Candidates::SetDisplayText(INT_PTR index, const WCHAR* display_name) {
+	try {
+		m_candidates.at(index).m_display_text.assign(display_name);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
 	try {
 		return m_candidates.at(index).SetUserData(key, data);
@@ -129,6 +147,16 @@ const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
 const WCHAR* Candidates::GetText(INT_PTR index)const {
 	try{
 		return m_candidates.at(index).m_text.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return nullptr;
+}
+
+const WCHAR* Candidates::GetDisplayText(INT_PTR index)const {
+	try {
+		return m_candidates.at(index).m_display_text.c_str();
 	}
 	catch (std::exception) {
 		//pass

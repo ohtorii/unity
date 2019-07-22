@@ -15,7 +15,10 @@ public:
 		};
 
 		template<class Archive> void serialize(Archive & archive) {
-			archive(m_source_name,m_arg);
+			archive(
+				m_is_start,
+				m_source_name,
+				m_arg);
 		};
 		
 		bool Set(const WCHAR*source_name, const WCHAR*arg);
