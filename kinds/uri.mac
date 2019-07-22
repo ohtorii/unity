@@ -23,6 +23,7 @@ base_kind=
 [action.start]
 function=start
 description=open uri by browser
+is_quit=false
 )";
 
 
