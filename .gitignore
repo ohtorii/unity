@@ -35,3 +35,4 @@ dll_project/ohtorii_tools/x64/Release/UnitTest.dll
 sources/tags
 *.codeanalysis
 *.codeanalysisast
+dll_project/ohtorii_tools/UnitTest/x64/Release
