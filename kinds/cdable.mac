@@ -136,29 +136,28 @@ hidemaru_filer:
 
 
 file:
-	debuginfo 1;
-	debuginfo "call file";
-	return "1";
-
-	/*##first_item_index	= 0;
+	##first_item_index	= 0;
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
 	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
-	$$parent_folder=getresultex(-1);
+	$$parent_folder=getresultex(-1)+"\\";
 	$$source="file";
+
+	debuginfo "-- file --";
+	debuginfo "  $$text="+$$text;
+	debuginfo "  $$parent_folder="+$$parent_folder;
+
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$parent_folder);
 	if(##ret){
 		return "1";
 	}
-	return "0";*/
+	return "0";
 
 
 narrow:
-	debuginfo "Enter narrow";
 	##first_item_index	= 0;
 	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
 	$$source="file";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$folder);
-	debuginfo "  ##ret="+str(##ret);
 	if(##ret){
 		return "1";
 	}

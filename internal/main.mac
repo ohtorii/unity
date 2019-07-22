@@ -202,12 +202,12 @@ Start:
 	}
 
 	{//ソースを読み込む
-		##num_source= split($g_sources,$$source_list, "\t");
+		##num_source= split($$sources,$$source_list, "\t");
 		##i			= 0;
 		debuginfo "##num_source="+str(##num_source);
 		while(##i<##num_source){
-			$$source_filename=$g_root_macro_directory+"\\sources\\"+$g_sources[##i]+".mac";
-			debuginfo"$$g_sources[##i]="+$g_sources[##i];
+			$$source_filename=$g_root_macro_directory+"\\sources\\"+$$sources[##i]+".mac";
+			debuginfo"$$sources[##i]="+$$sources[##i];
 			execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, "";
 			if(getresultex(-1)=="0"){
 				return 0;

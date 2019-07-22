@@ -5,7 +5,6 @@
 //////////////////////////////////////////////////////////////////////////
 $g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
-#g_dll_ht_tools		=0;
 $g_separator="\x0B";	//垂直タブ
 $g_marker="#layer0";
 
@@ -114,7 +113,7 @@ preview:
 	*/
 	##first_item_index	= 0;
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
-	$$command = sprintf(R"(PowerShell.exe -Command "& {Get-Content "%s" | Select-Object -first 20}")", $$text);
+	$$command = sprintf(R"(PowerShell.exe -Command "& {Get-Content "%s" | Select-Object -first 100}")", $$text);
 	runex $$command
 			, 1 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
@@ -126,25 +125,12 @@ preview:
 			, 0 			//unicode 0:ansi 2:unicode
 			;
 
-	call LoadHtToolsDll;
-	if(! ##return){
-		return "0";
-	}
 	##output_dll=loaddll("HmOutputPane.dll");
 	if(!result){
-		call FreeHtToolsDll;
 		return "0";
 	}
-
-	//
-	//todo 	秀丸エディタでスクロールが実装されるまでの仮実装
-	//アウトプット枠を先頭にスクロールする
 	##parent=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-	##edit = dllfunc(#g_dll_ht_tools, "FINDWINDOW", ##parent, "Edit","");
-	if(##edit){
-		#ret = sendmessage(##edit, 0x0115 /*WM_VSCROLL */, 6 /*SB_TOP*/, 0);
-	}
-	call FreeHtToolsDll;
+	##ret=sendmessage(##parent,0x111/*WM_COMMAND*/,1015 ,0);//1015=先頭にカーソル移
 	freedll ##output_dll;
 	return "1";
 
@@ -195,18 +181,3 @@ LoadDllFuzzy:
 	return 0;
 
 
-LoadHtToolsDll:
-	if(#g_dll_ht_tools!=0){
-		return true;
-	}
-	call LoadDllFuzzy "ht_tools.dll";
-	#g_dll_ht_tools=##return;
-	if(#g_dll_ht_tools!=0){
-		return true;
-	}
-	return false;
-
-FreeHtToolsDll:
-	freedll(#g_dll_ht_tools);
-	#g_dll_ht_tools=0;
-	return ;

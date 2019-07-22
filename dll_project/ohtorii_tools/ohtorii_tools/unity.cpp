@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 static WCHAR	gs_empty[] = { 0 };
 
-std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{ {nullptr,nullptr,nullptr,nullptr} };
+std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{nullptr, };
 size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
