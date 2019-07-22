@@ -100,8 +100,8 @@ exec_action:
 	setactivehidemaru(#g_target_hidemaruhandle);
 
 	//切り替えた秀丸エディタへohtorii_toolsを読み込む
-	call LoadDll;
-	##dll_ohtorii_tools=##return;
+	execmacro currentmacrodirectory+"\\load_ohtorii_tools_dll.mac";
+	##dll_ohtorii_tools=val(getresultex(-1));
 	if(##dll_ohtorii_tools==0){
 		//元の秀丸エディタへ切り替える
 		setactivehidemaru(##current_hidemaruhandle);
@@ -182,22 +182,7 @@ SerializeStatusContext:
 	return $$return;
 
 
-LoadDll:
-	//ohtorii_toolsを読み込む
-	if(platform&0x00080000){
-		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
-	}else{
-		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x86.dll");
-	}
-	if (##dll_ohtorii_tools==0) {
-		message "dll\\ohtorii_tools.dllのロードに失敗しました";
-		return 0;
-	}
-	return ##dll_ohtorii_tools;
-
-
 FreeDll:
-	//ohtorii_toolsを読み込む
 	if(##dll_ohtorii_tools != 0){
 		freedll ##dll_ohtorii_tools;
 		##dll_ohtorii_tools=0;

@@ -651,11 +651,8 @@ LoadDllFuzzy:
 	return 0;
 
 LoadDll:
-	if(platform&0x00080000){
-		#g_dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x64.dll");
-	}else{
-		#g_dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\dll\\ohtorii_tools_x86.dll");
-	}
+	execmacro currentmacrodirectory+"\\load_ohtorii_tools_dll.mac";
+	#g_dll_ohtorii_tools=val(getresultex(-1));
 	if (#g_dll_ohtorii_tools==0) {
 		message "dll\\ohtorii_tools.dllのロードに失敗しました";
 		return false;
