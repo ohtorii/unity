@@ -144,21 +144,10 @@ LoadSources:
 	return true;
 
 
-LoadDllFuzzy:
-	##dll=loaddll(macrodir+"\\"+$$1);
-	if(##dll!=0){
-		return ##dll;
-	}
-	##dll=loaddll(hidemarudir+"\\"+$$1);
-	if(##dll!=0){
-		return ##dll;
-	}
-	message $$1+" のロードに失敗しました\n「秀丸エディタ・マクロ」のディレクトリに存在するか確認してください";
-	return 0;
 
 LoadDll:
-	call LoadDllFuzzy("DengakuDLL.dll");
-	#g_dengaku_dll=##return;
+	execmacro currentmacrodirectory+"\\load_dll.mac", "DengakuDLL.dll";
+	#g_dengaku_dll=val(getresultex(-1));
 	if(#g_dengaku_dll==0){
 		return false;
 	}
