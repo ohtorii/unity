@@ -51,7 +51,7 @@ public:
 				continue;
 			}
 
-			if (MatchAll(candidate.GetDisplayText(), tokens)) {
+			if (MatchAll(candidate.m_text, tokens)) {
 				if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
 					//ヘッダー部を挿入する
 					const auto& header_candidate= candidates.at(header_candidate_index);
@@ -84,15 +84,13 @@ private:
 		//
 		//候補と詳細のテキストを追加する
 		//
-		{
-			const auto &display_text = candidate.GetDisplayText();
-			hidemaru_text.insert(hidemaru_text.end(), display_text.begin(), display_text.end());
-			if (!candidate.m_description.empty()) {
-				hidemaru_text.push_back(_T('\t'));
-				//hidemaru_text.push_back(_T('\t'));
-				hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
-			}
+		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());
+		if (!candidate.m_description.empty()) {
+			hidemaru_text.push_back(_T('\t'));
+			//hidemaru_text.push_back(_T('\t'));
+			hidemaru_text.insert(hidemaru_text.end(), candidate.m_description.begin(), candidate.m_description.end());
 		}
+		
 		
 		if (candidate.m_selected) {
 			m_hidemaru_view.m_hidemaru_maeked_lineno.push_back(m_current_hidemaru_lineno);

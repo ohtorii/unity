@@ -20,8 +20,8 @@ extern "C" INT_PTR AppendCandidate(WCHAR*candidate, WCHAR*description) {
 	return InterfaceSugar::Instance().AppendCandidate(candidate, description);
 }
 
-extern "C" INT_PTR SetCandidateDisplayText(WCHAR*display_name) {
-	return InterfaceSugar::Instance().SetCandidateDisplayText(display_name);
+extern "C" INT_PTR SetCandidateActionPath(WCHAR*display_name) {
+	return InterfaceSugar::Instance().SetCandidateActionPath(display_name);
 }
 
 extern "C" INT_PTR SetCandidateUserDataString(const WCHAR* key, WCHAR* data) {
@@ -48,9 +48,9 @@ extern "C" WCHAR* GetSelectionText(INT_PTR selected_index) {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates().GetText(index));
 }
 
-extern "C" WCHAR* GetSelectionDisplayText(INT_PTR selected_index) {
+extern "C" WCHAR* GetSelectionActionPath(INT_PTR selected_index) {
 	auto index = Unity::Instance().lock()->QueryRefineSearch().GetSelectionCandidateIndex(selected_index);
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates().GetDisplayText(index));
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates().GetActionPath(index));
 }
 
 extern "C" WCHAR* GetSelectionSourceName(INT_PTR selected_index) {

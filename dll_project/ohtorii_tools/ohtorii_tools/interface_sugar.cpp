@@ -52,8 +52,8 @@ bool InterfaceSugar::AppendCandidate(const WCHAR*candidate, const WCHAR*descript
 	return true;
 }
 
-bool InterfaceSugar::SetCandidateDisplayText(const WCHAR*display_name) {
-	return Unity::Instance().lock()->QueryCandidates().SetDisplayText(m_current_candidate_index, display_name);
+bool InterfaceSugar::SetCandidateActionPath(const WCHAR*display_name) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionPath(m_current_candidate_index, display_name);
 }
 
 bool InterfaceSugar::SetCandidateUserDataString(const WCHAR* key, const WCHAR* data) {

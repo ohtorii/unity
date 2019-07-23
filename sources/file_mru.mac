@@ -32,7 +32,12 @@ gather_candidates:
 	$$user_dataname = "file_history_index";
 	##i=0;
 	while(##i<filehistcount){
-		##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", getfilehist(##i),"");
+		$$file_name=getfilehist(##i);
+		##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$file_name,"");
+		if(! ##success){
+			return "0";
+		}
+		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$file_name);
 		if(! ##success){
 			return "0";
 		}

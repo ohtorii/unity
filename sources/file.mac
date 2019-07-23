@@ -85,8 +85,8 @@ gather_candidates_main:
 		}
 
 		$$dir=$$dir+"\\";
-		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$root_dir+$$dir,"");
-		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateDisplayText", $$dir);
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir, "");
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$root_dir+$$dir);
 	}
 
 
@@ -103,8 +103,8 @@ gather_candidates_main:
 		if ($$file == "") {
 			break;
 		}
-		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$root_dir+$$file,"");
-		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateDisplayText", $$file);
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$file, "");
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$root_dir+$$file);
 	}
 
 	return "1";

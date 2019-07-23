@@ -62,6 +62,8 @@ gather_candidates_main:
 		if($$dir == "."){
 			continue;
 		}
-		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir+"/","");
+		$$dir=$$dir+"\\";
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir,"");
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$dir);
 	}
 	return "1";

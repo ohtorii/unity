@@ -18,7 +18,7 @@ public:
 	bool ClearCurrentSourceName();
 	bool AppendCandidateHeader(const WCHAR*header, const WCHAR*description);
 	bool AppendCandidate(const WCHAR*candidate, const WCHAR*description);
-	bool SetCandidateDisplayText(const WCHAR*display_name);
+	bool SetCandidateActionPath(const WCHAR*display_name);
 	bool SetCandidateUserDataString(const WCHAR* key, const WCHAR* data);
 	bool SetCandidateUserDataNumeric(const WCHAR* key, INT_PTR data);
 	bool AppendChildCandidate(const WCHAR* candidate, const WCHAR* description);

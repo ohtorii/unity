@@ -40,7 +40,6 @@ remove:
 	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i=0;
 	while(##i < ##count){
-		//$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
 		##index=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionUserDataNumeric",##i,$$user_data_name,##not_found);
 		if(##index != -1){
 			##history_index[##history_index_num] = ##index;

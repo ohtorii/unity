@@ -7,8 +7,6 @@
 struct Candidate {
 	Candidate();
 	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description);
-	
-	const std::wstring & GetDisplayText()const;
 
 	/**候補のユーザーデータを設定する（文字列版）
 	同一キーがある場合は上書きします。
@@ -30,7 +28,7 @@ struct Candidate {
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
 			m_source_name ,
-			m_display_text,
+			m_action_path,
 			m_text,
 			m_description,
 			m_child,
@@ -55,8 +53,10 @@ struct Candidate {
 
 	///ソース名
 	std::wstring			m_source_name;
-	///表示に利用するテキスト
-	std::wstring			m_display_text;
+	///アクションのパス（ファイル名、または、ディレクトリ名）
+	std::wstring			m_action_path;
+	///アクションのディレクトリ
+	//std::wstring			m_action_directory;
 	///候補のテキスト
 	std::wstring			m_text;	
 	///説明
@@ -94,7 +94,7 @@ public:
 	return bool	true	成功
 				false	失敗
 	*/
-	bool SetDisplayText(INT_PTR index, const WCHAR* display_name);
+	bool SetActionPath(INT_PTR index, const WCHAR* display_name);
 
 	/**候補の子供を追加する
 	return 候補へのインデックス
@@ -125,7 +125,7 @@ public:
 
 	const WCHAR* GetSourceName(INT_PTR index)const;
 	const WCHAR* GetText(INT_PTR index)const;
-	const WCHAR* GetDisplayText(INT_PTR index)const;
+	const WCHAR* GetActionPath(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
 	template<class Archive> void serialize(Archive & archive) {

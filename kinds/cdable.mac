@@ -77,7 +77,7 @@ do_action:
 
 command_prompt:
 	##first_item_index	= 0;
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
 	$$parent_folder=getresultex(-1);
 	runex "cmd"
@@ -95,7 +95,7 @@ command_prompt:
 
 explorer:
 	##first_item_index	= 0;
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
 	$$parent_folder=getresultex(-1);
 	runex "explorer " + "\""+$$parent_folder+"\""
@@ -118,7 +118,7 @@ hidemaru_filer:
 		return "0";
 	}
 	##first_item_index	= 0;
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
 	$$parent_folder=getresultex(-1);
 
@@ -137,7 +137,7 @@ hidemaru_filer:
 
 file:
 	##first_item_index	= 0;
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
 	$$parent_folder=getresultex(-1)+"\\";
 	$$source="file";
@@ -155,7 +155,7 @@ file:
 
 narrow:
 	##first_item_index	= 0;
-	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 	$$source="file";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$folder);
 	if(##ret){
