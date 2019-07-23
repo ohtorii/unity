@@ -39,7 +39,8 @@ ForeachJoin:
 	moveto2 ##old_column,##old_lineno;
 	endsel;
 	call ReplacePaint, $g_separator, " ", $g_marker;
-	// 跡地を範囲選択
+
+	//// 跡地を範囲選択
 	selectcolormarker $g_marker;
 	deletecolormarkerall $g_marker;
 	setcompatiblemode ##old;
@@ -76,7 +77,7 @@ ReplacePaint:
 	// $$3 = レイヤ名
 	replacedown $$1, $$2, nohilight,inselect;
 	while (result) {
-		colormarker 0xFFFFFF, 0x663333, 11, 2, 0, $$3, lineno, column - strlen($$2), lineno, column;
+		colormarker 0xFFFFFF, 0x663333, 11, 2, 0, $$3, lineno, column - wcslen($$2), lineno, column;
 		finddown;
 	}
 	escapeinselect;
