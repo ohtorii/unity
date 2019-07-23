@@ -13,6 +13,7 @@ get_property:
 	return R"([property]
 name=window
 default_action=preview
+base_kind=common
 
 [action.preview]
 function=preview
