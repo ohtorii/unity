@@ -46,3 +46,30 @@
 ## $unity.hidemaruhandle_to_focus_at_end_of_process (int)
 unity終了後にフォーカスするウインドウ
 0 = 無効なハンドル
+
+
+# アクションの上書きについて
+
+|種類|優先度|
+|:--:|:--:|
+|kind|低|
+|source|高|
+
+## 例 1
+
+	kinds\file.mac
+		default_action=open
+
+	sources\file.mac
+		default_kind=file		<- openを呼び出す
+
+## 例 2
+
+	kinds\file.mac
+		default_action=open
+
+	sources\file.mac
+		default_kind=file
+		default_action=echo		<- echoを呼び出す
+
+
