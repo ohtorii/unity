@@ -1,0 +1,52 @@
+﻿/*ディレクトリ履歴*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg1=getarg(2);
+$arg2=getarg(3);
+$arg3=getarg(4);
+$arg4=getarg(5);
+$arg5=getarg(6);
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=directory_mru
+description=candidates from directory MRU list
+default_kind=directory_mru
+candidate_type=function
+)";
+
+gather_candidates:
+	/*候補を集める*/
+
+	/*
+	candidate_type=function
+
+	返値	"1"		成功
+		"0"		失敗
+	*/
+	$$user_dataname = "directory_history_index";
+	##i=0;
+	while(true /*##i<filehistcount*/){
+		$$path_name=getpathhist(##i);
+		if($$path_name==""){
+			break;
+		}
+		##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$path_name,"");
+		if(! ##success){
+			return "0";
+		}
+		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$path_name);
+		if(! ##success){
+			return "0";
+		}
+		##success = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateUserDataNumeric",$$user_dataname,##i);
+		if(! ##success){
+			return "0";
+		}
+		##i = ##i + 1;
+	}
+	return "1";

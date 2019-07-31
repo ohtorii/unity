@@ -136,6 +136,8 @@ LoadSources:
 	##i = ##i + 1;
 	$g_source_names[##i]="file_mru";
 	##i = ##i + 1;
+	$g_source_names[##i]="directory_mru";
+	##i = ##i + 1;
 	$g_source_names[##i]="window";
 	##i = ##i + 1;
 	$g_source_names[##i]="process";

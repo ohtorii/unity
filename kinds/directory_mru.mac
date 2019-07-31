@@ -1,0 +1,59 @@
+﻿/* directory_mru
+*/
+
+#g_dll_ohtorii_tools=val(getarg(0));
+$label=getarg(1);
+$arg=getarg(2);
+call $label, $arg;
+endmacro $$return;
+
+
+
+get_property:
+	return R"([property]
+name=directory_mru
+base_kind=directory
+
+[action.remove]
+function=remove
+description=フォルダ履歴から削除する
+is_quit=false
+is_multi_selectable=true
+)";
+
+
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+
+remove:
+	##history_index[0]	=0;
+	##history_index_num	=0;
+	##not_found			=-1;
+	$$user_data_name 	="directory_history_index";
+	//
+	//フォルダヒストリのインデックスを集める
+	//
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i < ##count){
+		##index=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionUserDataNumeric",##i,$$user_data_name,##not_found);
+		if(##index != -1){
+			##history_index[##history_index_num] = ##index;
+			##history_index_num = ##history_index_num + 1;
+		}
+
+		##i = ##i + 1;
+	}
+
+	//ファイルヒストリのインデックスがずれないように末端から削除する。
+	##i = ##history_index_num - 1;
+	while(0 <= ##i) {
+		debuginfo "remove: "+str(##history_index[##i]);
+		//deletefilehist ##history_index[##i];
+		##i = ##i - 1;
+	}
+	return "1";
+

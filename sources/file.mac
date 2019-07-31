@@ -49,8 +49,12 @@ gather_candidates:
 
 
 gather_candidates_main:
-	$$sub_dir=$$1;//memo: ディレクトリ区切り(\)で終端しています。
-	debuginfo "$$sub_dir="+$$sub_dir;
+	$$sub_dir=$$1;
+	//memo: ディレクトリ区切り(\)で終端させる。
+	$$directory_separator=wcsrightstr($$sub_dir,1);
+	if(($$directory_separator!="\\") && ($$directory_separator!="/")){
+		$$sub_dir = $$sub_dir + "\\";
+	}
 
 	/*memo: カレントディレクトリをユーザーデータに保持しています。
 	*/

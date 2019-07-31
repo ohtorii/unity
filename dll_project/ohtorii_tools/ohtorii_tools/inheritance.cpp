@@ -239,6 +239,13 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 	}
 }
 
+
+/*ディフォルトカインドとアクションを生成する
+
+結果は以下メンバ変数へ格納される
+	m_default_action.m_kind_name
+	m_default_action.m_label_name
+*/
 bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
 	if (m_instance == nullptr) {
 		return false;
@@ -253,16 +260,27 @@ bool Inheritance::GenerateDefaultAction(const WCHAR* source_name) {
 	auto kind = m_instance->QueryKinds().FindKind(source_default_kind.c_str());
 	if (kind == nullptr) {
 		return false;
+	}	
+
+	//
+	//ディフォルトアクション名を探す
+	//
+	std::wstring default_action_name;
+	if (! source->m_default_action.empty()) {		
+		default_action_name = source->m_default_action;
 	}
-		
-	if (kind->m_default_action.empty()) {
-		return GenerateDefaultActionRecursive(source_default_kind.c_str());
+	else {
+		if (! kind->m_default_action.empty()) {			
+			default_action_name = kind->m_default_action;
+		}
+		else {
+			if (!FindDefaultActionNameRecursive(default_action_name, source_default_kind.c_str())) {
+				return false;
+			}
+		}
 	}
 
-	if (source->m_default_action.empty()) {
-		return GenerateDefaultActionRecursive2(source_default_kind.c_str(), kind->m_default_action);
-	}
-	return GenerateDefaultActionRecursive2(source_default_kind.c_str(), source->m_default_action);
+	return GenerateDefaultActionRecursive2(source_default_kind.c_str(), default_action_name);
 }
 
 bool Inheritance::GenerateDefaultActionRecursive2(const WCHAR* kind_name, const std::wstring&default_action) {
@@ -286,22 +304,23 @@ bool Inheritance::GenerateDefaultActionRecursive2(const WCHAR* kind_name, const 
 	return false;
 }
 
-bool Inheritance::GenerateDefaultActionRecursive(const WCHAR* kind_name) {
+/*ディフォルトアクション名を探す
+*/
+bool Inheritance::FindDefaultActionNameRecursive(std::wstring&out_default_action_name, const WCHAR* kind_name) {
 	auto kind = m_instance->QueryKinds().FindKind(kind_name);
 	if (kind == nullptr) {
 		return false;
 	}
 
-	if (!kind->m_default_action.empty()) {
-		m_default_action.m_kind_name	= kind->m_name;
-		m_default_action.m_label_name	= kind->m_default_action;
+	if (!kind->m_default_action.empty()) {		
+		out_default_action_name = kind->m_default_action;
 		return true;
 	}
 	//ディフォルトアクションが空なので基底カインドから探す
 	for (const auto&base_kind : kind->m_base_kind) {
-		if (GenerateDefaultActionRecursive(base_kind.c_str())) {
+		if (FindDefaultActionNameRecursive(out_default_action_name, base_kind.c_str())) {
 			return true;
-		}
+		}					
 	}
 	return false;
 }
