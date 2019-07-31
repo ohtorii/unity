@@ -28,25 +28,26 @@ gather_candidates:
 	返値	"1"		成功
 		"0"		失敗
 	*/
+	##pathhistcount = 9;
 	$$user_dataname = "directory_history_index";
 	##i=0;
-	while(true /*##i<filehistcount*/){
+	while(##i < ##pathhistcount){
 		$$path_name=getpathhist(##i);
-		if($$path_name==""){
-			break;
+		if($$path_name!=""){
+			##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$path_name,"");
+			if(! ##success){
+				return "0";
+			}
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$path_name);
+			if(! ##success){
+				return "0";
+			}
+			##success = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateUserDataNumeric",$$user_dataname,##i);
+			if(! ##success){
+				return "0";
+			}
 		}
-		##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$path_name,"");
-		if(! ##success){
-			return "0";
-		}
-		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$path_name);
-		if(! ##success){
-			return "0";
-		}
-		##success = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateUserDataNumeric",$$user_dataname,##i);
-		if(! ##success){
-			return "0";
-		}
+
 		##i = ##i + 1;
 	}
 	return "1";
