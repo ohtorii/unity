@@ -50,11 +50,6 @@ gather_candidates:
 
 gather_candidates_main:
 	$$sub_dir=$$1;
-	//memo: ディレクトリ区切り(\)で終端させる。
-	$$directory_separator=wcsrightstr($$sub_dir,1);
-	if(($$directory_separator!="\\") && ($$directory_separator!="/")){
-		$$sub_dir = $$sub_dir + "\\";
-	}
 
 	/*memo: カレントディレクトリをユーザーデータに保持しています。
 	*/
@@ -62,11 +57,17 @@ gather_candidates_main:
 		$$current_dir=directory+"\\";
 		##r=dllfuncw(#g_dll_ohtorii_tools,"SetUserDataString",$g_user_data_name,$$current_dir);
 	}
+
 	$$parent_dir= dllfuncstrw(#g_dll_ohtorii_tools,"GetUserDataString",$g_user_data_name,"");
 	debuginfo "$$parent_dir="+$$parent_dir;
 	$$root_dir 	= $$parent_dir+$$sub_dir;
 	##r=dllfuncw(#g_dll_ohtorii_tools,"SetUserDataString",$g_user_data_name,$$root_dir);
 	debuginfo "$$root_dir="+$$root_dir;
+	//memo: ディレクトリ区切り(\)で終端させる。
+	$$directory_separator=wcsrightstr($$root_dir,1);
+	if(($$directory_separator!="\\") && ($$directory_separator!="/")){
+		$$root_dir = $$root_dir + "\\";
+	}
 
 	$$pattern=$$root_dir+"*.*";
 	debuginfo "$$pattern="+$$pattern;
@@ -90,7 +91,7 @@ gather_candidates_main:
 
 		$$dir=$$dir+"\\";
 		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir, "");
-		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$root_dir+$$dir);
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$root_dir+$$dir);
 	}
 
 
@@ -108,7 +109,7 @@ gather_candidates_main:
 			break;
 		}
 		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$file, "");
-		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$root_dir+$$file);
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $$root_dir+$$file);
 	}
 
 	return "1";

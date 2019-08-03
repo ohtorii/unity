@@ -4,7 +4,8 @@ EXPORTS
 	ClearCurrentSourceName
 	AppendCandidateHeader
 	AppendCandidate
-	SetCandidateActionPath
+	SetCandidateActionFileName
+	SetCandidateActionDirectoryName
 	SetCandidateUserDataString
 	SetCandidateUserDataNumeric
 	AppendChildCandidate
@@ -12,7 +13,8 @@ EXPORTS
 	
 	GetSelectionCount
 	GetSelectionText
-	GetSelectionActionPath
+	GetSelectionActionDirectoryName
+	GetSelectionActionFileName
 	GetSelectionUserDataString
 	GetSelectionUserDataNumeric
 	GetSelectionSourceName

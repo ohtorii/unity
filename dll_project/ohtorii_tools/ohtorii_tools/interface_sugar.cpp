@@ -52,9 +52,14 @@ bool InterfaceSugar::AppendCandidate(const WCHAR*candidate, const WCHAR*descript
 	return true;
 }
 
-bool InterfaceSugar::SetCandidateActionPath(const WCHAR*display_name) {
-	return Unity::Instance().lock()->QueryCandidates().SetActionPath(m_current_candidate_index, display_name);
+bool InterfaceSugar::SetCandidateActionDirectoryName(const WCHAR*directory_name) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionDirectoryName(m_current_candidate_index, directory_name);
 }
+
+bool InterfaceSugar::SetCandidateActionFileName(const WCHAR*filename) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionFileName(m_current_candidate_index, filename);
+}
+
 
 bool InterfaceSugar::SetCandidateUserDataString(const WCHAR* key, const WCHAR* data) {
 	return Unity::Instance().lock()->QueryCandidates().SetUserData(m_current_candidate_index, key, data);

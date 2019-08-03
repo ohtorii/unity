@@ -38,7 +38,7 @@ gather_candidates:
 			if(! ##success){
 				return "0";
 			}
-			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$path_name);
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$path_name);
 			if(! ##success){
 				return "0";
 			}

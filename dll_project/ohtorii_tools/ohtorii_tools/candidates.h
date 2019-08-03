@@ -28,7 +28,8 @@ struct Candidate {
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
 			m_source_name ,
-			m_action_path,
+			m_action_directory_name,
+			m_action_file_name,
 			m_text,
 			m_description,
 			m_child,
@@ -53,10 +54,10 @@ struct Candidate {
 
 	///ソース名
 	std::wstring			m_source_name;
-	///アクションのパス（ファイル名、または、ディレクトリ名）
-	std::wstring			m_action_path;
-	///アクションのディレクトリ
-	//std::wstring			m_action_directory;
+	///アクションのディレクトリ名
+	std::wstring			m_action_directory_name;
+	///アクションのファイル名
+	std::wstring			m_action_file_name;
 	///候補のテキスト
 	std::wstring			m_text;	
 	///説明
@@ -90,11 +91,17 @@ public:
 	*/
 	INT_PTR AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description=_T(""));
 
-	/**表示に利用するテキストを設定する
+	/**アクションのdirectory名を設定する
 	return bool	true	成功
 				false	失敗
 	*/
-	bool SetActionPath(INT_PTR index, const WCHAR* display_name);
+	bool SetActionDirectoryName(INT_PTR index, const WCHAR* directory_name);
+
+	/**アクションのファイル名を設定する
+	return bool	true	成功
+				false	失敗
+	*/
+	bool SetActionFileName(INT_PTR index, const WCHAR* filename);
 
 	/**候補の子供を追加する
 	return 候補へのインデックス
@@ -125,7 +132,8 @@ public:
 
 	const WCHAR* GetSourceName(INT_PTR index)const;
 	const WCHAR* GetText(INT_PTR index)const;
-	const WCHAR* GetActionPath(INT_PTR index)const;
+	const WCHAR* GetActionDirectoryName(INT_PTR index)const;
+	const WCHAR* GetActionFileName(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
 	template<class Archive> void serialize(Archive & archive) {

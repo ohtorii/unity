@@ -44,7 +44,8 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |tab				|タブの一覧|||
 |vimgrep			|:vimgrep の結果を出力|||
 |window				|現在のウィンドウのタブ一覧||✅|
-|
+|unite-mark|||||
+
 
 ## 秀丸エディタ独自のソース
 |機能|説明|秀丸の実装状況|
@@ -185,3 +186,41 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |:---|:---|:---|:---|
 |preview|ウインドウのプレビューを行う||✅|
 
+# アクション引数
+
+|機能|説明|補足|秀丸の実装状況|
+|:---|:---|:---|:---|
+|word|候補|GetSelectionText/AppendCandidate関数を利用する|✅|
+|action__action||||
+|action__args||||
+|action__buffer_nr||||
+|action__col||||
+|action__col_pattern||||
+|action__command||||
+|action__command_args||||
+|action__complete_info||||
+|action__complete_info_lazy||||
+|action__complete_pos||||
+|action__complete_word||||
+|action__description||||
+|action__directory|ディレクトリパス名|GetCandidateActionDirectoryName/SetCandidateActionDirectoryName関数を利用する|✅|
+|action__filename||kinds\file_vimfiler_base.vimで利用。Unityではaction__pathと同じ扱いにした||
+|action__function||||
+|action__histadd||||
+|action__id||||
+|action__line||||
+|action__mapping||||
+|action__path|ファイルパス名|GetCandidateActionFileName/SetCandidateActionFileName関数を利用する|✅|
+|action__pattern||||
+|action__pid||||
+|action__register||||
+|action__regtype||||
+|action__signature||||
+|action__source_args||||
+|action__source_name||||
+|action__tab_nr||||
+|action__text||||
+|action__title||||
+|action__type||||
+|action__uri
+|action__window_nr

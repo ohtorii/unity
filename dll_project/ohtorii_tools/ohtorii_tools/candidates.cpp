@@ -78,9 +78,20 @@ INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*ca
 	return UNITY_NOT_FOUND_INDEX;
 }
 
-bool Candidates::SetActionPath(INT_PTR index, const WCHAR* action_path) {
+bool Candidates::SetActionDirectoryName(INT_PTR index, const WCHAR* directory_name) {
 	try {
-		m_candidates.at(index).m_action_path.assign(action_path);
+		m_candidates.at(index).m_action_directory_name.assign(directory_name);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
+bool Candidates::SetActionFileName(INT_PTR index, const WCHAR* filename) {
+	try {
+		m_candidates.at(index).m_action_file_name.assign(filename);
 		return true;
 	}
 	catch (std::exception) {
@@ -147,15 +158,26 @@ const WCHAR* Candidates::GetText(INT_PTR index)const {
 	return nullptr;
 }
 
-const WCHAR* Candidates::GetActionPath(INT_PTR index)const {
+const WCHAR* Candidates::GetActionDirectoryName(INT_PTR index)const {
 	try {
-		return m_candidates.at(index).m_action_path.c_str();
+		return m_candidates.at(index).m_action_directory_name.c_str();
 	}
 	catch (std::exception) {
 		//pass
 	}
 	return nullptr;
 }
+
+const WCHAR* Candidates::GetActionFileName(INT_PTR index)const {
+	try {
+		return m_candidates.at(index).m_action_file_name.c_str();
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return nullptr;
+}
+
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {
 	try{

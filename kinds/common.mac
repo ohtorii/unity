@@ -136,10 +136,11 @@ echo:
 	while(##i<##count){
 		$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionSourceName",	##i);
 		$$text			=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",		##i);
-		$$action_path	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##i);
+		$$action_file_name		=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
+		$$action_directory_name	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##i);
 		$$description	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionDescription",##i);
 
-		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) <%s> %s %s \n",##i+1,##count,$$source_name,$$action_path,$$text,$$description));
+		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) <%s> <%s> %s %s\n",##i+1,##count,$$source_name,$$action_directory_name,$$action_file_name,$$text,$$description));
 		##i = ##i + 1;
 	}
 	freedll ##output_dll;
@@ -173,6 +174,7 @@ preview:
 	execmacro $g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "preview_proc";
 	$$ret=getresultex(-1);
 	freedll #g_dll_output_panel;
+	#g_dll_output_panel=0;
 	return $$ret;
 
 
@@ -201,11 +203,19 @@ overwrite_proc:
 
 preview_proc:
 	##is_separetor = ##1;
+	if(#g_dll_output_panel==0){
+		#g_dll_output_panel=loaddll("HmOutputPane.dll");
+		if(#g_dll_output_panel==0){
+			return "0";
+		}
+	}
 	if(##is_separetor){
 		##ret=dllfunc(#g_dll_output_panel,"Output",hidemaruhandle(0),"\r\n");
 	}else{
 		##ret=dllfunc(#g_dll_output_panel,"Output",hidemaruhandle(0),$$2);
 	}
+	freedll #g_dll_output_panel;
+	#g_dll_output_panel=0;
 	return ;
 
 

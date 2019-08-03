@@ -86,7 +86,7 @@ open:
 	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i=0;
 	while(##i < ##count){
-		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##i);
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
 
 		openfile $$text;
 		##new_hidemaru_handle = hidemaruhandle(0);
@@ -112,7 +112,7 @@ preview:
 	/*ファイル内容のプレビュー
 	*/
 	##first_item_index	= 0;
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
 	$$command = sprintf(R"(PowerShell.exe -Command "& {Get-Content "%s" | Select-Object -first 100}")", $$text);
 	runex $$command
 			, 1 			//sync	  0:async 1:sync

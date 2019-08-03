@@ -10,6 +10,7 @@
 |function|DLL側の関数を利用して候補を作成する|
 |list|候補を改行区切りのリストで返す|
 
+
 # kindについて
 
 ## is_quit
@@ -72,4 +73,14 @@ unity終了後にフォーカスするウインドウ
 		default_kind=file
 		default_action=echo		<- echoを呼び出す
 
+
+# アクションのパスにつて
+
+アクションのパス（ディレクトリ、ファイル）を設定取得することが出来ます。
+
+## 設定(source側)
+ ##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionPath", $$file_name);
+
+## 取得(kind側)
+$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 
