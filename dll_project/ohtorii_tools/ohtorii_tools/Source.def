@@ -6,6 +6,8 @@ EXPORTS
 	AppendCandidate
 	SetCandidateActionFileName
 	SetCandidateActionDirectoryName
+	SetCandidateActionLine
+	SetCandidateActionColumn
 	SetCandidateUserDataString
 	SetCandidateUserDataNumeric
 	AppendChildCandidate
@@ -15,6 +17,8 @@ EXPORTS
 	GetSelectionText
 	GetSelectionActionDirectoryName
 	GetSelectionActionFileName
+	GetSelectionActionColumn
+	GetSelectionActionLine
 	GetSelectionUserDataString
 	GetSelectionUserDataNumeric
 	GetSelectionSourceName

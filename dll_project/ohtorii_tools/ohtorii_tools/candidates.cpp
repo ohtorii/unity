@@ -80,7 +80,7 @@ INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*ca
 
 bool Candidates::SetActionDirectoryName(INT_PTR index, const WCHAR* directory_name) {
 	try {
-		m_candidates.at(index).m_action_directory_name.assign(directory_name);
+		m_candidates.at(index).m_action.m_directory_name.assign(directory_name);
 		return true;
 	}
 	catch (std::exception) {
@@ -91,7 +91,29 @@ bool Candidates::SetActionDirectoryName(INT_PTR index, const WCHAR* directory_na
 
 bool Candidates::SetActionFileName(INT_PTR index, const WCHAR* filename) {
 	try {
-		m_candidates.at(index).m_action_file_name.assign(filename);
+		m_candidates.at(index).m_action.m_file_name.assign(filename);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
+bool Candidates::SetActionColumn(INT_PTR index, INT_PTR column) {
+	try {
+		m_candidates.at(index).m_action.m_column = column;
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
+bool Candidates::SetActionLine(INT_PTR index, INT_PTR line) {
+	try {
+		m_candidates.at(index).m_action.m_line = line;
 		return true;
 	}
 	catch (std::exception) {
@@ -160,7 +182,7 @@ const WCHAR* Candidates::GetText(INT_PTR index)const {
 
 const WCHAR* Candidates::GetActionDirectoryName(INT_PTR index)const {
 	try {
-		return m_candidates.at(index).m_action_directory_name.c_str();
+		return m_candidates.at(index).m_action.m_directory_name.c_str();
 	}
 	catch (std::exception) {
 		//pass
@@ -170,7 +192,7 @@ const WCHAR* Candidates::GetActionDirectoryName(INT_PTR index)const {
 
 const WCHAR* Candidates::GetActionFileName(INT_PTR index)const {
 	try {
-		return m_candidates.at(index).m_action_file_name.c_str();
+		return m_candidates.at(index).m_action.m_file_name.c_str();
 	}
 	catch (std::exception) {
 		//pass
@@ -178,6 +200,24 @@ const WCHAR* Candidates::GetActionFileName(INT_PTR index)const {
 	return nullptr;
 }
 
+INT_PTR		Candidates::GetActionColumn(INT_PTR index)const {
+	try {
+		return m_candidates.at(index).m_action.m_column;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
+INT_PTR		Candidates::GetActionLine(INT_PTR index)const {
+	try {
+		return m_candidates.at(index).m_action.m_line;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return UNITY_NOT_FOUND_INDEX;
+}
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {
 	try{

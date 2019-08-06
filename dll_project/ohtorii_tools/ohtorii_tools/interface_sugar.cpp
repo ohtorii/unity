@@ -60,6 +60,13 @@ bool InterfaceSugar::SetCandidateActionFileName(const WCHAR*filename) {
 	return Unity::Instance().lock()->QueryCandidates().SetActionFileName(m_current_candidate_index, filename);
 }
 
+bool InterfaceSugar::SetCandidateActionColumn(INT_PTR column) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionColumn(m_current_candidate_index, column);
+}
+
+bool InterfaceSugar::SetCandidateActionLine(INT_PTR line) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionLine(m_current_candidate_index, line);
+}
 
 bool InterfaceSugar::SetCandidateUserDataString(const WCHAR* key, const WCHAR* data) {
 	return Unity::Instance().lock()->QueryCandidates().SetUserData(m_current_candidate_index, key, data);

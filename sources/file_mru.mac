@@ -27,7 +27,7 @@ gather_candidates:
 	candidate_type=function
 
 	返値	"1"		成功
-		"0"		失敗
+			"0"		失敗
 	*/
 	$$user_dataname = "file_history_index";
 	##i=0;

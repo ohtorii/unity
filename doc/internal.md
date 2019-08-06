@@ -1,5 +1,8 @@
 ﻿# 内部実装について
 
+このドキュメントはUnityマクロの内部実装について書いています。
+
+
 # sourceについて
 
 ## candidate_type
@@ -58,23 +61,39 @@ unity終了後にフォーカスするウインドウ
 
 ## 例 1
 
+通常の使用例。
+
 	kinds\file.mac
 		default_action=open
 
 	sources\file.mac
-		default_kind=file		<- openを呼び出す
+		default_kind=file		<- fileカインドのopenを呼ぶ
 
 ## 例 2
+
+上書きした場合の例。
 
 	kinds\file.mac
 		default_action=open
 
 	sources\file.mac
 		default_kind=file
-		default_action=echo		<- echoを呼び出す
+		default_action=echo		<- commonアクションのechoを呼ぶ
 
 
-# アクションのパスにつて
+# カインドの継承順序について
+
+	base_kind=jump_list file
+	default_action=open
+
+jump_listとfileはそれぞれopenアクションを持っています、上記例ではjump_listのopenが呼ばれます。
+
+## 仕様
+
+base_kind=最高優先度 次の優先度 ... 最低優先度
+
+
+# アクションのファイルパスについて
 
 アクションのパス（ディレクトリ、ファイル）を設定取得することが出来ます。
 

@@ -20,12 +20,20 @@ extern "C" INT_PTR AppendCandidate(WCHAR*candidate, WCHAR*description) {
 	return InterfaceSugar::Instance().AppendCandidate(candidate, description);
 }
 
-extern "C" INT_PTR SetCandidateActionDirectoryName(WCHAR*display_name) {
-	return InterfaceSugar::Instance().SetCandidateActionDirectoryName(display_name);
+extern "C" INT_PTR SetCandidateActionDirectoryName(WCHAR*directory_name) {
+	return InterfaceSugar::Instance().SetCandidateActionDirectoryName(directory_name);
 }
 
-extern "C" INT_PTR SetCandidateActionFileName(WCHAR*display_name) {
-	return InterfaceSugar::Instance().SetCandidateActionFileName(display_name);
+extern "C" INT_PTR SetCandidateActionFileName(WCHAR*filename) {
+	return InterfaceSugar::Instance().SetCandidateActionFileName(filename);
+}
+
+extern "C" INT_PTR SetCandidateActionColumn(INT_PTR column) {
+	return InterfaceSugar::Instance().SetCandidateActionColumn(column);
+}
+
+extern "C" INT_PTR SetCandidateActionLine(INT_PTR line) {
+	return InterfaceSugar::Instance().SetCandidateActionLine(line);
 }
 
 extern "C" INT_PTR SetCandidateUserDataString(const WCHAR* key, WCHAR* data) {
@@ -60,6 +68,16 @@ extern "C" WCHAR* GetSelectionActionDirectoryName(INT_PTR selected_index) {
 extern "C" WCHAR* GetSelectionActionFileName(INT_PTR selected_index) {
 	auto index = Unity::Instance().lock()->QueryRefineSearch().GetSelectionCandidateIndex(selected_index);
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates().GetActionFileName(index));
+}
+
+extern "C" INT_PTR GetSelectionActionColumn(INT_PTR selected_index) {
+	auto index = Unity::Instance().lock()->QueryRefineSearch().GetSelectionCandidateIndex(selected_index);
+	return Unity::Instance().lock()->QueryCandidates().GetActionColumn(index);
+}
+
+extern "C" INT_PTR GetSelectionActionLine(INT_PTR selected_index) {
+	auto index = Unity::Instance().lock()->QueryRefineSearch().GetSelectionCandidateIndex(selected_index);
+	return Unity::Instance().lock()->QueryCandidates().GetActionLine(index);
 }
 
 extern "C" WCHAR* GetSelectionSourceName(INT_PTR selected_index) {

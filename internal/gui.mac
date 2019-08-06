@@ -130,6 +130,8 @@ LoadSources:
 	//仮実装
 	//$g_sources_dirを利用する
 	##i=0;
+	$g_source_names[##i]="grep_result";
+	##i = ##i + 1;
 	$g_source_names[##i]="file";
 	##i = ##i + 1;
 	$g_source_names[##i]="directory";

@@ -194,7 +194,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |action__action||||
 |action__args||||
 |action__buffer_nr||||
-|action__col||||
+|action__col|カラム位置||✅|
 |action__col_pattern||||
 |action__command||||
 |action__command_args||||
@@ -208,7 +208,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |action__function||||
 |action__histadd||||
 |action__id||||
-|action__line||||
+|action__line|行番号||✅|
 |action__mapping||||
 |action__path|ファイルパス名|GetCandidateActionFileName/SetCandidateActionFileName関数を利用する|✅|
 |action__pattern||||

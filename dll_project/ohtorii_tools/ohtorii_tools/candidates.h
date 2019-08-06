@@ -28,8 +28,7 @@ struct Candidate {
 	template<class Archive> void serialize(Archive & archive) {
 		archive(
 			m_source_name ,
-			m_action_directory_name,
-			m_action_file_name,
+			m_action,
 			m_text,
 			m_description,
 			m_child,
@@ -52,12 +51,28 @@ struct Candidate {
 		std::wstring			m_description;
 	};
 
+	///アクションの情報
+	struct Action{
+		Action() {
+			m_column = 1;
+			m_line = 1;
+		};
+
+		template<class Archive> void serialize(Archive & archive) {
+			archive(m_column, m_line,m_directory_name,m_file_name);
+		};
+		///アクションのカラム位置
+		INT_PTR				m_column;
+		///アクションの行番号
+		INT_PTR				m_line;
+		///アクションのディレクトリ名
+		std::wstring			m_directory_name;
+		///アクションのファイル名
+		std::wstring			m_file_name;		
+	};
+	Action				m_action;
 	///ソース名
-	std::wstring			m_source_name;
-	///アクションのディレクトリ名
-	std::wstring			m_action_directory_name;
-	///アクションのファイル名
-	std::wstring			m_action_file_name;
+	std::wstring			m_source_name;	
 	///候補のテキスト
 	std::wstring			m_text;	
 	///説明
@@ -103,6 +118,14 @@ public:
 	*/
 	bool SetActionFileName(INT_PTR index, const WCHAR* filename);
 
+	/**アクションのカラム位置を設定する
+	*/
+	bool SetActionColumn(INT_PTR index, INT_PTR column);
+
+	/**アクションの行番号を設定する
+	*/
+	bool SetActionLine(INT_PTR index, INT_PTR line);
+
 	/**候補の子供を追加する
 	return 候補へのインデックス
 
@@ -134,6 +157,8 @@ public:
 	const WCHAR* GetText(INT_PTR index)const;
 	const WCHAR* GetActionDirectoryName(INT_PTR index)const;
 	const WCHAR* GetActionFileName(INT_PTR index)const;
+	INT_PTR		GetActionColumn(INT_PTR index)const;
+	INT_PTR		GetActionLine(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
 	template<class Archive> void serialize(Archive & archive) {
