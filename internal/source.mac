@@ -65,6 +65,9 @@ main:
 	if($$candidate_type=="list"){
 		call GatherCandidatesFromList $$source_filename, $$arg;
 		##ret = ##return;
+	}else if($$candidate_type=="filelist"){
+		call GatherCandidatesFromFileList $$source_filename, $$arg;
+		##ret = ##return;
 	}else if($$candidate_type=="function"){
 		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
 		if(getresultex(-1)=="0"){
@@ -142,3 +145,54 @@ GatherCandidatesFromList:
 
 	freedll ##dll;
 	return ##success;
+
+
+GatherCandidatesFromFileList:
+	$$source_filename=$$1;
+	$$arg=$$2;
+
+	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
+	$$filelist_name=getresultex(-1);
+	if($$filelist_name==""){
+		return false;
+	}
+	debuginfo "@1";
+	//
+	//$g_file_image変数へファイル内容を読み込む
+	//
+	call LoadFileImage $$filelist_name;
+	if(! ##return){
+		return false;
+	}
+	debuginfo "@2";
+
+	//
+	//$$candidate_list変数を候補に登録する
+	//
+	##num_candidate = split($$candidate_list,$g_file_image,"\r\n" );
+	debuginfo "##num_candidate="+str(##num_candidate);
+	$g_file_image="";
+	##i=0;
+	while(##i < ##num_candidate){
+		##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$candidate_list[##i],"");
+		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $$candidate_list[##i]);
+
+		##i = ##i + 1;
+	}
+	debuginfo "@3";
+
+	return true;
+
+
+LoadFileImage:
+	##current_hidemaru=hidemaruhandle(0);
+	openfile "/h /n " + $$1;
+	if(! result){
+		return false;
+	}
+	##new_hidemaru=hidemaruhandle(0);
+	selectall;
+	$g_file_image=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
+	setactivehidemaru ##current_hidemaru;
+	closehidemaruforced ##new_hidemaru;;
+	return true;

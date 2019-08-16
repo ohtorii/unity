@@ -40,6 +40,9 @@
 ## $unity.target_hidemaruhandle (int)
 文字列などを挿入する操作対象となる秀丸ハンドル
 
+## $unity.current_working_directory (string)
+マクロ起動時の作業ディレクトリ
+
 ## $unity.root_macro_directory (string)
 マクロのルートディレクトリ
 

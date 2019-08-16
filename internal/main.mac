@@ -102,6 +102,8 @@ Start:
 
 	setstaticvariable "$unity.hidemaruhandle_to_focus_at_end_of_process",str(0), 1;
 	setstaticvariable "$unity.target_hidemaruhandle", str(#g_target_hidemaru), 1;
+	setstaticvariable "$unity.current_working_directory", directory2, 1;
+	debuginfo "directory2="+directory2;
 	call NewFile;
 	if(! ##return){
 		return false;
