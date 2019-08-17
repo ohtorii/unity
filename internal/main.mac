@@ -209,6 +209,7 @@ RefineSearchMain:
 	call Filter $$key_buffer;
 
 	$$prev_pattern="999";
+	##interval_msec=20;
 	##prev_tickcount=0;
 	while(true){
 		execmacro $g_command_line_path+"\\input-keys.mac", $$key_buffer, $$cursor_pos;
@@ -241,7 +242,7 @@ RefineSearchMain:
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
 		}else{
-			if(($$prev_pattern != $$key_buffer) && (300<(tickcount-##prev_tickcount))){
+			if(($$prev_pattern != $$key_buffer) && (##interval_msec<(tickcount-##prev_tickcount))){
 				call Filter $$key_buffer;
 				$$prev_pattern=$$key_buffer;
 				##prev_tickcount=tickcount;

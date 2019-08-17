@@ -62,11 +62,11 @@ main:
 	}
 
 	$$candidate_type = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);
-	if($$candidate_type=="list"){
-		call GatherCandidatesFromList $$source_filename, $$arg;
+	if($$candidate_type=="string"){
+		call GatherCandidatesFromString $$source_filename, $$arg;
 		##ret = ##return;
-	}else if($$candidate_type=="filelist"){
-		call GatherCandidatesFromFileList $$source_filename, $$arg;
+	}else if($$candidate_type=="file"){
+		call GatherCandidatesFromFile $$source_filename, $$arg;
 		##ret = ##return;
 	}else if($$candidate_type=="function"){
 		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
@@ -108,7 +108,7 @@ LoadSourceIfNotExist:
 	}
 	return $$source_name;
 
-GatherCandidatesFromList:
+GatherCandidatesFromString:
 	$$source_filename=$$1;
 	$$arg=$$2;
 
@@ -147,7 +147,7 @@ GatherCandidatesFromList:
 	return ##success;
 
 
-GatherCandidatesFromFileList:
+GatherCandidatesFromFile:
 	$$source_filename=$$1;
 	$$arg=$$2;
 

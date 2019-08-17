@@ -19,13 +19,10 @@ get_property:
 name=directory_recursive
 description=candidates from directory by recursive
 default_kind=directory
-candidate_type=filelist
+candidate_type=file
 )";
 
-/*
-\ 'ignore_globs' : [
-      \         '.hg/**', '.git/**', '.bzr/**', '.svn/**', '.vs/**'
-*/
+
 gather_candidates:
 	$$root_dir=$$1;
 	$$temp_filename="c:\\temp\\filelist.txt";
@@ -36,14 +33,8 @@ gather_candidates:
 
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
 	if(! ##ret){
-		debuginfo " internal/action.mac exec_action -> false";
 		return "";
 	}
-
-
-	//65001 = UTF8
-	//$$batch = sprintf(R"(pushd "%s" & for /R %%i in (*.*) do echo %%i>>"%s"& popd)", $$root_dir,$$temp_filename);
-	//$$batch = sprintf(R"(echo ..\ > "%s" && dir /ad /b /s "%s" >> "%s")", $$temp_filename,$$root_dir,$$temp_filename);
 
 	/* memo
 	\で終端しているディレクトリ名をダブルクォーテーションで囲ってコマンドライン引数で渡すときの対策。
@@ -59,16 +50,18 @@ gather_candidates:
 	$$batch = sprintf(R"(%s "%s" directory "%s" "%s" *)", $$exe, $$temp_filename, $g_current_working_directory, $$root_dir);
 
 	$$cmd = "cmd /U /C "+$$batch;
+	/*
 	debuginfo "directory="+directory;
 	debuginfo "$$batch="+$$batch;
 	debuginfo "$$cmd="+$$cmd;
+	*/
 	runex $$cmd
 			, 1 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
 			, 7, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
 			, 1, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
 			, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
-			, 1 			//show	  0:auto 1:show 2:hide
+			, 2 			//show	  0:auto 1:show 2:hide
 			, 1 			//nodraw  0:draw 1:no draw
 			, 2 			//unicode 0:ansi 2:unicode
 			;
@@ -79,6 +72,7 @@ gather_candidates:
 	//memo
 	//アクションパス=候補＋ルートディレクトリ
 	return $$temp_filename /* + "\t" + $$root_dir */;
+
 
 remove_terminate:
 	/*ディレクトリ名終端の \/ を取り除く

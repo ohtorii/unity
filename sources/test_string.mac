@@ -10,9 +10,9 @@ get_property:
 	//ソースのプロパティをini形式で返す
 	return R"([property]
 name=tab
-description=test list.
+description=test string.
 default_kind=tab
-candidate_type=list
+candidate_type=string
 )";
 
 gather_candidates:
