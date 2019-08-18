@@ -68,6 +68,9 @@ main:
 	}else if($$candidate_type=="file"){
 		call GatherCandidatesFromFile $$source_filename, $$arg;
 		##ret = ##return;
+	}else if($$candidate_type=="async_file"){
+		call GatherCandidatesFromASyncFile $$source_filename, $$arg;
+		##ret = ##return;
 	}else if($$candidate_type=="function"){
 		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
 		if(getresultex(-1)=="0"){
@@ -156,7 +159,6 @@ GatherCandidatesFromFile:
 	if($$filelist_name==""){
 		return false;
 	}
-	debuginfo "@1";
 	//
 	//$g_file_image変数へファイル内容を読み込む
 	//
@@ -164,13 +166,11 @@ GatherCandidatesFromFile:
 	if(! ##return){
 		return false;
 	}
-	debuginfo "@2";
 
 	//
 	//$$candidate_list変数を候補に登録する
 	//
 	##num_candidate = split($$candidate_list,$g_file_image,"\r\n" );
-	debuginfo "##num_candidate="+str(##num_candidate);
 	$g_file_image="";
 	##i=0;
 	while(##i < ##num_candidate){
@@ -179,12 +179,29 @@ GatherCandidatesFromFile:
 
 		##i = ##i + 1;
 	}
-	debuginfo "@3";
 
 	return true;
 
 
+GatherCandidatesFromASyncFile:
+	$$source_filename=$$1;
+	$$arg=$$2;
+
+	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
+	$$filelist_name=getresultex(-1);
+	if($$filelist_name==""){
+		return false;
+	}
+
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsASyncFile", $$filelist_name);
+	return ##success;
+
+
 LoadFileImage:
+	/* ファイルを変数へ読み込む
+
+	$g_file_image　へファイル内容を読み込む
+	*/
 	##current_hidemaru=hidemaruhandle(0);
 	openfile "/h /n " + $$1;
 	if(! result){

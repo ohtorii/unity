@@ -6,7 +6,7 @@
 ///候補
 struct Candidate {
 	Candidate();
-	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description);
+	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description=_T(""));
 
 	/**候補のユーザーデータを設定する（文字列版）
 	同一キーがある場合は上書きします。

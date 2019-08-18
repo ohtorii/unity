@@ -11,6 +11,7 @@
 #include"inheritance.h"
 #include"user_data.h"
 #include"status.h"
+#include"async_files.h"
 
 
 
@@ -52,6 +53,7 @@ public:
 	Inheritance&	QueryInheritance();
 	UserData&		QueryUserData();
 	Status&			QueryStatus();
+	ASyncFiles&		QueryASyncFiles();
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_candidates,m_refine_search,m_user_data);
@@ -72,7 +74,7 @@ private:
 	RefineSearch		m_refine_search;
 	Inheritance			m_inheritance;	
 	UserData			m_user_data;
-
+	ASyncFiles			m_async_files;
 	///状態
 	static Status		m_status;
 

@@ -19,7 +19,7 @@ get_property:
 name=directory_recursive
 description=candidates from directory by recursive
 default_kind=directory
-candidate_type=file
+candidate_type=async_file
 )";
 
 
@@ -38,10 +38,6 @@ gather_candidates:
 
 	/* memo
 	\で終端しているディレクトリ名をダブルクォーテーションで囲ってコマンドライン引数で渡すときの対策。
-
-	（変換の例）
-	"c:temp\"	-> "c:\temp"
-	"c:temp/"	-> "c:\temp"
 	*/
 	call remove_terminate $$root_dir;
 	$$root_dir=$$return;
@@ -69,13 +65,15 @@ gather_candidates:
 		return "";
 	}
 
-	//memo
-	//アクションパス=候補＋ルートディレクトリ
-	return $$temp_filename /* + "\t" + $$root_dir */;
+	return $$temp_filename;
 
 
 remove_terminate:
 	/*ディレクトリ名終端の \/ を取り除く
+
+	（変換の例）
+	"c:temp\"	-> "c:\temp"
+	"c:temp/"	-> "c:\temp"
 	*/
 	$$last=rightstr($$1,1);
 	if(($$last=="\\") || ($$last=="/")){

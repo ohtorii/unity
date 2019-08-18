@@ -52,6 +52,15 @@ bool InterfaceSugar::AppendCandidate(const WCHAR*candidate, const WCHAR*descript
 	return true;
 }
 
+bool InterfaceSugar::AppendCandidateAsASyncFile(const WCHAR*filename) {
+	auto index = Unity::Instance().lock()->QueryASyncFiles().AppendCandidate(m_current_source_name.c_str(), filename);
+	//m_current_async_candidate_index = index;
+	if (index == UNITY_NOT_FOUND_INDEX) {
+		return false;
+	}
+	return true;
+}
+
 bool InterfaceSugar::SetCandidateActionDirectoryName(const WCHAR*directory_name) {
 	return Unity::Instance().lock()->QueryCandidates().SetActionDirectoryName(m_current_candidate_index, directory_name);
 }

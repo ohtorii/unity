@@ -15,6 +15,9 @@ Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*desc
 	m_text(text),
 	m_description(description)
 {
+	//memo: Trim
+	m_text.erase(std::remove(m_text.begin(), m_text.end(), _T('\n')), m_text.end());
+
 	m_header=false;
 	m_selectable=true;
 	m_selected = false;

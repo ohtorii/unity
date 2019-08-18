@@ -106,6 +106,9 @@
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\resources\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -125,7 +128,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\dll\"</Command>
+      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -150,7 +153,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\dll\"</Command>
+      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,10 +178,11 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\dll\"</Command>
+      <Command>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\resources\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="async_files.h" />
     <ClInclude Include="candidates.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="file.h" />
@@ -195,6 +199,7 @@
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="async_files.cpp" />
     <ClCompile Include="candidates.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="file.cpp" />

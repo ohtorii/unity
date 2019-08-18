@@ -199,7 +199,11 @@ Status& Unity::QueryStatus() {
 	return m_status;
 }
 
-Unity::Unity() : m_refine_search(this), m_inheritance(this){
+ASyncFiles&		Unity::QueryASyncFiles() {
+	return m_async_files;
+}
+
+Unity::Unity() : m_refine_search(this), m_inheritance(this), m_async_files(this){
 }
 
 Unity::~Unity(){

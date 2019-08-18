@@ -33,38 +33,38 @@ public:
 		m_first_match=true;
 	};
 
-	void Generate(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates) 
+	void Generate(const std::vector<std::wstring> &tokens, const std::vector<Candidate>&candidates)
 	{
 		m_hidemaru_view.Clear();
 		m_hidemaru_view.m_collapsed.Clear();
 
-		const size_t	size = candidates.size();		
-		INT_PTR			header_candidate_index=UNITY_NOT_FOUND_INDEX;
-		
+		{
+			const size_t	size = candidates.size();
+			INT_PTR			header_candidate_index = UNITY_NOT_FOUND_INDEX;
 
-		for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
-			const auto& candidate = candidates.at(candidate_list_index);
-						
-			if (candidate.m_header) {
-				//memo: ヘッダー部は検索処理に含めない
-				header_candidate_index=candidate_list_index;
-				continue;
-			}
+			for (size_t candidate_list_index = 0; candidate_list_index < size; ++candidate_list_index) {
+				const auto& candidate = candidates.at(candidate_list_index);
 
-			if (MatchAll(candidate.m_text, tokens)) {
-				if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
-					//ヘッダー部を挿入する
-					const auto& header_candidate= candidates.at(header_candidate_index);
-					if(header_candidate.m_source_name == candidate.m_source_name){
-						InserCandidate(header_candidate, header_candidate_index);
-					}
-					header_candidate_index= UNITY_NOT_FOUND_INDEX;
+				if (candidate.m_header) {
+					//memo: ヘッダー部は検索処理に含めない
+					header_candidate_index = candidate_list_index;
+					continue;
 				}
-				//検索にマッチした候補を挿入する
-				InserCandidate(candidate, candidate_list_index);
+
+				if (MatchAll(candidate.m_text, tokens)) {
+					if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
+						//ヘッダー部を挿入する
+						const auto& header_candidate = candidates.at(header_candidate_index);
+						if (header_candidate.m_source_name == candidate.m_source_name) {
+							InserCandidate(header_candidate, header_candidate_index);
+						}
+						header_candidate_index = UNITY_NOT_FOUND_INDEX;
+					}
+					//検索にマッチした候補を挿入する
+					InserCandidate(candidate, candidate_list_index);
+				}
 			}
 		}
-
 		//テキストの終端を追加
 		m_hidemaru_view.m_hidemaru_text.push_back(_T('\0'));
 	};
@@ -191,17 +191,20 @@ void RefineSearch::SetHidemaruLineno(INT_PTR hidemaru_line_no) {
 
 bool RefineSearch::Do(const WCHAR* search_words) {
 	try{
+		m_instance->QueryASyncFiles().Exec();
+
+		auto& candidates = m_instance->QueryCandidates().GetCandidates();
 		std::vector<std::wstring> tokens;
 		tokens.reserve(16);
 		Tokenize(tokens, const_cast<WCHAR*>(search_words), _T(" \t\n"));
-
-		auto& candidates= m_instance->QueryCandidates().GetCandidates();
-	
+		
 		//memo: std::vector<>のメモリ予約		
-		m_hidemaru_view.Reserve(candidates.size());		
+		m_hidemaru_view.Reserve(candidates.size());
 		
 		Filter filter(m_hidemaru_view);
-		filter.Generate(tokens, candidates);		
+		filter.Generate(
+			tokens, 
+			candidates);
 	}
 	catch (std::exception) {
 		return false;

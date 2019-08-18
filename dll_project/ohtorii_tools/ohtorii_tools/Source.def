@@ -4,6 +4,7 @@ EXPORTS
 	ClearCurrentSourceName
 	AppendCandidateHeader
 	AppendCandidate
+	AppendCandidateAsASyncFile
 	SetCandidateActionFileName
 	SetCandidateActionDirectoryName
 	SetCandidateActionLine

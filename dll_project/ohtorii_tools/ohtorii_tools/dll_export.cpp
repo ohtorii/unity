@@ -20,6 +20,10 @@ extern "C" INT_PTR AppendCandidate(WCHAR*candidate, WCHAR*description) {
 	return InterfaceSugar::Instance().AppendCandidate(candidate, description);
 }
 
+extern "C" INT_PTR AppendCandidateAsASyncFile(WCHAR*filename) {
+	return InterfaceSugar::Instance().AppendCandidateAsASyncFile(filename);
+}
+
 extern "C" INT_PTR SetCandidateActionDirectoryName(WCHAR*directory_name) {
 	return InterfaceSugar::Instance().SetCandidateActionDirectoryName(directory_name);
 }

@@ -57,6 +57,9 @@
     <ClInclude Include="user_data.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="async_files.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -99,6 +102,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="user_data.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="async_files.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
