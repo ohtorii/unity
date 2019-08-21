@@ -1,9 +1,9 @@
 ﻿/* window
 */
 
-#g_dll_ohtorii_tools=val(getarg(0));
-$label=getarg(1);
-$arg=getarg(2);
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg=getarg(1);
 call $label, $arg;
 endmacro $$return;
 

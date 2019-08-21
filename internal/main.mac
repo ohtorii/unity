@@ -518,7 +518,10 @@ LoadKindAll:
 
 	##i=0;
 	while(##i<##kinds_num){
-		execmacro $$kinds[##i],str(#g_dll_ohtorii_tools),"get_property";
+		$$args[0]="get_property";
+		$$args[30]=str(#g_dll_ohtorii_tools);
+		execmacro $$kinds[##i],$$args,31;
+
 		$$kind_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsCreate",getresultex(-1));
 		if($$kind_name==""){
 			return false;
@@ -549,7 +552,9 @@ LoadSourceAll:
 		/*ソースのプロパティを取得する
 		*/
 		$$source_filename=$$sources[##i];
-		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
+		$$args[0]="get_property";
+		$$args[30]=str(#g_dll_ohtorii_tools);
+		execmacro $$source_filename, $$args,31;
 		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",getresultex(-1));
 		if($$source_name==""){
 			return false;

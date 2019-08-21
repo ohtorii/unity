@@ -1,9 +1,9 @@
 ﻿/*アクション候補
 */
 
-#g_dll_ohtorii_tools=val(getarg(0));
-$label=getarg(1);
-$arg=getarg(2);
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg=getarg(1);
 call $label, $arg;
 endmacro $$return;
 
@@ -18,7 +18,7 @@ candidate_type=function
 
 gather_candidates:
 	##context=val($$1);
-	
+
 	//
 	//選択されたソースから候補を生成する
 	//

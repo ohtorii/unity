@@ -17,6 +17,7 @@ $g_candidate_filename="";
 //==========================================================================
 //メイン処理
 //==========================================================================
+debuginfo "ENTER internal\\source.mac";
 #g_dll_ohtorii_tools=val(getarg(0));
 call main getarg(1),getarg(2);
 if(##return){
@@ -30,8 +31,11 @@ endmacro "0";
 //	ソースの生成処理
 //==========================================================================
 main:
+	debuginfo "ENTER internal\\source.mac main";
 	$$source_filename=$$1;
 	$$arg=$$2;
+	debuginfo "  $$source_filename="+$$source_filename;
+	debuginfo "  $$arg="+$$arg;
 
 	call LoadSourceIfNotExist $$source_filename;
 	$$source_name=$$return;
@@ -72,7 +76,10 @@ main:
 		call GatherCandidatesFromASyncFile $$source_filename, $$arg;
 		##ret = ##return;
 	}else if($$candidate_type=="function"){
-		execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
+		$$args[0]="gather_candidates";
+		$$args[1]=$$arg;
+		$$args[30]=str(#g_dll_ohtorii_tools);
+		execmacro $$source_filename, $$args, 31;
 		if(getresultex(-1)=="0"){
 			##ret=false;
 		}else{
@@ -98,7 +105,9 @@ LoadSourceIfNotExist:
 		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools, "SourcesFileNameToSourceName", $$source_filename);
 		return $$source_name;
 	}
-	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
+	$$args[0]="get_property";
+	$$args[30]=str(#g_dll_ohtorii_tools);
+	execmacro $$source_filename, $$args, 31;
 	$$ini=getresultex(-1);
 	if($$ini==""){
 		return "";
@@ -115,7 +124,10 @@ GatherCandidatesFromString:
 	$$source_filename=$$1;
 	$$arg=$$2;
 
-	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
+	$$args[0]="gather_candidates";
+	$$args[1]=$$arg;
+	$$args[30]=str(#g_dll_ohtorii_tools);
+	execmacro $$source_filename, $$args, 31;
 	$$candidates=getresultex(-1);
 
 	execmacro currentmacrodirectory+"\\get_file_basename.mac",$$source_filename;
@@ -154,7 +166,11 @@ GatherCandidatesFromFile:
 	$$source_filename=$$1;
 	$$arg=$$2;
 
-	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
+	$$args[0]="gather_candidates";
+	$$args[1]=$$arg;
+	$$args[30]=str(#g_dll_ohtorii_tools);
+
+	execmacro $$source_filename, $$args, 31;
 	$$filelist_name=getresultex(-1);
 	if($$filelist_name==""){
 		return false;
@@ -187,7 +203,11 @@ GatherCandidatesFromASyncFile:
 	$$source_filename=$$1;
 	$$arg=$$2;
 
-	execmacro $$source_filename, str(#g_dll_ohtorii_tools), "gather_candidates", $$arg;
+	$$args[0]="gather_candidates";
+	$$args[1]=$$arg;
+	$$args[30]=str(#g_dll_ohtorii_tools);
+
+	execmacro $$source_filename, $$args, 31;
 	$$filelist_name=getresultex(-1);
 	if($$filelist_name==""){
 		return false;

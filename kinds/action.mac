@@ -3,9 +3,9 @@
 #g_target_hidemaruhandle=val(getstaticvariable("$unity.target_hidemaruhandle",1));
 $g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
-#g_dll_ohtorii_tools=val(getarg(0));
-$label				=getarg(1);
-$arg				=getarg(2);
+#g_dll_ohtorii_tools=val(getarg(30));
+$label				=getarg(0);
+$arg				=getarg(1);
 call $label, $arg;
 endmacro $$return;
 
@@ -90,6 +90,9 @@ exec_action:
 
 	debuginfo "  $$kind_filename="+$$kind_filename;
 	debuginfo "  $$action_name="+ $$action_name;
-	execmacro $$kind_filename, str(#g_dll_ohtorii_tools), "do_action", $$action_name;
+	$$args[0]="do_action";
+	$$args[1]=$$action_name;
+	$$args[30]=str(#g_dll_ohtorii_tools);
+	execmacro $$kind_filename, $$args, 31;
 	$$action_result = getresultex(-1);
 	return $$action_result;
