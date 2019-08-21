@@ -43,14 +43,15 @@ gather_candidates:
 	$$root_dir=$$return;
 
 	$$exe=$g_root_macro_directory+R"(\resources\file_searcher.exe)";
-	$$batch = sprintf(R"(%s "%s" directory "%s" "%s" *)", $$exe, $$temp_filename, $g_current_working_directory, $$root_dir);
+	//$$batch = sprintf(R"(%s "%s" directory "%s" "%s" *)", $$exe, $$temp_filename, $g_current_working_directory, $$root_dir);
+	$$batch = sprintf(R"(%s --output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$exe,$$temp_filename,$g_current_working_directory,$$root_dir,0);
 
-	$$cmd = "cmd /U /C "+$$batch;
-	/*
-	debuginfo "directory="+directory;
+	$$cmd = "cmd /C "+$$batch;
+
+	debuginfo	1;
 	debuginfo "$$batch="+$$batch;
 	debuginfo "$$cmd="+$$cmd;
-	*/
+
 	runex $$cmd
 			, 1 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
@@ -59,12 +60,13 @@ gather_candidates:
 			, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
 			, 2 			//show	  0:auto 1:show 2:hide
 			, 1 			//nodraw  0:draw 1:no draw
-			, 2 			//unicode 0:ansi 2:unicode
+			, 0 			//unicode 0:ansi 2:unicode
 			;
 	if(! result){
+		debuginfo "runex false";
 		return "";
 	}
-
+	debuginfo "runex true";
 	return $$temp_filename;
 
 
