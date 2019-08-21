@@ -7,7 +7,7 @@ class ASyncFile {
 public:
 	ASyncFile();
 	ASyncFile(const WCHAR*source_name, const WCHAR*filename);
-	void Exec(std::vector<Candidate>&dst);
+	void Exec(Candidates::ContainerType&dst);
 
 
 private:

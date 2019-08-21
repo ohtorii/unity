@@ -56,180 +56,237 @@ Candidates::Candidates() {
 }
 
 INT_PTR Candidates::AppendCandidateHeader(const WCHAR*source_name, const WCHAR*header, const WCHAR*description){
-	m_candidates.emplace_back(source_name, header, description);
-	auto &dst=m_candidates.back();
-	dst.m_header=true;
-	dst.m_selectable=false;
-	return m_candidates.size() - 1;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		m_candidates.emplace_back(source_name, header, description);
+		auto &dst = m_candidates.back();
+		dst.m_header = true;
+		dst.m_selectable = false;
+		return m_candidates.size() - 1;
+	}	
 }
 
 INT_PTR Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description)
 {
-	m_candidates.emplace_back(source_name, candidate, description);
-	return m_candidates.size() - 1;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		m_candidates.emplace_back(source_name, candidate, description);
+		return m_candidates.size() - 1;
+	}
 }
 
 INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*candidate, const WCHAR*description) {
-	try{
-		auto &child = m_candidates.at(candidate_index).m_child;
-		child.emplace_back(candidate, description);
-		return child.size() - 1;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			auto &child = m_candidates.at(candidate_index).m_child;
+			child.emplace_back(candidate, description);
+			return child.size() - 1;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return UNITY_NOT_FOUND_INDEX;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return UNITY_NOT_FOUND_INDEX;
 }
 
 bool Candidates::SetActionDirectoryName(INT_PTR index, const WCHAR* directory_name) {
-	try {
-		m_candidates.at(index).m_action.m_directory_name.assign(directory_name);
-		return true;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_directory_name.assign(directory_name);
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return false;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return false;
 }
 
 bool Candidates::SetActionFileName(INT_PTR index, const WCHAR* filename) {
-	try {
-		m_candidates.at(index).m_action.m_file_name.assign(filename);
-		return true;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_file_name.assign(filename);
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return false;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return false;
 }
 
 bool Candidates::SetActionColumn(INT_PTR index, INT_PTR column) {
-	try {
-		m_candidates.at(index).m_action.m_column = column;
-		return true;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_column = column;
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return false;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return false;
 }
 
 bool Candidates::SetActionLine(INT_PTR index, INT_PTR line) {
-	try {
-		m_candidates.at(index).m_action.m_line = line;
-		return true;
-	}
-	catch (std::exception) {
-		//pass
-	}
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_line = line;
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
 	return false;
+	}
 }
 
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
-	try {
-		return m_candidates.at(index).SetUserData(key, data);
-	}catch (std::exception) {
-		//pass
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).SetUserData(key, data);
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return false;
 	}
-	return false;
 }
 
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, INT_PTR data) {
-	try {
-		return m_candidates.at(index).SetUserData(key, data);
-	}catch (std::exception) {
-		//pass
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).SetUserData(key, data);
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return false;
 	}
-	return false;
 }
 
 const WCHAR*	Candidates::GetUserData(INT_PTR index, const WCHAR* key, const WCHAR*	default_data) {
-	try {
-		return m_candidates.at(index).GetUserData(key, default_data);
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).GetUserData(key, default_data);
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return default_data;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return default_data;
 }
 
 INT_PTR			Candidates::GetUserData(INT_PTR index, const WCHAR* key, INT_PTR		default_data) {
-	try {
-		return m_candidates.at(index).GetUserData(key, default_data);
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).GetUserData(key, default_data);
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return default_data;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return default_data;
 }
 
 const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
-	try {
-		return m_candidates.at(index).m_source_name.c_str();
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_source_name.c_str();
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return nullptr;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return nullptr;
 }
 
 const WCHAR* Candidates::GetText(INT_PTR index)const {
-	try{
-		return m_candidates.at(index).m_text.c_str();
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_text.c_str();
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return nullptr;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return nullptr;
 }
 
 const WCHAR* Candidates::GetActionDirectoryName(INT_PTR index)const {
-	try {
-		return m_candidates.at(index).m_action.m_directory_name.c_str();
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_directory_name.c_str();
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return nullptr;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return nullptr;
 }
 
 const WCHAR* Candidates::GetActionFileName(INT_PTR index)const {
-	try {
-		return m_candidates.at(index).m_action.m_file_name.c_str();
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_file_name.c_str();
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return nullptr;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return nullptr;
 }
 
 INT_PTR		Candidates::GetActionColumn(INT_PTR index)const {
-	try {
-		return m_candidates.at(index).m_action.m_column;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_column;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return UNITY_NOT_FOUND_INDEX;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return UNITY_NOT_FOUND_INDEX;
 }
+
 INT_PTR		Candidates::GetActionLine(INT_PTR index)const {
-	try {
-		return m_candidates.at(index).m_action.m_line;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_line;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return UNITY_NOT_FOUND_INDEX;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return UNITY_NOT_FOUND_INDEX;
 }
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {
-	try{
-		return m_candidates.at(index).m_description.c_str();
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_description.c_str();
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return nullptr;
 	}
-	catch (std::exception) {
-		//pass
-	}
-	return nullptr;
 }
 
 /*

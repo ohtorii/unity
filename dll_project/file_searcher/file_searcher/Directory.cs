@@ -17,7 +17,7 @@ namespace file_searcher
 			_show_hidden_file = args._show_hidden_files;
 		}
 
-		static bool Ignore(string folder)
+		static bool IgnoreFolder(string folder)
 		{
 			foreach (var pattern in _ignore)
 			{
@@ -31,10 +31,15 @@ namespace file_searcher
 
 		static bool UseThisFolder(string folder)
 		{
-			if (Ignore(folder))
+			if (IgnoreFolder(folder))
 			{
 				return false;
 			}
+			if (_show_hidden_file)
+			{
+				return true;
+			}
+
 			var file_attributes = new System.IO.FileInfo(folder).Attributes;
 			if ((file_attributes & System.IO.FileAttributes.Hidden) == System.IO.FileAttributes.Hidden)
 			{

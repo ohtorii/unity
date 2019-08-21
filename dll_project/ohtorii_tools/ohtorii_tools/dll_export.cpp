@@ -147,6 +147,14 @@ extern "C" WCHAR* GetUserDataString(WCHAR* key, const WCHAR*	default_data) {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryUserData().GetUserData(key, default_data));
 }
 
+extern "C" INT_PTR HasChanged() {
+	return Unity::Instance().lock()->HasChanged();
+}
+
+extern "C" INT_PTR  ClearChangedAndReturnPrevStatus() {
+	return Unity::Instance().lock()->ClearChangedAndReturnPrevStatus();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //絞り込み検索
 /////////////////////////////////////////////////////////////////////////////

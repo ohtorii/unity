@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using CommandLine;
 
 
@@ -44,6 +45,10 @@ namespace file_searcher
 			foreach (string subFolder in subFolders)
 			{
 				writer.WriteLine(FormatString(subFolder));
+				if (_arguments._delay != 0)
+				{
+					Thread.Sleep(_arguments._delay);
+				}
 			}
 
 			writer.Close();

@@ -2,6 +2,8 @@
 #include<string>
 #include<vector>
 #include<unordered_map>
+#include"parallel.h"
+
 
 ///候補
 struct Candidate {
@@ -94,6 +96,8 @@ struct Candidate {
 
 class Candidates {
 public:
+	typedef ParallelVector<Candidate>	ContainerType;
+
 	Candidates();
 	
 	/**ヘッダーを追加する
@@ -150,8 +154,8 @@ public:
 	INT_PTR			GetUserData(INT_PTR index, const WCHAR* key, INT_PTR		default_data = 0);
 
 	//const std::vector<SourceCandidate>&	GetSources()const { return m_sources; }
-	const std::vector<Candidate>&	GetCandidates()const	{ return m_candidates; }
-	std::vector<Candidate>&			GetCandidates()			{ return m_candidates; }
+	const ContainerType&	GetCandidates()const	{ return m_candidates; }
+	ContainerType&			GetCandidates()			{ return m_candidates; }
 
 	const WCHAR* GetSourceName(INT_PTR index)const;
 	const WCHAR* GetText(INT_PTR index)const;
@@ -173,6 +177,6 @@ private:
 	//std::vector<SourceCandidate>	m_sources;
 
 	//memo: 並び順が重要なのでvector<>を利用
-	std::vector<Candidate>	m_candidates;
+	mutable ContainerType	m_candidates;
 
 };

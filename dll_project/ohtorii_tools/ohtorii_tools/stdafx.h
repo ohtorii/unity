@@ -35,6 +35,7 @@
 #include<stdio.h>
 #include<tchar.h>
 
+#include"parallel.h"
 #include"define.h"
 #include"unity.h"
 #include"sources.h"

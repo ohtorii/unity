@@ -7,6 +7,7 @@
 static WCHAR	gs_empty[] = { 0 };
 
 std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{nullptr, };
+bool					Unity::m_changed = false;
 size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
@@ -201,6 +202,16 @@ Status& Unity::QueryStatus() {
 
 ASyncFiles&		Unity::QueryASyncFiles() {
 	return m_async_files;
+}
+
+bool Unity::HasChanged() {
+	return m_changed;
+}
+
+bool Unity::ClearChangedAndReturnPrevStatus() {
+	auto prev = m_changed;
+	m_changed = false;
+	return prev;
 }
 
 Unity::Unity() : m_refine_search(this), m_inheritance(this), m_async_files(this){

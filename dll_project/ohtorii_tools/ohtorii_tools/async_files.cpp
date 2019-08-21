@@ -24,7 +24,7 @@ bool ASyncFile::OpenFile() {
 	return false;
 }
 
-void ASyncFile::Exec(std::vector<Candidate>&dst) {
+void ASyncFile::Exec(Candidates::ContainerType&dst) {
 	TCHAR	line[4096];
 
 	switch (m_mode) {

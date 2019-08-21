@@ -19,7 +19,7 @@ namespace file_searcher
 		[Option('m', "mode", Required = true, HelpText = "Path mode")]
 		public PathMode _path_mode { get; set; }
 
-		[Option('w', "workind_directory", Required = false, HelpText = "Working directory", Default = ".")]
+		[Option('w', "working_directory", Required = false, HelpText = "Working directory", Default = ".")]
 		public string _working_directory { get; set; }
 
 		[Option('p', "path", Required = false, HelpText = "Search path", Default = ".")]
@@ -30,6 +30,9 @@ namespace file_searcher
 
 		[Option('h', "show_hidden_files", Required = false, HelpText = "Show hidden files", Default = false)]
 		public bool _show_hidden_files { get; set; }
+
+		[Option('d', "delay", Required = false, HelpText = "Deley time (msec)", Default = 0)]
+		public int _delay { get; set; }
 
 	}
 
