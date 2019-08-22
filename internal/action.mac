@@ -13,6 +13,7 @@
 $g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
 #g_dll_ohtorii_tools	=val(getarg(0));
+#g_dll_hm_process		=val(getarg(1));
 
 
 //==========================================================================

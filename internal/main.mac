@@ -25,7 +25,8 @@ https://www.youtube.com/watch?v=Co4Np4SXOOc
 #g_hmjre_dll 	= 0;
 #g_dengaku_dll 	= 0;
 #g_dll_ohtorii_tools=0;
-
+#g_dll_hm_process=0;
+#g_dll_output_panel=0;
 
 
 /*****************************************************************************
@@ -133,7 +134,7 @@ Start:
 		while(##i<##num_source){
 			$$source_filename=$g_root_macro_directory+"\\sources\\"+$$sources[##i]+".mac";
 			debuginfo"$$sources[##i]="+$$sources[##i];
-			execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, "";
+			execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process), $$source_filename, "";
 			if(getresultex(-1)=="0"){
 				return 0;
 			}
@@ -169,7 +170,7 @@ RefineSearch:
 	//ソースから候補を生成する
 	//
 	if($$source_filename!=""){
-		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), $$source_filename, $$args;
+		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process), $$source_filename, $$args;
 	}
 
 	//絞り込み検索を行う
@@ -209,8 +210,12 @@ RefineSearchMain:
 	call Filter $$key_buffer;
 
 	$$prev_pattern="999";
-	##interval_msec=20;
-	##prev_tickcount=0;
+	##candidates_update_interval=20;
+	##candidates_update_prev_tickcount=0;
+
+	##hm_process_update_interval=100;
+	##hm_process_update_prev_tickcount=0;
+
 	while(true){
 		execmacro $g_command_line_path+"\\input-keys.mac", $$key_buffer, $$cursor_pos;
 		$$keybord_buffer=getresultex(-1);
@@ -242,10 +247,14 @@ RefineSearchMain:
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
 		}else{
-			if(($$prev_pattern != $$key_buffer) && (##interval_msec<(tickcount-##prev_tickcount))){
+			if(($$prev_pattern != $$key_buffer) && (##candidates_update_interval<(tickcount-##candidates_update_prev_tickcount))){
+				##candidates_update_prev_tickcount=tickcount;
 				call Filter $$key_buffer;
 				$$prev_pattern=$$key_buffer;
-				##prev_tickcount=tickcount;
+			}
+			if(##hm_process_update_interval < (tickcount-##hm_process_update_prev_tickcount)){
+				##hm_process_update_prev_tickcount=tickcount;
+				call UpdateHmPocess;
 			}
 		}
 	}
@@ -258,7 +267,7 @@ Enter:
 			#g_result_faile
 			#g_result_continue
 	*/
-	execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools);
+	execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process);
 	if(getresultex(-1) != "1"){
 		return #g_result_faile;		//失敗
 	}
@@ -442,6 +451,29 @@ SearchWordsToHidemaruRegex:
 	$$regex = dllfuncstr(#g_hmjre_dll,"ReplaceRegular", "[" + $g_space + "]+", $$escaped, 0, "|", 2);
 	return $$regex;
 
+UpdateHmPocess:
+	$$text=dllfuncstrw(#g_dll_hm_process,"ReadStandardOutputAll");
+	if($$text!=""){
+		call AppendTextToOutputPanel $$text;
+	}
+	$$text=dllfuncstrw(#g_dll_hm_process,"ReadStandardErrorAll");
+	if($$text!=""){
+		call AppendTextToOutputPanel $$text;
+	}
+	return ;
+
+
+AppendTextToOutputPanel:
+	if(#g_dll_output_panel==0){
+		#g_dll_output_panel=loaddll("HmOutputPane.dll");
+		if(#g_dll_output_panel==0){
+			return false;
+		}
+	}
+	##ret=dllfunc(#g_dll_output_panel,"Output",hidemaruhandle(0),$$1);
+	return ##ret;
+
+
 TrimString:
 	if($$2==""){
 		$$space=$g_space;
@@ -573,7 +605,12 @@ LoadDll:
 	execmacro currentmacrodirectory+"\\load_ohtorii_tools_dll.mac";
 	#g_dll_ohtorii_tools=val(getresultex(-1));
 	if (#g_dll_ohtorii_tools==0) {
-		message "dll\\ohtorii_tools.dllのロードに失敗しました";
+		return false;
+	}
+
+	execmacro currentmacrodirectory+"\\load_hm_process_dll.mac";
+	#g_dll_hm_process=val(getresultex(-1));
+	if (#g_dll_hm_process==0) {
 		return false;
 	}
 
@@ -595,6 +632,11 @@ FreeDll:
 		freedll #g_dll_ohtorii_tools;
 		#g_dll_ohtorii_tools=0;
 	}
+	if(#g_dll_hm_process!=0){
+		##ret = dllfuncw(#g_dll_hm_process,"Finish");
+		freedll #g_dll_hm_process;
+		#g_dll_hm_process=0;
+	}
 
 	if(#g_hmjre_dll!=0){
 		freedll #g_hmjre_dll;
@@ -604,6 +646,10 @@ FreeDll:
 	if(#g_dengaku_dll!=0){
 		freedll #g_dengaku_dll;
 		#g_dengaku_dll=0;
+	}
+	if(#g_dll_output_panel!=0){
+		freedll #g_dll_output_panel;
+		#g_dll_output_panel=0;
 	}
 	return true;
 

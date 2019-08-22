@@ -21,6 +21,7 @@ private:
 	std::wstring			m_filename;
 	FILE*					m_file;
 	int						m_mode;
+	std::chrono::system_clock::time_point	m_file_read_start_clock;
 };
 
 class ASyncFiles {

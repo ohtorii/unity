@@ -18,7 +18,8 @@ bool ASyncFile::OpenFile() {
 		//ファイルはすでに開かれている
 		return true;
 	}
-	if (_wfopen_s(&m_file, m_filename.c_str(), _T("rS, ccs=UTF-8")) == 0) {
+	m_file = _wfsopen(m_filename.c_str(), _T("rS, ccs=UTF-8"), _SH_DENYNO);
+	if ( m_file != nullptr) {
 		return true;
 	}
 	return false;
@@ -32,12 +33,28 @@ void ASyncFile::Exec(Candidates::ContainerType&dst) {
 		if (! OpenFile()) {
 			return;
 		}
+		m_file_read_start_clock = std::chrono::system_clock::now();
 		++m_mode;
 	case 1:
 		if (fgetws(line, _countof(line), m_file) != nullptr) {
 			dst.emplace_back(m_source_name.c_str(), line);
+			m_file_read_start_clock = std::chrono::system_clock::now();
 			return;
 		}
+
+		//
+		//読み込む行が見つからない場合
+		//
+		{
+			//ファイル内容を作成中の可能性があるため少し待つ。
+			auto duration = std::chrono::system_clock::now() - m_file_read_start_clock;
+			auto second = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+			if (second < 8) {
+				return;
+			}
+		}
+		
+		//しばらく待っても行を読み込めないためファイル生成が終了したとみなす。
 		++m_mode;
 	case 2:
 		fclose(m_file);

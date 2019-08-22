@@ -1,0 +1,15 @@
+﻿/*
+*/
+$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
+
+call LoadDll;
+endmacro str(##return);
+
+
+LoadDll:
+	##dll = loaddll($g_root_macro_directory + "\\resources\\hm_process.dll");
+	if (##dll==0) {
+		message "resources\\hm_process.dllのロードに失敗しました";
+		return 0;
+	}
+	return ##dll;

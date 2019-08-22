@@ -3,6 +3,7 @@
 $g_root_macro_directory 	=getstaticvariable("$unity.root_macro_directory", 1);
 $g_current_working_directory=getstaticvariable("$unity.current_working_directory", 1);
 
+#g_dll_hm_process=val(getarg(29));
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
 $arg1=getarg(1);
@@ -26,12 +27,17 @@ candidate_type=async_file
 
 gather_candidates:
 	$$root_dir=$$1;
-	$$temp_filename="c:\\temp\\filelist.txt";
 	if($$root_dir==""){
 		//カレントディレクトリを使用する
 		$$root_dir=".";
 	}
 
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", "dr", ".txt";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return "";
+	}
+	debuginfo "$$temp_filename="+$$temp_filename;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
 	if(! ##ret){
 		return "";
@@ -44,30 +50,36 @@ gather_candidates:
 	$$root_dir=$$return;
 
 	$$exe=$g_root_macro_directory+R"(\resources\file_searcher.exe)";
-	//$$batch = sprintf(R"(%s "%s" directory "%s" "%s" *)", $$exe, $$temp_filename, $g_current_working_directory, $$root_dir);
-	$$batch = sprintf(R"(%s --output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$exe,$$temp_filename,$g_current_working_directory,$$root_dir,0);
 
-	$$cmd = "cmd /C "+$$batch;
-
-	debuginfo	1;
+	/*debuginfo	1;
 	debuginfo "$$batch="+$$batch;
-	debuginfo "$$cmd="+$$cmd;
-
-	runex $$cmd
-			, 1 			//sync	  0:async 1:sync
-			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
-			, 7, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
-			, 1, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
-			, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
-			, 2 			//show	  0:auto 1:show 2:hide
-			, 1 			//nodraw  0:draw 1:no draw
-			, 0 			//unicode 0:ansi 2:unicode
-			;
-	if(! result){
-		debuginfo "runex false";
-		return "";
+	debuginfo "$$cmd="+$$cmd;*/
+	if(true){
+		$$args = sprintf(R"(--output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$temp_filename,$g_current_working_directory,$$root_dir,0);
+		##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirect",$$exe,$$args,true,true);
+		##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
+		##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
+		if(##ret==0){
+			return "";
+		}
+		//##ret=dllfuncw(#g_dll_hm_process,"WaitForExit",##handle);
+	}else{
+		$$batch = sprintf(R"(%s --output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$exe,$$temp_filename,$g_current_working_directory,$$root_dir,0);
+		$$cmd = "cmd /C "+$$batch;
+		runex $$cmd
+				, 1 			//sync	  0:async 1:sync
+				, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+				, 7, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+				, 1, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+				, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+				, 2 			//show	  0:auto 1:show 2:hide
+				, 1 			//nodraw  0:draw 1:no draw
+				, 0 			//unicode 0:ansi 2:unicode
+				;
+		if(! result){
+			return "";
+		}
 	}
-	debuginfo "runex true";
 	return $$temp_filename;
 
 

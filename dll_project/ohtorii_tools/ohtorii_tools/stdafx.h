@@ -33,6 +33,7 @@
 #include<unordered_set>
 #include<unordered_map>
 #include<stdio.h>
+#include<chrono>
 #include<tchar.h>
 
 #include"parallel.h"
