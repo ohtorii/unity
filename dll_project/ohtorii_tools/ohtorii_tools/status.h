@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 
-/*ó‘Ô
+/*çŠ¶æ…‹
 */
 class Status {
 public:		

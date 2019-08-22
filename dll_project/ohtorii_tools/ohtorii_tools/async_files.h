@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<stdio.h>
 
-///”ñ“¯Šúƒtƒ@ƒCƒ‹
+///éåŒæœŸãƒ•ã‚¡ã‚¤ãƒ«
 class ASyncFile {
 public:
 	ASyncFile();
@@ -15,9 +15,9 @@ private:
 
 
 
-	///ƒ\[ƒX–¼
+	///ã‚½ãƒ¼ã‚¹å
 	std::wstring			m_source_name;
-	///ƒtƒ@ƒCƒ‹–¼
+	///ãƒ•ã‚¡ã‚¤ãƒ«å
 	std::wstring			m_filename;
 	FILE*					m_file;
 	int						m_mode;
@@ -35,6 +35,6 @@ public:
 
 private:
 	Unity*					m_instance;
-	///”ñ“¯Šúƒtƒ@ƒCƒ‹
+	///éåŒæœŸãƒ•ã‚¡ã‚¤ãƒ«
 	std::vector<ASyncFile>	m_async_files;
 };

@@ -1,4 +1,4 @@
-#include"stdafx.h"
+ï»¿#include"stdafx.h"
 
 ASyncFile::ASyncFile() {
 	m_file = nullptr;
@@ -15,7 +15,7 @@ ASyncFile::ASyncFile(const WCHAR*source_name, const WCHAR*filename) :
 
 bool ASyncFile::OpenFile() {
 	if (m_file != nullptr) {
-		//ƒtƒ@ƒCƒ‹‚Í‚·‚Å‚ÉŠJ‚©‚ê‚Ä‚¢‚é
+		//ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã™ã§ã«é–‹ã‹ã‚Œã¦ã„ã‚‹
 		return true;
 	}
 	m_file = _wfsopen(m_filename.c_str(), _T("rS, ccs=UTF-8"), _SH_DENYNO);
@@ -43,10 +43,10 @@ void ASyncFile::Exec(Candidates::ContainerType&dst) {
 		}
 
 		//
-		//“Ç‚İ‚Şs‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡
+		//èª­ã¿è¾¼ã‚€è¡ŒãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆ
 		//
 		{
-			//ƒtƒ@ƒCƒ‹“à—e‚ğì¬’†‚Ì‰Â”\«‚ª‚ ‚é‚½‚ß­‚µ‘Ò‚ÂB
+			//ãƒ•ã‚¡ã‚¤ãƒ«å†…å®¹ã‚’ä½œæˆä¸­ã®å¯èƒ½æ€§ãŒã‚ã‚‹ãŸã‚å°‘ã—å¾…ã¤ã€‚
 			auto duration = std::chrono::system_clock::now() - m_file_read_start_clock;
 			auto second = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
 			if (second < 8) {
@@ -54,7 +54,7 @@ void ASyncFile::Exec(Candidates::ContainerType&dst) {
 			}
 		}
 		
-		//‚µ‚Î‚ç‚­‘Ò‚Á‚Ä‚às‚ğ“Ç‚İ‚ß‚È‚¢‚½‚ßƒtƒ@ƒCƒ‹¶¬‚ªI—¹‚µ‚½‚Æ‚İ‚È‚·B
+		//ã—ã°ã‚‰ãå¾…ã£ã¦ã‚‚è¡Œã‚’èª­ã¿è¾¼ã‚ãªã„ãŸã‚ãƒ•ã‚¡ã‚¤ãƒ«ç”ŸæˆãŒçµ‚äº†ã—ãŸã¨ã¿ãªã™ã€‚
 		++m_mode;
 	case 2:
 		fclose(m_file);

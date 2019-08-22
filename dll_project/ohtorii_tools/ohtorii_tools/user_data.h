@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<string>
 #include<vector>
 #include<unordered_map>
@@ -6,10 +6,10 @@
 
 class UserData {
 public:
-	/**Œó•â‚Ìƒ†[ƒU[ƒf[ƒ^‚ğİ’è‚·‚éi•¶š—ñ”Åj
-	“¯ˆêƒL[‚ª‚ ‚éê‡‚Íã‘‚«‚µ‚Ü‚·B
-	return bool	true	¬Œ÷
-				false	¸”s
+	/**å€™è£œã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ï¼ˆæ–‡å­—åˆ—ç‰ˆï¼‰
+	åŒä¸€ã‚­ãƒ¼ãŒã‚ã‚‹å ´åˆã¯ä¸Šæ›¸ãã—ã¾ã™ã€‚
+	return bool	true	æˆåŠŸ
+				false	å¤±æ•—
 	*/
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_string);
@@ -17,6 +17,6 @@ public:
 	bool			SetUserData(const WCHAR* key, const WCHAR*data);
 	const WCHAR*	GetUserData(const WCHAR* key, const WCHAR*	default_data = _T(""))const;
 private:
-	///ƒ†[ƒU[ƒf[ƒ^i•¶š—ñj
+	///ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ‡ãƒ¼ã‚¿ï¼ˆæ–‡å­—åˆ—ï¼‰
 	std::unordered_map<std::wstring, std::wstring>	m_string;
 };

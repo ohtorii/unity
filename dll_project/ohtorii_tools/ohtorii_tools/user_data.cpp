@@ -1,4 +1,4 @@
-#include"stdafx.h"
+﻿#include"stdafx.h"
 
 bool			UserData::SetUserData(const WCHAR* key, const WCHAR*data) {
 	return m_string.emplace(key, data).second;
