@@ -49,8 +49,8 @@ EXPORTS
 	DeSerializeToStatusContext
 	SetUserDataString
 	GetUserDataString
-	HasChanged
-	ClearChangedAndReturnPrevStatus
+	HasChangedCandidates
+	ClearChangedCandidatesAndReturnPrevStatus
 
     SourcesCreate
     SourcesGetDefaultKind

@@ -37,7 +37,6 @@ gather_candidates:
 	if($$temp_filename==""){
 		return "";
 	}
-	debuginfo "$$temp_filename="+$$temp_filename;
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
 	if(! ##ret){
 		return "";
@@ -50,35 +49,12 @@ gather_candidates:
 	$$root_dir=$$return;
 
 	$$exe=$g_root_macro_directory+R"(\resources\file_searcher.exe)";
-
-	/*debuginfo	1;
-	debuginfo "$$batch="+$$batch;
-	debuginfo "$$cmd="+$$cmd;*/
-	if(true){
-		$$args = sprintf(R"(--output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$temp_filename,$g_current_working_directory,$$root_dir,0);
-		##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirect",$$exe,$$args,true,true);
-		##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
-		##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
-		if(##ret==0){
-			return "";
-		}
-		//##ret=dllfuncw(#g_dll_hm_process,"WaitForExit",##handle);
-	}else{
-		$$batch = sprintf(R"(%s --output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$exe,$$temp_filename,$g_current_working_directory,$$root_dir,0);
-		$$cmd = "cmd /C "+$$batch;
-		runex $$cmd
-				, 1 			//sync	  0:async 1:sync
-				, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
-				, 7, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
-				, 1, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
-				, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
-				, 2 			//show	  0:auto 1:show 2:hide
-				, 1 			//nodraw  0:draw 1:no draw
-				, 0 			//unicode 0:ansi 2:unicode
-				;
-		if(! result){
-			return "";
-		}
+	$$args = sprintf(R"(--output "%s" --mode directory --working_directory "%s" --path "%s" --delay %d)",$$temp_filename,$g_current_working_directory,$$root_dir,0);
+	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirect",$$exe,$$args,true,true);
+	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
+	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
+	if(##ret==0){
+		return "";
 	}
 	return $$temp_filename;
 

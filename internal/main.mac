@@ -247,11 +247,15 @@ RefineSearchMain:
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
 		}else{
-			if(($$prev_pattern != $$key_buffer) && (##candidates_update_interval<(tickcount-##candidates_update_prev_tickcount))){
+			//候補の更新
+			##canged_candidates=dllfuncw(#g_dll_ohtorii_tools,"ClearChangedCandidatesAndReturnPrevStatus");
+			//debuginfo "##canged_candidates="+str(##canged_candidates);
+			if((##canged_candidates) || (($$prev_pattern != $$key_buffer) && (##candidates_update_interval<(tickcount-##candidates_update_prev_tickcount)))){
 				##candidates_update_prev_tickcount=tickcount;
 				call Filter $$key_buffer;
 				$$prev_pattern=$$key_buffer;
 			}
+			//プロセスの更新
 			if(##hm_process_update_interval < (tickcount-##hm_process_update_prev_tickcount)){
 				##hm_process_update_prev_tickcount=tickcount;
 				call UpdateHmPocess;

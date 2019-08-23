@@ -193,18 +193,21 @@ bool RefineSearch::Do(const WCHAR* search_words) {
 	try{
 		m_instance->QueryASyncFiles().Exec();
 
-		auto& candidates = m_instance->QueryCandidates().GetCandidates();
 		std::vector<std::wstring> tokens;
 		tokens.reserve(16);
 		Tokenize(tokens, const_cast<WCHAR*>(search_words), _T(" \t\n"));
 		
-		//memo: std::vector<>のメモリ予約		
+		Candidates::ContainerType& candidates = m_instance->QueryCandidates().GetCandidates();
+		//memo: std::vector<>のメモリ予約
 		m_hidemaru_view.Reserve(candidates.size());
 		
 		Filter filter(m_hidemaru_view);
-		filter.Generate(
-			tokens, 
-			candidates);
+		{
+			Candidates::ContainerType::scoped_lock locker(candidates);
+			filter.Generate(
+				tokens,
+				candidates);
+		}
 	}
 	catch (std::exception) {
 		return false;

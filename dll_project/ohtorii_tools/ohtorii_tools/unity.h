@@ -29,8 +29,13 @@ public:
 	static bool SerializeStatusContext(const WCHAR*output_filename);
 	static bool DeSerializeToStatusContext(const WCHAR*input_filename);
 	static void Destroy();
-	static bool HasChanged();
-	static bool ClearChangedAndReturnPrevStatus();
+	
+	///候補に変更あり
+	void ChangeCandidates();
+	///候補に変更があるかどうか
+	bool HasChangedCandidates();
+	///候補に変更なし、かつ、直前の状態を返す
+	bool ClearChangedCandidatesAndReturnPrevStatus();
 
 
 	/*ファイルリストのファイル名を設定する
@@ -70,7 +75,7 @@ private:
 
 	static	std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	m_instances;
 	static	size_t					m_current_instance_index;
-	static bool			m_changed;
+	bool			m_changed_candidates;
 
 	static Sources		m_sources;
 	File				m_file;

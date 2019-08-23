@@ -1,40 +1,58 @@
 ﻿#pragma once
 #include<string>
 #include<stdio.h>
+#include<thread>
+#include<list>
+
 
 ///非同期ファイル
 class ASyncFile {
 public:
-	ASyncFile();
-	ASyncFile(const WCHAR*source_name, const WCHAR*filename);
-	void Exec(Candidates::ContainerType&dst);
-
+	ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filename);
+	void RequestExit();
+	void operator()();
 
 private:
 	bool OpenFile();
+	void Exec();
 
-
-
+	enum Status{
+		FILE_OPEN,
+		GET_LINE,
+		FILE_CLOSE,
+		FINISH,
+	};
 	///ソース名
 	std::wstring			m_source_name;
 	///ファイル名
 	std::wstring			m_filename;
 	FILE*					m_file;
-	int						m_mode;
+	Status						m_status;
 	std::chrono::system_clock::time_point	m_file_read_start_clock;
+	//Candidates::ContainerType&	m_candidates;
+	Unity*					m_instance;
+	bool					m_request_exit;
 };
+
 
 class ASyncFiles {
 public:
 	ASyncFiles(Unity*instance);
-	INT_PTR AppendCandidate(const WCHAR* spuce_name, const WCHAR* filename);
+	INT_PTR AppendCandidate(const WCHAR* source_name, const WCHAR* filename);
 	void Exec();
-
-//	const std::vector<std::shared_ptr<ASyncFile>>&	GetASyncFiles()const { return m_async_files; }
-	//std::vector<std::shared_ptr<ASyncFile>>&		GetASyncFiles() { return m_async_files; }
+	void Destroy();
 
 private:
 	Unity*					m_instance;
+
+	struct Thread {
+		Thread(Unity*instance, const WCHAR*source_name, const WCHAR*filename) :
+		m_file(instance, source_name, filename)
+		{
+		};
+		ASyncFile		m_file;
+		std::thread		m_thread;
+	};
 	///非同期ファイル
-	std::vector<ASyncFile>	m_async_files;
+	std::list<Thread>	m_threads;
 };

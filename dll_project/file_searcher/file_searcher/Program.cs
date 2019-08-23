@@ -9,9 +9,6 @@ using CommandLine;
 
 namespace file_searcher
 {
-	
-	
-
 	class Application
 	{
 		public CommandLineCode Exec(string[] args)
@@ -47,6 +44,8 @@ namespace file_searcher
 				writer.WriteLine(FormatString(subFolder));
 				if (_arguments._delay != 0)
 				{
+					//(memo) デバッグ用途なのでディスクへ書き込まれるようにする。
+					writer.Flush();
 					Thread.Sleep(_arguments._delay);
 				}
 			}

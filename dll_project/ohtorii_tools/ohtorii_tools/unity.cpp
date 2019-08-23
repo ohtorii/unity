@@ -7,7 +7,6 @@
 static WCHAR	gs_empty[] = { 0 };
 
 std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{nullptr, };
-bool					Unity::m_changed = false;
 size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
@@ -162,7 +161,12 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 
 void Unity::Destroy() {
 	for (size_t i = 0; i<m_instances.size() ; ++i) {
-		m_instances.at(i).reset();
+		auto&item = m_instances.at(i);
+		if (item==nullptr) {
+			continue;
+		}
+		item->QueryASyncFiles().Destroy();
+		item.reset();
 	}
 	m_kinds.Clear();
 	m_current_instance_index = 0;
@@ -204,18 +208,24 @@ ASyncFiles&		Unity::QueryASyncFiles() {
 	return m_async_files;
 }
 
-bool Unity::HasChanged() {
-	return m_changed;
+void Unity::ChangeCandidates() {
+	m_changed_candidates = true;
 }
 
-bool Unity::ClearChangedAndReturnPrevStatus() {
-	auto prev = m_changed;
-	m_changed = false;
+bool Unity::HasChangedCandidates() {
+	return m_changed_candidates;
+}
+
+bool Unity::ClearChangedCandidatesAndReturnPrevStatus() {
+	auto prev = m_changed_candidates;
+	m_changed_candidates = false;
 	return prev;
 }
 
 Unity::Unity() : m_refine_search(this), m_inheritance(this), m_async_files(this){
+	m_changed_candidates = false;
 }
 
 Unity::~Unity(){
+
 }
