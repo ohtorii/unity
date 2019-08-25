@@ -38,16 +38,26 @@ namespace file_searcher
 
 			var writer = new System.IO.StreamWriter(_arguments._output_filename, false, Encoding.UTF8);
 			var subFolders = Directory.SafeEnumerateFilesInAllDirectories(_arguments._search_path, _arguments._search_pattern);
+			var counter = 0;
 			//サブフォルダを列挙する
 			foreach (string subFolder in subFolders)
 			{
-				writer.WriteLine(FormatString(subFolder));
+				string sub_dir = FormatString(subFolder);
+				string abs_dir = System.IO.Path.Combine(_arguments._working_directory,sub_dir);
+				writer.WriteLine(string.Format("{0}\t{1}\t{2}", sub_dir ,"@action_directory",abs_dir));
 				if (_arguments._delay != 0)
 				{
 					//(memo) デバッグ用途なのでディスクへ書き込まれるようにする。
 					writer.Flush();
 					Thread.Sleep(_arguments._delay);
 				}
+
+				if (counter == 10)
+				{
+					//はじめの10行はすぐにファイルへ書き出す
+					writer.Flush();
+				}
+				++counter;
 			}
 
 			writer.Close();

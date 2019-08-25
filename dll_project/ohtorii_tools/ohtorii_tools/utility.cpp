@@ -35,3 +35,26 @@ void DebugLog(const WCHAR *fmt, ...)
 
 	va_end(ap);
 }
+
+std::wstring TrimString(const std::wstring& src, const WCHAR*trimCharacterList)
+{
+	const std::wstring::size_type left = src.find_first_not_of(trimCharacterList);	
+	const std::wstring::size_type right = src.find_last_not_of(trimCharacterList);
+
+	if (left == std::wstring::npos) {
+		if (right == std::wstring::npos) {
+			return src;
+		}else {
+			//"012__"
+			return src.substr(0,right+1);
+		}
+	}else{
+		if (right == std::wstring::npos) {
+			//"__234"
+			return src.substr(left, src.size() - left);
+		}else {
+			//"__234__"
+			return src.substr(left, right - left + 1);
+		}
+	}
+}

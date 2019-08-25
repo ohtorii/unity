@@ -58,9 +58,6 @@ namespace file_searcher
 			string[] sub_dirs = null;
 			try
 			{
-				/*if(!UseThisFolder(path)) {
-					yield break;
-				}*/
 				sub_dirs = System.IO.Directory.GetDirectories(path, searchPattern, System.IO.SearchOption.TopDirectoryOnly);
 			}
 			catch (System.UnauthorizedAccessException)

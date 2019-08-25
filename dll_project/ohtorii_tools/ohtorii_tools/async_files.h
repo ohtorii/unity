@@ -15,6 +15,7 @@ public:
 private:
 	bool OpenFile();
 	void Exec();
+	void DoLine(WCHAR*line);
 
 	enum Status{
 		FILE_OPEN,
@@ -32,6 +33,7 @@ private:
 	//Candidates::ContainerType&	m_candidates;
 	Unity*					m_instance;
 	bool					m_request_exit;
+	bool					m_check_bom;
 };
 
 

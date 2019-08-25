@@ -5,11 +5,22 @@
 #define SLEEP_MILLISECOND	20
 
 
+static size_t SkipUTF16Bom(const WCHAR str) {
+	if (str == 0xFEFF) {
+		return sizeof(WCHAR);
+	}
+	if (str == 0xFFFE) {
+		return sizeof(WCHAR);
+	}
+	return 0;
+}
+
 
 ASyncFile::ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filename) :
 	m_instance(instance),
 	m_source_name(source_name),
-	m_filename(filename) 
+	m_filename(filename),
+	m_check_bom(true)
 {
 	m_request_exit = false;
 	m_file = nullptr;
@@ -53,12 +64,13 @@ void ASyncFile::Exec(){
 
 	case GET_LINE:
 		if (fgetws(line, _countof(line), m_file) != nullptr) {
-			{
-				Candidates::ContainerType&candidates = m_instance->QueryCandidates().GetCandidates();
-				Candidates::ContainerType::scoped_lock locker(candidates);
-				candidates.emplace_back(m_source_name.c_str(), line);
-				m_instance->ChangeCandidates();
+			size_t skip_byte = 0;
+			if (m_check_bom) {
+				skip_byte = SkipUTF16Bom(line[0]);
+				m_check_bom = false;
 			}
+			auto*top = reinterpret_cast<WCHAR*>(reinterpret_cast<char*>(&line[0]) + skip_byte);
+			DoLine(top);
 			m_file_read_start_clock = std::chrono::system_clock::now();
 			return;
 		}
@@ -90,6 +102,41 @@ void ASyncFile::Exec(){
 		break;
 	}
 }
+
+void ASyncFile::DoLine(WCHAR*line) {
+	std::vector<std::wstring> tokens;
+	Tokenize(tokens, line, _T("\t"));
+
+	const auto num = tokens.size();
+	if (num == 0) {
+		return;
+	}
+
+	std::wstring							candidate_text(TrimString(tokens.at(0), _T("\n\r")));
+	Candidates::ContainerType&				candidates = m_instance->QueryCandidates().GetCandidates();
+	Candidates::ContainerType::scoped_lock	locker(candidates);
+	{
+		candidates.emplace_back(m_source_name.c_str(), candidate_text.c_str());
+
+		if (3 <= num) {
+			const auto	&action_name = tokens.at(1);
+			const auto	&action_text = TrimString(tokens.at(2), _T("\n\r"));
+			auto		&action = candidates.back().m_action;
+
+			if (action_name == _T("@action_directory")) {
+				action.m_directory_name.append(action_text);
+			}
+			else if (action_name == _T("@action_filename")) {
+				action.m_file_name.append(action_text);
+			}
+			else {
+				//pass
+			}
+		}
+	}
+	m_instance->ChangeCandidates();
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 //	ASyncFiles
