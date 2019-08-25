@@ -8,10 +8,12 @@
 ## candidate_type
 
 候補を返す方法を指定する
-|値|説明|
-|:--:|:--:|
-|function|DLL側の関数を利用して候補を作成する|
-|list|候補を改行区切りのリストで返す|
+|値|説明|処理|
+|:--:|:--:|:--:|
+|function|DLL側の関数を利用して候補を作成する|同期処理|
+|string|候補を改行区切りのリストで返す|同期処理|
+|file|候補をファイルから作成する|同期処理|
+|async_file|候補をファイルから作成する|非同期処理|
 
 
 # kindについて
@@ -106,3 +108,35 @@ base_kind=最高優先度 次の優先度 ... 最低優先度
 ## 取得(kind側)
 $$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 
+
+# ファイルフォーマットについて
+
+candidate_typeが以下の時のファイルフォーマットについて。
+- file
+- async_file
+
+## 文字コード
+
+UTF16LE-BOM
+
+## ファイル内容の例１（最もシンプル）
+
+	候補テキスト１
+	候補テキスト２
+	候補テキスト３
+		...
+	候補テキストN
+
+
+## ファイル内容の例２
+
+	候補テキスト１	action名１	アクションに紐付いたテキスト１
+	候補テキスト２	action名２	アクションに紐付いたテキスト２
+	候補テキスト３	action名３	アクションに紐付いたテキスト３
+		...
+	候補テキストN	action名４	アクションに紐付いたテキストN
+
+## action名について
+
+@action_directory
+@action_filename
