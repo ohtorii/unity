@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace file_searcher
 {
-	public class Directory
+	public class DirectoryTraverser
 	{
+		/// <summary>
+		/// 除外ディレクトリ、すべて小文字で指定すること。
+		/// </summary>
 		static string[] _ignore = { "\\.git", "\\.svn", "\\.vs", "\\.vscode", "\\__pycache__", "\\.hg", "\\.bzr", };
 		static bool _show_hidden_file = false;
 
@@ -17,11 +20,11 @@ namespace file_searcher
 			_show_hidden_file = args._show_hidden_files;
 		}
 
-		static bool IgnoreFolder(string folder)
+		public static bool IgnoreFolder(string folder)
 		{
 			foreach (var pattern in _ignore)
 			{
-				if (folder.EndsWith(pattern, StringComparison.InvariantCultureIgnoreCase))
+				if (folder.ToLower().EndsWith(pattern, StringComparison.InvariantCultureIgnoreCase))
 				{
 					return true;
 				}
@@ -29,7 +32,7 @@ namespace file_searcher
 			return false;
 		}
 
-		static bool UseThisFolder(string folder)
+		public static bool UseThisFolder(string folder)
 		{
 			if (IgnoreFolder(folder))
 			{

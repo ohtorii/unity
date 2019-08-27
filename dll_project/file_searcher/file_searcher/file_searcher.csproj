@@ -46,7 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="defines.cs" />
-    <Compile Include="Directory.cs" />
+    <Compile Include="DirectoryTraverser.cs" />
+    <Compile Include="FileTraverser.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
