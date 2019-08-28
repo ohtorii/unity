@@ -1,0 +1,73 @@
+﻿/*カレントディレクトリ以下のファイル候補
+*/
+$g_root_macro_directory 	=getstaticvariable("$unity.root_macro_directory", 1);
+$g_current_working_directory=getstaticvariable("$unity.current_working_directory", 1);
+
+#g_dll_hm_process=val(getarg(29));
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg1=getarg(1);
+$arg2=getarg(2);
+$arg3=getarg(3);
+$arg4=getarg(4);
+$arg5=getarg(5);
+
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
+endmacro $$return;
+
+get_property:
+	//ソースのプロパティをini形式で返す
+	return R"([property]
+name=file_recursive
+description=candidates from file by recursive
+default_kind=file
+candidate_type=async_file
+)";
+
+
+gather_candidates:
+	$$root_dir=$$1;
+	if($$root_dir==""){
+		//カレントディレクトリを使用する
+		$$root_dir=".";
+	}
+
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", "dr", ".txt";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return "";
+	}
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
+	if(! ##ret){
+		return "";
+	}
+
+	/* memo
+	\で終端しているディレクトリ名をダブルクォーテーションで囲ってコマンドライン引数で渡すときの対策。
+	*/
+	call remove_terminate $$root_dir;
+	$$root_dir=$$return;
+
+	$$exe=$g_root_macro_directory+R"(\resources\file_searcher.exe)";
+	$$args = sprintf(R"(--output "%s" --mode file --working_directory "%s" --path "%s" --delay %d)",$$temp_filename,$g_current_working_directory,$$root_dir,0);
+	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirect",$$exe,$$args,true,true);
+	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
+	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
+	if(##ret==0){
+		return "";
+	}
+	return $$temp_filename;
+
+
+remove_terminate:
+	/*ディレクトリ名終端の \/ を取り除く
+
+	（変換の例）
+	"c:temp\"	-> "c:\temp"
+	"c:temp/"	-> "c:\temp"
+	*/
+	$$last=rightstr($$1,1);
+	if(($$last=="\\") || ($$last=="/")){
+		return leftstr($$1,strlen($$1)-1);
+	}
+	return $$1;

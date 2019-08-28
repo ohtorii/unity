@@ -87,7 +87,7 @@ CreateDialog:
 
 MessageLoop:
 	while(1){
-		$$notify = dllfuncstr(#g_dengaku_dll,"WAITCTRLNOTIFY",10);
+		$$notify = dllfuncstr(#g_dengaku_dll,"WAITCTRLNOTIFY",0);
 		if($$notify == "0"){
 			//キャンセル
 			return "";
@@ -130,6 +130,8 @@ LoadSources:
 	//仮実装
 	//$g_sources_dirを利用する
 	##i=0;
+	$g_source_names[##i]="file_recursive";
+	##i = ##i + 1;
 	$g_source_names[##i]="directory_recursive";
 	##i = ##i + 1;
 	$g_source_names[##i]="grep_result";
