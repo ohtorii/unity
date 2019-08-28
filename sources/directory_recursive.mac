@@ -1,4 +1,4 @@
-﻿/*カレントディレクトリ以下のファイルを開く
+﻿/*カレントディレクトリ以下のディレクトリ候補
 */
 $g_root_macro_directory 	=getstaticvariable("$unity.root_macro_directory", 1);
 $g_current_working_directory=getstaticvariable("$unity.current_working_directory", 1);
