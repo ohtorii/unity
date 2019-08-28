@@ -159,7 +159,7 @@ file:
 narrow:
 	##first_item_index	= 0;
 	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##first_item_index);
-	$$source="file";
+	$$source="directory";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$folder);
 	if(##ret){
 		return "1";
