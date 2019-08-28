@@ -8,10 +8,6 @@ namespace file_searcher
 {
 	public class DirectoryTraverser
 	{
-		/// <summary>
-		/// 除外ディレクトリ、すべて小文字で指定すること。
-		/// </summary>
-		static string[] _ignore = { "\\.git", "\\.svn", "\\.vs", "\\.vscode", "\\__pycache__", "\\.hg", "\\.bzr", };
 		static bool _show_hidden_file = false;
 
 
@@ -22,7 +18,7 @@ namespace file_searcher
 
 		public static bool IgnoreFolder(string folder)
 		{
-			foreach (var pattern in _ignore)
+			foreach (var pattern in Ignore._directorys)
 			{
 				if (folder.ToLower().EndsWith(pattern, StringComparison.InvariantCultureIgnoreCase))
 				{

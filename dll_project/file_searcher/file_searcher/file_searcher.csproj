@@ -45,9 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="defines.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="Defines.cs" />
     <Compile Include="DirectoryTraverser.cs" />
+    <Compile Include="DllImport.cs" />
     <Compile Include="FileTraverser.cs" />
+    <Compile Include="Ignore.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,4 +60,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\resources\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

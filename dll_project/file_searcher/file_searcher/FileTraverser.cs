@@ -4,84 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 
 
 namespace file_searcher
 {
-	public class FileUtil
-	{
-		public static IEnumerable<string> GetAllFiles(String DirPath)
-		{
-			string[] files = null;
-			try
-			{
-				// ファイル取得Directory.GetFiles(DirPath)
-				files = Directory.GetFiles(DirPath);
-			}catch (System.UnauthorizedAccessException){
-				// アクセスできなかったので無視				
-			}
-			if (files != null) { 
-				foreach (var filename in files)
-				{
-					yield return filename;
-				}
-				files = null;
-			}
-
-			string[] directorys = null;
-			try {
-				// ディレクトリの取得
-				directorys = Directory.GetDirectories(DirPath);
-			}
-			catch (System.UnauthorizedAccessException)
-			{
-				// アクセスできなかったので無視
-			}
-
-			if (directorys != null)
-			{
-				foreach (var dir in directorys)
-				{
-					foreach (var filename in GetAllFiles(dir))
-					{
-						yield return filename;
-					}
-				}
-			}
-		}
-	}
-
-
 	class FileTraverser
 	{
-		/// <summary>
-		/// 除外ファイル、すべて小文字で指定すること。
-		/// </summary>
-		static string[] _ignore = {
-			".pyc",
-			".ipch",
-			".db",
-			".opendb",
-			".obj",
-			".tlog",
-			".pch",
-			".pdb",
-			".exp",
-			".iobj",
-			".ipdb",
-			".lib",
-			".log",
-			".db-shm",
-			".db-wal",
-			".lastcodeanalysissucceeded",
-			".ilk",
-			".codeanalysis",
-			".codeanalysisast",
-			"tags",
-			"ctags",
-		};
-
 		static bool _show_hidden_file = false;
 
 		public class Result
@@ -95,14 +23,7 @@ namespace file_searcher
 			public string abs_filename_;
 		}
 
-		[DllImport("shlwapi.dll",CharSet = CharSet.Auto)]
-		private static extern bool PathRelativePathTo(
-			 [Out] StringBuilder pszPath,
-			 [In] string pszFrom,
-			 [In] System.IO.FileAttributes dwAttrFrom,
-			 [In] string pszTo,
-			 [In] System.IO.FileAttributes dwAttrTo
-		);
+		
 
 		/// <summary>
 		/// 絶対パスから相対パスを取得します。
@@ -113,7 +34,7 @@ namespace file_searcher
 		public static string GetRelativePath(string basePath, string absolutePath)
 		{
 			var sb = new StringBuilder(260);
-			bool res = PathRelativePathTo(sb,
+			bool res = DllImport.PathRelativePathTo(sb,
 				basePath, System.IO.FileAttributes.Directory,
 				absolutePath, System.IO.FileAttributes.Normal);
 			if (!res)
@@ -131,7 +52,7 @@ namespace file_searcher
 
 		public static bool IgnoreFile(string filename)
 		{
-			foreach (var pattern in _ignore)
+			foreach (var pattern in Ignore._files)
 			{
 				if (filename.ToLower().EndsWith(pattern, StringComparison.InvariantCultureIgnoreCase))
 				{
