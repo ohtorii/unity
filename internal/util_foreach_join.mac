@@ -57,14 +57,21 @@ ForeachSelection:
 	$$separator 	="1";
 	$$not_separator ="0";
 
+	$$args[0]=$$label;
+	$$args[30]=$$dll_handle;
+
 	##count	=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i		=0;
 	while(##i < ##count){
 		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
 		if(1<=##i){
-			execmacro $g_callback_filename, $$dll_handle, $$label, $$separator, $g_separator;
+			$$args[1]=$$separator;
+			$$args[2]=$g_separator;
+			execmacro $g_callback_filename, $$args, 31;
 		}
-		execmacro  $g_callback_filename, $$dll_handle, $$label, $$not_separator, $$text;
+		$$args[1]=$$not_separator;
+		$$args[2]=$$text;
+		execmacro  $g_callback_filename, $$args, 31;
 		##i = ##i + 1;
 	}
 	return ;

@@ -1,8 +1,5 @@
 ﻿/*カレントディレクトリ以下のディレクトリ候補
 */
-$g_root_macro_directory 	=getstaticvariable("$unity.root_macro_directory", 1);
-$g_current_working_directory=getstaticvariable("$unity.current_working_directory", 1);
-
 #g_dll_hm_process=val(getarg(29));
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
@@ -11,6 +8,10 @@ $arg2=getarg(2);
 $arg3=getarg(3);
 $arg4=getarg(4);
 $arg5=getarg(5);
+
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
+$g_current_working_directory=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetCurrentWorkingDirectory");
+
 
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;

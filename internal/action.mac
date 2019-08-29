@@ -9,11 +9,11 @@
 //==========================================================================
 //グローバル変数
 //==========================================================================
-#g_target_hidemaruhandle=val(getstaticvariable("$unity.target_hidemaruhandle",1));
-$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
-
 #g_dll_ohtorii_tools	=val(getarg(0));
 #g_dll_hm_process		=val(getarg(1));
+
+#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetTargetHidemaruHandle");
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
 
 
 //==========================================================================
@@ -64,7 +64,7 @@ pre_action:
 	//is_quit
 	execmacro currentmacrodirectory+"\\is_quit.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
 	$$is_quit = getresultex(-1);
-	setstaticvariable "$unity.is_quit", $$is_quit,1;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsQuit",val(getresultex(-1)));
 
 	//is_start
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusClearIsStart");

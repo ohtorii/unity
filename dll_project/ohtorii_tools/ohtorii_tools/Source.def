@@ -100,6 +100,17 @@ EXPORTS
 	StatusEnableIsStart
 	StatusGetIsStartSourceName
 	StatusGetIsStartArg
+	StatusSetIsQuit
+	StatusGetIsQuit
+	StatusSetHidemaruHandleToForceAtEndProcess
+	StatusGetHidemaruHandleToForceAtEndProcess
+	StatusSetTargetHidemaruHandle
+	StatusGetTargetHidemaruHandle
+	StatusSetCurrentWorkingDirectory
+	StatusGetCurrentWorkingDirectory
+	StatusSetRootMacroDirectory
+	StatusGetRootMacroDirectory
+
 
 	FileRegistAfterDeleteFile
 	WriteToFile

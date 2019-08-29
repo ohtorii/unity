@@ -1,6 +1,6 @@
 ﻿/*
 */
-$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
+$g_root_macro_directory =currentmacrodirectory+"\\..";
 
 call LoadDll;
 endmacro str(##return);

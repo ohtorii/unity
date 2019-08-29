@@ -1,11 +1,13 @@
 ﻿/*アクションの実行
 */
-#g_target_hidemaruhandle=val(getstaticvariable("$unity.target_hidemaruhandle",1));
-$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
 
 #g_dll_ohtorii_tools=val(getarg(30));
 $label				=getarg(0);
 $arg				=getarg(1);
+
+#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetTargetHidemaruHandle");
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
+
 call $label, $arg;
 endmacro $$return;
 
@@ -77,8 +79,7 @@ do:
 	execmacro $g_root_macro_directory+"\\internal\\is_quit.mac", str(#g_dll_ohtorii_tools),$$user_data_kind, $$action_name;
 	$$is_quit = getresultex(-1);
 	debuginfo "  IsQuit finish. $$is_quit="+$$is_quit;
-
-	setstaticvariable "$unity.is_quit", $$is_quit,1;
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsQuit",val($$is_quit));
 	debuginfo "  do -> true";
 	return $$action_result;
 

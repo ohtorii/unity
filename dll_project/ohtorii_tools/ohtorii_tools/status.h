@@ -5,8 +5,16 @@
 */
 class Status {
 public:		
+	Status();
+
 	template<class Archive> void serialize(Archive & archive) {
-		archive(m_is_start);
+		archive(m_is_start,
+				m_is_quit,
+				m_hidemaruhandle_to_focus_at_end_of_process,
+				m_target_hidemaruhandle,
+				m_current_working_directory,
+				m_root_macro_directory
+		);
 	};
 
 	struct IsStart {
@@ -29,11 +37,19 @@ public:
 		bool			m_is_start;
 		std::wstring	m_source_name;
 		std::wstring	m_arg;
+		
 	};
-
 	IsStart&GetIsStart();
 	const IsStart&GetIsStart() const;
 
+
+
+public:
+	bool			m_is_quit;
+	INT_PTR			m_hidemaruhandle_to_focus_at_end_of_process;
+	INT_PTR			m_target_hidemaruhandle;
+	std::wstring	m_current_working_directory;
+	std::wstring	m_root_macro_directory;
 private:
 	IsStart		m_is_start;
 	//bool	m_is_quit;

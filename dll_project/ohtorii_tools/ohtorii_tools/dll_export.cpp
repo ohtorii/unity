@@ -397,6 +397,52 @@ extern "C" WCHAR* StatusGetIsStartArg() {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().GetIsStart().m_arg.c_str());
 }
 
+extern"C" INT_PTR StatusSetIsQuit(INT_PTR is_quit) {
+	Unity::Instance().lock()->QueryStatus().m_is_quit = is_quit;
+	return true;
+}
+
+extern"C" INT_PTR StatusGetIsQuit() {
+	return Unity::Instance().lock()->QueryStatus().m_is_quit;
+}
+
+extern"C" INT_PTR StatusSetHidemaruHandleToForceAtEndProcess(INT_PTR hidemaru_handle) {
+	Unity::Instance().lock()->QueryStatus().m_hidemaruhandle_to_focus_at_end_of_process=hidemaru_handle;
+	return true;
+}
+
+extern"C" INT_PTR StatusGetHidemaruHandleToForceAtEndProcess() {
+	return Unity::Instance().lock()->QueryStatus().m_hidemaruhandle_to_focus_at_end_of_process;
+}
+
+extern"C" INT_PTR StatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
+	Unity::Instance().lock()->QueryStatus().m_target_hidemaruhandle=hidemaru_handle;
+	return true;
+}
+
+extern"C" INT_PTR StatusGetTargetHidemaruHandle() {
+	return Unity::Instance().lock()->QueryStatus().m_target_hidemaruhandle;
+}
+
+extern"C" INT_PTR StatusSetCurrentWorkingDirectory(WCHAR* current_working_directory) {
+	Unity::Instance().lock()->QueryStatus().m_current_working_directory.assign(current_working_directory);
+	return true;
+}
+
+extern"C" WCHAR* StatusGetCurrentWorkingDirectory() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().m_current_working_directory.c_str());
+}
+
+extern"C" INT_PTR StatusSetRootMacroDirectory(WCHAR* root_macro_directory) {
+	Unity::Instance().lock()->QueryStatus().m_root_macro_directory.assign(root_macro_directory);
+	return true;
+}
+
+extern"C" WCHAR* StatusGetRootMacroDirectory() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().m_root_macro_directory.c_str());
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 //file
 /////////////////////////////////////////////////////////////////////////////

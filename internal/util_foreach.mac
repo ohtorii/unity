@@ -16,14 +16,14 @@ endmacro $$return;
 
 
 Foreach:
-	$$label 		=$g_callback_labelname;
-	$$dll_handle	=str(#g_dll_ohtorii_tools);
+	$$args[0]=$g_callback_labelname;
+	$$args[30]=str(#g_dll_ohtorii_tools);
 
 	##count	=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i		=0;
 	while(##i < ##count){
-		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
-		execmacro  $g_callback_filename, $$dll_handle, $$label, $$text;
+		$$args[2]=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+		execmacro  $g_callback_filename, $$args, 31;
 		##i = ##i + 1;
 	}
 	return "1";

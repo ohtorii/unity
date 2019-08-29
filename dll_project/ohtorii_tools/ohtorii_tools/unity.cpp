@@ -23,7 +23,7 @@ Status					Unity::m_status;
 //	class Unity
 ///////////////////////////////////////////////////////////////////////////////
 std::weak_ptr<Unity> Unity::Instance(size_t index) {
-	if (index == UNITY_USE_URRENT_INSTANCE) {
+	if (index == UNITY_USE_CURRENT_INSTANCE) {
 		if (m_instances.at(m_current_instance_index) == nullptr) {
 			m_instances.at(m_current_instance_index) = std::make_shared<Unity>();
 		}

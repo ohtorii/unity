@@ -20,7 +20,7 @@ public:
 	Unity();
 	~Unity();
 
-	static std::weak_ptr<Unity> Instance(size_t index= UNITY_USE_URRENT_INSTANCE);
+	static std::weak_ptr<Unity> Instance(size_t index= UNITY_USE_CURRENT_INSTANCE);
 	static bool PushContext(bool exist_context_then_delete =true);
 	static bool PopContext(bool exist_context_then_delete = true);
 	static size_t GetCurrentInstanceIndex();

@@ -26,8 +26,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //	グローバル変数
 ////////////////////////////////////////////////////////////////////////////
-$g_root_macro_directory =getstaticvariable("$unity.root_macro_directory", 1);
-
 #g_dll_ohtorii_tools=0;
 #g_dll_dengaku		=0;
 #g_dll_output_panel	=0;
@@ -43,6 +41,12 @@ $arg2=getarg(2);
 $arg3=getarg(3);
 $arg4=getarg(4);
 $arg5=getarg(5);
+
+debuginfo "kinds/commonm.mac";
+debuginfo "  #g_dll_ohtorii_tools="+getarg(30);
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
+debuginfo "  -> OK";
+
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6;
 endmacro $$return;
 
@@ -143,7 +147,7 @@ echo:
 		$$description	=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionDescription",##i);
 
 
-		$$info=sprintf(R"([%d/%d] {"text": "%s", "source_name": "%s", "action_directory_name": "%s", "action_file_name": "%s", "action_line": %d, "action_column": %d, "description": "%s"})", ##i+1,##count, $$text, $$source_name,  $$action_directory_name,$$action_file_name,##line, ##column, $$description);
+		$$info=sprintf(R"([%d/%d] {"text": "%s", "source_name": "%s", "action_directory_name": "%s", "action_file_name": "%s", "action_line": %d, "action_column": %d, "description": "%s"}\r\n)", ##i+1,##count, $$text, $$source_name,  $$action_directory_name,$$action_file_name,##line, ##column, $$description);
 		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$info);
 		//##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) <%s> <%s> %s %s\n",##i+1,##count,$$source_name,$$action_directory_name,$$action_file_name,$$text,$$description));
 		##i = ##i + 1;

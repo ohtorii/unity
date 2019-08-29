@@ -2,6 +2,13 @@
 
 
 
+Status::Status() {
+	m_is_quit=false;
+	m_hidemaruhandle_to_focus_at_end_of_process= UNITY_HIDEMARU_NULL_HANDLE;
+	m_target_hidemaruhandle= UNITY_HIDEMARU_NULL_HANDLE;
+
+}
+
 bool Status::IsStart::Set(const WCHAR*source_name, const WCHAR*arg) {
 	try {
 		m_source_name.assign(source_name);

@@ -74,6 +74,8 @@ main:
 	call Start $$1;
 	##ret = ##return;
 
+	##forcus_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetHidemaruHandleToForceAtEndProcess");
+
 	//カーソル位置を元に戻す
 	moveto2 ##old_column,##old_lineno;
 
@@ -82,8 +84,7 @@ main:
 	//
 	call FreeDll;
 	call CloseFileIfOpen;
-	$$forcus_hidemaru_handle=getstaticvariable("$unity.hidemaruhandle_to_focus_at_end_of_process",1);
-	##forcus_hidemaru_handle=val($$forcus_hidemaru_handle);
+
 	if(##forcus_hidemaru_handle!=0){
 		setactivehidemaru ##forcus_hidemaru_handle;
 	}
@@ -101,22 +102,23 @@ Start:
 		return false;
 	}
 
-	setstaticvariable "$unity.hidemaruhandle_to_focus_at_end_of_process",str(0), 1;
-	setstaticvariable "$unity.target_hidemaruhandle", str(#g_target_hidemaru), 1;
-	setstaticvariable "$unity.current_working_directory", directory2, 1;
 	debuginfo "directory2="+directory2;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
 
-	setstaticvariable "$unity.root_macro_directory", $g_root_macro_directory,1;
-	setstaticvariable "$unity.is_quit", "1",1;
-
 	call LoadDll;
 	if(! ##return){
 		return false;
 	}
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetHidemaruHandleToForceAtEndProcess",0);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetTargetHidemaruHandle",#g_target_hidemaru);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetCurrentWorkingDirectory",directory2);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetRootMacroDirectory",$g_root_macro_directory);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsQuit",true);
+
+
 	//##n=dllfuncw(#g_dll_ohtorii_tools,"Initialize");
 	call LoadKindAll;
 	if(! ##return){
@@ -142,11 +144,11 @@ Start:
 		}
 	}
 	call RefineSearch "", "";
-	call FreeDll;
+	/*call FreeDll;
 	call CloseFileIfOpen;
 	if(! ##return){
 		return false;
-	}
+	}*/
 
 	return true;
 
@@ -226,7 +228,9 @@ RefineSearchMain:
 		execmacro $g_command_line_path+"\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 		$$key_buffer=getresultex(-1);
 
-		##ctrl =iskeydown(0x11);
+		##page_up  	=iskeydown(0x21);
+		##page_down	=iskeydown(0x22);
+		##ctrl 		=iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
 			call Enter;
 			if(##return==#g_result_continue){continue;}
@@ -246,7 +250,9 @@ RefineSearchMain:
 			if(##return==#g_result_continue){continue;}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
-		}else{
+		}else if(##page_up){						call PageUp;}	//PageUp
+		else if(##page_down){					call PageDown;}	//PageDown
+		else{
 			//候補の更新
 			##canged_candidates=dllfuncw(#g_dll_ohtorii_tools,"ClearChangedCandidatesAndReturnPrevStatus");
 			//debuginfo "##canged_candidates="+str(##canged_candidates);
@@ -280,7 +286,7 @@ Enter:
 	//成功
 	//
 
-	##is_quit=val(getstaticvariable("$unity.is_quit",1));
+	##is_quit=dllfuncw(#g_dll_ohtorii_tools,"StatusGetIsQuit");
 	if(##is_quit){
 		return #g_result_quit;
 	}
@@ -322,7 +328,7 @@ NewCandidate:
 
 	call RefineSearch $$source_filename	,$$arg;
 	##search_result	=##return;
-	##is_quit		=val(getstaticvariable("$unity.is_quit",1));
+	##is_quit		=dllfuncw(#g_dll_ohtorii_tools,"StatusGetIsQuit");
 
 	call PopRefineSearch;
 	if(##return==false){
@@ -367,6 +373,13 @@ CursorDown:
 	call CursorMoveCommon 1;
 	return ##return;
 
+PageUp:
+	halfprevpage;
+	return;
+
+PageDown:
+	halfnextpage;
+	return;
 
 Mark:
 	//カーソル行に色を塗る
