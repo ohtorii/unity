@@ -81,7 +81,6 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 		
 		{
 			cereal::BinaryOutputArchive archive(os);
-			//archive(*(Instance().lock()));
 			archive(
 				Unity::m_instances,
 				Unity::m_current_instance_index,
@@ -90,6 +89,7 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 				Unity::m_status,
 				InterfaceSugar::m_instance);
 		}
+		os.close();
 		return true;
 	}catch (std::exception) {
 		//pass
@@ -113,6 +113,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 				Unity::m_status, 
 				InterfaceSugar::m_instance);
 		}
+		is.close();
 		return true;
 	}
 	catch (std::exception) {
@@ -130,9 +131,9 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 
 		 {
 			 cereal::BinaryOutputArchive archive(os);
-			 //archive(*(Instance().lock()));
 			 archive(Unity::m_status);
 		 }
+		 os.close();
 		 return true;
 	 }
 	 catch (std::exception) {
@@ -151,6 +152,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 			 cereal::BinaryInputArchive	archive(is);
 			 archive(Unity::m_status);
 		 }
+		 is.close();
 		 return true;
 	 }
 	 catch (std::exception) {
@@ -170,6 +172,8 @@ void Unity::Destroy() {
 	}
 	m_kinds.Clear();
 	m_current_instance_index = 0;
+
+	File::Destroy();
 }
 
 Sources& Unity::QuerySources(){

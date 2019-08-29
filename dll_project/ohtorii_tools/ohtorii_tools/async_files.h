@@ -8,6 +8,7 @@
 ///非同期ファイル
 class ASyncFile {
 public:
+	ASyncFile();
 	ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filename);
 	void RequestExit();
 	void operator()();
@@ -16,6 +17,8 @@ private:
 	bool OpenFile();
 	void Exec();
 	void DoLine(WCHAR*line);
+	void Destroy();
+
 
 	enum Status{
 		FILE_OPEN,

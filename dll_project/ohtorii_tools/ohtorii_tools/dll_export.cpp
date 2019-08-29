@@ -451,12 +451,11 @@ extern "C" INT_PTR WriteToFile(const WCHAR* filename, const WCHAR* string) {
 }
 
 extern "C" INT_PTR FileRegistAfterDeleteFile(const WCHAR* filename) {
-	Unity::Instance().lock()->QueryFile().RegistAfterDelete(filename);
-	return true;
+	return Unity::Instance().lock()->QueryFile().RegistAfterDelete(filename);
 }
 
 extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {	
-	/*Todo ここで一時ファイルを削除する*/
+	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n); 
 	Unity::Destroy();
 
 	/*_ASSERTE(_CrtCheckMemory());

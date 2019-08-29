@@ -16,6 +16,13 @@ static size_t SkipUTF16Bom(const WCHAR str) {
 }
 
 
+ASyncFile::ASyncFile() {
+	m_file=nullptr;
+	m_instance=nullptr;
+	m_request_exit=false;
+	m_check_bom=false;
+}
+
 ASyncFile::ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filename) :
 	m_instance(instance),
 	m_source_name(source_name),
@@ -49,6 +56,7 @@ void ASyncFile::operator()() {
 	while ((m_status!=FINISH) && (m_request_exit==false)) {
 		Exec();
 	}
+	Destroy();
 }
 
 void ASyncFile::Exec(){
@@ -89,7 +97,7 @@ void ASyncFile::Exec(){
 			}
 		}
 		
-		//しばらく待っても行を読み込めないためファイル生成が終了したとみなす。
+		//少し待っても行を読み込めないためファイル生成が終了したとみなす。
 		m_status=FILE_CLOSE;
 
 	case FILE_CLOSE:
@@ -136,6 +144,15 @@ void ASyncFile::DoLine(WCHAR*line) {
 	}
 	m_instance->ChangeCandidates();
 }
+
+void ASyncFile::Destroy() {
+	m_status = FINISH;
+	if (m_file != nullptr) {
+		fclose(m_file);
+		m_file = nullptr;
+	}
+}
+
 
 
 /////////////////////////////////////////////////////////////////////////////

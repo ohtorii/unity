@@ -154,7 +154,7 @@ exec_action:
 SerializeMain:
 	$$FunctionName=$$1;
 
-	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac";
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac","serialize",".bin";
 	$$serialize_filename=getresultex(-1);
 	if($$serialize_filename==""){
 		debuginfo " internal/action.mac exec_action -> false";

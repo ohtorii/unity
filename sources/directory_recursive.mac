@@ -33,7 +33,7 @@ gather_candidates:
 		$$root_dir=".";
 	}
 
-	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", "dr", ".txt";
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", "dirrec", ".tsv";
 	$$temp_filename=getresultex(-1);
 	if($$temp_filename==""){
 		return "";

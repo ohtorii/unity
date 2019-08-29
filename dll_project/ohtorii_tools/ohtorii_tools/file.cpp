@@ -1,15 +1,35 @@
 ﻿#include"stdafx.h"
 
+
+std::vector<std::wstring>	File::m_after_delete;
+
+
 File::File(){
 	
 }
 
 File::~File(){
-	
 }
 
-void File::RegistAfterDelete(const WCHAR*filename){
-	
+void File::Destroy() {
+	DebugLog(_T("File::Destroy() Start. m_after_delete.size()=%d"), m_after_delete.size());
+	for (const auto&filename:m_after_delete) {
+		DebugLog(_T("\tDelete -> %s"), filename.c_str());
+		DeleteFile(filename.c_str());
+	}
+	m_after_delete.clear();
+	DebugLog(_T("File::Destroy() Finish."));
+}
+
+bool File::RegistAfterDelete(const WCHAR*filename){
+	try {
+		m_after_delete.push_back(filename);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
 }
 
 bool File::CreateTempFile(std::wstring&out) {
@@ -20,39 +40,14 @@ bool File::CreateTempFile(std::wstring&out) {
 	if (GetTempPath(sizeof(szTempPath) / sizeof(szTempPath[0]), szTempPath) == 0) {
 		return false;
 	}
-	if (GetTempFileName(szTempPath, _T("hidemaru_"), 0, szTempFileName) == 0) {
+	if (GetTempFileName(szTempPath, _T("hut"), 0, szTempFileName) == 0) {
 		return false;
 	}
 	out.assign(szTempFileName);
 	return true;
 }
 
-
-// ワイド文字列からマルチバイト文字列へ
-static void WToA(std::string&out, const wchar_t* wcs)
-{
-	const size_t BUFFLEN = 32 * 1024;
-
-	size_t rv = 0;
-	std::vector<char> buffer;
-	buffer.resize(BUFFLEN);
-	setlocale(LC_CTYPE, "ja-JP");
-	wcstombs_s(&rv, &buffer[0], BUFFLEN, wcs, _TRUNCATE);
-	out.assign(&buffer[0]);
-
-	/*
-	size_t n = strlen(buffer);
-	n++;
-	char* astr = new char[n];
-	strcpy_s(astr, n, buffer);
-	return astr;*/
-}
-
 bool File::WriteToFile(const WCHAR* filename, const WCHAR* string) {
-
-	//std::string mbs;
-	//WToA(mbs,string);
-
 	FILE* fp = 0;
 	errno_t  error = _wfopen_s(&fp, filename, L"wb");
 	if (error != 0) {
@@ -61,8 +56,6 @@ bool File::WriteToFile(const WCHAR* filename, const WCHAR* string) {
 	if (fp == 0) {
 		return false;
 	}
-	//size_t n = mbs.size();
-	//size_t ret = fwrite(mbs.c_str(), sizeof(std::string::value_type), n, fp);
 
 	//BOMを書き込む
 	unsigned char bom[] = { 0xff,0xfe };
