@@ -53,7 +53,7 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 		}
 
 		const WCHAR*cname = temp_filename.c_str();
-		file.RegistAfterDelete(cname);
+		//file.RegistAfterDelete(cname);
 		if (!file.WriteToFile(cname, source_ini)) {
 			return gs_empty;
 		}

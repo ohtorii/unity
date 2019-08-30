@@ -1,9 +1,57 @@
 ﻿#include"stdafx.h"
 
 
-std::vector<std::wstring>	File::m_after_delete;
+std::deque<File::DeleteFile_>	File::m_after_delete;
+
+/////////////////////////////////////////////////////////////////////////////
+//DeleteFile_
+/////////////////////////////////////////////////////////////////////////////
+File::DeleteFile_::DeleteFile_() {
+	m_deleting = false;
+}
+
+File::DeleteFile_::DeleteFile_(const std::wstring&filename) :m_filename(filename) {
+	m_deleting = false;
+}
+
+void File::DeleteFile_::DeleteFile() {
+	if (m_deleting) {
+		return;
+	}
+	DebugLog(_T("DeleteFile -> %s"), m_filename.c_str());
+	m_deleting = true;
+	if (::DeleteFile(m_filename.c_str()) == 0) {
+		DebugLog(_T("  -> Fail."));
+		DebugLogLastError(GetLastError());
+	}
+	else {
+		DebugLog(_T("  -> Success."));
+	}
+}
+
+void File::DeleteFile_::DeleteFileAsThread() { 
+	if (m_deleting) {
+		return;
+	}
+	DebugLog(_T("DeleteFile -> %s"), m_filename.c_str());
+	m_deleting = true;
+	m_thread= std::thread(::DeleteFile, m_filename.c_str());
+}
+
+void File::DeleteFile_::Join() {
+	if (!m_deleting) {
+		return;
+	}
+	if (! m_thread.joinable()) {
+		return;
+	}
+	m_thread.join();
+}
 
 
+/////////////////////////////////////////////////////////////////////////////
+//File
+/////////////////////////////////////////////////////////////////////////////
 File::File(){
 	
 }
@@ -11,19 +59,22 @@ File::File(){
 File::~File(){
 }
 
-void File::Destroy() {
-	DebugLog(_T("File::Destroy() Start. m_after_delete.size()=%d"), m_after_delete.size());
-	for (const auto&filename:m_after_delete) {
-		DebugLog(_T("\tDelete -> %s"), filename.c_str());
-		DeleteFile(filename.c_str());
+void File::StartDestroy() {
+	for (auto&item:m_after_delete) {
+		item.DeleteFile();
+	}
+}
+
+void File::JoinDestroy() {
+	for (auto&item : m_after_delete) {
+		item.Join();
 	}
 	m_after_delete.clear();
-	DebugLog(_T("File::Destroy() Finish."));
 }
 
 bool File::RegistAfterDelete(const WCHAR*filename){
 	try {
-		m_after_delete.push_back(filename);
+		m_after_delete.emplace_back(filename);
 		return true;
 	}
 	catch (std::exception) {

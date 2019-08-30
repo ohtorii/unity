@@ -173,7 +173,14 @@ void Unity::Destroy() {
 	m_kinds.Clear();
 	m_current_instance_index = 0;
 
-	File::Destroy();
+	//
+	//memo: ASyncFileでファイルを閉じた後で終了処理を行う。
+	//そうしないと、ASyncFileがファイルを開いているためファイルの削除が出来ない。
+	//
+	//今のところ削除するファイルは1個でパフォーマンスに大きな影響は無いため対策は行わないことにした。
+	//
+	File::StartDestroy();
+	File::JoinDestroy();
 }
 
 Sources& Unity::QuerySources(){

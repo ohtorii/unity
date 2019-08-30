@@ -28,6 +28,7 @@
 #include <fstream>
 
 #include<vector>
+#include<deque>
 #include<string>
 #include<algorithm>
 #include<unordered_set>

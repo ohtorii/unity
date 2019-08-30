@@ -165,7 +165,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 		}
 
 		const WCHAR*cname = temp_filename.c_str();
-		file.RegistAfterDelete(cname);
+		//file.RegistAfterDelete(cname);
 		if (!file.WriteToFile(cname, kind_ini)) {
 			DebugLog(_T("  return false@2"));
 			return gs_empty;

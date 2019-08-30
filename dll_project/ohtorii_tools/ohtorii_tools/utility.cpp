@@ -36,6 +36,20 @@ void DebugLog(const WCHAR *fmt, ...)
 	va_end(ap);
 }
 
+void DebugLogLastError(DWORD errorcode) {
+	LPVOID lpMsgBuf=0;
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER  //      テキストのメモリ割り当てを要求する
+		| FORMAT_MESSAGE_FROM_SYSTEM    //      エラーメッセージはWindowsが用意しているものを使用
+		| FORMAT_MESSAGE_IGNORE_INSERTS,//      次の引数を無視してエラーコードに対するエラーメッセージを作成する
+		NULL, errorcode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),//   言語を指定
+		(LPTSTR)&lpMsgBuf,                          //      メッセージテキストが保存されるバッファへのポインタ
+		0,
+		NULL);
+	DebugLog(_T("%s"), lpMsgBuf);
+	LocalFree(lpMsgBuf);
+}
+
 std::wstring TrimString(const std::wstring& src, const WCHAR*trimCharacterList)
 {
 	const std::wstring::size_type left = src.find_first_not_of(trimCharacterList);	
