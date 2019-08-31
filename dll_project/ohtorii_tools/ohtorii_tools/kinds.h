@@ -9,7 +9,13 @@ public:
 	Action();
 
 	template<class Archive> void serialize(Archive & archive) {
-		archive(m_name, m_label, m_description, m_is_quit, m_is_multi_selectable, m_is_start);
+		archive(m_name, 
+				m_label, 
+				m_description, 
+				m_is_quit, 
+				m_is_multi_selectable, 
+				m_is_start, 
+				m_is_edit);
 	};
 
 	///表示に使用する名前
@@ -24,6 +30,8 @@ public:
 	bool				m_is_multi_selectable;
 	///ソースを生成しアクションを開始するかどうか
 	bool				m_is_start;
+	///rテキストを騙取するかどうか
+	bool				m_is_edit;
 };
 
 class Kind {
@@ -92,6 +100,7 @@ public:
 	bool IsActionQuit(size_t kind_index, size_t action_index);
 	bool IsActionMultiSelectable(size_t kind_index, size_t action_index);
 	bool IsActionStart(size_t kind_index, size_t action_index);
+	bool IsEdit(size_t kind_index, size_t action_index);
 private:
 	///
 	std::vector<Kind>		m_kinds;

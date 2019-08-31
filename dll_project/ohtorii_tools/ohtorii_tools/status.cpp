@@ -53,3 +53,23 @@ Status::IsStart&	Status::GetIsStart() {
 const Status::IsStart&	Status::GetIsStart()const {
 	return m_is_start;
 };
+
+bool Status::Reset(const WCHAR*kind_name, const WCHAR*action_name) {
+	auto unity = Unity::Instance().lock();
+	auto&kind=unity->QueryKinds();
+
+	auto kind_index=kind.FindKindIndex(kind_name);
+	if (kind_index == UNITY_NOT_FOUND_INDEX) {
+		return false;
+	}
+	auto action_index=kind.FindActionIndex(kind_index, action_name);
+	if (action_index == UNITY_NOT_FOUND_INDEX) {
+		return false;
+	}
+
+	m_is_quit= kind.IsActionQuit(kind_index,action_index);
+	auto is_start = kind.IsActionStart(kind_index, action_index);
+	GetIsStart().SetEnable(is_start);
+
+	return true;
+}

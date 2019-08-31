@@ -233,7 +233,11 @@ bool Unity::ClearChangedCandidatesAndReturnPrevStatus() {
 	return prev;
 }
 
-Unity::Unity() : m_refine_search(this), m_inheritance(this), m_async_files(this){
+Unity::Unity() : 
+	m_refine_search(this), 
+	m_inheritance(this),
+	m_async_files(this)
+{
 	m_changed_candidates = false;
 }
 

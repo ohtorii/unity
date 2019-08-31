@@ -1,0 +1,12 @@
+﻿#g_dll_ohtorii_tools=val(getarg(0));
+$g_kind 	= getarg(1);
+$g_action	= getarg(2);
+
+call IsEdit;
+endmacro str(##return);
+
+IsEdit:
+	##kind_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindKindIndex",	$g_kind);
+	##action_index	=dllfuncw(#g_dll_ohtorii_tools, 	"KindsFindActionIndex", ##kind_index, $g_action);
+	##is_edit		=dllfuncw(#g_dll_ohtorii_tools, 	"KindsIsEdit",			##kind_index,##action_index);
+	return ##is_edit;

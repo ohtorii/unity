@@ -69,40 +69,34 @@ base_kind=
 function=nop
 'アクションの説明
 description=Do nothing.
-'アクション実行後に終了するかどうか
-is_quit=false
-'アクションは複数選択に対して実行可能か
 is_multi_selectable=true
 
 [action.yank]
 function=yank
 description=Yank the candidate "word" or "action__text".
 is_multi_selectable=true
-is_quit=false
 
 [action.yank_escape]
 function=yank_escape
 description=Yank the escaped candidate "word" or "action__text".
-is_quit=false
 
 [action.insert]
 function=insert
+is_edit=true
 description=Insert the candidate word or text before the cursor.
 
 [action.overwrite]
 function=overwrite
+is_edit=true
 description=Owerwrite the candidate word or text before the cursor.
 
 [action.preview]
 function=preview
 description=Preview the candidate text.
-is_quit=false
-is_multi_selectable=false
 
 [action.echo]
 function=echo
 description=Echo candidates for debug.
-is_quit=false
 )";
 
 /*Todo コマンドラインのマクロと組み合わせる

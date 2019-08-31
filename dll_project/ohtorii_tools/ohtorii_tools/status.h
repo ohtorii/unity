@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include<string>
 
+class Unity;
+
+
 /*状態
 */
 class Status {
@@ -42,7 +45,7 @@ public:
 	IsStart&GetIsStart();
 	const IsStart&GetIsStart() const;
 
-
+	bool Reset(const WCHAR*kind_name,const WCHAR*action_name);
 
 public:
 	bool			m_is_quit;
@@ -52,5 +55,4 @@ public:
 	std::wstring	m_root_macro_directory;
 private:
 	IsStart		m_is_start;
-	//bool	m_is_quit;
 };

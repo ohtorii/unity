@@ -250,7 +250,7 @@ RefineSearchMain:
 			if(##return==#g_result_continue){continue;}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
-		}else if(##page_up){						call PageUp;}	//PageUp
+		}else if(##page_up){					call PageUp;}	//PageUp
 		else if(##page_down){					call PageDown;}	//PageDown
 		else{
 			//候補の更新

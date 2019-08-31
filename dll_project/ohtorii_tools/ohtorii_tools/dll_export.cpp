@@ -359,6 +359,10 @@ extern "C" INT_PTR	KindsIsActionStart(INT_PTR kind_index, INT_PTR action_index) 
 	return Unity::Instance().lock()->QueryKinds().IsActionStart(kind_index, action_index);
 }
 
+extern "C" INT_PTR	KindsIsEdit(INT_PTR kind_index, INT_PTR action_index) {
+	return Unity::Instance().lock()->QueryKinds().IsEdit(kind_index, action_index);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //Inheritance
 /////////////////////////////////////////////////////////////////////////////
@@ -377,6 +381,10 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 /////////////////////////////////////////////////////////////////////////////
 //Status
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR StatusReset(const WCHAR*kind_name,const WCHAR*action_name) {
+	return Unity::Instance().lock()->QueryStatus().Reset(kind_name,action_name);
+}
+
 extern "C" INT_PTR StatusSetIsStart(INT_PTR is_start) {
 	return Unity::Instance().lock()->QueryStatus().GetIsStart().SetEnable(is_start);
 }

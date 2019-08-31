@@ -41,8 +41,11 @@ main:
 	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionLabel");
 	$$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
 
+	execmacro currentmacrodirectory+"\\is_edit.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
+	##is_edit = val(getresultex(-1));
+
 	call pre_action,$$default_kind, $$default_action;
-	call exec_action, $$kind_filename, $$default_action;
+	call exec_action, $$kind_filename, $$default_action, ##is_edit;
 
 	/*memo
 	is_quitはexecmacro呼び出しで上書きされるためこれ以上何もしない。
@@ -54,98 +57,89 @@ main:
 
 
 pre_action:
-	/*アクションを呼び出す前の処理
-
-	主な処理内容：	内部状態を初期値に戻す。
+	/*アクションを呼び出す前の処理。
+	内部状態(Status)を初期値に戻します。
 	*/
 	$$default_kind	=$$1;
 	$$default_action=$$2;
 
-	//is_quit
-	execmacro currentmacrodirectory+"\\is_quit.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
-	$$is_quit = getresultex(-1);
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsQuit",val(getresultex(-1)));
-
-	//is_start
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusClearIsStart");
-	if(!##ret){
-		return false;
-	}
-	execmacro currentmacrodirectory+"\\is_start.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
-	if(getresultex(-1)=="0"){
-		##is_start=false;
-	}else{
-		##is_start=true;
-	}
-	debuginfo "StatusSetIsStart.##is_start="+str(##is_start);
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsStart",##is_start);
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusReset",$$default_kind, $$default_action);
 	return ##ret;
-
 
 
 exec_action:
 	debuginfo "internal/action.mac exec_action";
+	debuginfo "  -> ##is_edit="+str(##is_edit);
+
 	$$kind_filename	=$$1;
-	$$action_name	=$$2;
+	$$default_action=$$2;
+	##is_edit		=##3;
+	##ohtorii_dll_handle=0;
 
-	call SerializeCurrentContext;
-	$$current_contex_filename=$$return;
-	if($$current_contex_filename==""){
-		return "0";
-	}
+	if(##is_edit){
+		call SerializeCurrentContext;
+		$$current_contex_filename=$$return;
+		if($$current_contex_filename==""){
+			return "0";
+		}
 
-	//
-	//操作対象となる秀丸エディタへ切り替える
-	//
-	##current_hidemaruhandle=hidemaruhandle(0);
-	setactivehidemaru(#g_target_hidemaruhandle);
+		//
+		//操作対象となる秀丸エディタへ切り替える
+		//
+		##current_hidemaruhandle=hidemaruhandle(0);
+		setactivehidemaru(#g_target_hidemaruhandle);
 
-	//切り替えた秀丸エディタへohtorii_toolsを読み込む
-	execmacro currentmacrodirectory+"\\load_ohtorii_tools_dll.mac";
-	##dll_ohtorii_tools=val(getresultex(-1));
-	if(##dll_ohtorii_tools==0){
-		//元の秀丸エディタへ切り替える
-		setactivehidemaru(##current_hidemaruhandle);
-		debuginfo " internal/action.mac exec_action -> false";
-		return "0";
-	}
-	debuginfo "  DeSerializeToCurrentContext";
-	//deserialize
-	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToCurrentContext", $$current_contex_filename);
-	if(! ##ret){
-		call FreeDll;
-		//元の秀丸エディタへ切り替える
-		setactivehidemaru(##current_hidemaruhandle);
-		debuginfo " internal/action.mac exec_action -> false";
-		return "0";
+		//切り替えた秀丸エディタへohtorii_toolsを読み込む
+		execmacro currentmacrodirectory+"\\load_ohtorii_tools_dll.mac";
+		##ohtorii_dll_handle=val(getresultex(-1));
+		if(##ohtorii_dll_handle==0){
+			//元の秀丸エディタへ切り替える
+			setactivehidemaru(##current_hidemaruhandle);
+			debuginfo " internal/action.mac exec_action -> false";
+			return "0";
+		}
+		debuginfo "  DeSerializeToCurrentContext";
+		//deserialize
+		##ret=dllfuncw(##ohtorii_dll_handle,"DeSerializeToCurrentContext", $$current_contex_filename);
+		if(! ##ret){
+			call FreeDll;
+			//元の秀丸エディタへ切り替える
+			setactivehidemaru(##current_hidemaruhandle);
+			debuginfo " internal/action.mac exec_action -> false";
+			return "0";
+		}
+	}else{
+		##ohtorii_dll_handle=#g_dll_ohtorii_tools;
 	}
 
 	debuginfo "  $$kind_filename="+$$kind_filename;
-	debuginfo "  $$action_name="+ $$action_name;
+	debuginfo "  $$default_action="+ $$default_action;
 	$$args[0]="do_action";
-	$$args[1]=$$action_name;
-	$$args[30]=str(##dll_ohtorii_tools);
+	$$args[1]=$$default_action;
+	$$args[30]=str(##ohtorii_dll_handle);
 	execmacro $$kind_filename, $$args, 31;
 	$$action_result = getresultex(-1);
 
-	call SerializeStatusContext;
-	$$status_contex_filename=$$return;
+	if(##is_edit){
+		call SerializeStatusContext;
+		$$status_contex_filename=$$return;
 
-	call FreeDll;
+		call FreeDll;
 
-	if($$status_contex_filename==""){
-		debuginfo " internal/action.mac SerializeStatusContext -> false";
-		return "0";
-	}
+		if($$status_contex_filename==""){
+			debuginfo " internal/action.mac SerializeStatusContext -> false";
+			return "0";
+		}
 
-	//
-	//元の秀丸エディタへ切り替えアクションで更新されたステータスを反映する。
-	//
-	setactivehidemaru(##current_hidemaruhandle);
-	##ret=dllfuncw(##dll_ohtorii_tools,"DeSerializeToStatusContext", $$status_contex_filename);
-	if(! ##ret){
-		debuginfo " internal/action.mac DeSerializeToStatusContext -> false";
-		return "0";
+		//
+		//元の秀丸エディタへ切り替えアクションで更新されたステータスを反映する。
+		//
+		setactivehidemaru(##current_hidemaruhandle);
+		##ret=dllfuncw(##ohtorii_dll_handle,"DeSerializeToStatusContext", $$status_contex_filename);
+		if(! ##ret){
+			debuginfo " internal/action.mac DeSerializeToStatusContext -> false";
+			return "0";
+		}
 	}
 	debuginfo " internal/action.mac exec_action -> true";
 	return $$action_result;
