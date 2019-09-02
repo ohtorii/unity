@@ -54,6 +54,14 @@ const Status::IsStart&	Status::GetIsStart()const {
 	return m_is_start;
 };
 
+void Status::Initialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
+	m_hidemaruhandle_to_focus_at_end_of_process = UNITY_HIDEMARU_NULL_HANDLE;
+	m_target_hidemaruhandle = target_hidemaru;
+	m_current_working_directory.assign(working_directory);
+	m_root_macro_directory.assign(root_macro_directory);
+	m_is_quit = true;
+}
+
 bool Status::Reset(const WCHAR*kind_name, const WCHAR*action_name) {
 	auto unity = Unity::Instance().lock();
 	auto&kind=unity->QueryKinds();

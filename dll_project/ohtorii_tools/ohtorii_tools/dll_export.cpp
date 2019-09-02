@@ -381,6 +381,11 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 /////////////////////////////////////////////////////////////////////////////
 //Status
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR StatusInitialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
+	Unity::Instance().lock()->QueryStatus().Initialize(target_hidemaru, working_directory, root_macro_directory);
+	return true;
+}
+
 extern "C" INT_PTR StatusReset(const WCHAR*kind_name,const WCHAR*action_name) {
 	return Unity::Instance().lock()->QueryStatus().Reset(kind_name,action_name);
 }

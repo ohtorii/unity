@@ -45,20 +45,6 @@ main:
 		return false;
 	}
 
-	/*ソースのプロパティを取得する
-	*/
-
-	/*execmacro $$source_filename, str(#g_dll_ohtorii_tools), "get_property";
-	$$ini=getresultex(-1);
-	if($$ini==""){
-		return false;
-	}
-	$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
-	if($$source_name==""){
-		return false;
-	}
-	$$ini="";//メモリ解放*/
-
 	/*候補を作る
 	*/
 	##ret		=false;

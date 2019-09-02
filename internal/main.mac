@@ -13,6 +13,7 @@ Unite-vimの説明。
 https://www.youtube.com/watch?v=Co4Np4SXOOc
 */
 
+#g_tick_prev=tickcount;
 
 /*****************************************************************************
 	グローバル変数
@@ -74,7 +75,9 @@ main:
 	call Start $$1;
 	##ret = ##return;
 
-	##forcus_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetHidemaruHandleToForceAtEndProcess");
+	if(#g_dll_ohtorii_tools){
+		##forcus_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetHidemaruHandleToForceAtEndProcess");
+	}
 
 	//カーソル位置を元に戻す
 	moveto2 ##old_column,##old_lineno;
@@ -101,41 +104,40 @@ Start:
 	if($$source_list==""){
 		return false;
 	}
+	call ShowPerformanceCounter "Start";
 
-	debuginfo "directory2="+directory2;
 	call NewFile;
 	if(! ##return){
 		return false;
 	}
+	call ShowPerformanceCounter "NewFile";
 
 	call LoadDll;
 	if(! ##return){
 		return false;
 	}
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetHidemaruHandleToForceAtEndProcess",0);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetTargetHidemaruHandle",#g_target_hidemaru);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetCurrentWorkingDirectory",directory2);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetRootMacroDirectory",$g_root_macro_directory);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsQuit",true);
+	call ShowPerformanceCounter "LoadDLL";
 
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusInitialize",#g_target_hidemaru,directory2,$g_root_macro_directory);
 
 	//##n=dllfuncw(#g_dll_ohtorii_tools,"Initialize");
 	call LoadKindAll;
 	if(! ##return){
 		return false;
 	}
+	call ShowPerformanceCounter "LoadKindAll";
+
 	call LoadSourceAll;
 	if(! ##return){
 		return false;
 	}
+	call ShowPerformanceCounter "LoadSourceAll";
 
 	{//ソースを読み込む
 		##num_source= split($$sources,$$source_list, "\t");
 		##i			= 0;
-		debuginfo "##num_source="+str(##num_source);
 		while(##i<##num_source){
 			$$source_filename=$g_root_macro_directory+"\\sources\\"+$$sources[##i]+".mac";
-			debuginfo"$$sources[##i]="+$$sources[##i];
 			execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process), $$source_filename, "";
 			if(getresultex(-1)=="0"){
 				return 0;
@@ -143,14 +145,10 @@ Start:
 			##i = ##i + 1;
 		}
 	}
-	call RefineSearch "", "";
-	/*call FreeDll;
-	call CloseFileIfOpen;
-	if(! ##return){
-		return false;
-	}*/
+	call ShowPerformanceCounter "ソースの読み込み";
 
-	return true;
+	call RefineSearch "", "";
+	return ##return;
 
 
 //#region 絞り込み検索
@@ -519,17 +517,19 @@ NewFile:
 	}
 	#g_open_newfile=true;
 	#g_new_hidemaru=hidemaruhandle(0);
-
-	/* 折りたたみを表示しない*/
-	config "xFoldingTwigBar:0";
+	if(false){
+		/* 折りたたみを表示しない*/
+		config "xFoldingTwigBar:0";
+		/*行番号表示*/
+		config "xShowLineNo:0";
+	}
 	/*見出しバー表示*/
-	config "xOutlineBar:1";
-	/*行番号表示*/
-	config "xShowLineNo:0";
+	/config "xOutlineBar:1";
 	/*TSVモード*/
 	config "xTabMode:0x0001";
 	config "xGuideLine:0x00";
 	config "xOrikaeshiLine:0";
+
 
 	return true;
 
@@ -672,6 +672,12 @@ FreeDll:
 
 
 //#region そのた
+ShowPerformanceCounter:
+	##diff=tickcount-#g_tick_prev;
+	debuginfo sprintf("[%d]%s",##diff,$$1);
+	#g_tick_prev=tickcount;
+
+
 /*ファイルの新規作成*/
 file_new:
 

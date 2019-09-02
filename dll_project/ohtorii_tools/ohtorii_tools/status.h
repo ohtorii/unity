@@ -45,6 +45,7 @@ public:
 	IsStart&GetIsStart();
 	const IsStart&GetIsStart() const;
 
+	void Initialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory);
 	bool Reset(const WCHAR*kind_name,const WCHAR*action_name);
 
 public:

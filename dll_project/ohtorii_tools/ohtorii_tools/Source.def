@@ -95,7 +95,7 @@ EXPORTS
 	InheriatnceGetDefaultActionKind
 	InheriatnceGetDefaultActionLabel
 
-	
+	StatusInitialize
 	StatusReset
 	StatusSetIsStart
 	StatusClearIsStart
