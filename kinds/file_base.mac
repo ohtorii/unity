@@ -29,33 +29,6 @@ endmacro $$return;
 ////////////////////////////////////////////////////////////////////////////
 //	Request.
 ////////////////////////////////////////////////////////////////////////////
-get_property:
-	return R"([property]
-name=file_base
-description=File actions.
-default_action=open
-base_kind=
-
-[action.open]
-function=open
-description=Open files.
-is_multi_selectable=true
-
-[action.insert_directory]
-function=insert_directory
-description=Insert the candidate directory before the cursor.
-
-[action.overwrite_directory]
-function=overwrite_directory
-description=Owerwrite the candidate directory before the cursor.
-
-[action.preview]
-function=preview
-description=Preview file.
-is_quit=false
-is_multi_selectable=false
-)";
-
 /*
 実装	アクション
 ○		function! s:kind.action_table.open.func(candidates) abort "{{{

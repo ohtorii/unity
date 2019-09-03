@@ -150,12 +150,7 @@ void Kinds::Clear() {
 }
 
 WCHAR* Kinds::Create(const WCHAR* kind_ini) {
-	static std::wstring	name;	//staticについて: 秀丸エディタへ文字列を返すため静的なメモリ領域とする
 	Kind dst;
-
-//	std::wstring	description;
-	//std::wstring	default_action;
-	//std::vector<std::wstring>	base_kind;
 
 	DebugLog(_T("Kinds::Create"));
 
@@ -168,57 +163,20 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 			return gs_empty;
 		}
 
-		const WCHAR*cname = temp_filename.c_str();
-		//file.RegistAfterDelete(cname);
-		if (!file.WriteToFile(cname, kind_ini)) {
+		const WCHAR*ini_filename = temp_filename.c_str();
+		if (!file.WriteToFile(ini_filename, kind_ini)) {
 			DebugLog(_T("  return false@2"));
 			return gs_empty;
 		}
 
-		WCHAR buf[4 * 1024];
-		GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), cname);
-		dst.m_name.assign(buf);
-		if (dst.m_name.size() == 0) {
-			DebugLog(_T("  return false@3"));
+		if (!IniToKind(dst, ini_filename)) {
 			return gs_empty;
 		}
-
-		GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf, _countof(buf), cname);
-		dst.m_description.assign(buf);
-
-		GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf, _countof(buf), cname);
-		dst.m_default_action.assign(buf);
-
-		{
-			GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), buf, _countof(buf), cname);
-			Tokenize(dst.m_base_kind,buf,_T(" \t"));
-			if(1){
-				//debug
-				DebugLog(_T("  ==== Inheritance ===="));
-				for (const auto&item : dst.m_base_kind) {
-					DebugLog(_T("  %s"), item.c_str());
-				}
-			}
-		}
-
-		{
-			std::vector<std::wstring> action_sections;
-			action_sections.reserve(16);
-			GatherActionSections(action_sections, cname);
-
-			Action action;
-			for (const auto& section_name: action_sections) {
-				ParseActionSection(action, section_name.c_str(), cname);
-				//dst.m_actions.emplace(section_name, action);
-				dst.m_actions.emplace_back(action);
-			}
-		}
 	}
-	
-	name.assign(dst.m_name);
+			
 	m_kinds.emplace_back(dst);
-	DebugLog(_T("  return=%s"), name.c_str());
-	return const_cast<WCHAR*>(name.c_str());
+	DebugLog(_T("  return=%s"), m_kinds.back().m_name.c_str());
+	return const_cast<WCHAR*>(m_kinds.back().m_name.c_str());
 }
 
 Kind* Kinds::FindKind(const WCHAR* kind_name) {	
@@ -405,82 +363,68 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 			auto candidate_index = candidates.AppendCandidate(_T("action"), action.m_name.c_str(), (item.m_kind_name+_T("\t")+action.m_description).c_str());
 			candidates.SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
 		}
-
-		
-		/*{
 			
-			for (const auto& action : kind->m_actions) {
-				if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
-					auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());
-					candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
-				}
-			}
-		}*/
 		DebugLog(_T("  return true"));
 		return true;
 
 	}
+}
 
-#if 0
-	bool			is_multi_select = false;
-	std::wstring	first_source_name;
+bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
+	WCHAR buf[16 * 1024];
+	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
+	dst.m_name.assign(buf);
+	if (dst.m_name.size() == 0) {
+		DebugLog(_T("  return false@3"));
+		return false;
+	}
+
+	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf, _countof(buf), ini_filename);
+	dst.m_description.assign(buf);
+
+	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf, _countof(buf), ini_filename);
+	dst.m_default_action.assign(buf);
+
 	{
-		RefineSearch*	search = instance.lock()->QueryRefineSearch();
-		const auto		num_selection = search->GetMarkedCount();
-		if (num_selection == 0) {
-			DebugLog(_T("@2"));
-			return false;
-		}
-
-		for (auto select = 0; select < num_selection; ++select) {
-			Candidate* candidate = search->GetMarkedCandidate(select);
-			if (candidate == nullptr) {
-				DebugLog(_T("@2.1"));
-				continue;
-			}
-			//Memo: 最初に選択されたソース名
-			DebugLog(_T("candidate->m_source_name="));
-			DebugLog(candidate->m_source_name.c_str());
-			first_source_name = candidate->m_source_name;
-			break;
-		}
-
-		if (first_source_name.empty()) {
-			DebugLog(_T("@3"));
-			return false;
-		}
-		if (2 <= num_selection) {
-			is_multi_select = true;
-		}else {
-			is_multi_select = false;
-		}		
-	}	
-
-	//ソース名からディフォルトカインドを取り出す
-	auto* source= instance.lock()->QuerySources().FindSource(first_source_name.c_str());
-	if (source == nullptr) {
-		DebugLog((std::wstring(_T("@4: first_source_name="))+ first_source_name).c_str());
-		return false;
-	}
-	const auto &default_kind = source->m_default_kind;
-
-	auto* kind = instance.lock()->QueryKinds().FindKind(default_kind.c_str());
-	if (kind == nullptr) {
-		DebugLog(_T("@5"));
-		return false;
-	}
-
-	//現在のインスタンスへ候補を追加する
-	{		
-		auto* candidates = Unity::Instance().lock()->QueryCandidates();
-		for (const auto& action : kind->m_actions) {
-			if (CheckAppendable(is_multi_select, action.m_is_multi_selectable)) {
-				auto candidate_index = candidates->AppendCandidate(_T("action"), action.m_name.c_str(), action.m_description.c_str());
-				candidates->SetUserData(candidate_index, _T("__kind__"), kind->m_name.c_str());
+		GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), buf, _countof(buf), ini_filename);
+		Tokenize(dst.m_base_kind, buf, _T(" \t"));
+		if (1) {
+			//debug
+			DebugLog(_T("  ==== Inheritance ===="));
+			for (const auto&item : dst.m_base_kind) {
+				DebugLog(_T("  %s"), item.c_str());
 			}
 		}
 	}
-	DebugLog(_T("Finish"));
+
+	{
+		std::vector<std::wstring> action_sections;
+		action_sections.reserve(16);
+		GatherActionSections(action_sections, ini_filename);
+
+		Action action;
+		for (const auto& section_name : action_sections) {
+			ParseActionSection(action, section_name.c_str(), ini_filename);
+			//dst.m_actions.emplace(section_name, action);
+			dst.m_actions.emplace_back(action);
+		}
+	}
 	return true;
-#endif
+}
+
+bool Kinds::LoadKindAll(const WCHAR* root_dir) {
+	std::deque<std::wstring> file_names;
+	if (!Unity::Instance().lock()->QueryFile().EnumeFiles(file_names, root_dir, _T("*.ini"))) {
+		return false;
+	}
+
+	const auto num = file_names.size();
+	m_kinds.resize(num);
+	for (size_t i = 0; i < num; ++i) {
+		if (!IniToKind(m_kinds.at(i), file_names.at(i).c_str())) {
+			return false;
+		}
+	}
+
+	return true;
 }

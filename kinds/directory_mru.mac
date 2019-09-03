@@ -8,20 +8,6 @@ call $label, $arg;
 endmacro $$return;
 
 
-
-get_property:
-	return R"([property]
-name=directory_mru
-base_kind=directory
-
-[action.remove]
-function=remove
-description=フォルダ履歴から削除する
-is_quit=false
-is_multi_selectable=true
-)";
-
-
 do_action:
 	$$action=$$1;
 	call $$action;

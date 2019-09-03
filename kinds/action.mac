@@ -16,20 +16,6 @@ endmacro $$return;
 ////////////////////////////////////////////////////////////////////////////
 //	Request.
 ////////////////////////////////////////////////////////////////////////////
-get_property:
-	return R"([property]
-name=action
-description=Do action.
-default_action=do
-base_kind=
-
-'アクション
-[action.do]
-name=do
-function=do
-description=Call action.
-)";
-
 do_action:
 	$$action=$$1;
 	call $$action;

@@ -18,15 +18,6 @@ $g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDir
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;
 
-get_property:
-	//ソースのプロパティをini形式で返す
-	return R"([property]
-name=file
-description=candidates from file list
-default_kind=file
-'default_action=file
-candidate_type=function
-)";
 
 /*
 \ 'ignore_globs' : [

@@ -12,6 +12,10 @@ public:
 	bool RegistAfterDelete(const WCHAR*filename);
 	bool CreateTempFile(std::wstring&out);
 	bool WriteToFile(const WCHAR* filename, const WCHAR* string);
+	
+	///指定ディレクトリのファイルを絶対パスで列挙する
+	static bool EnumeFiles(std::deque<std::wstring>&out_files, const WCHAR*root_dir, const WCHAR* extension);
+
 	static void StartDestroy();
 	static void JoinDestroy();
 

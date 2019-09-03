@@ -119,3 +119,30 @@ bool File::WriteToFile(const WCHAR* filename, const WCHAR* string) {
 	}
 	return true;
 }
+
+bool File::EnumeFiles(std::deque<std::wstring>&out_files, const WCHAR*directory, const WCHAR* extension) {
+	std::wstring	file_pattern;
+	file_pattern.append(directory);
+	file_pattern.append(extension);
+	
+	WIN32_FIND_DATA win32fd;
+	memset(&win32fd,0,sizeof(win32fd));
+
+	HANDLE hFind = FindFirstFile(file_pattern.c_str(), &win32fd);
+	if (hFind == INVALID_HANDLE_VALUE) {
+		return false;
+	}
+
+	do {
+		if (win32fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+			//pass
+		}
+		else {
+			out_files.emplace_back(directory);
+			out_files.back().append(win32fd.cFileName);
+		}
+	} while (FindNextFile(hFind, &win32fd));
+	FindClose(hFind);
+
+	return true;
+}

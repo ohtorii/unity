@@ -15,18 +15,6 @@ call $label, $arg1, $arg2, $arg3, $arg4, $arg5 ;
 endmacro $$return;
 
 
-
-get_property:
-	return R"([property]
-name=file_position
-description=Kind pointing to the location of the file.
-default_action=open
-base_kind=jump_list file
-'markを後で加える。
-
-)";
-
-
 do_action:
 	$$action=$$1;
 	call $$action;

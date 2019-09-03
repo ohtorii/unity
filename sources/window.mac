@@ -19,14 +19,6 @@ $arg=getarg(1);
 call $label, $arg;
 endmacro $$return;
 
-get_property:
-	//ソースのプロパティをini形式で返す
-	return R"([property]
-name=window
-description=candidates from tab list
-default_kind=window
-candidate_type=function
-)";
 
 gather_candidates:
 	/*

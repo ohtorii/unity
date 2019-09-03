@@ -8,21 +8,6 @@ call $label, $arg;
 endmacro $$return;
 
 
-
-get_property:
-	return R"([property]
-name=window
-default_action=preview
-base_kind=common
-
-[action.preview]
-function=preview
-description=Preview window.
-is_quit=false
-is_multi_selectable=false
-)";
-
-
 do_action:
 	$$action=$$1;
 	call $$action;

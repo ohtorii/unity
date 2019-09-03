@@ -52,6 +52,7 @@ EXPORTS
 	HasChangedCandidates
 	ClearChangedCandidatesAndReturnPrevStatus
 
+	SourcesLoadAll
     SourcesCreate
     SourcesGetDefaultKind
 	SourcesGetCandidateType
@@ -76,8 +77,7 @@ EXPORTS
 	KindGetDefaultAction
 
     
-	KindsClear
-    KindsCreate
+	KindsLoadAll
 	KindsGetDefaultActionLabelName
 	KindsGenerateCandidates
 	KindsFindKindIndex

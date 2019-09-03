@@ -17,17 +17,6 @@ endmacro $$return;
 ////////////////////////////////////////////////////////////////////////////
 //	Request.
 ////////////////////////////////////////////////////////////////////////////
-get_property:
-	return R"([property]
-name=file
-description=file actions.
-default_action=open
-base_kind=file_base cdable common uri
-'openable file_vimfiler_base
-)";
-
-
-
 do_action:
 	$$action=$$1;
 	call $$action;

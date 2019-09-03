@@ -17,7 +17,6 @@ $g_candidate_filename="";
 //==========================================================================
 //メイン処理
 //==========================================================================
-debuginfo "ENTER internal\\source.mac";
 #g_dll_ohtorii_tools=val(getarg(0));
 #g_dll_hm_process=val(getarg(1));
 
@@ -33,11 +32,8 @@ endmacro "0";
 //	ソースの生成処理
 //==========================================================================
 main:
-	debuginfo "ENTER internal\\source.mac main";
 	$$source_filename=$$1;
 	$$arg=$$2;
-	debuginfo "  $$source_filename="+$$source_filename;
-	debuginfo "  $$arg="+$$arg;
 
 	call LoadSourceIfNotExist $$source_filename;
 	$$source_name=$$return;

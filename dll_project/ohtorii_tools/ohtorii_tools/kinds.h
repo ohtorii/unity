@@ -65,6 +65,9 @@ public:
 		archive(m_kinds);
 	};
 
+	///全カインドを読み込む
+	bool LoadKindAll(const WCHAR* directory);
+
 	void Clear();
 	
 	WCHAR* Create(const WCHAR* kind_ini);
@@ -102,6 +105,7 @@ public:
 	bool IsActionStart(size_t kind_index, size_t action_index);
 	bool IsEdit(size_t kind_index, size_t action_index);
 private:
+	static bool IniToKind(Kind&dst, const WCHAR*ini_filename);
 	///
 	std::vector<Kind>		m_kinds;
 };

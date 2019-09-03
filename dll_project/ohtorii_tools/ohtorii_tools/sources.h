@@ -46,6 +46,7 @@ public:
 		archive(m_sources, m_file_name_to_source_name);
 	};
 
+	bool LoadSourceAll(const WCHAR* root_dir);
 	WCHAR* Create(const WCHAR* source_ini);
 
 	///ソースを見付ける
@@ -68,8 +69,16 @@ private:
 
 	///ソースの情報(Ex. m_sources["file_mru"].name="file_mru")
 	std::unordered_map<std::wstring, Source> 	m_sources;
-	///ファオル名からソース名を取得するテーブル
+	
+	/**ファオル名からソース名を取得するテーブル
+	
+	（マップの内容）
+	"c:\sources\file_mru" : "file_mru",
+	"c:\sources\process"  : "process",
+	*/
 	std::unordered_map<std::wstring, std::wstring> 	m_file_name_to_source_name;
+	
+	static bool IniToSource(Source&dst, const WCHAR*ini_filename);
 	bool Exist(const WCHAR*source_name)const;
 };
 

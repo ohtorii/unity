@@ -220,6 +220,10 @@ extern "C" INT_PTR	RefineSearchMoveHidemaruCursorLineNo(INT_PTR current_line_no,
 	return Unity::Instance().SetCandidateList(source_filename, source_name, source_description);
 }*/
 
+extern "C" INT_PTR SourcesLoadAll(const WCHAR* directory) {
+	return Unity::Instance().lock()->QuerySources().LoadSourceAll(directory);
+}
+
 extern "C" WCHAR* SourcesCreate(WCHAR* source_ini){
 	return Unity::Instance().lock()->QuerySources().Create(source_ini);
 }
@@ -292,6 +296,10 @@ extern "C" WCHAR* CandidatesGetText(INT_PTR index) {
 /////////////////////////////////////////////////////////////////////////////
 //kind
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR KindsLoadAll(const WCHAR* directory) {
+	return Unity::Instance().lock()->QueryKinds().LoadKindAll(directory);
+}
+/*
 extern "C" INT_PTR KindsClear() {
 	Unity::Instance().lock()->QueryKinds().Clear();
 	return true;
@@ -299,7 +307,7 @@ extern "C" INT_PTR KindsClear() {
 
 extern "C" WCHAR* KindsCreate(WCHAR* kind_ini) {
 	return Unity::Instance().lock()->QueryKinds().Create(kind_ini);
-}
+}*/
 
 extern "C" INT_PTR KindsGenerateCandidates(INT_PTR instance_index) {
 	return Unity::Instance().lock()->QueryKinds().GenerateKindCandidates(instance_index);

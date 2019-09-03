@@ -14,20 +14,6 @@ call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;
 
 
-
-get_property:
-	return R"([property]
-name=uri
-default_action=start
-base_kind=
-
-[action.start]
-function=start
-description=open uri by browser
-is_quit=false
-)";
-
-
 do_action:
 	$$action=$$1;
 	call $$action;

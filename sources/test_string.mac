@@ -6,14 +6,6 @@ $arg=getarg(1);
 call $label, $arg;
 endmacro $$return;
 
-get_property:
-	//ソースのプロパティをini形式で返す
-	return R"([property]
-name=tab
-description=test string.
-default_kind=tab
-candidate_type=string
-)";
 
 gather_candidates:
 	return

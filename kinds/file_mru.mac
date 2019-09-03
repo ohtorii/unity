@@ -8,21 +8,6 @@ call $label, $arg;
 endmacro $$return;
 
 
-
-get_property:
-	return R"([property]
-name=file_mru
-default_action=open
-base_kind=file
-
-[action.remove]
-function=remove
-description=ファイル履歴から削除する
-is_quit=false
-is_multi_selectable=true
-)";
-
-
 do_action:
 	$$action=$$1;
 	call $$action;

@@ -24,7 +24,6 @@ https://www.youtube.com/watch?v=Co4Np4SXOOc
 
 //DLL
 #g_hmjre_dll 	= 0;
-#g_dengaku_dll 	= 0;
 #g_dll_ohtorii_tools=0;
 #g_dll_hm_process=0;
 #g_dll_output_panel=0;
@@ -120,15 +119,15 @@ Start:
 
 	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusInitialize",#g_target_hidemaru,directory2,$g_root_macro_directory);
 
-	//##n=dllfuncw(#g_dll_ohtorii_tools,"Initialize");
-	call LoadKindAll;
-	if(! ##return){
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"KindsLoadAll",$g_root_macro_directory+"\\kinds\\");
+	if(! ##ret){
 		return false;
 	}
 	call ShowPerformanceCounter "LoadKindAll";
 
-	call LoadSourceAll;
-	if(! ##return){
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesLoadAll",$g_root_macro_directory+"\\sources\\");
+	if(! ##ret){
 		return false;
 	}
 	call ShowPerformanceCounter "LoadSourceAll";
@@ -163,8 +162,6 @@ RefineSearch:
 	*/
 	$$source_filename	= $$1;
 	$$args				= $$2;
-
-	debuginfo 1;
 
 	//
 	//ソースから候補を生成する
@@ -253,7 +250,6 @@ RefineSearchMain:
 		else{
 			//候補の更新
 			##canged_candidates=dllfuncw(#g_dll_ohtorii_tools,"ClearChangedCandidatesAndReturnPrevStatus");
-			//debuginfo "##canged_candidates="+str(##canged_candidates);
 			if((##canged_candidates) || (($$prev_pattern != $$key_buffer) && (##candidates_update_interval<(tickcount-##candidates_update_prev_tickcount)))){
 				##candidates_update_prev_tickcount=tickcount;
 				call Filter $$key_buffer;
@@ -290,12 +286,11 @@ Enter:
 	}
 
 	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StatusEnableIsStart");
-	debuginfo 1;
-	debuginfo "##is_start="+str(##is_start);
 	if(##is_start){
 		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartSourceName");
 		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartArg");
 		$$source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
+		$$source_filename=$$source_filename+".mac";
 		call NewCandidate, $$source_filename, $$arg;
 		return ##return;
 	}
@@ -524,7 +519,7 @@ NewFile:
 		config "xShowLineNo:0";
 	}
 	/*見出しバー表示*/
-	/config "xOutlineBar:1";
+	config "xOutlineBar:1";
 	/*TSVモード*/
 	config "xTabMode:0x0001";
 	config "xGuideLine:0x00";
@@ -542,77 +537,6 @@ CloseFileIfOpen:
 		#g_new_hidemaru=0;
 
 		#g_open_newfile=false;
-	}
-	return true;
-
-
-//#region Kind
-LoadKindAll:
-	/*全カインドをDLLへ読み込む*/
-	$$kinds[0]="";
-	##kinds_num=0;
-
-	$$root = $g_root_macro_directory+"\\kinds\\";
-	##n = dllfunc(#g_dengaku_dll,"ENUMFILE",$$root+"*.mac");
-	while (1) {
-		$$file = dllfuncstr(#g_dengaku_dll,"FINDNEXT");
-		if ($$file == "") {
-			break;
-		}
-		$$kinds[##kinds_num]=$$root+$$file;
-		##kinds_num = ##kinds_num + 1;
-	}
-
-	##n=dllfuncw(#g_dll_ohtorii_tools,"KindsClear");
-
-	##i=0;
-	while(##i<##kinds_num){
-		$$args[0]="get_property";
-		$$args[30]=str(#g_dll_ohtorii_tools);
-		execmacro $$kinds[##i],$$args,31;
-
-		$$kind_name=dllfuncstrw(#g_dll_ohtorii_tools,"KindsCreate",getresultex(-1));
-		if($$kind_name==""){
-			return false;
-		}
-		##i = ##i + 1;
-	}
-	return true;
-
-//#region Source
-LoadSourceAll:
-	/*全ソースをDLLへ読み込む*/
-	$$sources[0]="";
-	##sources_num=0;
-
-	$$root = $g_root_macro_directory+"\\sources\\";
-	##n = dllfunc(#g_dengaku_dll,"ENUMFILE",$$root+"*.mac");
-	while (1) {
-		$$file = dllfuncstr(#g_dengaku_dll,"FINDNEXT");
-		if ($$file == "") {
-			break;
-		}
-		$$sources[##sources_num]=$$root+$$file;
-		##sources_num = ##sources_num + 1;
-	}
-
-	##i=0;
-	while(##i<##sources_num){
-		/*ソースのプロパティを取得する
-		*/
-		$$source_filename=$$sources[##i];
-		$$args[0]="get_property";
-		$$args[30]=str(#g_dll_ohtorii_tools);
-		execmacro $$source_filename, $$args,31;
-		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",getresultex(-1));
-		if($$source_name==""){
-			return false;
-		}
-		##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceName",$$source_filename,$$source_name);
-		if(!##ret){
-			return false;
-		}
-		##i = ##i + 1;
 	}
 	return true;
 
@@ -636,11 +560,6 @@ LoadDll:
 	if(#g_hmjre_dll==0){
 		return false;
 	}
-	execmacro currentmacrodirectory+"\\load_dll.mac", "DengakuDLL.dll";
-	#g_dengaku_dll=val(getresultex(-1));
-	if(#g_dengaku_dll==0){
-		return false;
-	}
 	return true;
 
 
@@ -660,10 +579,6 @@ FreeDll:
 		#g_hmjre_dll=0;
 	}
 
-	if(#g_dengaku_dll!=0){
-		freedll #g_dengaku_dll;
-		#g_dengaku_dll=0;
-	}
 	if(#g_dll_output_panel!=0){
 		freedll #g_dll_output_panel;
 		#g_dll_output_panel=0;

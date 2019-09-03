@@ -11,14 +11,6 @@ $arg5=getarg(5);
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;
 
-get_property:
-	//ソースのプロパティをini形式で返す
-	return R"([property]
-name=file_mru
-description=candidates from file MRU list
-default_kind=file_mru
-candidate_type=function
-)";
 
 gather_candidates:
 	/*候補を集める*/

@@ -7,14 +7,6 @@ $arg=getarg(1);
 call $label, $arg;
 endmacro $$return;
 
-get_property:
-	//ソースのプロパティをini形式で返す
-	return R"([property]
-name=process
-description=起動しているプロセスの一覧
-default_kind=common
-candidate_type=function
-)";
 
 gather_candidates:
 	/*
