@@ -370,13 +370,19 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 	}
 }
 
-bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
+bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){		
 	WCHAR buf[16 * 1024];
+	
 	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_name.assign(buf);
-	if (dst.m_name.size() == 0) {
-		DebugLog(_T("  return false@3"));
-		return false;
+	dst.m_name.assign(buf);	
+	if (dst.m_name.size() == 0)	
+	{
+		WCHAR fname[_MAX_FNAME];
+		const errno_t err = _wsplitpath_s(ini_filename, nullptr, 0, nullptr, 0, fname, _MAX_FNAME, nullptr, 0);
+		if (err != 0) {
+			return false;
+		}
+		dst.m_name.assign(fname);		
 	}
 
 	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf, _countof(buf), ini_filename);
@@ -413,7 +419,7 @@ bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
 }
 
 bool Kinds::LoadKindAll(const WCHAR* root_dir) {
-	std::deque<std::wstring> file_names;
+	File::EnumeFileResultContainer file_names;
 	if (!Unity::Instance().lock()->QueryFile().EnumeFiles(file_names, root_dir, _T("*.ini"))) {
 		return false;
 	}
@@ -421,7 +427,7 @@ bool Kinds::LoadKindAll(const WCHAR* root_dir) {
 	const auto num = file_names.size();
 	m_kinds.resize(num);
 	for (size_t i = 0; i < num; ++i) {
-		if (!IniToKind(m_kinds.at(i), file_names.at(i).c_str())) {
+		if (!IniToKind(m_kinds.at(i), file_names.at(i).m_abs_filename.c_str())) {
 			return false;
 		}
 	}

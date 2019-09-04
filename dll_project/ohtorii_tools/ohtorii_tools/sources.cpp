@@ -65,7 +65,7 @@ Source* Sources::FindSource(const WCHAR*source_name) {
 	return &(it->second);
 }
 
-static bool MakePath(std::wstring&out, const WCHAR*file_name) {
+bool Sources::MakeSourcePathName(std::wstring&out, const WCHAR*file_name) {
 	WCHAR drive[_MAX_DRIVE];
 	WCHAR dir[_MAX_DIR];
 	WCHAR fname[_MAX_FNAME];
@@ -79,12 +79,15 @@ static bool MakePath(std::wstring&out, const WCHAR*file_name) {
 	out.assign(drive);
 	out.append(dir);
 	out.append(fname);
+
+	//(memo)ファイルパスを小文字で比較する。
+	std::transform(out.begin(), out.end(), out.begin(), ::tolower);
 	return true;
 }
 
 bool Sources::AppendFileNameAndSourceName(const WCHAR*file_name, const WCHAR*source_name) {
 	std::wstring path;
-	if (!MakePath(path, file_name)) {
+	if (!MakeSourcePathName(path, file_name)) {
 		return false;
 	}
 
@@ -100,7 +103,7 @@ bool Sources::AppendFileNameAndSourceName(const WCHAR*file_name, const WCHAR*sou
 
 bool Sources::ExistFileName(const WCHAR*file_name)const {
 	std::wstring path;
-	if (!MakePath(path, file_name)) {
+	if (!MakeSourcePathName(path, file_name)) {
 		return false;
 	}
 	auto it = m_file_name_to_source_name.find(path);
@@ -112,7 +115,7 @@ bool Sources::ExistFileName(const WCHAR*file_name)const {
 
 const WCHAR* Sources::FileNameToSourceName(const WCHAR*file_name)const {
 	std::wstring path;
-	if (!MakePath(path, file_name)) {
+	if (!MakeSourcePathName(path, file_name)) {
 		return gs_empty;
 	}
 	try {
@@ -152,12 +155,21 @@ bool Sources::Exist(const WCHAR*source_name)const {
 	return m_sources.end() != m_sources.find(source_name);
 }
 
-bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {
-	WCHAR buf[16*1024];
-
-	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_name.assign(buf);
+bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {	
+	WCHAR buf[16 * 1024];
 	
+	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
+	dst.m_name.assign(buf);	
+	if(dst.m_name.size()==0)
+	{
+		WCHAR fname[_MAX_FNAME];
+		const errno_t err = _wsplitpath_s(ini_filename, nullptr, 0, nullptr, 0, fname, _MAX_FNAME, nullptr, 0);
+		if (err != 0) {
+			return false;
+		}
+		dst.m_name.assign(fname);		
+	}
+
 	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf, _countof(buf), ini_filename);
 	dst.m_description.assign(buf);
 
@@ -174,7 +186,7 @@ bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {
 }
 
 bool Sources::LoadSourceAll(const WCHAR* root_dir) {
-	std::deque<std::wstring> file_names;
+	File::EnumeFileResultContainer file_names;
 	if (!Unity::Instance().lock()->QueryFile().EnumeFiles(file_names, root_dir, _T("*.ini"))) {
 		return false;
 	}
@@ -182,12 +194,12 @@ bool Sources::LoadSourceAll(const WCHAR* root_dir) {
 	const auto num = file_names.size();
 	Source dst;
 	for (size_t i = 0; i < num; ++i) {
-		const auto &filename = file_names.at(i);
-		if (!IniToSource(dst, filename.c_str())) {
+		const auto &abs_filename = file_names.at(i).m_abs_filename;
+		if (!IniToSource(dst, abs_filename.c_str())) {
 			return false;
 		}
 		m_sources.insert({ dst.m_name, dst });
-		if (!AppendFileNameAndSourceName(filename.c_str(), dst.m_name.c_str())) {
+		if (!AppendFileNameAndSourceName(abs_filename.c_str(), dst.m_name.c_str())) {
 			return false;
 		}		
 	}

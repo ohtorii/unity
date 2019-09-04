@@ -79,6 +79,7 @@ private:
 	std::unordered_map<std::wstring, std::wstring> 	m_file_name_to_source_name;
 	
 	static bool IniToSource(Source&dst, const WCHAR*ini_filename);
+	static bool MakeSourcePathName(std::wstring&out, const WCHAR*file_name);
 	bool Exist(const WCHAR*source_name)const;
 };
 

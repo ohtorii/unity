@@ -120,7 +120,7 @@ bool File::WriteToFile(const WCHAR* filename, const WCHAR* string) {
 	return true;
 }
 
-bool File::EnumeFiles(std::deque<std::wstring>&out_files, const WCHAR*directory, const WCHAR* extension) {
+bool File::EnumeFiles(EnumeFileResultContainer&out, const WCHAR*directory, const WCHAR* extension) {
 	std::wstring	file_pattern;
 	file_pattern.append(directory);
 	file_pattern.append(extension);
@@ -133,13 +133,16 @@ bool File::EnumeFiles(std::deque<std::wstring>&out_files, const WCHAR*directory,
 		return false;
 	}
 
+	EnumeFileResultContainer::value_type	value;
 	do {
 		if (win32fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			//pass
 		}
 		else {
-			out_files.emplace_back(directory);
-			out_files.back().append(win32fd.cFileName);
+			value.m_abs_filename.assign(directory);
+			value.m_abs_filename.append(win32fd.cFileName);
+			//value.m_filename.assign(win32fd.cFileName);
+			out.emplace_back(value);
 		}
 	} while (FindNextFile(hFind, &win32fd));
 	FindClose(hFind);

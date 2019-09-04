@@ -13,8 +13,13 @@ public:
 	bool CreateTempFile(std::wstring&out);
 	bool WriteToFile(const WCHAR* filename, const WCHAR* string);
 	
+	struct EnumeFileResult {
+		std::wstring	m_abs_filename;
+		//std::wstring		m_filename;
+	};
+	typedef std::deque<EnumeFileResult> EnumeFileResultContainer;
 	///指定ディレクトリのファイルを絶対パスで列挙する
-	static bool EnumeFiles(std::deque<std::wstring>&out_files, const WCHAR*root_dir, const WCHAR* extension);
+	static bool EnumeFiles(EnumeFileResultContainer&out_files, const WCHAR*root_dir, const WCHAR* extension);
 
 	static void StartDestroy();
 	static void JoinDestroy();

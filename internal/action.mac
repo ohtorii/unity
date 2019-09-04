@@ -34,7 +34,7 @@ main:
 	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",##candidate_index);
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"InheriatnceGenerateDefaultAction",$$source_name);
 	if(! ##ret){
-		debuginfo "  [Failed]internal/action.mac return 0";
+		debuginfo "  [Failed]internal/action.mac return 0. $$source_name="+$$source_name;
 		return "0";
 	}
 	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionKind");
