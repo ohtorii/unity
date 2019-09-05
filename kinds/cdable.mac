@@ -106,11 +106,6 @@ file:
 	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
 	$$parent_folder=getresultex(-1)+"\\";
 	$$source="file";
-
-	debuginfo "-- file --";
-	debuginfo "  $$text="+$$text;
-	debuginfo "  $$parent_folder="+$$parent_folder;
-
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$parent_folder);
 	if(##ret){
 		return "1";
@@ -121,7 +116,7 @@ file:
 narrow:
 	##first_item_index	= 0;
 	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##first_item_index);
-	$$source="directory";
+	$$source="file";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$folder);
 	if(##ret){
 		return "1";
