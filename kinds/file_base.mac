@@ -62,10 +62,11 @@ open:
 	##i=0;
 	while(##i < ##count){
 		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
-
-		openfile $$text;
-		##new_hidemaru_handle = hidemaruhandle(0);
-		setactivehidemaru(##current_hidemaru_handle);
+		if($$text!=""){
+			openfile $$text;
+			##new_hidemaru_handle = hidemaruhandle(0);
+			setactivehidemaru(##current_hidemaru_handle);
+		}
 
 		##i = ##i + 1;
 	}
