@@ -5,8 +5,8 @@
 $label				=getarg(0);
 $arg				=getarg(1);
 
-#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetTargetHidemaruHandle");
-$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
+#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
 
 call $label, $arg;
 endmacro $$return;
@@ -65,7 +65,7 @@ do:
 	execmacro $g_root_macro_directory+"\\internal\\is_quit.mac", str(#g_dll_ohtorii_tools),$$user_data_kind, $$action_name;
 	$$is_quit = getresultex(-1);
 	debuginfo "  IsQuit finish. $$is_quit="+$$is_quit;
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusSetIsQuit",val($$is_quit));
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusSetIsQuit",val($$is_quit));
 	debuginfo "  do -> true";
 	return $$action_result;
 

@@ -20,7 +20,7 @@ private:
 	void Destroy();
 
 
-	enum Status{
+	enum StaticStatus{
 		FILE_OPEN,
 		GET_LINE,
 		FILE_CLOSE,
@@ -31,7 +31,7 @@ private:
 	///ファイル名
 	std::wstring			m_filename;
 	FILE*					m_file;
-	Status						m_status;
+	StaticStatus						m_status;
 	std::chrono::system_clock::time_point	m_file_read_start_clock;
 	//Candidates::ContainerType&	m_candidates;
 	Unity*					m_instance;

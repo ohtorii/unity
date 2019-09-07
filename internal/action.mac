@@ -12,8 +12,8 @@
 #g_dll_ohtorii_tools	=val(getarg(0));
 #g_dll_hm_process		=val(getarg(1));
 
-#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetTargetHidemaruHandle");
-$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
+#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
 
 
 //==========================================================================
@@ -63,7 +63,7 @@ pre_action:
 	$$default_kind	=$$1;
 	$$default_action=$$2;
 
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusReset",$$default_kind, $$default_action);
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusReset",$$default_kind, $$default_action);
 	return ##ret;
 
 
@@ -121,13 +121,13 @@ exec_action:
 	$$action_result = getresultex(-1);
 
 	if(##is_edit){
-		call SerializeStatusContext;
+		call SerializeStaticStatusContext;
 		$$status_contex_filename=$$return;
 
 		call FreeDll;
 
 		if($$status_contex_filename==""){
-			debuginfo " internal/action.mac SerializeStatusContext -> false";
+			debuginfo " internal/action.mac SerializeStaticStatusContext -> false";
 			return "0";
 		}
 
@@ -135,9 +135,9 @@ exec_action:
 		//元の秀丸エディタへ切り替えアクションで更新されたステータスを反映する。
 		//
 		setactivehidemaru(##current_hidemaruhandle);
-		##ret=dllfuncw(##ohtorii_dll_handle,"DeSerializeToStatusContext", $$status_contex_filename);
+		##ret=dllfuncw(##ohtorii_dll_handle,"DeSerializeToStaticStatusContext", $$status_contex_filename);
 		if(! ##ret){
-			debuginfo " internal/action.mac DeSerializeToStatusContext -> false";
+			debuginfo " internal/action.mac DeSerializeToStaticStatusContext -> false";
 			return "0";
 		}
 	}
@@ -175,8 +175,8 @@ SerializeCurrentContext:
 	return $$return;
 
 
-SerializeStatusContext:
-	call SerializeMain, "SerializeStatusContext";
+SerializeStaticStatusContext:
+	call SerializeMain, "SerializeStaticStatusContext";
 	return $$return;
 
 

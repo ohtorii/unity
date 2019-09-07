@@ -271,12 +271,12 @@ INT_PTR RefineSearch::ChangeMarked(INT_PTR hidemaru_line_no, bool is_selected) {
 }
 
 
-INT_PTR RefineSearch::GetMarkedCount() {
+INT_PTR RefineSearch::GetMarkedCount()const {
 	return m_hidemaru_view.m_hidemaru_maeked_lineno.size();
 }
 
 
-INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index) {
+INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)const {
 	try {
 		return m_hidemaru_view.m_hidemaru_maeked_lineno.at(marked_index);
 	}
@@ -286,7 +286,7 @@ INT_PTR RefineSearch::ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)
 	return UNITY_NOT_FOUND_INDEX;
 }
 
-INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no) {	
+INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no)const {	
 	/*DebugLog(_T("ConvertHidemaruLinenNoToCandidateIndex"));
 	DebugLog(_T("  hidemaru_line_no=%d"),hidemaru_line_no);
 	*/
@@ -304,7 +304,7 @@ INT_PTR RefineSearch::ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_li
 	return UNITY_NOT_FOUND_INDEX;
 }
 
-INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index) {
+INT_PTR RefineSearch::ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index)const {
 	INT_PTR hidemaru_line_no = ConvertSelectedIndexToHidemaruLineno(marked_index);
 	if (hidemaru_line_no <= 0) {
 		return UNITY_NOT_FOUND_INDEX;
@@ -332,7 +332,7 @@ Candidate* RefineSearch::GetMarkedCandidate(INT_PTR marked_index) {
 	return nullptr;
 }
 */
-INT_PTR	RefineSearch::GetFirstSelectionCandidateIndex() {
+INT_PTR	RefineSearch::GetFirstSelectionCandidateIndex()const {
 	if (GetMarkedCount()) {
 		const INT_PTR first_item = 0;
 		return ConvertMarkIndexToCandidatesIndex(first_item);
@@ -340,7 +340,7 @@ INT_PTR	RefineSearch::GetFirstSelectionCandidateIndex() {
 	return ConvertHidemaruLinenNoToCandidateIndex(m_hidemaru_line_no);
 }
 
-INT_PTR	RefineSearch::GetSelectionCandidateCount() {
+INT_PTR	RefineSearch::GetSelectionCandidateCount()const {
 	auto marked_count = GetMarkedCount();
 	if (0<marked_count) {
 		return marked_count;
@@ -351,7 +351,7 @@ INT_PTR	RefineSearch::GetSelectionCandidateCount() {
 	return 1;
 }
 
-INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) {
+INT_PTR	RefineSearch::GetSelectionCandidateIndex(INT_PTR selected_index) const{
 	auto marked_count = GetMarkedCount();
 
 	/*DebugLog(_T("GetSelectionCandidateIndex"));

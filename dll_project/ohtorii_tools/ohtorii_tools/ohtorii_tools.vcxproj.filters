@@ -51,9 +51,6 @@
     <ClInclude Include="interface_sugar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="status.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="user_data.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -61,6 +58,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="parallel.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="static_status.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,13 +101,13 @@
     <ClCompile Include="interface_sugar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="status.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="user_data.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="async_files.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="static_status.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

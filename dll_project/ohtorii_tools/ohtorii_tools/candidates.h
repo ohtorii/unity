@@ -165,6 +165,13 @@ public:
 	INT_PTR		GetActionLine(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
+	/*指定ソース名の候補を削除する
+	sourcename	ソース名
+	return	bool	true	操作に成功
+					false	操作に失敗
+	*/
+	bool ClearWithSourceName(const WCHAR*sourcename);
+
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_candidates);
 	};

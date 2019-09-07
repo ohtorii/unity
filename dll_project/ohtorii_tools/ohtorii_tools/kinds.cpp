@@ -73,6 +73,10 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 
 	GetPrivateProfileString(section_name, _T("is_edit"), _T(""), buf, _countof(buf), filename);
 	dst.m_is_edit = StringToBool(buf);
+
+	GetPrivateProfileString(section_name, _T("is_reget_candidates"), _T(""), buf, _countof(buf), filename);
+	dst.m_is_reget_candidates = StringToBool(buf);
+	
 }
 
 static bool CheckAppendable(bool candidate_is_multi_select, bool action_is_multi_selectable) {
@@ -94,6 +98,7 @@ Action::Action() {
 	m_is_multi_selectable = false;
 	m_is_start = false;
 	m_is_edit = false;
+	m_is_reget_candidates = false;
 }
 
 
@@ -309,6 +314,15 @@ bool Kinds::IsActionStart(size_t kind_index, size_t action_index) {
 bool Kinds::IsEdit(size_t kind_index, size_t action_index) {
 	try {
 		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_edit;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+bool Kinds::IsRegetCandidates(size_t kind_index, size_t action_index) {
+	try {
+		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_reget_candidates;
 	}
 	catch (std::exception) {
 		//pass

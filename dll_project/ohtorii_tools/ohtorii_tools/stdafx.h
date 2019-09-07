@@ -47,7 +47,7 @@
 #include"inheritance.h"
 #include"utility.h"
 #include"interface_sugar.h"
-#include"status.h"
+#include"static_status.h"
 #include"user_data.h"
 #include"async_files.h"
 

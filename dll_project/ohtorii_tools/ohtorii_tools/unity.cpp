@@ -10,7 +10,7 @@ std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{nul
 size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
-Status					Unity::m_status;
+StaticStatus					Unity::m_status;
 
 
 
@@ -122,7 +122,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 	return false;
 }
 
- bool Unity::SerializeStatusContext(const WCHAR*out_filename) {
+ bool Unity::SerializeStaticStatusContext(const WCHAR*out_filename) {
 	 try {
 		 std::ofstream os(out_filename, std::ios::binary);
 		 if (!os) {
@@ -131,7 +131,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 
 		 {
 			 cereal::BinaryOutputArchive archive(os);
-			 archive(Unity::m_status);
+			 archive(Unity::m_status/*, Unity::Instance().lock()->m_candidates*/);
 		 }
 		 os.close();
 		 return true;
@@ -142,7 +142,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 	 return false;
 }
 
- bool Unity::DeSerializeToStatusContext(const WCHAR*input_filename) {
+ bool Unity::DeSerializeToStaticStatusContext(const WCHAR*input_filename) {
 	 try {
 		 std::ifstream is(input_filename, std::ios::binary);
 		 if (!is) {
@@ -150,7 +150,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 		 }
 		 {
 			 cereal::BinaryInputArchive	archive(is);
-			 archive(Unity::m_status);
+			 archive(Unity::m_status/*, Unity::Instance().lock()->m_candidates*/);
 		 }
 		 is.close();
 		 return true;
@@ -211,7 +211,7 @@ UserData&		Unity::QueryUserData() {
 	return m_user_data;
 }
 
-Status& Unity::QueryStatus() {
+StaticStatus& Unity::QueryStaticStatus() {
 	return m_status;
 }
 

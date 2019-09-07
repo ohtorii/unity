@@ -10,7 +10,7 @@
 #include"kinds.h"
 #include"inheritance.h"
 #include"user_data.h"
-#include"status.h"
+#include"static_status.h"
 #include"async_files.h"
 
 
@@ -26,8 +26,8 @@ public:
 	static size_t GetCurrentInstanceIndex();
 	static bool SerializeCurrentContext(const WCHAR*output_filename);
 	static bool DeSerializeToCurrentContext(const WCHAR*input_filename);
-	static bool SerializeStatusContext(const WCHAR*output_filename);
-	static bool DeSerializeToStatusContext(const WCHAR*input_filename);
+	static bool SerializeStaticStatusContext(const WCHAR*output_filename);
+	static bool DeSerializeToStaticStatusContext(const WCHAR*input_filename);
 	static void Destroy();
 	
 	///候補に変更あり
@@ -60,7 +60,7 @@ public:
 	Kinds&			QueryKinds();	
 	Inheritance&	QueryInheritance();
 	UserData&		QueryUserData();
-	Status&			QueryStatus();
+	StaticStatus&	QueryStaticStatus();
 	ASyncFiles&		QueryASyncFiles();
 
 	template<class Archive> void serialize(Archive & archive) {
@@ -85,7 +85,7 @@ private:
 	UserData			m_user_data;
 	ASyncFiles			m_async_files;
 	///状態
-	static Status		m_status;
+	static StaticStatus		m_status;
 
 	///カインドはインスタンス共通で利用するため静的領域とする
 	static Kinds		m_kinds;	

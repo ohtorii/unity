@@ -45,8 +45,8 @@ EXPORTS
     GetCurrentContext
 	SerializeCurrentContext
 	DeSerializeToCurrentContext
-	SerializeStatusContext
-	DeSerializeToStatusContext
+	SerializeStaticStatusContext
+	DeSerializeToStaticStatusContext
 	SetUserDataString
 	GetUserDataString
 	HasChangedCandidates
@@ -70,6 +70,7 @@ EXPORTS
 	CandidatesSetUserDataNumeric
 	CandidatesGetUserDataString
 	CandidatesGetUserDataNumeric
+	CandidatesClearWithSourceName
 
 	
 	KindGetKindName
@@ -89,29 +90,32 @@ EXPORTS
 	KindsIsActionMultiSelectable
 	KindsIsActionStart
 	KindsIsEdit
+	KindsIsRegetCandidates
 
 	
 	InheriatnceGenerateDefaultAction
 	InheriatnceGetDefaultActionKind
 	InheriatnceGetDefaultActionLabel
 
-	StatusInitialize
-	StatusReset
-	StatusSetIsStart
-	StatusClearIsStart
-	StatusEnableIsStart
-	StatusGetIsStartSourceName
-	StatusGetIsStartArg
-	StatusSetIsQuit
-	StatusGetIsQuit
-	StatusSetHidemaruHandleToForceAtEndProcess
-	StatusGetHidemaruHandleToForceAtEndProcess
-	StatusSetTargetHidemaruHandle
-	StatusGetTargetHidemaruHandle
-	StatusSetCurrentWorkingDirectory
-	StatusGetCurrentWorkingDirectory
-	StatusSetRootMacroDirectory
-	StatusGetRootMacroDirectory
+	StaticStatusInitialize
+	StaticStatusReset
+	StaticStatusSetIsStart
+	StaticStatusClearIsStart
+	StaticStatusEnableIsStart
+	StaticStatusGetIsStartSourceName
+	StaticStatusGetIsStartArg
+	StaticStatusSetIsQuit
+	StaticStatusGetIsQuit
+	StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates
+	StaticStatusGetSourceNameForReacquisitionCandidates
+	StaticStatusSetHidemaruHandleToForceAtEndProcess
+	StaticStatusGetHidemaruHandleToForceAtEndProcess
+	StaticStatusSetTargetHidemaruHandle
+	StaticStatusGetTargetHidemaruHandle
+	StaticStatusSetCurrentWorkingDirectory
+	StaticStatusGetCurrentWorkingDirectory
+	StaticStatusSetRootMacroDirectory
+	StaticStatusGetRootMacroDirectory
 
 
 	FileRegistAfterDeleteFile

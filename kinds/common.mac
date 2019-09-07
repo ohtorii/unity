@@ -44,7 +44,7 @@ $arg5=getarg(5);
 
 debuginfo "kinds/commonm.mac";
 debuginfo "  #g_dll_ohtorii_tools="+getarg(30);
-$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetRootMacroDirectory");
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
 debuginfo "  -> OK";
 
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5, $arg6;

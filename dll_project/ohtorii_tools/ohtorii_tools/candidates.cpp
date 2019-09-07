@@ -56,23 +56,27 @@ Candidates::Candidates() {
 }
 
 INT_PTR Candidates::AppendCandidateHeader(const WCHAR*source_name, const WCHAR*header, const WCHAR*description){
+	INT_PTR result=0;
 	ContainerType::scoped_lock locker(m_candidates);
 	{
 		m_candidates.emplace_back(source_name, header, description);
 		auto &dst = m_candidates.back();
 		dst.m_header = true;
 		dst.m_selectable = false;
-		return m_candidates.size() - 1;
-	}	
+		result=m_candidates.size() - 1;
+	}
+	return result;
 }
 
 INT_PTR Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description)
 {
+	INT_PTR result=0;
 	ContainerType::scoped_lock locker(m_candidates);
 	{
 		m_candidates.emplace_back(source_name, candidate, description);
-		return m_candidates.size() - 1;
+		result=m_candidates.size() - 1;
 	}
+	return result;
 }
 
 INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*candidate, const WCHAR*description) {
@@ -85,9 +89,9 @@ INT_PTR Candidates::AppendChildCandidate(INT_PTR candidate_index, const WCHAR*ca
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return UNITY_NOT_FOUND_INDEX;
+		}		
 	}
+	return UNITY_NOT_FOUND_INDEX;
 }
 
 bool Candidates::SetActionDirectoryName(INT_PTR index, const WCHAR* directory_name) {
@@ -99,9 +103,9 @@ bool Candidates::SetActionDirectoryName(INT_PTR index, const WCHAR* directory_na
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return false;
+		}		
 	}
+	return false;
 }
 
 bool Candidates::SetActionFileName(INT_PTR index, const WCHAR* filename) {
@@ -113,9 +117,9 @@ bool Candidates::SetActionFileName(INT_PTR index, const WCHAR* filename) {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return false;
+		}		
 	}
+	return false;
 }
 
 bool Candidates::SetActionColumn(INT_PTR index, INT_PTR column) {
@@ -127,9 +131,9 @@ bool Candidates::SetActionColumn(INT_PTR index, INT_PTR column) {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return false;
+		}		
 	}
+	return false;
 }
 
 bool Candidates::SetActionLine(INT_PTR index, INT_PTR line) {
@@ -141,9 +145,9 @@ bool Candidates::SetActionLine(INT_PTR index, INT_PTR line) {
 		}
 		catch (std::exception) {
 			//pass
-		}
-	return false;
+		}	
 	}
+	return false;
 }
 
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
@@ -154,9 +158,9 @@ bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) 
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return false;
+		}		
 	}
+	return false;
 }
 
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, INT_PTR data) {
@@ -167,9 +171,9 @@ bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, INT_PTR data) {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return false;
+		}		
 	}
+	return false;
 }
 
 const WCHAR*	Candidates::GetUserData(INT_PTR index, const WCHAR* key, const WCHAR*	default_data) {
@@ -180,9 +184,9 @@ const WCHAR*	Candidates::GetUserData(INT_PTR index, const WCHAR* key, const WCHA
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return default_data;
+		}		
 	}
+	return default_data;
 }
 
 INT_PTR			Candidates::GetUserData(INT_PTR index, const WCHAR* key, INT_PTR		default_data) {
@@ -193,9 +197,9 @@ INT_PTR			Candidates::GetUserData(INT_PTR index, const WCHAR* key, INT_PTR		defa
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return default_data;
+		}		
 	}
+	return default_data;
 }
 
 const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
@@ -206,9 +210,9 @@ const WCHAR* Candidates::GetSourceName(INT_PTR index)const{
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return nullptr;
+		}		
 	}
+	return nullptr;
 }
 
 const WCHAR* Candidates::GetText(INT_PTR index)const {
@@ -219,9 +223,9 @@ const WCHAR* Candidates::GetText(INT_PTR index)const {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return nullptr;
+		}		
 	}
+	return nullptr;
 }
 
 const WCHAR* Candidates::GetActionDirectoryName(INT_PTR index)const {
@@ -232,9 +236,9 @@ const WCHAR* Candidates::GetActionDirectoryName(INT_PTR index)const {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return nullptr;
+		}		
 	}
+	return nullptr;
 }
 
 const WCHAR* Candidates::GetActionFileName(INT_PTR index)const {
@@ -245,9 +249,9 @@ const WCHAR* Candidates::GetActionFileName(INT_PTR index)const {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return nullptr;
+		}		
 	}
+	return nullptr;
 }
 
 INT_PTR		Candidates::GetActionColumn(INT_PTR index)const {
@@ -258,9 +262,9 @@ INT_PTR		Candidates::GetActionColumn(INT_PTR index)const {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return UNITY_NOT_FOUND_INDEX;
+		}		
 	}
+	return UNITY_NOT_FOUND_INDEX;
 }
 
 INT_PTR		Candidates::GetActionLine(INT_PTR index)const {
@@ -272,8 +276,8 @@ INT_PTR		Candidates::GetActionLine(INT_PTR index)const {
 		catch (std::exception) {
 			//pass
 		}
-		return UNITY_NOT_FOUND_INDEX;
 	}
+	return UNITY_NOT_FOUND_INDEX;
 }
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {
@@ -284,9 +288,26 @@ const WCHAR* Candidates::GetDescription(INT_PTR index)const {
 		}
 		catch (std::exception) {
 			//pass
-		}
-		return nullptr;
+		}		
 	}
+	return nullptr;
+}
+
+bool Candidates::ClearWithSourceName(const WCHAR*sourcename) {
+	ContainerType::scoped_lock locker(m_candidates);
+	try {
+		auto first = std::find_if(m_candidates.begin(), m_candidates.end(), [sourcename](auto&item) {return item.m_source_name.compare(sourcename) == 0; });
+		if (first == m_candidates.end()) {
+			return true;
+		}
+		auto last = std::find_if_not(first, m_candidates.end(), [sourcename](auto&item) {return item.m_source_name.compare(sourcename) == 0; });
+		m_candidates.erase(first, last);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
 }
 
 /*

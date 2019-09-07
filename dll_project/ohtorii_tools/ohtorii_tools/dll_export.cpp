@@ -105,7 +105,7 @@ extern "C" INT_PTR GetSelectionUserDataNumeric(INT_PTR selected_index, WCHAR*key
 }
 
 extern "C" INT_PTR StartCandidate(WCHAR*source_name, WCHAR*arg) {	
-	return Unity::Instance().lock()->QueryStatus().GetIsStart().Set(source_name,arg);
+	return Unity::Instance().lock()->QueryStaticStatus().GetIsStart().Set(source_name,arg);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -131,12 +131,12 @@ extern "C" INT_PTR DeSerializeToCurrentContext(WCHAR* input_filename) {
 	return Unity::Instance().lock()->DeSerializeToCurrentContext(input_filename);
 }
 
-extern "C" INT_PTR SerializeStatusContext(WCHAR* out_filename) {
-	return Unity::Instance().lock()->SerializeStatusContext(out_filename);
+extern "C" INT_PTR SerializeStaticStatusContext(WCHAR* out_filename) {
+	return Unity::Instance().lock()->SerializeStaticStatusContext(out_filename);
 }
 
-extern "C" INT_PTR DeSerializeToStatusContext(WCHAR* input_filename) {
-	return Unity::Instance().lock()->DeSerializeToStatusContext(input_filename);
+extern "C" INT_PTR DeSerializeToStaticStatusContext(WCHAR* input_filename) {
+	return Unity::Instance().lock()->DeSerializeToStaticStatusContext(input_filename);
 }
 
 extern "C" INT_PTR SetUserDataString(WCHAR* key, WCHAR* data) {
@@ -281,7 +281,7 @@ extern "C" const WCHAR*	CandidatesGetUserDataString(INT_PTR index, const WCHAR* 
 	return Unity::Instance().lock()->QueryCandidates().GetUserData(index, key, default_data);
 }
 
-extern "C" INT_PTR		CandidatesGetUserDataNumeric(INT_PTR index, const WCHAR* key, INT_PTR default_data) {
+extern "C" INT_PTR CandidatesGetUserDataNumeric(INT_PTR index, const WCHAR* key, INT_PTR default_data) {
 	return Unity::Instance().lock()->QueryCandidates().GetUserData(index,key,default_data);
 }
 
@@ -292,6 +292,11 @@ extern "C" WCHAR* CandidatesGetSourceName(INT_PTR index) {
 extern "C" WCHAR* CandidatesGetText(INT_PTR index) {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates().GetText(index));
 }
+
+extern "C" INT_PTR CandidatesClearWithSourceName(const WCHAR*source_name) {
+	return Unity::Instance().lock()->QueryCandidates().ClearWithSourceName(source_name);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 //kind
@@ -371,6 +376,11 @@ extern "C" INT_PTR	KindsIsEdit(INT_PTR kind_index, INT_PTR action_index) {
 	return Unity::Instance().lock()->QueryKinds().IsEdit(kind_index, action_index);
 }
 
+extern "C" INT_PTR	KindsIsRegetCandidates(INT_PTR kind_index, INT_PTR action_index) {
+	return Unity::Instance().lock()->QueryKinds().IsRegetCandidates(kind_index, action_index);
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 //Inheritance
 /////////////////////////////////////////////////////////////////////////////
@@ -389,78 +399,93 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 /////////////////////////////////////////////////////////////////////////////
 //Status
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR StatusInitialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
-	Unity::Instance().lock()->QueryStatus().Initialize(target_hidemaru, working_directory, root_macro_directory);
+extern "C" INT_PTR StaticStatusInitialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
+	Unity::Instance().lock()->QueryStaticStatus().Initialize(target_hidemaru, working_directory, root_macro_directory);
 	return true;
 }
 
-extern "C" INT_PTR StatusReset(const WCHAR*kind_name,const WCHAR*action_name) {
-	return Unity::Instance().lock()->QueryStatus().Reset(kind_name,action_name);
+extern "C" INT_PTR StaticStatusReset(const WCHAR*kind_name,const WCHAR*action_name) {
+	return Unity::Instance().lock()->QueryStaticStatus().Reset(kind_name,action_name);
 }
 
-extern "C" INT_PTR StatusSetIsStart(INT_PTR is_start) {
-	return Unity::Instance().lock()->QueryStatus().GetIsStart().SetEnable(is_start);
+extern "C" INT_PTR StaticStatusSetIsStart(INT_PTR is_start) {
+	return Unity::Instance().lock()->QueryStaticStatus().GetIsStart().SetEnable(is_start);
 }
 
-extern "C" INT_PTR StatusClearIsStart() {
-	return Unity::Instance().lock()->QueryStatus().GetIsStart().Clear();
+extern "C" INT_PTR StaticStatusClearIsStart() {
+	return Unity::Instance().lock()->QueryStaticStatus().GetIsStart().Clear();
 }
 
-extern "C" INT_PTR StatusEnableIsStart() {
-	return Unity::Instance().lock()->QueryStatus().GetIsStart().Enable();
+extern "C" INT_PTR StaticStatusEnableIsStart() {
+	return Unity::Instance().lock()->QueryStaticStatus().GetIsStart().Enable();
 }
 
-extern "C" WCHAR* StatusGetIsStartSourceName() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().GetIsStart().m_source_name.c_str());
+extern "C" WCHAR* StaticStatusGetIsStartSourceName() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().GetIsStart().m_source_name.c_str());
 }
 
-extern "C" WCHAR* StatusGetIsStartArg() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().GetIsStart().m_arg.c_str());
+extern "C" WCHAR* StaticStatusGetIsStartArg() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().GetIsStart().m_arg.c_str());
 }
 
-extern"C" INT_PTR StatusSetIsQuit(INT_PTR is_quit) {
-	Unity::Instance().lock()->QueryStatus().m_is_quit = is_quit;
+extern"C" INT_PTR StaticStatusSetIsQuit(INT_PTR is_quit) {
+	Unity::Instance().lock()->QueryStaticStatus().m_is_quit = is_quit;
 	return true;
 }
 
-extern"C" INT_PTR StatusGetIsQuit() {
-	return Unity::Instance().lock()->QueryStatus().m_is_quit;
+extern"C" INT_PTR StaticStatusGetIsQuit() {
+	return Unity::Instance().lock()->QueryStaticStatus().m_is_quit;
 }
 
-extern"C" INT_PTR StatusSetHidemaruHandleToForceAtEndProcess(INT_PTR hidemaru_handle) {
-	Unity::Instance().lock()->QueryStatus().m_hidemaruhandle_to_focus_at_end_of_process=hidemaru_handle;
+extern"C" INT_PTR StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
+	return Unity::Instance().lock()->QueryStaticStatus().GetNumberOfSourceNamesForReacquisitionCandidates();
+}
+
+extern"C" WCHAR* StaticStatusGetSourceNameForReacquisitionCandidates(INT_PTR index) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().GetSourceNameForReacquisitionCandidates(index));
+}
+/*
+extern"C" INT_PTR StatusGetIsRegetCandidates() {
+	if (Unity::Instance().lock()->QueryStatus().m_reget_candidate_source_names.size()) {
+		return true;
+	}
+	return false;
+}*/
+
+extern"C" INT_PTR StaticStatusSetHidemaruHandleToForceAtEndProcess(INT_PTR hidemaru_handle) {
+	Unity::Instance().lock()->QueryStaticStatus().m_hidemaruhandle_to_focus_at_end_of_process=hidemaru_handle;
 	return true;
 }
 
-extern"C" INT_PTR StatusGetHidemaruHandleToForceAtEndProcess() {
-	return Unity::Instance().lock()->QueryStatus().m_hidemaruhandle_to_focus_at_end_of_process;
+extern"C" INT_PTR StaticStatusGetHidemaruHandleToForceAtEndProcess() {
+	return Unity::Instance().lock()->QueryStaticStatus().m_hidemaruhandle_to_focus_at_end_of_process;
 }
 
-extern"C" INT_PTR StatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
-	Unity::Instance().lock()->QueryStatus().m_target_hidemaruhandle=hidemaru_handle;
+extern"C" INT_PTR StaticStatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
+	Unity::Instance().lock()->QueryStaticStatus().m_target_hidemaruhandle=hidemaru_handle;
 	return true;
 }
 
-extern"C" INT_PTR StatusGetTargetHidemaruHandle() {
-	return Unity::Instance().lock()->QueryStatus().m_target_hidemaruhandle;
+extern"C" INT_PTR StaticStatusGetTargetHidemaruHandle() {
+	return Unity::Instance().lock()->QueryStaticStatus().m_target_hidemaruhandle;
 }
 
-extern"C" INT_PTR StatusSetCurrentWorkingDirectory(WCHAR* current_working_directory) {
-	Unity::Instance().lock()->QueryStatus().m_current_working_directory.assign(current_working_directory);
+extern"C" INT_PTR StaticStatusSetCurrentWorkingDirectory(WCHAR* current_working_directory) {
+	Unity::Instance().lock()->QueryStaticStatus().m_current_working_directory.assign(current_working_directory);
 	return true;
 }
 
-extern"C" WCHAR* StatusGetCurrentWorkingDirectory() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().m_current_working_directory.c_str());
+extern"C" WCHAR* StaticStatusGetCurrentWorkingDirectory() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_current_working_directory.c_str());
 }
 
-extern"C" INT_PTR StatusSetRootMacroDirectory(WCHAR* root_macro_directory) {
-	Unity::Instance().lock()->QueryStatus().m_root_macro_directory.assign(root_macro_directory);
+extern"C" INT_PTR StaticStatusSetRootMacroDirectory(WCHAR* root_macro_directory) {
+	Unity::Instance().lock()->QueryStaticStatus().m_root_macro_directory.assign(root_macro_directory);
 	return true;
 }
 
-extern"C" WCHAR* StatusGetRootMacroDirectory() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStatus().m_root_macro_directory.c_str());
+extern"C" WCHAR* StaticStatusGetRootMacroDirectory() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_root_macro_directory.c_str());
 }
 
 

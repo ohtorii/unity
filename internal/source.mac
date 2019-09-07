@@ -1,8 +1,13 @@
 ﻿/* ソースから候補を取得する
 
-引数	ohtorii_tools_dll_handle 	dllへのハンドル
-		input_source_filename		ソースファイル名
-		gather_arg					gather_candidates へ渡す引数
+引数	[0] 	ohtorii_tools_dll_handle	dllへのハンドル
+		[1]		hm_process_dll_handle		dllへのハンドル
+		[2] 	input_source_filename		ソースファイル名
+		[3] 	gather_arg					gather_candidates へ渡す引数
+		...
+		[31]	mode						""		候補の取得
+											"reget"	候補の再取得
+
 
 返値	成功	"1"
 		失敗	"0"
@@ -17,9 +22,11 @@ $g_candidate_filename="";
 //==========================================================================
 //メイン処理
 //==========================================================================
+$g_mode=getarg(30);
 #g_dll_ohtorii_tools=val(getarg(0));
 #g_dll_hm_process=val(getarg(1));
 
+debuginfo "internal\\source.mac  #g_mode="+$g_mode;
 call main getarg(2),getarg(3);
 if(##return){
 	endmacro "1";
@@ -47,6 +54,10 @@ main:
 	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", $$source_name);
 	if(!##success){
 		return false;
+	}
+
+	if($g_mode=="reget"){
+		##ret=dllfuncw(#g_dll_ohtorii_tools,"CandidatesClearWithSourceName",$$source_name);
 	}
 
 	$$candidate_type = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesGetCandidateType",$$source_name);

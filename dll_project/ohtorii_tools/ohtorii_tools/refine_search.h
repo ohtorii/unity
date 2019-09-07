@@ -147,7 +147,7 @@ public:
 	return	成功	0以上の数値
 			失敗	-1
 	*/
-	INT_PTR ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no);
+	INT_PTR ConvertHidemaruLinenNoToCandidateIndex(INT_PTR hidemaru_line_no)const;
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -168,16 +168,16 @@ public:
 
 	/*マークされた行数を取得する
 	*/
-	INT_PTR GetMarkedCount();
+	INT_PTR GetMarkedCount()const;
 
 	/*マークのインデックスから秀丸エディタの行番号へ変換する
 	return	秀丸エディタの行番号
 	*/
-	INT_PTR ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index);
+	INT_PTR ConvertSelectedIndexToHidemaruLineno(INT_PTR marked_index)const;
 
 	/*マークインデックスから候補インデックスへ変換する
 	*/
-	INT_PTR ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index);
+	INT_PTR ConvertMarkIndexToCandidatesIndex(INT_PTR marked_index)const;
 
 	/*マークしたファイル名を取得する
 	*/
@@ -195,15 +195,15 @@ public:
 	return	not -1	候補インデックス
 			-1		無し
 	*/
-	INT_PTR	GetFirstSelectionCandidateIndex();
+	INT_PTR	GetFirstSelectionCandidateIndex()const;
 
 	/** 選択した候補数を取得する
 	*/
-	INT_PTR	GetSelectionCandidateCount();
+	INT_PTR	GetSelectionCandidateCount()const;
 
 	/** 選択した候補のインデックスを取得する
 	*/
-	INT_PTR	GetSelectionCandidateIndex(INT_PTR selected_index);
+	INT_PTR	GetSelectionCandidateIndex(INT_PTR selected_index)const;
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(

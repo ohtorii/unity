@@ -75,7 +75,7 @@ main:
 	##ret = ##return;
 
 	if(#g_dll_ohtorii_tools){
-		##forcus_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StatusGetHidemaruHandleToForceAtEndProcess");
+		##forcus_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetHidemaruHandleToForceAtEndProcess");
 	}
 
 	//カーソル位置を元に戻す
@@ -117,7 +117,7 @@ Start:
 	}
 	call ShowPerformanceCounter "LoadDLL";
 
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StatusInitialize",#g_target_hidemaru,directory2,$g_root_macro_directory);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusInitialize",#g_target_hidemaru,directory2,$g_root_macro_directory);
 
 
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"KindsLoadAll",$g_root_macro_directory+"\\kinds\\");
@@ -137,8 +137,14 @@ Start:
 		##i			= 0;
 		while(##i<##num_source){
 			$$source_filename=$g_root_macro_directory+"\\sources\\"+$$sources[##i]+".mac";
-			execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process), $$source_filename, "";
-			if(getresultex(-1)=="0"){
+
+			$$args[0]	=str(#g_dll_ohtorii_tools);
+			$$args[1]	=str(#g_dll_hm_process) ;
+			$$args[2]	=$$source_filename;
+			$$args[3]	="";
+			$$args[30]	="";
+			execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
+			if(getresultex(-1) != "1"){
 				return 0;
 			}
 			##i = ##i + 1;
@@ -156,22 +162,28 @@ RefineSearch:
 	引数	$$1		ソースのファイル名
 		$$2		引数
 
-	return	0 	キャンセル
-			1 	確定
-			-1	エラー
+	return	#g_result_*;
 	*/
 	$$source_filename	= $$1;
-	$$args				= $$2;
+	$$source_args		= $$2;
 
 	//
 	//ソースから候補を生成する
 	//
 	if($$source_filename!=""){
-		execmacro currentmacrodirectory+"\\source.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process), $$source_filename, $$args;
+		$$args[0]	=str(#g_dll_ohtorii_tools);
+		$$args[1]	=str(#g_dll_hm_process) ;
+		$$args[2]	=$$source_filename;
+		$$args[3]	=$$source_args;
+		$$args[30]	="";
+		execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
+		if(getresultex(-1)!="1"){
+			return #g_result_faile;
+		}
 	}
 
 	//絞り込み検索を行う
-	call RefineSearchMain;
+	call RefineSearchMain $$source_filename;
 	##ret=##return;
 	return ##ret;
 
@@ -190,9 +202,7 @@ PopRefineSearch:
 
 RefineSearchMain:
 	/*
-	return	0 	キャンセル
-			1 	確定
-			-1	エラー
+	return	#g_result_*;
 	*/
 	$$keybord_buffer="";
 
@@ -227,8 +237,8 @@ RefineSearchMain:
 		##page_down	=iskeydown(0x22);
 		##ctrl 		=iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
-			call Enter;
-			if(##return==#g_result_continue){continue;}
+			call Enter ;
+			if(##return==#g_result_continue){call Continue $$key_buffer; continue;}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
 		}else if($$keycode=="27"){				return #g_result_cancel;}			//Escapeが押された
@@ -242,7 +252,14 @@ RefineSearchMain:
 			/*	アクションを選択する */
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
 			call NewCandidate currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
-			if(##return==#g_result_continue){continue;}
+			if(##return==#g_result_continue){
+				//call TryRegetCandidates;
+				if(! ##return){
+					return #g_result_faile;
+				}
+				call Continue $$key_buffer;
+				continue;
+			}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
 		}else if(##page_up){					call PageUp;}	//PageUp
@@ -267,9 +284,8 @@ RefineSearchMain:
 
 Enter:
 	/*Enterキーの処理
-	return	#g_result_quit
-			#g_result_faile
-			#g_result_continue
+
+	return	#g_result_*
 	*/
 	execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process);
 	if(getresultex(-1) != "1"){
@@ -280,24 +296,29 @@ Enter:
 	//成功
 	//
 
-	##is_quit=dllfuncw(#g_dll_ohtorii_tools,"StatusGetIsQuit");
+	##is_quit=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetIsQuit");
 	if(##is_quit){
 		return #g_result_quit;
 	}
 
-	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StatusEnableIsStart");
+	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusEnableIsStart");
 	if(##is_start){
-		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartSourceName");
-		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StatusGetIsStartArg");
+		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetIsStartSourceName");
+		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetIsStartArg");
 		$$source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
 		$$source_filename=$$source_filename+".mac";
 		call NewCandidate, $$source_filename, $$arg;
 		return ##return;
 	}
-	//画面を更新して再度絞り込み検索を行う。
-	call Filter $$key_buffer;
 	return #g_result_continue;
 
+
+Continue:
+	/*画面を更新して再度絞り込み検索を行う。
+	$$1 	key_buffer
+	*/
+	call Filter $$1;
+	return ;
 
 NewCandidate:
 	/*新規の候補選択
@@ -321,29 +342,61 @@ NewCandidate:
 
 	call RefineSearch $$source_filename	,$$arg;
 	##search_result	=##return;
-	##is_quit		=dllfuncw(#g_dll_ohtorii_tools,"StatusGetIsQuit");
+	##is_quit		=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetIsQuit");
 
 	call PopRefineSearch;
 	if(##return==false){
+		debuginfo "  [Failed]Pop";
 		return #g_result_faile;
 	}
 
+	/*候補を再取得するか=unity->StatusGetIsRegetCandidates()
+	if(候補を再取得するか){
+		unity->GatherSourceNameForReacquisitionCandidates()
+	}else{
+
+	}*/
+
 	if(##search_result==#g_result_cancel){
 		//キャンセル
-		//画面を更新して再度絞り込み検索を行う。
-		call Filter $$key_buffer;
+		debuginfo "   cancel.";
 		return #g_result_continue;
 	}
 	if(##search_result==#g_result_success){
 		//成功
 		if(##is_quit){
+			debuginfo "    quit";
 			return #g_result_quit;
 		}
-		//画面を更新して再度絞り込み検索を行う。
-		call Filter $$key_buffer;
 		return #g_result_continue;
 	}
 	return ##search_result;
+
+
+/*候補の再取得を試みる
+*/
+TryRegetCandidates:
+	##source_name_count=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates");
+	##source_name_index=0;
+	while(##source_name_index < ##source_name_count){
+		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetSourceNameForReacquisitionCandidates",##source_name_index);
+		$$reget_source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
+		$$reget_source_filename=$$reget_source_filename+".mac";
+		debuginfo "$$reget_source_filename="+$$reget_source_filename;
+
+		/*$$args[0]	=str(#g_dll_ohtorii_tools);
+		$$args[1]	=str(#g_dll_hm_process) ;
+		$$args[2]	=$$reget_source_filename;
+		$$args[3]	=????;
+		$$args[30]	="reget";
+		execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
+		if(getresultex(-1)!="1"){
+			return false;
+		}*/
+
+		##source_name_index = ##source_name_index + 1;
+	}
+	return true;
 
 
 CursorMoveCommon:

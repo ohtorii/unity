@@ -14,8 +14,9 @@ public:
 				m_description, 
 				m_is_quit, 
 				m_is_multi_selectable, 
-				m_is_start, 
-				m_is_edit);
+				m_is_start,
+				m_is_edit,
+				m_is_reget_candidates);
 	};
 
 	///表示に使用する名前
@@ -30,8 +31,10 @@ public:
 	bool				m_is_multi_selectable;
 	///ソースを生成しアクションを開始するかどうか
 	bool				m_is_start;
-	///rテキストを騙取するかどうか
+	///テキストを騙取するかどうか
 	bool				m_is_edit;
+	///候補を再取得するかどうか
+	bool				m_is_reget_candidates;
 };
 
 class Kind {
@@ -104,6 +107,8 @@ public:
 	bool IsActionMultiSelectable(size_t kind_index, size_t action_index);
 	bool IsActionStart(size_t kind_index, size_t action_index);
 	bool IsEdit(size_t kind_index, size_t action_index);
+	bool IsRegetCandidates(size_t kind_index, size_t action_index);
+
 private:
 	static bool IniToKind(Kind&dst, const WCHAR*ini_filename);
 	///
