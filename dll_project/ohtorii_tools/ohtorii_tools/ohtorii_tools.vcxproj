@@ -192,6 +192,7 @@
   <ItemGroup>
     <ClInclude Include="async_files.h" />
     <ClInclude Include="candidates.h" />
+    <ClInclude Include="context_status.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="inheritance.h" />
@@ -210,6 +211,7 @@
   <ItemGroup>
     <ClCompile Include="async_files.cpp" />
     <ClCompile Include="candidates.cpp" />
+    <ClCompile Include="context_status.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="dll_export.cpp" />

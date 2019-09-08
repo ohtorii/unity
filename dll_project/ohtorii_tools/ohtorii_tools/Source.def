@@ -98,16 +98,13 @@ EXPORTS
 	InheriatnceGetDefaultActionLabel
 
 	StaticStatusInitialize
-	StaticStatusReset
 	StaticStatusSetIsStart
 	StaticStatusClearIsStart
 	StaticStatusEnableIsStart
 	StaticStatusGetIsStartSourceName
 	StaticStatusGetIsStartArg
 	StaticStatusSetIsQuit
-	StaticStatusGetIsQuit
-	StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates
-	StaticStatusGetSourceNameForReacquisitionCandidates
+	StaticStatusGetIsQuit	
 	StaticStatusSetHidemaruHandleToForceAtEndProcess
 	StaticStatusGetHidemaruHandleToForceAtEndProcess
 	StaticStatusSetTargetHidemaruHandle
@@ -117,6 +114,7 @@ EXPORTS
 	StaticStatusSetRootMacroDirectory
 	StaticStatusGetRootMacroDirectory
 
+	ContextStatusGetIsRegetCandidates
 
 	FileRegistAfterDeleteFile
 	WriteToFile

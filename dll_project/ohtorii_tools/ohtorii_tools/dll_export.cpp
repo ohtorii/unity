@@ -155,6 +155,11 @@ extern "C" INT_PTR  ClearChangedCandidatesAndReturnPrevStatus() {
 	return Unity::Instance().lock()->ClearChangedCandidatesAndReturnPrevStatus();
 }
 
+
+extern "C" INT_PTR StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name) {
+	return Unity::Instance().lock()->StatusUpdate(kind_name,action_name);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //絞り込み検索
 /////////////////////////////////////////////////////////////////////////////
@@ -397,15 +402,11 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//Status
+//StaticStatus
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR StaticStatusInitialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
 	Unity::Instance().lock()->QueryStaticStatus().Initialize(target_hidemaru, working_directory, root_macro_directory);
 	return true;
-}
-
-extern "C" INT_PTR StaticStatusReset(const WCHAR*kind_name,const WCHAR*action_name) {
-	return Unity::Instance().lock()->QueryStaticStatus().Reset(kind_name,action_name);
 }
 
 extern "C" INT_PTR StaticStatusSetIsStart(INT_PTR is_start) {
@@ -437,13 +438,14 @@ extern"C" INT_PTR StaticStatusGetIsQuit() {
 	return Unity::Instance().lock()->QueryStaticStatus().m_is_quit;
 }
 
-extern"C" INT_PTR StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
+/*extern"C" INT_PTR StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
 	return Unity::Instance().lock()->QueryStaticStatus().GetNumberOfSourceNamesForReacquisitionCandidates();
 }
 
 extern"C" WCHAR* StaticStatusGetSourceNameForReacquisitionCandidates(INT_PTR index) {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().GetSourceNameForReacquisitionCandidates(index));
-}
+}*/
+
 /*
 extern"C" INT_PTR StatusGetIsRegetCandidates() {
 	if (Unity::Instance().lock()->QueryStatus().m_reget_candidate_source_names.size()) {
@@ -487,6 +489,12 @@ extern"C" INT_PTR StaticStatusSetRootMacroDirectory(WCHAR* root_macro_directory)
 extern"C" WCHAR* StaticStatusGetRootMacroDirectory() {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_root_macro_directory.c_str());
 }
+
+/////////////////////////////////////////////////////////////////////////////
+//ContextStatus
+/////////////////////////////////////////////////////////////////////////////
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////

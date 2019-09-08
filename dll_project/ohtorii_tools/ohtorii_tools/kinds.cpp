@@ -284,7 +284,7 @@ const WCHAR* Kinds::GetActionDescription(size_t kind_index, size_t action_index)
 	}
 	return gs_empty;
 }
-bool Kinds::IsActionQuit(size_t kind_index, size_t action_index) {
+bool Kinds::IsActionQuit(size_t kind_index, size_t action_index)const {
 	try {
 		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_quit;
 	}
@@ -302,7 +302,7 @@ bool Kinds::IsActionMultiSelectable(size_t kind_index, size_t action_index) {
 	}
 	return false;
 }
-bool Kinds::IsActionStart(size_t kind_index, size_t action_index) {
+bool Kinds::IsActionStart(size_t kind_index, size_t action_index)const {
 	try {
 		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_start;
 	}
@@ -320,7 +320,7 @@ bool Kinds::IsEdit(size_t kind_index, size_t action_index) {
 	}
 	return false;
 }
-bool Kinds::IsRegetCandidates(size_t kind_index, size_t action_index) {
+bool Kinds::IsRegetCandidates(size_t kind_index, size_t action_index)const {
 	try {
 		return m_kinds.at(kind_index).m_actions.at(action_index).m_is_reget_candidates;
 	}

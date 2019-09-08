@@ -103,11 +103,11 @@ public:
 	const WCHAR* GetActionName(size_t kind_index, size_t action_index);
 	const WCHAR* GetActionLabelName(size_t kind_index, size_t action_index);
 	const WCHAR* GetActionDescription(size_t kind_index, size_t action_index);
-	bool IsActionQuit(size_t kind_index, size_t action_index);
+	bool IsActionQuit(size_t kind_index, size_t action_index)const;
 	bool IsActionMultiSelectable(size_t kind_index, size_t action_index);
-	bool IsActionStart(size_t kind_index, size_t action_index);
+	bool IsActionStart(size_t kind_index, size_t action_index)const;
 	bool IsEdit(size_t kind_index, size_t action_index);
-	bool IsRegetCandidates(size_t kind_index, size_t action_index);
+	bool IsRegetCandidates(size_t kind_index, size_t action_index)const;
 
 private:
 	static bool IniToKind(Kind&dst, const WCHAR*ini_filename);

@@ -10,7 +10,7 @@ std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{nul
 size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
-StaticStatus					Unity::m_status;
+StaticStatus					Unity::m_static_status;
 
 
 
@@ -86,7 +86,7 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 				Unity::m_current_instance_index,
 				Unity::m_sources,
 				Unity::m_kinds,
-				Unity::m_status,
+				Unity::m_static_status,
 				InterfaceSugar::m_instance);
 		}
 		os.close();
@@ -110,7 +110,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 				Unity::m_current_instance_index, 
 				Unity::m_sources,
 				Unity::m_kinds, 
-				Unity::m_status, 
+				Unity::m_static_status, 
 				InterfaceSugar::m_instance);
 		}
 		is.close();
@@ -131,7 +131,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 
 		 {
 			 cereal::BinaryOutputArchive archive(os);
-			 archive(Unity::m_status/*, Unity::Instance().lock()->m_candidates*/);
+			 archive(Unity::m_static_status/*, Unity::Instance().lock()->m_candidates*/);
 		 }
 		 os.close();
 		 return true;
@@ -150,7 +150,7 @@ bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
 		 }
 		 {
 			 cereal::BinaryInputArchive	archive(is);
-			 archive(Unity::m_status/*, Unity::Instance().lock()->m_candidates*/);
+			 archive(Unity::m_static_status/*, Unity::Instance().lock()->m_candidates*/);
 		 }
 		 is.close();
 		 return true;
@@ -211,8 +211,12 @@ UserData&		Unity::QueryUserData() {
 	return m_user_data;
 }
 
+ContextStatus&	Unity::QueryContextStatus() {
+	return m_context_status;
+}
+
 StaticStatus& Unity::QueryStaticStatus() {
-	return m_status;
+	return m_static_status;
 }
 
 ASyncFiles&		Unity::QueryASyncFiles() {
@@ -231,6 +235,21 @@ bool Unity::ClearChangedCandidatesAndReturnPrevStatus() {
 	auto prev = m_changed_candidates;
 	m_changed_candidates = false;
 	return prev;
+}
+
+bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name) {
+	auto kind_index = m_kinds.FindKindIndex(kind_name);
+	if (kind_index == UNITY_NOT_FOUND_INDEX) {
+		return false;
+	}
+
+	auto action_index = m_kinds.FindActionIndex(kind_index, action_name);
+	if (action_index == UNITY_NOT_FOUND_INDEX) {
+		return false;
+	}
+	m_static_status.UpdateStatus(kind_index, action_index);
+	m_context_status.UpdateStatus(kind_index, action_index);
+	return true;
 }
 
 Unity::Unity() : 

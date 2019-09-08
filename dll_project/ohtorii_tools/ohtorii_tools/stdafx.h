@@ -48,6 +48,7 @@
 #include"utility.h"
 #include"interface_sugar.h"
 #include"static_status.h"
+#include"context_status.h"
 #include"user_data.h"
 #include"async_files.h"
 

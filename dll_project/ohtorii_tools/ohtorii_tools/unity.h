@@ -11,6 +11,7 @@
 #include"inheritance.h"
 #include"user_data.h"
 #include"static_status.h"
+#include"context_status.h"
 #include"async_files.h"
 
 
@@ -52,7 +53,8 @@ public:
 	//WCHAR* Filter(WCHAR* search_words);
 	
 	void AppendAfterDelete(const WCHAR*filename){}
-	
+	bool StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name);
+
 	Sources& 		QuerySources();
 	File&			QueryFile();
 	Candidates&		QueryCandidates();
@@ -60,6 +62,7 @@ public:
 	Kinds&			QueryKinds();	
 	Inheritance&	QueryInheritance();
 	UserData&		QueryUserData();
+	ContextStatus&	QueryContextStatus();
 	StaticStatus&	QueryStaticStatus();
 	ASyncFiles&		QueryASyncFiles();
 
@@ -84,8 +87,9 @@ private:
 	Inheritance			m_inheritance;	
 	UserData			m_user_data;
 	ASyncFiles			m_async_files;
-	///状態
-	static StaticStatus		m_status;
+	
+	ContextStatus		m_context_status;
+	static StaticStatus	m_static_status;
 
 	///カインドはインスタンス共通で利用するため静的領域とする
 	static Kinds		m_kinds;	
