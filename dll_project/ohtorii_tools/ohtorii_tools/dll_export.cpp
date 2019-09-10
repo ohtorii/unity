@@ -156,8 +156,8 @@ extern "C" INT_PTR  ClearChangedCandidatesAndReturnPrevStatus() {
 }
 
 
-extern "C" INT_PTR StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name) {
-	return Unity::Instance().lock()->StatusUpdate(kind_name,action_name);
+extern "C" INT_PTR StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR context_index) {
+	return Unity::Instance().lock()->StatusUpdate(kind_name,action_name,context_index);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -493,9 +493,13 @@ extern"C" WCHAR* StaticStatusGetRootMacroDirectory() {
 /////////////////////////////////////////////////////////////////////////////
 //ContextStatus
 /////////////////////////////////////////////////////////////////////////////
+extern "C" INT_PTR ContextStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
+	return Unity::Instance().lock()->QueryContextStatus().GetNumberOfSourceNamesForReacquisitionCandidates();
+}
 
-
-
+extern "C" WCHAR* ContextStatusGetSourceNameForReacquisitionCandidates(INT_PTR index) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryContextStatus().GetSourceNameForReacquisitionCandidates(index));
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //file

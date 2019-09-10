@@ -52,8 +52,8 @@ public:
 	*/
 	//WCHAR* Filter(WCHAR* search_words);
 	
-	void AppendAfterDelete(const WCHAR*filename){}
-	bool StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name);
+	//void AppendAfterDelete(const WCHAR*filename){}
+	bool StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR context_index);
 
 	Sources& 		QuerySources();
 	File&			QueryFile();

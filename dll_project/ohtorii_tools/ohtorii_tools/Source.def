@@ -97,6 +97,8 @@ EXPORTS
 	InheriatnceGetDefaultActionKind
 	InheriatnceGetDefaultActionLabel
 
+	StatusUpdate
+
 	StaticStatusInitialize
 	StaticStatusSetIsStart
 	StaticStatusClearIsStart
@@ -114,7 +116,8 @@ EXPORTS
 	StaticStatusSetRootMacroDirectory
 	StaticStatusGetRootMacroDirectory
 
-	ContextStatusGetIsRegetCandidates
+	ContextStatusGetNumberOfSourceNamesForReacquisitionCandidates
+	ContextStatusGetSourceNameForReacquisitionCandidates
 
 	FileRegistAfterDeleteFile
 	WriteToFile

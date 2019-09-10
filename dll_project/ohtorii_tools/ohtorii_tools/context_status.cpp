@@ -30,9 +30,9 @@ ContextStatus::ContextStatus() {
 	
 }
 
-void ContextStatus::UpdateStatus(INT_PTR kind_index, INT_PTR action_index) {
+void ContextStatus::UpdateStatus(INT_PTR kind_index, INT_PTR action_index, INT_PTR context_index) {
 	m_reget_candidate_source_names.clear();
-	auto unity = Unity::Instance().lock();
+	auto unity = Unity::Instance(context_index).lock();
 	const auto &kind=unity->QueryKinds();
 	if (kind.IsRegetCandidates(kind_index, action_index)) {
 		GatherSourceNames(

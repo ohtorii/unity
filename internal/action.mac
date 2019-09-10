@@ -62,8 +62,8 @@ pre_action:
 	*/
 	$$default_kind	=$$1;
 	$$default_action=$$2;
-
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusReset",$$default_kind, $$default_action);
+	##previous_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext") - 1;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusUpdate",$$default_kind, $$default_action,##previous_context);
 	return ##ret;
 
 

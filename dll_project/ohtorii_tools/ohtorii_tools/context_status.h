@@ -10,7 +10,7 @@ public:
 
 	ContextStatus();
 
-	void			UpdateStatus(INT_PTR kind_index, INT_PTR action_index);
+	void			UpdateStatus(INT_PTR kind_index, INT_PTR action_index, INT_PTR context_index);
 	INT_PTR			GetNumberOfSourceNamesForReacquisitionCandidates()const;
 	const WCHAR*	GetSourceNameForReacquisitionCandidates(INT_PTR index)const;
 private:

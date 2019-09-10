@@ -237,7 +237,8 @@ bool Unity::ClearChangedCandidatesAndReturnPrevStatus() {
 	return prev;
 }
 
-bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name) {
+
+bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR context_index) {
 	auto kind_index = m_kinds.FindKindIndex(kind_name);
 	if (kind_index == UNITY_NOT_FOUND_INDEX) {
 		return false;
@@ -248,7 +249,7 @@ bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name) {
 		return false;
 	}
 	m_static_status.UpdateStatus(kind_index, action_index);
-	m_context_status.UpdateStatus(kind_index, action_index);
+	m_context_status.UpdateStatus(kind_index, action_index, context_index);
 	return true;
 }
 

@@ -22,6 +22,15 @@ https://www.youtube.com/watch?v=Co4Np4SXOOc
 #g_new_hidemaru = 0;
 #g_target_hidemaru = hidemaruhandle(0);
 
+/*候補を再取得するソース名
+
+(Ex.) 	$g_reget_sourcenames[0]="file_mru";
+		$g_reget_sourcenames[1]="process";
+		#g_reget_sourcenames_count=2;
+*/
+$g_reget_sourcenames[0]="";
+#g_reget_sourcenames_count=0;
+
 //DLL
 #g_hmjre_dll 	= 0;
 #g_dll_ohtorii_tools=0;
@@ -241,19 +250,18 @@ RefineSearchMain:
 			if(##return==#g_result_continue){call Continue $$key_buffer; continue;}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
-		}else if($$keycode=="27"){				return #g_result_cancel;}			//Escapeが押された
-		else if($$keycode=="16"){				call CursorUp;} 	//ctrl-p
-		else if($$keycode=="14"){				call CursorDown;}	//ctrl-n
-		else if($$keycode=="18"){				call Mark;call CursorDown;} 		//ctrl-space
-		else if(##ctrl&&($$keycode=="32")){ 	call Mark;call CursorDown;} 		//ctrl-space
-		else if($$keycode == "29"){ 			call CursorUp;} 	//[↑]
-		else if($$keycode == "31"){ 			call CursorDown;}	//[↓]
-		else if($$keycode=="9"){									//tab
+		}else if($$keycode=="27"){			return #g_result_cancel;} //Escapeが押された
+		else if($$keycode=="16"){			call CursorUp;} 	//ctrl-p
+		else if($$keycode=="14"){			call CursorDown;}	//ctrl-n
+		else if($$keycode=="18"){			call Mark;call CursorDown;} 		//ctrl-space
+		else if(##ctrl&&($$keycode=="32")){ call Mark;call CursorDown;} 		//ctrl-space
+		else if($$keycode == "29"){ 		call CursorUp;} 	//[↑]
+		else if($$keycode == "31"){ 		call CursorDown;}	//[↓]
+		else if($$keycode=="9"){								//tab
 			/*	アクションを選択する */
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
 			call NewCandidate currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
 			if(##return==#g_result_continue){
-				//call TryRegetCandidates;
 				if(! ##return){
 					return #g_result_faile;
 				}
@@ -328,10 +336,10 @@ NewCandidate:
 	*/
 	debuginfo "Enter NewCandidate";
 	$$source_filename	=$$1;
-	$$arg				=$$2;
+	$$source_arg				=$$2;
 
 	debuginfo "  $$source_filename="+$$source_filename;
-	debuginfo "  $$arg="+$$arg;
+	debuginfo "  $$source_arg="+$$source_arg;
 
 	call PushRefineSearch;
 	if(##return==false){
@@ -340,22 +348,17 @@ NewCandidate:
 		return #g_result_continue;
 	}
 
-	call RefineSearch $$source_filename	,$$arg;
+	call RefineSearch $$source_filename	,$$source_arg;
 	##search_result	=##return;
 	##is_quit		=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetIsQuit");
+	call GatherRegetCandidates;
 
 	call PopRefineSearch;
 	if(##return==false){
 		debuginfo "  [Failed]Pop";
 		return #g_result_faile;
 	}
-
-	/*候補を再取得するか=unity->StatusGetIsRegetCandidates()
-	if(候補を再取得するか){
-		unity->GatherSourceNameForReacquisitionCandidates()
-	}else{
-
-	}*/
+	call TryRegetCandidates $$source_arg;
 
 	if(##search_result==#g_result_cancel){
 		//キャンセル
@@ -373,30 +376,44 @@ NewCandidate:
 	return ##search_result;
 
 
+/*候補の再取得に必要なソース名を集める*/
+GatherRegetCandidates:
+	$g_reget_sourcenames[0]="";
+	#g_reget_sourcenames_count=dllfuncw(#g_dll_ohtorii_tools,"ContextStatusGetNumberOfSourceNamesForReacquisitionCandidates");
+	##i=0;
+	while(##i<#g_reget_sourcenames_count){
+		$g_reget_sourcenames[##i] = dllfuncstrw(#g_dll_ohtorii_tools,"ContextStatusGetSourceNameForReacquisitionCandidates", ##i);
+		##i = ##i + 1;
+	}
+	return ;
+
+
 /*候補の再取得を試みる
 */
 TryRegetCandidates:
-	##source_name_count=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates");
+	if(#g_reget_sourcenames_count==0){
+		return ;
+	}
+	$$source_arg=$$1;
+
 	##source_name_index=0;
-	while(##source_name_index < ##source_name_count){
-		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetSourceNameForReacquisitionCandidates",##source_name_index);
-		$$reget_source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
-		$$reget_source_filename=$$reget_source_filename+".mac";
+	while(##source_name_index < #g_reget_sourcenames_count){
+		$$reget_source_filename = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$g_reget_sourcenames[##source_name_index]) + ".mac";
 		debuginfo "$$reget_source_filename="+$$reget_source_filename;
 
-		/*$$args[0]	=str(#g_dll_ohtorii_tools);
+		$$args[0]	=str(#g_dll_ohtorii_tools);
 		$$args[1]	=str(#g_dll_hm_process) ;
 		$$args[2]	=$$reget_source_filename;
-		$$args[3]	=????;
+		$$args[3]	=$$source_arg;
 		$$args[30]	="reget";
 		execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
 		if(getresultex(-1)!="1"){
 			return false;
-		}*/
+		}
 
 		##source_name_index = ##source_name_index + 1;
 	}
-	return true;
+	return ;
 
 
 CursorMoveCommon:
@@ -644,92 +661,5 @@ ShowPerformanceCounter:
 	##diff=tickcount-#g_tick_prev;
 	debuginfo sprintf("[%d]%s",##diff,$$1);
 	#g_tick_prev=tickcount;
-
-
-/*ファイルの新規作成*/
-file_new:
-
 	return ;
 
-
-/*フォルダヒストリ
-*/
-directory_mru:
-	##i=0;
-	while(##i<100){
-		$$path=getpathhist(##i);
-		if($$path==""){
-			break;
-		}
-		insert($$path+"\n");
-		##i = ##i + 1;
-	}
-	return true;
-
-/*タブ一覧
-*/
-tab:
-	/*
-	ウインドウモードの時
-	未実装
-
-	# タブモードの時
-	1: タブグループ
-		1.1: foo.txt
-		1.2: bar.txt
-	2: タブグループ
-		2.1: readme.md
-		2.2: (無題) *
-	*/
-	if($$1=="get_candidate_mode"){
-		//この関数は文字列を返す
-		return "string";
-	}else if($$1=="generate_candidate"){
-		if(! tabmode){
-			return "";
-		}
-		$$candidate_list="";
-		##i 			= 0;
-		while( ##i < tabgrouptotal ) {
-			##grouptop 		= gettabhandle( true, ##i, 0 );
-			$$candidate_list=$$candidate_list+str(##i+1)+": タブグループ\n";
-			##j 			= 0;
-			while( ##j < tabtotal[##grouptop] ) {
-				##handle = gettabhandle( true, ##i, ##j );
-				$$candidate_list=$$candidate_list+"\t"+ str(##i+1)+"."+str(##j+1) + ": "+filename2[##handle]+"\n";
-				##j = ##j + 1;
-			}
-			##i = ##i + 1;
-		}
-		return $$candidate_list;
-	}
-	return "";
-
-window:
-	/*
-	ウインドウモード時
-	未実装
-
-	タブモード時
-	1: foo.txt
-	2: bar.txt
-
-	*/
-	if($$1=="get_candidate_mode"){
-		//この関数は文字列を返す
-		return "string";
-	}else if($$1=="generate_candidate"){
-		if(! tabmode){
-			return "";
-		}
-		$$candidate_list	="";
-		##i 				=0;
-		##group				=tabgroup[hidemaruhandle(0)];
-		while( ##i < tabtotal[##group] ) {
-			##tab_handle 	=gettabhandle( false, ##group, ##i );
-			$$candidate_list=$$candidate_list+str(##i+1)+": " + filename2[##tab_handle] + "\n";
-			##i 			=##i + 1;
-		}
-		return $$candidate_list;
-	}
-	return "";
