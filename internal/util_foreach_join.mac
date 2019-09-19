@@ -38,14 +38,14 @@ ForeachJoin:
 	beginsel;
 	moveto2 ##old_column,##old_lineno;
 	endsel;
+
 	call ReplacePaint, $g_separator, " ", $g_marker;
 
-	//// 跡地を範囲選択
+	// 跡地を範囲選択
 	selectcolormarker $g_marker;
 	deletecolormarkerall $g_marker;
 	setcompatiblemode ##old;
-	//カーソル位置を元に戻す
-	moveto2 ##old_column,##old_lineno;
+
 	endgroupundo;
 	return "1";
 
