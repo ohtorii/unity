@@ -109,6 +109,8 @@ public:
 	bool IsEdit(size_t kind_index, size_t action_index);
 	bool IsRegetCandidates(size_t kind_index, size_t action_index)const;
 
+	///ダンプ表示
+	void Dump()const;
 private:
 	static bool IniToKind(Kind&dst, const WCHAR*ini_filename);
 	///

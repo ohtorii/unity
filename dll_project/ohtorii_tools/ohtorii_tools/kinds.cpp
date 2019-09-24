@@ -62,19 +62,19 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	GetPrivateProfileString(section_name, _T("description"), _T(""), buf, _countof(buf), filename);
 	dst.m_description.assign(buf);
 
-	GetPrivateProfileString(section_name, _T("is_quit"), _T(""), buf, _countof(buf), filename);
+	GetPrivateProfileString(section_name, _T("is_quit"), _T("false"), buf, _countof(buf), filename);
 	dst.m_is_quit = StringToBool(buf);
 	
-	GetPrivateProfileString(section_name, _T("is_multi_selectable"), _T(""), buf, _countof(buf), filename);
+	GetPrivateProfileString(section_name, _T("is_multi_selectable"), _T("false"), buf, _countof(buf), filename);
 	dst.m_is_multi_selectable = StringToBool(buf);
 	
-	GetPrivateProfileString(section_name, _T("is_start"), _T(""), buf, _countof(buf), filename);
+	GetPrivateProfileString(section_name, _T("is_start"), _T("false"), buf, _countof(buf), filename);
 	dst.m_is_start = StringToBool(buf);
 
-	GetPrivateProfileString(section_name, _T("is_edit"), _T(""), buf, _countof(buf), filename);
+	GetPrivateProfileString(section_name, _T("is_edit"), _T("false"), buf, _countof(buf), filename);
 	dst.m_is_edit = StringToBool(buf);
 
-	GetPrivateProfileString(section_name, _T("is_reget_candidates"), _T(""), buf, _countof(buf), filename);
+	GetPrivateProfileString(section_name, _T("is_reget_candidates"), _T("false"), buf, _countof(buf), filename);
 	dst.m_is_reget_candidates = StringToBool(buf);
 	
 }
@@ -445,6 +445,29 @@ bool Kinds::LoadKindAll(const WCHAR* root_dir) {
 			return false;
 		}
 	}
-
+	Dump();
 	return true;
+}
+
+void Kinds::Dump()const {
+	DebugLog(_T("==== Kinds::Dump [kinds.size=%d] ===="), m_kinds.size());
+	size_t kind_index = 0;
+	for(auto &kind : m_kinds)
+	{
+		DebugLog(_T("  [%d]%s"), kind_index, kind.m_name.c_str());
+		DebugLog(_T("    m_actions.size()=%d"), kind.m_actions.size());
+		size_t action_index = 0;
+		for (auto&action : kind.m_actions) {
+			DebugLog(_T("    [%d]%s"), action_index, action.m_name.c_str());
+			DebugLog(_T("       is_edit=%d"),action.m_is_edit);
+			DebugLog(_T("       is_quit=%d"), action.m_is_quit);
+			DebugLog(_T("       is_is_multi_selectable=%d"), action.m_is_multi_selectable);
+			DebugLog(_T("       is_is_start=%d"), action.m_is_start);
+			DebugLog(_T("       is_reget_candidates=%d"), action.m_is_reget_candidates);
+
+			++action_index;
+		}
+
+		++kind_index;
+	}
 }
