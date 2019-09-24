@@ -328,3 +328,14 @@ bool Inheritance::FindDefaultActionNameRecursive(std::wstring&out_default_action
 Inheritance::DefaultAction&	Inheritance::GetDefaultAction() {
 	return m_default_action; 
 }
+
+const WCHAR* Inheritance::FindActionKind(const WCHAR*action_name) {
+	if (!GenerateResolveActions()) {
+		return gs_empty;
+	}
+	auto it = std::find_if(m_resolve_actions.begin(), m_resolve_actions.end(), [action_name](auto&item) {return item.m_action_name.compare(action_name) == 0; });
+	if (it == m_resolve_actions.end()) {
+		return gs_empty;
+	}
+	return it->m_kind_name.c_str();
+}

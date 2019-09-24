@@ -60,6 +60,11 @@ $g_space = "\r\n\t 　";
 #g_result_quit			=3;
 #g_result_faile 		=-1;
 
+//オプション
+#g_option_auto_preview=true;
+$g_option_auto_preview_context_candidate="";
+
+
 /*****************************************************************************
 	メイン処理
 *****************************************************************************/
@@ -286,6 +291,10 @@ RefineSearchMain:
 				call UpdateHmPocess;
 			}
 		}
+
+		if(#g_option_auto_preview){
+			call DoAutoPreview;
+		}
 	}
 	return #g_result_faile;
 
@@ -295,7 +304,10 @@ Enter:
 
 	return	#g_result_*
 	*/
-	execmacro currentmacrodirectory+"\\action.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process);
+	$$args[0]	=str(#g_dll_ohtorii_tools);
+	$$args[1]	=str(#g_dll_hm_process) ;
+	$$args[30]	="";
+	execmacro currentmacrodirectory+"\\action.mac", $$args, 31;
 	if(getresultex(-1) != "1"){
 		return #g_result_faile;		//失敗
 	}
@@ -540,6 +552,24 @@ UpdateHmPocess:
 	if($$text!=""){
 		call AppendTextToOutputPanel $$text;
 	}
+	return ;
+
+
+DoAutoPreview:
+	##first_item_index	= 0;
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
+	if($$text==""){
+		return ;
+	}
+	if($g_option_auto_preview_context_candidate==$$text){
+		return ;
+	}
+
+	$$args[0]	=str(#g_dll_ohtorii_tools);
+	$$args[1]	=str(#g_dll_hm_process) ;
+	$$args[30]	="preview";
+	execmacro currentmacrodirectory+"\\action.mac", $$args, 31;
+	$g_option_auto_preview_context_candidate=$$text;
 	return ;
 
 

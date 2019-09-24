@@ -401,6 +401,11 @@ extern "C" WCHAR*	InheriatnceGetDefaultActionLabel() {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryInheritance().GetDefaultAction().m_label_name.c_str());
 }
 
+extern "C" WCHAR* InheritanceFindActionKind(const WCHAR* action_name) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryInheritance().FindActionKind(action_name));
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 //StaticStatus
 /////////////////////////////////////////////////////////////////////////////

@@ -96,6 +96,7 @@ EXPORTS
 	InheriatnceGenerateDefaultAction
 	InheriatnceGetDefaultActionKind
 	InheriatnceGetDefaultActionLabel
+	InheritanceFindActionKind
 
 	StatusUpdate
 

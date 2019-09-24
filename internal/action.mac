@@ -1,6 +1,10 @@
 ﻿/* アクションから候補を取得する
 
-引数	ohtorii_tools_dll_handle, root_macro_directory
+引数	[0]		ohtorii_tools_dll_handle
+		[1]		hm_process
+		[30]	action_name	(default="")
+				実行したいアクション名。(例 "preview","echo",...)
+
 返値	成功	"1"
 		失敗	"0"
 */
@@ -11,6 +15,7 @@
 //==========================================================================
 #g_dll_ohtorii_tools	=val(getarg(0));
 #g_dll_hm_process		=val(getarg(1));
+$g_do_action_name		=getarg(30);
 
 #g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
 $g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
@@ -37,15 +42,27 @@ main:
 		debuginfo "  [Failed]internal/action.mac return 0. $$source_name="+$$source_name;
 		return "0";
 	}
-	$$default_kind	=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionKind");
-	$$default_action=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionLabel");
-	$$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$default_kind+".mac";
+	if($g_do_action_name==""){
+		//ディフォルトアクションを取得する
+		$$kind	=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionKind");
+		$$action=dllfuncstrw(#g_dll_ohtorii_tools,"InheriatnceGetDefaultActionLabel");
+	}else{
+		//指定されたアクションを取得する
+		$$kind	=dllfuncstrw(#g_dll_ohtorii_tools,"InheritanceFindActionKind",$g_do_action_name);
+		if($$kind==""){
+			debuginfo "  [Failed]internal/action.mac return 0. $$kind==\"\"";
+			return "0";
+		}
+		$$action=$g_do_action_name;
+	}
+    $$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$kind+".mac";
 
-	execmacro currentmacrodirectory+"\\is_edit.mac", str(#g_dll_ohtorii_tools), $$default_kind, $$default_action;
+	execmacro currentmacrodirectory+"\\is_edit.mac", str(#g_dll_ohtorii_tools), $$kind, $$action;
 	##is_edit = val(getresultex(-1));
+	debuginfo "##is_edit="+str(##is_edit);
 
-	call pre_action,$$default_kind, $$default_action;
-	call exec_action, $$kind_filename, $$default_action, ##is_edit;
+	call pre_action,$$kind, $$action;
+	call exec_action, $$kind_filename, $$action, ##is_edit;
 
 	/*memo
 	is_quitはexecmacro呼び出しで上書きされるためこれ以上何もしない。
@@ -69,12 +86,13 @@ pre_action:
 
 exec_action:
 	debuginfo "internal/action.mac exec_action";
-	debuginfo "  -> ##is_edit="+str(##is_edit);
 
 	$$kind_filename	=$$1;
 	$$default_action=$$2;
 	##is_edit		=##3;
 	##ohtorii_dll_handle=0;
+
+	debuginfo "  -> ##is_edit="+str(##is_edit);
 
 	if(##is_edit){
 		call SerializeCurrentContext;

@@ -85,7 +85,11 @@ public:
 
 	///継承を考慮したアクションのリストを返す
 	const std::vector<ResolveAction>&	GetResolveActions()const;
-
+	
+	///アクションのカインド名を取得する
+	const WCHAR* FindActionKind(const WCHAR*action_name);
+	
+	
 	//--------------------------------------------------------------------------
 	//		DefaultAction
 	//--------------------------------------------------------------------------
