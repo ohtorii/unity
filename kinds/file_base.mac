@@ -86,6 +86,49 @@ overwrite_directory:
 
 
 preview:
+	##old_hidemaruhandle=hidemaruhandle(0);
+	##first_item_index	= 0;
+	$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
+	##file_flag=existfile($$filename,1);
+	if(##file_flag==0){
+		//ファイルが存在しない
+		return "0";
+	}
+	if(##file_flag&0x00000010){
+		//ディレクトリ
+		return "0";
+	}
+	openfile "/rr /h /m2 /I0,400,0 "+$$filename, noaddhist;
+	if(!result){
+		debuginfo "[failed] openfile.";
+		return "0";
+	}
+	##current_hidemaruhandle=hidemaruhandle(0);
+	gofiletop;
+	beginsel;
+	moveto2 column,lineno+40;
+	golineend2;
+	endsel;
+	$$text=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno );
+
+	setactivehidemaru(##old_hidemaruhandle);
+	closehidemaruforced(##current_hidemaruhandle);
+
+	##output_dll=loaddll("HmOutputPane.dll");
+	if(##output_dll==0){
+		debuginfo "[failed] Load HmOutputPane.dll";
+		return "0";
+	}
+
+	##window=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+	##ret=sendmessage(##window,0x111/*WM_COMMAND*/,1009 ,0);//1009=クリア
+	##ret=dllfunc(##output_dll, "Output",hidemaruhandle(0),$$text);
+	##ret=sendmessage(##window,0x111/*WM_COMMAND*/,1015 ,0);//1015=先頭にカーソル移動
+	freedll ##output_dll;
+	return "1";
+
+
+preview_old:
 	/*ファイル内容のプレビュー
 	*/
 	##first_item_index	= 0;
@@ -107,7 +150,7 @@ preview:
 		return "0";
 	}
 	##parent=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-	##ret=sendmessage(##parent,0x111/*WM_COMMAND*/,1015 ,0);//1015=先頭にカーソル移
+	##ret=sendmessage(##parent,0x111/*WM_COMMAND*/,1015 ,0);//1015=先頭にカーソル移動
 	freedll ##output_dll;
 	return "1";
 

@@ -237,6 +237,9 @@ RefineSearchMain:
 	##hm_process_update_interval=100;
 	##hm_process_update_prev_tickcount=0;
 
+	##auto_update_interval=200;
+	##auto_update_prev_tickcount=0;
+
 	while(true){
 		execmacro $g_command_line_path+"\\input-keys.mac", $$key_buffer, $$cursor_pos;
 		$$keybord_buffer=getresultex(-1);
@@ -293,7 +296,11 @@ RefineSearchMain:
 		}
 
 		if(#g_option_auto_preview){
-			call DoAutoPreview;
+			//auto_updateの更新
+			if(##auto_update_interval < (tickcount-##auto_update_prev_tickcount)){
+				##auto_update_prev_tickcount=tickcount;
+				call DoAutoPreview;
+			}
 		}
 	}
 	return #g_result_faile;
