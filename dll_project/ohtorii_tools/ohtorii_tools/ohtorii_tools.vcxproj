@@ -198,6 +198,7 @@
     <ClInclude Include="inheritance.h" />
     <ClInclude Include="kinds.h" />
     <ClInclude Include="parallel.h" />
+    <ClInclude Include="recurring_task.h" />
     <ClInclude Include="refine_search.h" />
     <ClInclude Include="sources.h" />
     <ClInclude Include="static_status.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="dll_export.cpp" />
     <ClCompile Include="inheritance.cpp" />
     <ClCompile Include="kinds.cpp" />
+    <ClCompile Include="recurring_task.cpp" />
     <ClCompile Include="refine_search.cpp" />
     <ClCompile Include="sources.cpp" />
     <ClCompile Include="static_status.cpp" />

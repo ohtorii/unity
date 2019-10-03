@@ -13,7 +13,7 @@
 #include"static_status.h"
 #include"context_status.h"
 #include"async_files.h"
-
+#include"recurring_task.h"
 
 
 class Unity{
@@ -65,6 +65,9 @@ public:
 	ContextStatus&	QueryContextStatus();
 	StaticStatus&	QueryStaticStatus();
 	ASyncFiles&		QueryASyncFiles();
+	RecurringTask&	QueryRecurringTask();
+
+	bool AutoPreviewRegist(HWND output_handle, const WCHAR*filename);
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_candidates,m_refine_search,m_user_data);
@@ -87,7 +90,7 @@ private:
 	Inheritance			m_inheritance;	
 	UserData			m_user_data;
 	ASyncFiles			m_async_files;
-	
+	RecurringTask		m_recurring_task;
 	ContextStatus		m_context_status;
 	static StaticStatus	m_static_status;
 

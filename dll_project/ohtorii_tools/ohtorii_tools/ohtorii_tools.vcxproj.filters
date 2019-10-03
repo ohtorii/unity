@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ソース ファイル\candidates">
+      <UniqueIdentifier>{1099453f-38b0-4345-989b-4836a3643c63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\candidates">
+      <UniqueIdentifier>{932eda5d-cfcd-4957-afda-8eb09749b2a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -28,9 +34,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="file.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="candidates.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="refine_search.h">
@@ -54,9 +57,6 @@
     <ClInclude Include="user_data.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="async_files.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="parallel.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -65,6 +65,15 @@
     </ClInclude>
     <ClInclude Include="context_status.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="recurring_task.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="async_files.h">
+      <Filter>ヘッダー ファイル\candidates</Filter>
+    </ClInclude>
+    <ClInclude Include="candidates.h">
+      <Filter>ヘッダー ファイル\candidates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,9 +87,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="file.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="candidates.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="refine_search.cpp">
@@ -107,14 +113,20 @@
     <ClCompile Include="user_data.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="async_files.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="static_status.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="context_status.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="recurring_task.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="async_files.cpp">
+      <Filter>ソース ファイル\candidates</Filter>
+    </ClCompile>
+    <ClCompile Include="candidates.cpp">
+      <Filter>ソース ファイル\candidates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

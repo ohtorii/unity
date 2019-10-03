@@ -302,6 +302,9 @@ RefineSearchMain:
 				call DoAutoPreview;
 			}
 		}
+
+		//定期処理を呼び出す
+		##ret=dllfuncw(#g_dll_ohtorii_tools,"RecurringTask");
 	}
 	return #g_result_faile;
 

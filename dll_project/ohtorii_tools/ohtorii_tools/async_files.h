@@ -25,6 +25,8 @@ private:
 		GET_LINE,
 		FILE_CLOSE,
 		FINISH,
+		//
+		INITIALIZED,
 	};
 	///ソース名
 	std::wstring			m_source_name;

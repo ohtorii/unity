@@ -160,6 +160,15 @@ extern "C" INT_PTR StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, 
 	return Unity::Instance().lock()->StatusUpdate(kind_name,action_name,context_index);
 }
 
+extern "C" INT_PTR RecurringTask() {
+	Unity::Instance().lock()->QueryRecurringTask().Update();
+	return 1;
+}
+extern "C" INT_PTR AutoPreviewRegist(INT_PTR output_handle, const WCHAR* filename) {
+	Unity::Instance().lock()->AutoPreviewRegist(reinterpret_cast<HWND>(output_handle), filename);
+	return 1;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 //絞り込み検索
 /////////////////////////////////////////////////////////////////////////////

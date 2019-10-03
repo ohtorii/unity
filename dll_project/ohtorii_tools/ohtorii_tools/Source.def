@@ -120,6 +120,9 @@ EXPORTS
 	ContextStatusGetNumberOfSourceNamesForReacquisitionCandidates
 	ContextStatusGetSourceNameForReacquisitionCandidates
 
+	RecurringTask
+	AutoPreviewRegist
+
 	FileRegistAfterDeleteFile
 	WriteToFile
     DllDetachFunc_After_Hm866
