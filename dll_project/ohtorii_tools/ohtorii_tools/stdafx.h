@@ -38,6 +38,8 @@
 #include<tchar.h>
 
 #include"parallel.h"
+#include"log.h"
+#include"unicode_helper.h"
 #include"define.h"
 #include"unity.h"
 #include"sources.h"
@@ -52,5 +54,5 @@
 #include"user_data.h"
 #include"async_files.h"
 #include"recurring_task.h"
-
+#include"auto_preview.h"
 

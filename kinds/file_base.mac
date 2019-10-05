@@ -86,6 +86,13 @@ overwrite_directory:
 
 
 preview:
+	##first_item_index	= 0;
+	$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
+	##ret=dllfuncw(#g_dll_ohtorii_tools, "AutoPreviewRegist", $$filename);
+	return "1";
+
+
+preview_ng:
 	##old_hidemaruhandle=hidemaruhandle(0);
 	##first_item_index	= 0;
 	$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
@@ -98,12 +105,53 @@ preview:
 		//ディレクトリ
 		return "0";
 	}
-	openfile "/rr /h /m2 /I0,400,0 "+$$filename, noaddhist;
+
+	$$args = sprintf(R"(/rr /h /n /m2 /I0,400,0 /x?"%s" "%s")",currentmacrodirectory+"\\_preview.mac", $$filename);
+	openfile $$args, noaddhist;
 	if(!result){
 		debuginfo "[failed] openfile.";
 		return "0";
 	}
 	##current_hidemaruhandle=hidemaruhandle(0);
+	setactivehidemaru(##old_hidemaruhandle);
+	closehidemaruforced(##current_hidemaruhandle);
+	return "1";
+
+
+preview_oshii:
+	##first_item_index	= 0;
+	$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
+	##file_flag=existfile($$filename,1);
+	if(##file_flag==0){
+		//ファイルが存在しない
+		return "0";
+	}
+	if(##file_flag&0x00000010){
+		//ディレクトリ
+		return "0";
+	}
+	##old_hidemaruhandle=hidemaruhandle(0);
+
+	##working_hidemaru_handle = val(getstaticvariable("Unity.file_base.preview",0));
+	$$args="/rr /h /n /m2 /I0,400,0 "+$$filename;
+	if(##working_hidemaru_handle==0){
+		openfile $$args, noaddhist;
+		if(!result){
+			debuginfo "[failed] openfile.";
+			setactivehidemaru(##old_hidemaruhandle);
+			return "0";
+		}
+		##working_hidemaru_handle=hidemaruhandle(0);
+	}else{
+		setactivehidemaru(##working_hidemaru_handle);
+		clearupdated;
+		loadfile $$filename,noaddhist;
+		if(!result){
+			debuginfo "[failed] loadfile.";
+			setactivehidemaru(##old_hidemaruhandle);
+			return "0";
+		}
+	}
 	gofiletop;
 	beginsel;
 	moveto2 column,lineno+40;
@@ -112,7 +160,8 @@ preview:
 	$$text=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno );
 
 	setactivehidemaru(##old_hidemaruhandle);
-	closehidemaruforced(##current_hidemaruhandle);
+	//closehidemaruforced(##current_hidemaruhandle);
+	setstaticvariable "Unity.file_base.preview",str(##working_hidemaru_handle),0;
 
 	##output_dll=loaddll("HmOutputPane.dll");
 	if(##output_dll==0){
@@ -120,10 +169,11 @@ preview:
 		return "0";
 	}
 
+	##WM_COMMAND=0x111;
 	##window=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-	##ret=sendmessage(##window,0x111/*WM_COMMAND*/,1009 ,0);//1009=クリア
+	##ret=sendmessage(##window,##WM_COMMAND,1009 ,0);//1009=クリア
 	##ret=dllfunc(##output_dll, "Output",hidemaruhandle(0),$$text);
-	##ret=sendmessage(##window,0x111/*WM_COMMAND*/,1015 ,0);//1015=先頭にカーソル移動
+	##ret=sendmessage(##window,##WM_COMMAND,1015 ,0);//1015=先頭にカーソル移動
 	freedll ##output_dll;
 	return "1";
 

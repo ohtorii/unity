@@ -164,8 +164,8 @@ extern "C" INT_PTR RecurringTask() {
 	Unity::Instance().lock()->QueryRecurringTask().Update();
 	return 1;
 }
-extern "C" INT_PTR AutoPreviewRegist(INT_PTR output_handle, const WCHAR* filename) {
-	Unity::Instance().lock()->AutoPreviewRegist(reinterpret_cast<HWND>(output_handle), filename);
+extern "C" INT_PTR AutoPreviewRegist(const WCHAR* filename) {
+	Unity::Instance().lock()->AutoPreviewRegist(filename);
 	return 1;
 }
 

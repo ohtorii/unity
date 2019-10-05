@@ -19,6 +19,12 @@
     <Filter Include="ヘッダー ファイル\candidates">
       <UniqueIdentifier>{932eda5d-cfcd-4957-afda-8eb09749b2a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\auto">
+      <UniqueIdentifier>{a2d7641c-fe15-4d23-8abd-ea1ccfd4eafa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\auto">
+      <UniqueIdentifier>{5aa319a3-dad4-4de3-be29-8471a875815a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -75,6 +81,15 @@
     <ClInclude Include="candidates.h">
       <Filter>ヘッダー ファイル\candidates</Filter>
     </ClInclude>
+    <ClInclude Include="auto_preview.h">
+      <Filter>ヘッダー ファイル\auto</Filter>
+    </ClInclude>
+    <ClInclude Include="unicode_helper.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -127,6 +142,15 @@
     </ClCompile>
     <ClCompile Include="candidates.cpp">
       <Filter>ソース ファイル\candidates</Filter>
+    </ClCompile>
+    <ClCompile Include="auto_preview.cpp">
+      <Filter>ソース ファイル\auto</Filter>
+    </ClCompile>
+    <ClCompile Include="unicode_helper.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

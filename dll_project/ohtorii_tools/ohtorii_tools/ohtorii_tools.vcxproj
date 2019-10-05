@@ -191,12 +191,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="async_files.h" />
+    <ClInclude Include="auto_preview.h" />
     <ClInclude Include="candidates.h" />
     <ClInclude Include="context_status.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="file.h" />
     <ClInclude Include="inheritance.h" />
     <ClInclude Include="kinds.h" />
+    <ClInclude Include="log.h" />
     <ClInclude Include="parallel.h" />
     <ClInclude Include="recurring_task.h" />
     <ClInclude Include="refine_search.h" />
@@ -205,12 +207,14 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="interface_sugar.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="unicode_helper.h" />
     <ClInclude Include="unity.h" />
     <ClInclude Include="user_data.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="async_files.cpp" />
+    <ClCompile Include="auto_preview.cpp" />
     <ClCompile Include="candidates.cpp" />
     <ClCompile Include="context_status.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -218,6 +222,7 @@
     <ClCompile Include="dll_export.cpp" />
     <ClCompile Include="inheritance.cpp" />
     <ClCompile Include="kinds.cpp" />
+    <ClCompile Include="log.cpp" />
     <ClCompile Include="recurring_task.cpp" />
     <ClCompile Include="refine_search.cpp" />
     <ClCompile Include="sources.cpp" />
@@ -229,6 +234,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="interface_sugar.cpp" />
+    <ClCompile Include="unicode_helper.cpp" />
     <ClCompile Include="unity.cpp" />
     <ClCompile Include="user_data.cpp" />
     <ClCompile Include="utility.cpp" />

@@ -17,7 +17,16 @@ void RecurringTask::Destroy() {
 	m_tasks.clear();
 }
 
-void RecurringTask::Update() {	
+void RecurringTask::Update() {
+	try {
+		Main();
+	}
+	catch (std::exception) {
+		//pass
+	}
+}
+
+void RecurringTask::Main(){
 	//DebugLog(_T("RecurringTask::Update"));
 
 	//タスクを実行する

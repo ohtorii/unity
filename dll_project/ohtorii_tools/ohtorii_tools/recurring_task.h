@@ -30,14 +30,23 @@ public:
 
 	///実行するタスクの登録
 	template<typename T, class... _Valty>
-	void Register(_Valty&&... _Val) {
-		m_tasks.emplace_back(std::make_unique<T>(std::forward<_Valty>(_Val)...));
+	bool Register(_Valty&&... _Val) {
+		try {
+			m_tasks.emplace_back(std::make_unique<T>(std::forward<_Valty>(_Val)...));
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+		return false;
 	}
 
 
 private:
 	RecurringTask(const RecurringTask&);
 	RecurringTask& operator=(const RecurringTask&);
+	
+	void Main();
 
 	typedef std::list<TaskType> TaskListType;
 	TaskListType  m_tasks;

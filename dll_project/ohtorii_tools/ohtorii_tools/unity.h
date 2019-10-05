@@ -67,7 +67,7 @@ public:
 	ASyncFiles&		QueryASyncFiles();
 	RecurringTask&	QueryRecurringTask();
 
-	bool AutoPreviewRegist(HWND output_handle, const WCHAR*filename);
+	bool AutoPreviewRegist(const WCHAR*filename);
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_candidates,m_refine_search,m_user_data);
