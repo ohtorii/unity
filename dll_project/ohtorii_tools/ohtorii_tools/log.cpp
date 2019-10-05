@@ -19,6 +19,25 @@ void DebugLog(const WCHAR *fmt, ...)
 	va_end(ap);
 }
 
+
+void DebugLog(const char *fmt, ...)
+{
+	va_list		ap;
+	int			len = 0;
+	std::vector<char>	buffer;
+
+	va_start(ap, fmt);
+	len = _vscprintf(fmt, ap) + 1;//+1 == '\0'
+	if (len) {
+		buffer.resize(len);
+		vsprintf_s(buffer.data(), len, fmt, ap);
+
+		// VisualStudioのデバッグウィンドウには必ず出力する
+		OutputDebugStringA(buffer.data());
+	}
+	va_end(ap);
+}
+
 void DebugLogLastError(DWORD errorcode) {
 	LPVOID lpMsgBuf = 0;
 	FormatMessage(

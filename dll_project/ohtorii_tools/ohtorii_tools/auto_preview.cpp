@@ -45,8 +45,6 @@ void AsyncFileReader::Sequence(){
 }
 
 void AsyncFileReader::LoadFileImage(std::vector<uint8_t>&out_fileimage) {
-	DebugLog(_T("AsyncFileReader::Do() Statrt"));
-	
 	size_t	readed_byte = 0;
 	
 	{
@@ -73,7 +71,6 @@ void AsyncFileReader::LoadFileImage(std::vector<uint8_t>&out_fileimage) {
 
 	//実際読み込んだファイルサイズへバッファを縮小する
 	out_fileimage.resize(readed_byte);
-	DebugLog(_T("readed_byte=%d"), readed_byte);
 }
 
 void AsyncFileReader::ConvertToWideChar(std::wstring&out, const std::vector<uint8_t>&fileimage) {
@@ -81,6 +78,63 @@ void AsyncFileReader::ConvertToWideChar(std::wstring&out, const std::vector<uint
 		return;
 	}
 
+	const auto bom_type = GetBomType(&fileimage.at(0), fileimage.size());
+	const auto bom_byte_size = GetBomSize(bom_type);
+
+	auto code=guess_jp(&fileimage.at(0), static_cast<int>(fileimage.size()));
+	if (code == nullptr) {
+		return;
+	}
+	if ((strcmp(code, "ISO-2022-JP") == 0) || (strcmp(code, "SJIS")==0)) {
+		const char*	str_ptr = reinterpret_cast<const char*>(&fileimage.at(bom_byte_size));
+		const int	str_size = static_cast<int>(fileimage.size() - bom_byte_size);
+
+		const auto size_needed = MultiByteToWideChar(CP_ACP, 0, str_ptr, str_size, NULL, 0);
+		if (size_needed <= 0) {
+			return;
+		}
+		out.resize(size_needed, 0);
+		const auto success = MultiByteToWideChar(CP_ACP, 0, str_ptr, str_size, &out.at(0), size_needed);
+		if (!success) {
+			out.clear();
+			return;
+		}
+		return;
+	}
+	else if (strcmp(code, "UCS-2BE")==0) {
+		//とりあえずリトルエンディアンのまま格納して
+		out.assign(reinterpret_cast<const wchar_t*>(&fileimage.at(bom_byte_size)),
+			(fileimage.size() - bom_byte_size) / sizeof(wchar_t));
+		static_assert(sizeof(std::remove_reference< decltype(out.at(0))>::type) == sizeof(unsigned short), "sizeof(wchar_t) != sizeof(unsigned) short. Must change _byteswap_ushort function.");
+		//エンディアンをひっくり返す
+		std::for_each(out.begin(), out.end(), [](auto&c) {c = _byteswap_ushort(c); });
+		return;
+	}
+	else if (strcmp(code, "UCS-2LE")==0) {
+		out.assign(reinterpret_cast<const wchar_t*>(&fileimage.at(bom_byte_size)),
+			(fileimage.size() - bom_byte_size) / sizeof(wchar_t));
+		return;
+	}
+	else if (strcmp(code, "UTF-8")==0) {
+		const char*	str_ptr  = reinterpret_cast<const char*>(&fileimage.at(bom_byte_size));
+		const int	str_size = static_cast<int>(fileimage.size() - bom_byte_size);
+
+		const auto size_needed = MultiByteToWideChar(CP_UTF8, 0, str_ptr, str_size, NULL, 0);
+		if (size_needed <= 0) {
+			return;
+		}
+		out.resize(size_needed, 0);
+		const auto success = MultiByteToWideChar(CP_UTF8, 0, str_ptr, str_size, &out.at(0), size_needed);
+		if (!success) {
+			out.clear();
+			return;
+		}
+		return;
+	}
+	//out.assign(_T("UNKNOWN"));
+	return;
+		
+#if 0
 	const auto bom_type		= GetBomType(&fileimage.at(0), fileimage.size());
 	const auto bom_byte_size= GetBomSize(bom_type);
 	
@@ -141,6 +195,7 @@ void AsyncFileReader::ConvertToWideChar(std::wstring&out, const std::vector<uint
 	default:
 		break;
 	}
+#endif
 }
 
 bool AsyncFileReader::CheckFinish()const {
@@ -246,7 +301,7 @@ return;
 	_snwprintf_s(macro,_TRUNCATE,format,m_file_reader.GetFileImage().c_str());
 	pfnHidemaru_Hidemaru_EvalMacro(const_cast<WCHAR*>(macro));
 
-	DebugLog(macro);
+	//DebugLog(macro);
 }
 
 void AutoPreview::Destroy() {

@@ -18,6 +18,12 @@
 
 
 // プログラムに必要な追加ヘッダーをここで参照してください
+
+/////////////////////////////////////////////////////////////////////////////
+//3rd-party
+/////////////////////////////////////////////////////////////////////////////
+
+//cereal
 #include <cereal/types/unordered_map.hpp>
 #include <cereal/types/unordered_set.hpp>
 #include <cereal/types/array.hpp>
@@ -25,8 +31,16 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/memory.hpp>
 #include <cereal/archives/binary.hpp>
-#include <fstream>
 
+//libguess
+#include<libguess/libguess.h>
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//unity
+/////////////////////////////////////////////////////////////////////////////
+#include <fstream>
 #include<vector>
 #include<deque>
 #include<string>

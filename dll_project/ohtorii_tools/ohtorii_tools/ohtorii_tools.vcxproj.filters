@@ -22,8 +22,17 @@
     <Filter Include="ヘッダー ファイル\auto">
       <UniqueIdentifier>{a2d7641c-fe15-4d23-8abd-ea1ccfd4eafa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\string">
+      <UniqueIdentifier>{4214903f-2c4a-4677-985d-9635f3f80c5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\3rd-party">
+      <UniqueIdentifier>{82bf5d37-3b2f-474c-b5d4-342370b304e5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ソース ファイル\auto">
       <UniqueIdentifier>{5aa319a3-dad4-4de3-be29-8471a875815a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\3rd-party">
+      <UniqueIdentifier>{15b31012-932d-4aeb-aa4a-35826906dca5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +99,9 @@
     <ClInclude Include="log.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\external\libguess\libguess.h">
+      <Filter>ヘッダー ファイル\3rd-party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -114,9 +126,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="dll_export.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="utility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="inheritance.cpp">
@@ -146,11 +155,17 @@
     <ClCompile Include="auto_preview.cpp">
       <Filter>ソース ファイル\auto</Filter>
     </ClCompile>
-    <ClCompile Include="unicode_helper.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="unicode_helper.cpp">
+      <Filter>ソース ファイル\string</Filter>
+    </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>ソース ファイル\string</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\libguess\guess.cpp">
+      <Filter>ソース ファイル\3rd-party</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
