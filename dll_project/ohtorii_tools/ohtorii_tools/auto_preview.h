@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include<windows.h>
 #include<thread>
 #include<atomic>
@@ -14,7 +14,7 @@ public:
 	bool CheckFinish()const;
 	void RequestTerminate();
 
-	const std::wstring& GetFileImage()const;
+	const std::wstring& GetHidemaruScript()const;
 private:
 	AsyncFileReader(const AsyncFileReader&) = delete;
 	AsyncFileReader& operator=(const AsyncFileReader&) = delete;
@@ -22,16 +22,17 @@ private:
 	void Sequence();
 	void LoadFileImage(std::vector<uint8_t>&out_fileimage);
 	void ConvertToWideChar(std::wstring&out, const std::vector<uint8_t>&fileimage);
+	void ConvertToHidemaruMacro(std::wstring&out, std::wstring&in);
 
-	///“Ç‚İ‚ŞƒoƒCƒg”
+	///èª­ã¿è¾¼ã‚€ãƒã‚¤ãƒˆæ•°
 	const size_t		m_request_read_byte;
-	///“Ç‚İ‚Şƒtƒ@ƒCƒ‹–¼
+	///èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«å
 	const std::wstring		m_filename;
-	///“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹“à—e
-	std::wstring			m_fileimage;
-	///ˆ—‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©
+	///ç§€ä¸¸ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+	std::wstring			m_hidemaru_script;
+	///å‡¦ç†ãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹
 	std::atomic<bool>	m_finished;
-	///I—¹ƒŠƒNƒGƒXƒg
+	///çµ‚äº†ãƒªã‚¯ã‚¨ã‚¹ãƒˆ
 	std::atomic<bool>	m_terminate_request;
 
 };
