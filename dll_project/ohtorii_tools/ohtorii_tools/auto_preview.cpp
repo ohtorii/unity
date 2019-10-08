@@ -1,4 +1,4 @@
-#include"stdafx.h"
+ï»¿#include"stdafx.h"
 
 
 
@@ -30,7 +30,7 @@ void AsyncFileReader::Sequence(){
 		return;
 	}
 
-	//“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹“à—e
+	//èª­ã¿è¾¼ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«å†…å®¹
 	std::vector<uint8_t>		fileimage;
 	
 	LoadFileImage(fileimage);
@@ -71,7 +71,7 @@ void AsyncFileReader::LoadFileImage(std::vector<uint8_t>&out_fileimage) {
 		fclose(fp);
 	}
 
-	//ÀÛ“Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹ƒTƒCƒY‚Öƒoƒbƒtƒ@‚ğk¬‚·‚é
+	//å®Ÿéš›èª­ã¿è¾¼ã‚“ã ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã¸ãƒãƒƒãƒ•ã‚¡ã‚’ç¸®å°ã™ã‚‹
 	out_fileimage.resize(readed_byte);
 }
 
@@ -104,11 +104,11 @@ void AsyncFileReader::ConvertToWideChar(std::wstring&out, const std::vector<uint
 		return;
 	}
 	else if (strcmp(code, "UCS-2BE")==0) {
-		//‚Æ‚è‚ ‚¦‚¸ƒŠƒgƒ‹ƒGƒ“ƒfƒBƒAƒ“‚Ì‚Ü‚ÜŠi”[‚µ‚Ä
+		//ã¨ã‚Šã‚ãˆãšãƒªãƒˆãƒ«ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã®ã¾ã¾æ ¼ç´ã—ã¦
 		out.assign(reinterpret_cast<const wchar_t*>(&fileimage.at(bom_byte_size)),
 			(fileimage.size() - bom_byte_size) / sizeof(wchar_t));
 		static_assert(sizeof(std::remove_reference< decltype(out.at(0))>::type) == sizeof(unsigned short), "sizeof(wchar_t) != sizeof(unsigned) short. Must change _byteswap_ushort function.");
-		//ƒGƒ“ƒfƒBƒAƒ“‚ğ‚Ğ‚Á‚­‚è•Ô‚·
+		//ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’ã²ã£ãã‚Šè¿”ã™
 		std::for_each(out.begin(), out.end(), [](auto&c) {c = _byteswap_ushort(c); });
 		return;
 	}
