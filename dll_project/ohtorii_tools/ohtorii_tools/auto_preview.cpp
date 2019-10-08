@@ -41,7 +41,9 @@ void AsyncFileReader::Sequence(){
 		return;
 	}
 	
-	ConvertToWideChar(m_fileimage,fileimage);
+	std::wstring wide_string;
+	ConvertToWideChar(wide_string,fileimage);
+	ConvertToHidemaruMacro(m_hidemaru_script,wide_string);
 }
 
 void AsyncFileReader::LoadFileImage(std::vector<uint8_t>&out_fileimage) {
@@ -133,69 +135,33 @@ void AsyncFileReader::ConvertToWideChar(std::wstring&out, const std::vector<uint
 	}
 	//out.assign(_T("UNKNOWN"));
 	return;
-		
-#if 0
-	const auto bom_type		= GetBomType(&fileimage.at(0), fileimage.size());
-	const auto bom_byte_size= GetBomSize(bom_type);
-	
-	switch (bom_type) {
-	case UTF_BOM_TYPE::UTF8:
-		{
-			const char*	str_ptr	= reinterpret_cast<const char*>(&fileimage.at(bom_byte_size));
-			const int	str_size= static_cast<int>(fileimage.size() - bom_byte_size);
+}
 
-			const auto size_needed = MultiByteToWideChar(CP_UTF8, 0, str_ptr, str_size, NULL, 0);
-			if (size_needed == 0) {
-				return;
-			}
-			out.resize(size_needed, 0);
-			const auto success = MultiByteToWideChar(CP_UTF8, 0, str_ptr, str_size, &out.at(0), size_needed);
-			if (!success) {
-				out.clear();
-				return;
-			}
-		}
-		return;
-	
-	case UTF_BOM_TYPE::UTF16LE:
-		out.assign(	reinterpret_cast<const wchar_t*>(&fileimage.at(bom_byte_size)), 
-					(fileimage.size()-bom_byte_size)/sizeof(wchar_t));
-		return;
-	
-	case UTF_BOM_TYPE::UTF16BE:
-		//とりあえずリトルエンディアンのまま格納して
-		out.assign(	reinterpret_cast<const wchar_t*>(&fileimage.at(bom_byte_size)),
-					(fileimage.size() - bom_byte_size) / sizeof(wchar_t));
-		static_assert(sizeof(std::remove_reference< decltype(out.at(0))>::type)==sizeof(unsigned short),"sizeof(wchar_t) != sizeof(unsigned) short. Must change _byteswap_ushort function.");
-		//エンディアンをひっくり返す
-		std::for_each(out.begin(), out.end(), [](auto&c) {c=_byteswap_ushort(c); });
-		return;
+void AsyncFileReader::ConvertToHidemaruMacro(std::wstring&out, std::wstring&in) {
+	static  const auto format = _T(R"(
+call main;
+endmacro;
 
-	case UTF_BOM_TYPE::UNKNOWN:
-		return;
-		//とりあえずshift-jisとする
-		//todo いろいろな文字コードへの対応
-		{
-			const char*	str_ptr = reinterpret_cast<const char*>(&fileimage.at(bom_byte_size));
-			const int	str_size= static_cast<int>(fileimage.size() - bom_byte_size);
+main:
+##output_dll=loaddll("HmOutputPane.dll");
+if (##output_dll == 0) {
+	return;
+}
+$$text=R"-(%s)-";
+##window=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
+##ret=sendmessage(##window,0x111,1009 ,0);
+##ret=dllfunc(##output_dll, "Output",hidemaruhandle(0),$$text);
+##ret=sendmessage(##window,0x111,1015 ,0);
+freedll ##output_dll;
+return;
+)");
 
-			const auto size_needed = MultiByteToWideChar(CP_ACP, 0, str_ptr, str_size, NULL, 0);
-			if (size_needed == 0) {
-				return;
-			}
-			out.resize(size_needed, 0);
-			const auto success = MultiByteToWideChar(CP_ACP, 0, str_ptr, str_size, &out.at(0), size_needed);
-			if (!success) {
-				out.clear();
-				return;
-			}
-		}
-		return;
-	
-	default:
-		break;
-	}
-#endif
+	std::vector<std::wstring::value_type> macro;
+	const auto len = in.size() + 10 * 1024;
+	const auto len2 = wcslen(format);
+	macro.resize(len+len2);
+	_snwprintf_s(&macro.at(0), macro.size(), _TRUNCATE, format, in.c_str());
+	out.assign(&macro.at(0));
 }
 
 bool AsyncFileReader::CheckFinish()const {
@@ -206,8 +172,8 @@ void AsyncFileReader::RequestTerminate() {
 	m_terminate_request = true;
 }
 
-const std::wstring& AsyncFileReader::GetFileImage()const {
-	return m_fileimage;
+const std::wstring& AsyncFileReader::GetHidemaruScript()const {
+	return m_hidemaru_script;
 }
 
 
@@ -280,26 +246,7 @@ void AutoPreview::Preview() {
 		return;
 	}
 
-	auto format = _T(R"(
-call main;
-endmacro;
-
-main:
-##output_dll=loaddll("HmOutputPane.dll");
-if (##output_dll == 0) {
-	return;
-}
-$$text=R"-(%s)-";
-##window=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
-##ret=sendmessage(##window,0x111,1009 ,0);
-##ret=dllfunc(##output_dll, "Output",hidemaruhandle(0),$$text);
-##ret=sendmessage(##window,0x111,1015 ,0);
-freedll ##output_dll;
-return;
-)");
-	wchar_t macro[10 * 1024];
-	_snwprintf_s(macro,_TRUNCATE,format,m_file_reader.GetFileImage().c_str());
-	pfnHidemaru_Hidemaru_EvalMacro(const_cast<WCHAR*>(macro));
+	pfnHidemaru_Hidemaru_EvalMacro(const_cast<WCHAR*>(m_file_reader.GetHidemaruScript().c_str()));
 
 	//DebugLog(macro);
 }
