@@ -1,3 +1,9 @@
+
+/* Copyright (c) 2019 ohtorii
+ * - Bug fix and more modification.
+ */
+
+
 /*
  * This code is derivative of guess.c of Gauche-0.8.3.
  * The following is the original copyright notice.
@@ -37,11 +43,7 @@
  *
  */
 
-/* Copyright (c) 2019 ohtorii
-- Bug fix and more modification.
-*/
-
-#include"stdafx.h"
+#include "stdafx.h"
 #include "libguess.h"
 
 
