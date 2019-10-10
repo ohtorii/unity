@@ -222,6 +222,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="file.cpp" />
     <ClCompile Include="dll_export.cpp" />
+    <ClCompile Include="hidemaru_functions.cpp" />
     <ClCompile Include="inheritance.cpp" />
     <ClCompile Include="kinds.cpp" />
     <ClCompile Include="log.cpp" />

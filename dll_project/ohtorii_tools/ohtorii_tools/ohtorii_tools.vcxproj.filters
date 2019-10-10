@@ -13,26 +13,20 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\candidates">
-      <UniqueIdentifier>{1099453f-38b0-4345-989b-4836a3643c63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\candidates">
-      <UniqueIdentifier>{932eda5d-cfcd-4957-afda-8eb09749b2a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\auto">
-      <UniqueIdentifier>{a2d7641c-fe15-4d23-8abd-ea1ccfd4eafa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\string">
-      <UniqueIdentifier>{4214903f-2c4a-4677-985d-9635f3f80c5e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\3rd-party">
+    <Filter Include="3rd-party">
       <UniqueIdentifier>{82bf5d37-3b2f-474c-b5d4-342370b304e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\auto">
-      <UniqueIdentifier>{5aa319a3-dad4-4de3-be29-8471a875815a}</UniqueIdentifier>
+    <Filter Include="candidates">
+      <UniqueIdentifier>{1099453f-38b0-4345-989b-4836a3643c63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\3rd-party">
-      <UniqueIdentifier>{15b31012-932d-4aeb-aa4a-35826906dca5}</UniqueIdentifier>
+    <Filter Include="auto">
+      <UniqueIdentifier>{a2d7641c-fe15-4d23-8abd-ea1ccfd4eafa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="string">
+      <UniqueIdentifier>{4214903f-2c4a-4677-985d-9635f3f80c5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="interface">
+      <UniqueIdentifier>{bd7a2acd-78b9-43e3-9e6e-7a76050ec901}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,13 +54,7 @@
     <ClInclude Include="define.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="utility.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="inheritance.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="interface_sugar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="user_data.h">
@@ -84,23 +72,29 @@
     <ClInclude Include="recurring_task.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="async_files.h">
-      <Filter>ヘッダー ファイル\candidates</Filter>
-    </ClInclude>
-    <ClInclude Include="candidates.h">
-      <Filter>ヘッダー ファイル\candidates</Filter>
-    </ClInclude>
     <ClInclude Include="auto_preview.h">
-      <Filter>ヘッダー ファイル\auto</Filter>
-    </ClInclude>
-    <ClInclude Include="unicode_helper.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>auto</Filter>
     </ClInclude>
     <ClInclude Include="log.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\external\libguess\libguess.h">
-      <Filter>ヘッダー ファイル\3rd-party</Filter>
+      <Filter>3rd-party</Filter>
+    </ClInclude>
+    <ClInclude Include="async_files.h">
+      <Filter>candidates</Filter>
+    </ClInclude>
+    <ClInclude Include="candidates.h">
+      <Filter>candidates</Filter>
+    </ClInclude>
+    <ClInclude Include="unicode_helper.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="interface_sugar.h">
+      <Filter>interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,13 +119,7 @@
     <ClCompile Include="kinds.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="dll_export.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="inheritance.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="interface_sugar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="user_data.cpp">
@@ -147,25 +135,34 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="async_files.cpp">
-      <Filter>ソース ファイル\candidates</Filter>
+      <Filter>candidates</Filter>
     </ClCompile>
     <ClCompile Include="candidates.cpp">
-      <Filter>ソース ファイル\candidates</Filter>
-    </ClCompile>
-    <ClCompile Include="auto_preview.cpp">
-      <Filter>ソース ファイル\auto</Filter>
+      <Filter>candidates</Filter>
     </ClCompile>
     <ClCompile Include="log.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="unicode_helper.cpp">
-      <Filter>ソース ファイル\string</Filter>
+      <Filter>string</Filter>
     </ClCompile>
     <ClCompile Include="utility.cpp">
-      <Filter>ソース ファイル\string</Filter>
+      <Filter>string</Filter>
     </ClCompile>
     <ClCompile Include="..\external\libguess\guess.cpp">
-      <Filter>ソース ファイル\3rd-party</Filter>
+      <Filter>3rd-party</Filter>
+    </ClCompile>
+    <ClCompile Include="auto_preview.cpp">
+      <Filter>auto</Filter>
+    </ClCompile>
+    <ClCompile Include="dll_export.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="hidemaru_functions.cpp">
+      <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="interface_sugar.cpp">
+      <Filter>interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
