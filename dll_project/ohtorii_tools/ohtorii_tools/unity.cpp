@@ -10,8 +10,8 @@ std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	Unity::m_instances{nul
 size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
-StaticStatus					Unity::m_static_status;
-
+StaticStatus			Unity::m_static_status;
+HidemaruFunctions		Unity::m_hidemaru_functions;
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -225,6 +225,10 @@ ASyncFiles&		Unity::QueryASyncFiles() {
 
 RecurringTask&	Unity::QueryRecurringTask() {
 	return m_recurring_task;
+}
+
+HidemaruFunctions& Unity::QueryHidemaruFunctions() {
+	return m_hidemaru_functions;
 }
 
 void Unity::ChangeCandidates() {

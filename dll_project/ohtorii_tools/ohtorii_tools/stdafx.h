@@ -68,5 +68,6 @@
 #include"user_data.h"
 #include"async_files.h"
 #include"recurring_task.h"
+#include"hidemaru_functions.h"
 #include"auto_preview.h"
 

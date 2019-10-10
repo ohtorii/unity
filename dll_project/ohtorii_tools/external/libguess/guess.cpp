@@ -1,6 +1,8 @@
 
 /* Copyright (c) 2019 ohtorii
  * - Bug fix and more modification.
+ *
+ * The following is the original copyright notice.
  */
 
 

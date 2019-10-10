@@ -14,6 +14,8 @@
 #include"context_status.h"
 #include"async_files.h"
 #include"recurring_task.h"
+#include"hidemaru_functions.h"
+
 
 
 class Unity{
@@ -66,6 +68,7 @@ public:
 	StaticStatus&	QueryStaticStatus();
 	ASyncFiles&		QueryASyncFiles();
 	RecurringTask&	QueryRecurringTask();
+	HidemaruFunctions& QueryHidemaruFunctions();
 
 	bool AutoPreviewRegist(const WCHAR*filename);
 
@@ -96,6 +99,8 @@ private:
 
 	///カインドはインスタンス共通で利用するため静的領域とする
 	static Kinds		m_kinds;	
+	///秀丸エディタの関数
+	static HidemaruFunctions	m_hidemaru_functions;
 
 	//std::vector<Candidate>	m_input;
 	//HidemaruView				m_hidemaru_view;

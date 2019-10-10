@@ -190,6 +190,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\external\cereal\include\cereal\cereal.hpp" />
     <ClInclude Include="..\external\libguess\libguess.h" />
     <ClInclude Include="async_files.h" />
     <ClInclude Include="auto_preview.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="context_status.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="hidemaru_functions.h" />
     <ClInclude Include="inheritance.h" />
     <ClInclude Include="kinds.h" />
     <ClInclude Include="log.h" />

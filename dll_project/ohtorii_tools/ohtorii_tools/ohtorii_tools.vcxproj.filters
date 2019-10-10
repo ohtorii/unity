@@ -96,6 +96,12 @@
     <ClInclude Include="interface_sugar.h">
       <Filter>interface</Filter>
     </ClInclude>
+    <ClInclude Include="hidemaru_functions.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\cereal\include\cereal\cereal.hpp">
+      <Filter>3rd-party</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

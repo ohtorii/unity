@@ -30,19 +30,21 @@ void AsyncFileReader::Sequence(){
 		return;
 	}
 
-	//読み込んだファイル内容
-	std::vector<uint8_t>		fileimage;
-	
-	LoadFileImage(fileimage);
-	if (m_terminate_request) {
-		return;
-	}
-	if (fileimage.size() == 0) {
-		return;
-	}
-	
 	std::wstring wide_string;
-	ConvertToWideChar(wide_string,fileimage);
+	{
+		//読み込んだファイル内容
+		std::vector<uint8_t>		fileimage;
+
+		LoadFileImage(fileimage);
+		if (m_terminate_request) {
+			return;
+		}
+		if (fileimage.size() == 0) {
+			return;
+		}
+
+		ConvertToWideChar(wide_string, fileimage);
+	}
 	ConvertToHidemaruMacro(m_hidemaru_script,wide_string);
 }
 
@@ -239,16 +241,7 @@ void AutoPreview::StartFileReadThread() {
 }
 
 void AutoPreview::Preview() {
-	HINSTANCE hinstExe = GetModuleHandle(NULL);
-	BOOL(WINAPI* pfnHidemaru_Hidemaru_EvalMacro)(WCHAR* pwsz);
-	*(FARPROC*)&pfnHidemaru_Hidemaru_EvalMacro = GetProcAddress(hinstExe, "Hidemaru_EvalMacro");
-	if (pfnHidemaru_Hidemaru_EvalMacro == nullptr) {
-		return;
-	}
-
-	pfnHidemaru_Hidemaru_EvalMacro(const_cast<WCHAR*>(m_file_reader.GetHidemaruScript().c_str()));
-
-	//DebugLog(macro);
+	Unity::Instance().lock()->QueryHidemaruFunctions().EvalMacro(const_cast<WCHAR*>(m_file_reader.GetHidemaruScript().c_str()));
 }
 
 void AutoPreview::Destroy() {
