@@ -1,0 +1,33 @@
+﻿/*コマンドの実行
+*/
+
+#g_dll_ohtorii_tools=val(getarg(30));
+$label				=getarg(0);
+$arg				=getarg(1);
+
+/*
+#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+*/
+
+call $label, $arg;
+endmacro $$return;
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Request.
+////////////////////////////////////////////////////////////////////////////
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+//秀丸マクロとして実行する
+execute:
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",0);
+	message $$text;
+
+	//loadhilight "C-language.hilight", 0;
+	//eval "";
+	return "1";
