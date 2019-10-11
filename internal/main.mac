@@ -61,7 +61,7 @@ $g_space = "\r\n\t 　";
 #g_result_faile 		=-1;
 
 //オプション
-#g_option_auto_preview=true;
+#g_option_auto_preview=false;
 $g_option_auto_preview_context_candidate="";
 
 
