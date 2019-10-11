@@ -25,6 +25,9 @@ main:
 
 LoadSources:
 	##i=0;
+	$g_source_menu[##i]="H)hilight";
+	$g_source_names[##i]="hilight";
+	##i = ##i + 1;
 	$g_source_menu[##i]="G)grep_result";
 	$g_source_names[##i]="grep_result";
 	##i = ##i + 1;
