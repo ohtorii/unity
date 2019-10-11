@@ -29,6 +29,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |function			|Vim の組み込み関数と unite.vim、neocomplcache で定義されている関数の一覧|||
 |grep				|外部コマンド "grep" の結果を出力|||
 |history/yank		|ヤンクされたワードの一覧|||
+|unite-colorscheme	|カラースキームの適用|ソース名をhilightへ変更して実装|✅|
 |jump				|:jump の結果の出力|||
 |jump_point			|file:line に一致するデータを出力|||
 |launcher			|$PATH にある実行ファイルの一覧|||
