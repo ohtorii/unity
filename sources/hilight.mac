@@ -1,0 +1,45 @@
+﻿#g_dll_dengaku=0;
+
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg1=getarg(1);
+$arg2=getarg(2);
+$arg3=getarg(3);
+$arg4=getarg(4);
+$arg5=getarg(5);
+
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
+endmacro $$return;
+
+
+gather_candidates:
+	execmacro $g_root_macro_directory+"\\internal\\load_dll.mac", "DengakuDLL.dll";
+	#g_dll_dengaku=val(getresultex(-1));
+	if(#g_dll_dengaku==0){
+		return "0";
+	}
+
+	call gather_candidates_main,$$root_dir;
+	$$ret=$$return;
+
+	freedll(#g_dll_dengaku);
+	#g_dll_dengaku=0;
+	return $$ret;
+
+
+gather_candidates_main:
+	##r = dllfunc(#g_dll_dengaku,"ENUMFILE",settingdir+"\\*.hilight");
+	while (1) {
+		$$file_name = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
+		if ($$file_name == "") {
+			break;
+		}
+		##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$file_name,"");
+		if(! ##success){
+			return "0";
+		}
+	}
+
+	return "1";
