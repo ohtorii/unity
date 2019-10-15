@@ -124,11 +124,11 @@ extern "C" INT_PTR GetCurrentContext() {
 }
 
 extern "C" INT_PTR SerializeCurrentContext(WCHAR* out_filename) {
-	return Unity::Instance().lock()->SerializeCurrentContext(out_filename);
+	return Unity::Instance().lock()->SerializeStaticContext(out_filename);
 }
 
 extern "C" INT_PTR DeSerializeToCurrentContext(WCHAR* input_filename) {
-	return Unity::Instance().lock()->DeSerializeToCurrentContext(input_filename);
+	return Unity::Instance().lock()->DeSerializeToStaticContext(input_filename);
 }
 
 extern "C" INT_PTR SerializeStaticStatusContext(WCHAR* out_filename) {

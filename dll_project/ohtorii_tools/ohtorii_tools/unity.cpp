@@ -72,7 +72,7 @@ size_t Unity::GetCurrentInstanceIndex() {
 	return m_current_instance_index;
 }
 
-bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
+bool Unity::SerializeStaticContext(const WCHAR*out_filename) {
 	try {
 		std::ofstream os(out_filename, std::ios::binary);
 		if (!os) {
@@ -97,7 +97,7 @@ bool Unity::SerializeCurrentContext(const WCHAR*out_filename) {
 	return false;
 }
 
-bool Unity::DeSerializeToCurrentContext(const WCHAR*input_filename) {
+bool Unity::DeSerializeToStaticContext(const WCHAR*input_filename) {
 	try {
 		std::ifstream is(input_filename, std::ios::binary);
 		if (!is) {
@@ -247,6 +247,8 @@ bool Unity::ClearChangedCandidatesAndReturnPrevStatus() {
 
 
 bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR context_index) {
+	DebugLog(_T("Unity::StatusUpdate. kind_name=%s, action_name=%s"), kind_name, action_name);
+
 	auto kind_index = m_kinds.FindKindIndex(kind_name);
 	if (kind_index == UNITY_NOT_FOUND_INDEX) {
 		return false;
@@ -256,6 +258,7 @@ bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR
 	if (action_index == UNITY_NOT_FOUND_INDEX) {
 		return false;
 	}
+
 	m_static_status.UpdateStatus(kind_index, action_index);
 	m_context_status.UpdateStatus(kind_index, action_index, context_index);
 	return true;

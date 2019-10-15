@@ -27,8 +27,8 @@ public:
 	static bool PushContext(bool exist_context_then_delete =true);
 	static bool PopContext(bool exist_context_then_delete = true);
 	static size_t GetCurrentInstanceIndex();
-	static bool SerializeCurrentContext(const WCHAR*output_filename);
-	static bool DeSerializeToCurrentContext(const WCHAR*input_filename);
+	static bool SerializeStaticContext(const WCHAR*output_filename);
+	static bool DeSerializeToStaticContext(const WCHAR*input_filename);
 	static bool SerializeStaticStatusContext(const WCHAR*output_filename);
 	static bool DeSerializeToStaticStatusContext(const WCHAR*input_filename);
 	static void Destroy();
