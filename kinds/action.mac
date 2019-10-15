@@ -37,7 +37,6 @@ do:
 	$$user_data_kind=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetUserDataString",##candidate_index,"__kind__","");
 	$$kind_filename=$g_root_macro_directory+"\\kinds\\"+$$user_data_kind+".mac";
 
-
 	/////////////////////////////////////////////////////////////////////////
 	//選択ファイルに対してアクションを実行する
 	/////////////////////////////////////////////////////////////////////////
@@ -48,6 +47,8 @@ do:
 		debuginfo "  do -> false @ 1";
 		return "0";
 	}
+
+	call pre_action $$user_data_kind,$$action_name;
 
 	debuginfo "  exec_action start.";
 	call exec_action, $$kind_filename, $$action_name;
@@ -68,6 +69,17 @@ do:
 	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusSetIsQuit",val($$is_quit));
 	debuginfo "  do -> true";
 	return $$action_result;
+
+
+pre_action:
+	/*アクションを呼び出す前の処理。
+	内部状態(Status)を初期値に戻します。
+	*/
+	$$default_kind	=$$1;
+	$$default_action=$$2;
+	##previous_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext") - 1;
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusUpdate",$$default_kind, $$default_action,##previous_context);
+	return ##ret;
 
 
 exec_action:

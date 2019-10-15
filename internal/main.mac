@@ -358,7 +358,7 @@ NewCandidate:
 	*/
 	debuginfo "Enter NewCandidate";
 	$$source_filename	=$$1;
-	$$source_arg				=$$2;
+	$$source_arg		=$$2;
 
 	debuginfo "  $$source_filename="+$$source_filename;
 	debuginfo "  $$source_arg="+$$source_arg;
@@ -421,8 +421,6 @@ TryRegetCandidates:
 	##source_name_index=0;
 	while(##source_name_index < #g_reget_sourcenames_count){
 		$$reget_source_filename = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$g_reget_sourcenames[##source_name_index]) + ".mac";
-		debuginfo "$$reget_source_filename="+$$reget_source_filename;
-
 		$$args[0]	=str(#g_dll_ohtorii_tools);
 		$$args[1]	=str(#g_dll_hm_process) ;
 		$$args[2]	=$$reget_source_filename;
