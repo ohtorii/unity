@@ -63,9 +63,14 @@ open:
 	while(##i < ##count){
 		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
 		if($$text!=""){
-			openfile $$text;
-			##new_hidemaru_handle = hidemaruhandle(0);
-			setactivehidemaru(##current_hidemaru_handle);
+			if(existfile($$text)){
+				if((existfile($$text,1)&0x00000010) == 0){
+					//パスが存在している、かつ、ファイルである
+					openfile $$text;
+					##new_hidemaru_handle = hidemaruhandle(0);
+					setactivehidemaru(##current_hidemaru_handle);
+				}
+			}
 		}
 
 		##i = ##i + 1;
