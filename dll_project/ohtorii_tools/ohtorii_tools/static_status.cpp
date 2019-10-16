@@ -2,6 +2,28 @@
 
 
 /////////////////////////////////////////////////////////////////////////////
+//	Static functions.
+/////////////////////////////////////////////////////////////////////////////
+
+/* 選択した候補からソース名を取得する
+*/
+static void GatherSourceNames(std::vector<std::wstring>&out, const RefineSearch&search, const Candidates&candidates) {
+	std::unordered_set<std::wstring>	source_names;
+	{
+		const INT_PTR selections = search.GetSelectionCandidateCount();
+		for (INT_PTR selection_index = 0; selection_index < selections; ++selection_index) {
+			auto candidate_index = search.GetSelectionCandidateIndex(selection_index);
+			auto source_name = candidates.GetSourceName(candidate_index);
+			source_names.insert(source_name);
+		}
+	}
+	out.resize(source_names.size());
+	std::copy(source_names.cbegin(), source_names.cend(), out.begin());
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////
 //	Status::IsStart
 /////////////////////////////////////////////////////////////////////////////
 StaticStatus::IsStart::IsStart() {
@@ -73,16 +95,30 @@ void StaticStatus::Initialize(INT_PTR target_hidemaru, const WCHAR* working_dire
 	//m_reget_candidate_source_names.clear();
 }
 
-void StaticStatus::UpdateStatus(INT_PTR kind_index, INT_PTR action_index) {
-	const auto &kind=Unity::Instance().lock()->QueryKinds();
+void StaticStatus::UpdateStatus(INT_PTR kind_index, INT_PTR action_index, INT_PTR context_index) {
+	{
+		const auto &kind = Unity::Instance().lock()->QueryKinds();
 
-	m_is_quit = kind.IsActionQuit(kind_index, action_index);
+		m_is_quit = kind.IsActionQuit(kind_index, action_index);
 
-	auto is_start = kind.IsActionStart(kind_index, action_index);
-	GetIsStart().SetEnable(is_start);
+		auto is_start = kind.IsActionStart(kind_index, action_index);
+		GetIsStart().SetEnable(is_start);
+	}
+
+	{
+		m_reget_candidate_source_names.clear();
+
+		auto unity = Unity::Instance(context_index).lock();
+		const auto &kind = unity->QueryKinds();
+		if (kind.IsRegetCandidates(kind_index, action_index)) {
+			GatherSourceNames(
+				m_reget_candidate_source_names,
+				unity->QueryRefineSearch(),
+				unity->QueryCandidates());
+		}
+	}
 }
 
-/*
 INT_PTR StaticStatus::GetNumberOfSourceNamesForReacquisitionCandidates()const {
 	return m_reget_candidate_source_names.size();
 }
@@ -96,4 +132,7 @@ const WCHAR* StaticStatus::GetSourceNameForReacquisitionCandidates(INT_PTR index
 	}
 	return _T("");
 }
-*/
+
+void StaticStatus::ClearSourceNamesForReacquisitionCandidates() {
+	m_reget_candidate_source_names.clear();
+}

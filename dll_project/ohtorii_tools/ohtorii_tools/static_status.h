@@ -43,23 +43,26 @@ public:
 	const IsStart&GetIsStart() const;
 
 	void Initialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory);
-	void UpdateStatus(INT_PTR kind_index, INT_PTR action_index);
+	void UpdateStatus(INT_PTR kind_index, INT_PTR action_index,INT_PTR context_index);
 	/*再取得する候補のソース名の個数を得る
 	*/
-	//INT_PTR GetNumberOfSourceNamesForReacquisitionCandidates()const;
+	INT_PTR GetNumberOfSourceNamesForReacquisitionCandidates()const;
 
 	/*再取得する候補のソース名を得る
 	*/
-	//const WCHAR* GetSourceNameForReacquisitionCandidates(INT_PTR index)const;
-
+	const WCHAR* GetSourceNameForReacquisitionCandidates(INT_PTR index)const;
+	/*再取得する候補のソース名をクリアする
+	*/
+	void ClearSourceNamesForReacquisitionCandidates();
 
 public:
-	bool			m_is_quit;
-	//std::vector<std::wstring>	m_reget_candidate_source_names;
+	bool			m_is_quit;	
 	INT_PTR			m_hidemaruhandle_to_focus_at_end_of_process;
 	INT_PTR			m_target_hidemaruhandle;
 	std::wstring	m_current_working_directory;
 	std::wstring	m_root_macro_directory;
+
 private:
 	IsStart		m_is_start;
+	std::vector<std::wstring>	m_reget_candidate_source_names;
 };

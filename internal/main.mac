@@ -401,18 +401,21 @@ NewCandidate:
 /*候補の再取得に必要なソース名を集める*/
 GatherRegetCandidates:
 	$g_reget_sourcenames[0]="";
-	#g_reget_sourcenames_count=dllfuncw(#g_dll_ohtorii_tools,"ContextStatusGetNumberOfSourceNamesForReacquisitionCandidates");
+	#g_reget_sourcenames_count=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates");
 	##i=0;
 	while(##i<#g_reget_sourcenames_count){
-		$g_reget_sourcenames[##i] = dllfuncstrw(#g_dll_ohtorii_tools,"ContextStatusGetSourceNameForReacquisitionCandidates", ##i);
+		$g_reget_sourcenames[##i] = dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetSourceNameForReacquisitionCandidates", ##i);
 		##i = ##i + 1;
 	}
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusClearSourceNamesForReacquisitionCandidates");
 	return ;
 
 
 /*候補の再取得を試みる
 */
 TryRegetCandidates:
+	debuginfo "==== TryRegetCandidates ====";
+	debuginfo "    #g_reget_sourcenames_count="+str(#g_reget_sourcenames_count);
 	if(#g_reget_sourcenames_count==0){
 		return ;
 	}

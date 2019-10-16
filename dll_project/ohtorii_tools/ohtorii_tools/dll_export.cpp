@@ -507,12 +507,17 @@ extern"C" WCHAR* StaticStatusGetRootMacroDirectory() {
 /////////////////////////////////////////////////////////////////////////////
 //ContextStatus
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR ContextStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
-	return Unity::Instance().lock()->QueryContextStatus().GetNumberOfSourceNamesForReacquisitionCandidates();
+extern "C" INT_PTR StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
+	return Unity::Instance().lock()->QueryStaticStatus().GetNumberOfSourceNamesForReacquisitionCandidates();
 }
 
-extern "C" WCHAR* ContextStatusGetSourceNameForReacquisitionCandidates(INT_PTR index) {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryContextStatus().GetSourceNameForReacquisitionCandidates(index));
+extern "C" WCHAR* StaticStatusGetSourceNameForReacquisitionCandidates(INT_PTR index) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().GetSourceNameForReacquisitionCandidates(index));
+}
+
+extern "C" INT_PTR StaticStatusClearSourceNamesForReacquisitionCandidates() {
+	Unity::Instance().lock()->QueryStaticStatus().ClearSourceNamesForReacquisitionCandidates();
+	return 1;
 }
 
 /////////////////////////////////////////////////////////////////////////////

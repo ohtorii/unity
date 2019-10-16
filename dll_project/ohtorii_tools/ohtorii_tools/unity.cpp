@@ -259,7 +259,7 @@ bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR
 		return false;
 	}
 
-	m_static_status.UpdateStatus(kind_index, action_index);
+	m_static_status.UpdateStatus(kind_index, action_index, context_index);
 	m_context_status.UpdateStatus(kind_index, action_index, context_index);
 	return true;
 }
