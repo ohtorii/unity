@@ -1,0 +1,49 @@
+﻿#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg1=getarg(1);
+$arg2=getarg(2);
+$arg3=getarg(3);
+$arg4=getarg(4);
+$arg5=getarg(5);
+
+//$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+
+
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5 ;
+endmacro $$return;
+
+
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+
+sigkill:
+	##dll=loaddll("HmOutputPane.dll");
+	##ret=dllfunc(##dll,"Output",hidemaruhandle(0),"==== sigkill ====\r\n");
+
+
+	##user_process_id=100;
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i < ##count){
+		##process_id=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionProcessId",##i);
+		if(##user_process_id < ##process_id){
+			$$cmd = sprintf("cmd.exe /c taskkill /PID %d", ##process_id);
+			runex $$cmd
+					, 1 			//sync	  0:async 1:sync
+					, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+					, 8, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+					, 1, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+					, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+					, 2 			//show	  0:auto 1:show 2:hide
+					, 1 			//nodraw  0:draw 1:no draw
+					, 0 			//unicode 0:ansi 2:unicode
+					;
+		}
+
+		##i = ##i + 1;
+	}
+
+	return "1";

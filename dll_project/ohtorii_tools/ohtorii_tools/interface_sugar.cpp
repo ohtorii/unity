@@ -77,6 +77,14 @@ bool InterfaceSugar::SetCandidateActionLine(INT_PTR line) {
 	return Unity::Instance().lock()->QueryCandidates().SetActionLine(m_current_candidate_index, line);
 }
 
+bool InterfaceSugar::SetCandidateActionCommand(const WCHAR*command) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionCommand(m_current_candidate_index, command);
+}
+
+bool InterfaceSugar::SetCandidateActionProcessId(INT_PTR process_id) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionProcessId(m_current_candidate_index, process_id);
+}
+
 bool InterfaceSugar::SetCandidateUserDataString(const WCHAR* key, const WCHAR* data) {
 	return Unity::Instance().lock()->QueryCandidates().SetUserData(m_current_candidate_index, key, data);
 }

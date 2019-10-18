@@ -5,10 +5,10 @@
 $label				=getarg(0);
 $arg				=getarg(1);
 
-/*
-#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+
+//#g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
 $g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
-*/
+
 
 call $label, $arg;
 endmacro $$return;
@@ -23,11 +23,35 @@ do_action:
 	call $$action;
 	return $$return;
 
-//秀丸マクロとして実行する
+//候補を秀丸マクロとして実行する
 execute:
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",0);
-	message $$text;
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i<##count){
+		$$command=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionCommand",##i);
 
-	//loadhilight "C-language.hilight", 0;
-	//eval "";
+
+		/*(memo)
+		秀丸エディタの切り替えなどを行うためeval文は利用できない、
+		そのため回避策として一時ファイルに保存してからexecmacroする。
+		*/
+
+		execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac","command",".mac";
+		$$macro_filename=getresultex(-1);
+		if($$macro_filename!=""){
+			##ret=dllfuncw(#g_dll_ohtorii_tools,"WriteToFile",$$macro_filename,$$command);
+			/*if(! ##ret){
+			}*/
+
+			##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$macro_filename);
+			/*if(! ##ret){
+			}*/
+			execmacro $$macro_filename;
+		}
+
+
+		##i = ##i + 1;
+	}
+
 	return "1";
+

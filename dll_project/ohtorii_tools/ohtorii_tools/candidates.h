@@ -58,10 +58,17 @@ struct Candidate {
 		Action() {
 			m_column = 1;
 			m_line = 1;
+			m_process_id= UNITY_INVALID_PROCESS_ID;
 		};
 
 		template<class Archive> void serialize(Archive & archive) {
-			archive(m_column, m_line,m_directory_name,m_file_name);
+			archive(
+				m_column, 
+				m_line,
+				m_directory_name,
+				m_file_name,
+				m_command,
+				m_process_id);
 		};
 		///アクションのカラム位置
 		INT_PTR				m_column;
@@ -70,7 +77,11 @@ struct Candidate {
 		///アクションのディレクトリ名
 		std::wstring			m_directory_name;
 		///アクションのファイル名
-		std::wstring			m_file_name;		
+		std::wstring			m_file_name;
+		///アクションのコマンド
+		std::wstring		m_command;
+		///アクションのプロセスID
+		INT_PTR				m_process_id;
 	};
 	Action				m_action;
 	///ソース名
@@ -130,6 +141,14 @@ public:
 	*/
 	bool SetActionLine(INT_PTR index, INT_PTR line);
 
+	/**アクションのコマンドを設定する
+	*/
+	bool SetActionCommand(INT_PTR index, const WCHAR* command);
+
+	/**アクションのプロセスIDを設定する
+	*/
+	bool SetActionProcessId(INT_PTR index, INT_PTR process_id);
+
 	/**候補の子供を追加する
 	return 候補へのインデックス
 
@@ -163,6 +182,8 @@ public:
 	const WCHAR* GetActionFileName(INT_PTR index)const;
 	INT_PTR		GetActionColumn(INT_PTR index)const;
 	INT_PTR		GetActionLine(INT_PTR index)const;
+	const WCHAR* GetActionCommand(INT_PTR index)const;
+	INT_PTR		GetActionProcessId(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
 	/*指定ソース名の候補を削除する

@@ -150,6 +150,34 @@ bool Candidates::SetActionLine(INT_PTR index, INT_PTR line) {
 	return false;
 }
 
+bool Candidates::SetActionCommand(INT_PTR index, const WCHAR* command) {
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_command.assign(command);
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+	}
+	return false;
+}
+
+bool Candidates::SetActionProcessId(INT_PTR index, INT_PTR process_id) {
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_process_id=process_id;
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+	}
+	return false;
+}
+
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
 	ContainerType::scoped_lock locker(m_candidates);
 	{
@@ -278,6 +306,32 @@ INT_PTR		Candidates::GetActionLine(INT_PTR index)const {
 		}
 	}
 	return UNITY_NOT_FOUND_INDEX;
+}
+
+const WCHAR* Candidates::GetActionCommand(INT_PTR index)const {
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_command.c_str();
+		}
+		catch (std::exception) {
+			//pass
+		}
+	}
+	return _T("");
+}
+
+INT_PTR		Candidates::GetActionProcessId(INT_PTR index)const {
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_process_id;
+		}
+		catch (std::exception) {
+			//pass
+		}
+	}
+	return UNITY_INVALID_PROCESS_ID;
 }
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {

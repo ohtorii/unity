@@ -62,18 +62,18 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
-|cd|カレントディレクトリ移動|秀丸エディタではカレントディレクトリを移動できないため未対応|❎|
-|lcd|現在のウィンドウのカレントディレクトリ移動|||
-|project_cd||||
-|tabnew_cd|カレントディレクトリを移動し、新しいタブを開く|||
-|tabnew_lcd||||
-|file|Open this directory by file source.||✅|
-|narrow|Narrow down candidates by the directory name.||✅|
-|vimshell|対象をカレントディレクトリとしてvimshellを起動する|アクション名をcommand_promptへ変更。コマンドプロンプトを開くようにした。|✅|
-|tabvimshell||||
-|vimfiler|対象をカレントディレクトリとしてvimfilerを起動する|秀丸ファイラーを開く|✅|
-|🆕explorer|エクスプローラーを開く|新アクション|✅|
-|tabvimfiler||||
+|cd				|カレントディレクトリ移動|秀丸エディタではカレントディレクトリを移動できないため未対応|❎|
+|lcd			|現在のウィンドウのカレントディレクトリ移動|||
+|project_cd		||||
+|tabnew_cd		|カレントディレクトリを移動し、新しいタブを開く|||
+|tabnew_lcd		||||
+|file			|Open this directory by file source.||✅|
+|narrow			|Narrow down candidates by the directory name.||✅|
+|vimshell		|対象をカレントディレクトリとしてvimshellを起動する|アクション名をcommand_promptへ変更。コマンドプロンプトを開くようにした。|✅|
+|tabvimshell	||||
+|vimfiler		|対象をカレントディレクトリとしてvimfilerを起動する|秀丸ファイラーを開く|✅|
+|🆕explorer		|エクスプローラーを開く|新アクション|✅|
+|tabvimfiler	||||
 
 
 ## command
@@ -81,21 +81,21 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
 |edit        |edit command|||
-|execute     |execute command|||
+|execute     |execute command||✅|
 |grep        |grep this command|||
 
 
 ## common
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
-|nop					|なにもしない	||✅|
+|nop				|なにもしない	||✅|
 |append				|候補をカーソル右側へ挿入|秀丸エディタ的な操作では無いため実装しない|❎|
 |delete				|ファイルの削除|||
 |echo				|候補の情報をアウトプット枠へ出力|デバッグ目的で利用する|✅|
 |ex					|候補のフルパスをコマンドラインに挿入||❎|
 |insert				|候補のファイル名を挿入||✅|
 |insert_directory	|候補のディレクトリ名を挿入||✅|
-|🆕overwrite			|候補のファイル名を上書き挿入|新規追加||
+|🆕overwrite		|候補のファイル名を上書き挿入|新規追加||
 |🆕overwrite_directory|候補のディレクトリ名を上書き挿入|新規追加||
 |preview			|候補をプレビューする|アウトプット枠で表示する|✅|
 |yank				|候補をクリップボードにコピー||✅|
@@ -164,6 +164,11 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |splitswitch	|Open the file in split window or jump to existing window/tabpage.|||
 |vsplitswitch	|Open the file in vertical split window or jump to existing window/tabpage.|||
 
+## process
+|sigkill	|send the KILL signal to processes|taskkillコマンドを利用|✅|
+|sigterm	|send the TERM signal to processes|||
+|sigint		|send the INT signal to processes|||
+
 
 ## tab
 
@@ -195,25 +200,25 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |action__action||||
 |action__args||||
 |action__buffer_nr||||
-|action__col|カラム位置||✅|
+|action__col|カラム位置|SetCandidateActionColumn/GetSelectionActionColumn関数を利用する|✅|
+|action__line|行番号|SetCandidateActionLine/GetSelectionActionLine関数を利用する|✅|
 |action__col_pattern||||
-|action__command||||
-|action__command_args||||
+|action__command|コマンド|SetCandidateActionCommand/GetSelectionActionCommand関数を利用する|✅|
+|action__command_args||コマンドの引数とは異なる利用方法をされているようなので無視した。|❎|
+|action__histadd||秀丸エディタにはコマンド履歴が無いため未実装|❎|
 |action__complete_info||||
 |action__complete_info_lazy||||
 |action__complete_pos||||
 |action__complete_word||||
 |action__description||||
-|action__directory|ディレクトリパス名|GetCandidateActionDirectoryName/SetCandidateActionDirectoryName関数を利用する|✅|
+|action__directory|ディレクトリパス名|SetCandidateActionDirectoryName/GetSelectionActionDirectoryName関数を利用する|✅|
 |action__filename||kinds\file_vimfiler_base.vimで利用。Unityではaction__pathと同じ扱いにした||
 |action__function||||
-|action__histadd||||
 |action__id||||
-|action__line|行番号||✅|
 |action__mapping||||
-|action__path|ファイルパス名|GetCandidateActionFileName/SetCandidateActionFileName関数を利用する|✅|
+|action__path|ファイルパス名|SetCandidateActionFileName/GetSelectionActionFileName関数を利用する|✅|
 |action__pattern||||
-|action__pid||||
+|action__pid||SetCandidateActionProcessId/GetSelectionActionProcessId関数を利用する||
 |action__register||||
 |action__regtype||||
 |action__signature||||

@@ -5,21 +5,25 @@ EXPORTS
 	AppendCandidateHeader
 	AppendCandidate
 	AppendCandidateAsASyncFile
+	AppendChildCandidate
 	SetCandidateActionFileName
 	SetCandidateActionDirectoryName
-	SetCandidateActionLine
 	SetCandidateActionColumn
+	SetCandidateActionLine	
+	SetCandidateActionCommand
+	SetCandidateActionProcessId
 	SetCandidateUserDataString
 	SetCandidateUserDataNumeric
-	AppendChildCandidate
 
 	
 	GetSelectionCount
 	GetSelectionText
-	GetSelectionActionDirectoryName
 	GetSelectionActionFileName
+	GetSelectionActionDirectoryName	
 	GetSelectionActionColumn
 	GetSelectionActionLine
+	GetSelectionActionCommand
+	GetSelectionActionProcessId
 	GetSelectionUserDataString
 	GetSelectionUserDataNumeric
 	GetSelectionSourceName

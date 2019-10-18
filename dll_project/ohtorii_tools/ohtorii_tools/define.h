@@ -12,3 +12,5 @@
 ///秀丸エディタの無効なハンドル値
 #define UNITY_HIDEMARU_NULL_HANDLE		(0)
 
+///無効なプロセスID
+#define UNITY_INVALID_PROCESS_ID	(0)

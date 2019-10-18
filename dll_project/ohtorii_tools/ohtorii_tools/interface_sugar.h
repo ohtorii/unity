@@ -24,6 +24,8 @@ public:
 	bool SetCandidateActionFileName(const WCHAR*file_name);
 	bool SetCandidateActionColumn(INT_PTR column);
 	bool SetCandidateActionLine(INT_PTR line);
+	bool SetCandidateActionCommand(const WCHAR*command);
+	bool SetCandidateActionProcessId(INT_PTR process_id);
 
 	bool SetCandidateUserDataString(const WCHAR* key, const WCHAR* data);
 	bool SetCandidateUserDataNumeric(const WCHAR* key, INT_PTR data);

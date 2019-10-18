@@ -1,0 +1,27 @@
+﻿/*ハイライト
+*/
+
+#g_dll_ohtorii_tools=val(getarg(30));
+$label				=getarg(0);
+$arg				=getarg(1);
+
+call $label, $arg;
+endmacro $$return;
+
+
+
+////////////////////////////////////////////////////////////////////////////
+//	Request.
+////////////////////////////////////////////////////////////////////////////
+do_action:
+	$$action=$$1;
+	call $$action;
+	return $$return;
+
+//ハイライトのプレビュー
+preview:
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",0);
+	loadhilight $$text, 0, 0x1f;
+	debuginfo $$text;
+	debuginfo "result="+str(result);
+	return "1";

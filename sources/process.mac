@@ -3,23 +3,16 @@
 
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
-$arg=getarg(1);
-call $label, $arg;
+$arg1=getarg(1);
+$arg2=getarg(2);
+$arg3=getarg(3);
+$arg4=getarg(4);
+$arg5=getarg(5);
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;
 
 
 gather_candidates:
-	/*
-	タブグループ１[0x0000111]	<- 選択対象
-		foo.txt
-		bar.txt
-	タブグループ２[0x0000112]	<- 選択対象
-		hoge.txt
-
-	0x....はウインドウハンドル
-
-	*/
-
 	##success	= dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateHeader", "イメージ名", "PID\tメモリ使用量");
 	if(!##success){
 		return "0";
@@ -63,13 +56,18 @@ create_process_candidates:
 			debuginfo "Failed:Name";
 			return "0";
 		}*/
-		$$process_id=str(getpropnum( ##item, "ProcessId" ));//uint32
+		##process_id=getpropnum( ##item, "ProcessId" );//uint32
+		$$process_id=str(##process_id);
 
 		call number_format val(getpropstr( ##item, "WorkingSetSize" ))/1024;
 		$$working_set_size=$$return + "K";
 
 		//$$command_line=getpropstr(##item,"CommandLine");
 		##success = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$name, $$process_id+"\t"+$$working_set_size);
+		if(! ##success){
+			return "0";
+		}
+		##success = dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionProcessId", ##process_id);
 		if(! ##success){
 			return "0";
 		}
