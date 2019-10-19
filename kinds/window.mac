@@ -33,6 +33,9 @@ preview:
 
 
 jump:
+	##first_item_index	= 0;
+	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusSetHidemaruHandleToForceAtEndProcess",##hidemaru_handle);
 	return "1";
 
 
