@@ -113,9 +113,11 @@ EXPORTS
 	StaticStatusGetIsStartSourceName
 	StaticStatusGetIsStartArg
 	StaticStatusSetIsQuit
-	StaticStatusGetIsQuit	
-	StaticStatusSetHidemaruHandleToForceAtEndProcess
-	StaticStatusGetHidemaruHandleToForceAtEndProcess
+	StaticStatusGetIsQuit		
+	StaticStatusSetCallBackAtEndProcess
+	StaticStatusGetCallBackAtEndProcess_MacroFilename
+	StaticStatusGetCallBackAtEndProcess_LabelName
+	StaticStatusGetCallBackAtEndProcess_Args
 	StaticStatusSetTargetHidemaruHandle
 	StaticStatusGetTargetHidemaruHandle
 	StaticStatusSetCurrentWorkingDirectory

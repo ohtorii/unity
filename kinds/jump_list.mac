@@ -8,7 +8,6 @@ $arg3=getarg(3);
 $arg4=getarg(4);
 $arg5=getarg(5);
 
-$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
 
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5 ;
 endmacro $$return;
@@ -28,17 +27,31 @@ open:
 	##i=0;
 	while(##i < ##count){
 		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
-		##column=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionColumn",##i);
-		##line=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionLine",##i);
+		if(existfile($$filename)){
+			if((existfile($$filename,1)&0x00000010) == 0){
+				//パスが存在している、かつ、ファイルである
+				##column=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionColumn",##i);
+				##line  =dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionLine",##i);
 
-		//debuginfo $$filename + sprintf("(%d)", ##line);
-		openfile $$filename;
-		moveto2 ##column,##line;
-		##new_hidemaru_handle=hidemaruhandle(0);
 
-		setactivehidemaru ##current_hidemaru_handle;
+				openfile $$filename;
+				moveto2 ##column,##line;
+				##new_hidemaru_handle=hidemaruhandle(0);
+
+				setactivehidemaru ##current_hidemaru_handle;
+			}
+		}
 		##i = ##i + 1;
 	}
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusSetHidemaruHandleToForceAtEndProcess",##new_hidemaru_handle);
 
-	return "0";
+	if(##new_hidemaru_handle){
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusSetCallBackAtEndProcess",currentmacrofilename,"callback_open",str(##new_hidemaru_handle));
+	}
+	return str(##ret);
+
+
+callback_open:
+	##handle=val($$1);
+	setactivehidemaru ##handle;
+	return str(##return);
+

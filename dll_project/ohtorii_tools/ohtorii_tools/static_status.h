@@ -13,7 +13,7 @@ public:
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_is_start,
 				m_is_quit,
-				m_hidemaruhandle_to_focus_at_end_of_process,
+				m_callback,
 				m_target_hidemaruhandle,
 				m_current_working_directory,
 				m_root_macro_directory
@@ -55,9 +55,28 @@ public:
 	*/
 	void ClearSourceNamesForReacquisitionCandidates();
 
+
+	class CallBack{
+	public:
+		template<class Archive> void serialize(Archive & archive) {
+			archive(m_macro_filename, m_label_name, m_args);
+		};
+
+		void Clear() {
+			m_macro_filename.clear();
+			m_label_name.clear();
+			m_args.clear();
+		};
+		std::wstring	m_macro_filename;
+		std::wstring	m_label_name;
+		std::wstring	m_args;
+	};
+	bool SetCallBack(const WCHAR*macro_filename, const WCHAR* label_name, const WCHAR* args);
+
+
 public:
 	bool			m_is_quit;	
-	INT_PTR			m_hidemaruhandle_to_focus_at_end_of_process;
+	CallBack		m_callback;
 	INT_PTR			m_target_hidemaruhandle;
 	std::wstring	m_current_working_directory;
 	std::wstring	m_root_macro_directory;

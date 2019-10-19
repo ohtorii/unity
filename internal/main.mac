@@ -100,7 +100,10 @@ main:
 	##ret = ##return;
 
 	if(#g_dll_ohtorii_tools){
-		##forcus_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetHidemaruHandleToForceAtEndProcess");
+		$$callback_macro_filename	=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCallBackAtEndProcess_MacroFilename");
+		$$callback_label			=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCallBackAtEndProcess_LabelName");
+		$$callback_args				=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCallBackAtEndProcess_Args");
+
 	}
 
 	//カーソル位置を元に戻す
@@ -112,8 +115,8 @@ main:
 	call FreeDll;
 	call CloseFileIfOpen;
 
-	if(##forcus_hidemaru_handle!=0){
-		setactivehidemaru ##forcus_hidemaru_handle;
+	if($$callback_macro_filename!=""){
+		execmacro $$callback_macro_filename, $$callback_label, $$callback_args;
 	}
 
 	return ##ret;

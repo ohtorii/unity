@@ -495,13 +495,20 @@ extern"C" INT_PTR StatusGetIsRegetCandidates() {
 	return false;
 }*/
 
-extern"C" INT_PTR StaticStatusSetHidemaruHandleToForceAtEndProcess(INT_PTR hidemaru_handle) {
-	Unity::Instance().lock()->QueryStaticStatus().m_hidemaruhandle_to_focus_at_end_of_process=hidemaru_handle;
-	return true;
+extern"C" INT_PTR StaticStatusSetCallBackAtEndProcess(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
+	return Unity::Instance().lock()->QueryStaticStatus().SetCallBack(macro_filename,label_name,args);
 }
 
-extern"C" INT_PTR StaticStatusGetHidemaruHandleToForceAtEndProcess() {
-	return Unity::Instance().lock()->QueryStaticStatus().m_hidemaruhandle_to_focus_at_end_of_process;
+extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_MacroFilename() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_macro_filename.c_str());
+}
+
+extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_LabelName() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_label_name.c_str());
+}
+
+extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_Args() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_args.c_str());
 }
 
 extern"C" INT_PTR StaticStatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
