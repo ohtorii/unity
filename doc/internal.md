@@ -2,76 +2,48 @@
 
 このドキュメントはUnityマクロの内部実装について書いています。
 
+作成途中です。
+
 
 # sourceについて
 
 ## candidate_type
 
 候補を返す方法を指定する
+
 |値|説明|処理|
 |:--:|:--:|:--:|
-|function|DLL側の関数を利用して候補を作成する|同期処理|
-|string|候補を改行区切りのリストで返す|同期処理|
-|file|候補をファイルから作成する|同期処理|
-|async_file|候補をファイルから作成する|非同期処理|
+|function|DLL側の関数を利用して候補を作成する|同期|
+|string|候補を改行区切りのリストで返す|同期|
+|file|候補をファイルから作成する|同期|
+|async_file|候補をファイルから作成する|非同期|
 
 
 # kindについて
 
-## is_quit
-アクション実行後に終了するかどうか。
-ディフォルト値	false
-
-## is_multi_selectable
-複数選択に対応したアクションかどうか
-ディフォルト値	false
-
-## is_edit
-テキストを編集するアクションかどうか
-ディフォルト値	false
-
-## is_start
-ソースを生成してアクションを開始するかどうか
-ディフォルト値 false
-
-## is_reget_candidates
-候補を再取得するかどうか。
-ディフォルト値	false
+|種類|説明|ディフォルト値|
+|:--:|:--:|:--:|
+|is_quit|アクション実行後に終了するかどうか|false|
+|is_multi_selectable|複数選択に対応したアクションかどうか|false|
+|is_edit|テキストを編集するアクションかどうか|false|
+|is_start|アクション実行後に候補を生成しアクションを開始するかどうか|false|
+|is_reget_candidates|アクション実行後に候補を再取得するかどうか|false|
 
 
 # 固有名詞
+
 ## 秀丸エディタ
+
 |固有名詞|説明|備考|
 |:--:|:--:|:--:|
 |行番号|1開始の値||
 |行インデックス|0開始の値|行インデックス=行番号-1|
  
- 	
-# 静的変数
-## $unity.target_hidemaruhandle (int)
-文字列などを挿入する操作対象となる秀丸ハンドル
-
-## $unity.current_working_directory (string)
-マクロ起動時の作業ディレクトリ
-
-## $unity.root_macro_directory (string)
-マクロのルートディレクトリ
-
-## $unity.is_quit (bool)
-処理を終了するかどうか
-
-
-## $unity.hidemaruhandle_to_focus_at_end_of_process (int)
-unity終了後にフォーカスするウインドウ
-0 = 無効なハンドル
 
 
 # アクションの上書きについて
 
-|種類|優先度|
-|:--:|:--:|
-|kind|低|
-|source|高|
+アクションは別のアクションを継承することが出来ます。
 
 ## 例 1
 
@@ -94,6 +66,12 @@ unity終了後にフォーカスするウインドウ
 		default_kind=file
 		default_action=echo		<- commonアクションのechoを呼ぶ
 
+## 優先順位
+
+|種類|優先度|
+|:--:|:--:|
+|kind|低|
+|source|高|
 
 # カインドの継承順序について
 
@@ -147,5 +125,29 @@ UTF16LE-BOM
 
 ## action名について
 
+以下のいずれかを指定する。
 @action_directory
 @action_filename
+
+
+# コールバックの登録
+
+ユーザー定義のコールバックを登録できます。
+
+## コールバックの種類
+
+- Unityマクロ終了直前
+
+## 使用例
+
+\kinds\window.mac
+jump: ラベルの処理を参照してください。
+
+
+## 制限
+
+コールバックの種類毎に制限があります。
+
+### Unityマクロ終了直前
+以下のDLLは解放済みなので呼ぶことは出来ません。
+- ohtorii_tools
