@@ -75,7 +75,18 @@ $g_old_searchbuffer = searchbuffer;
 
 debuginfo 1;
 disablebreak;
-disablehistory 0xff;
+disablehistory
+				//0x0001 /*ファイルヒストリ*/
+				//0x0002 /*フォルダヒストリ*/
+				0x0004 | /*検索ヒストリ*/
+				0x0008 | /*置換ヒストリ*/
+				0x0010 | /*grepファイルヒストリ*/
+				0x0020 | /*プログラム実行ヒストリ*/
+				0x0040 | /*クリップボード履歴*/
+				0x0080 | /*/nオプション,またはopenfileのnoaddhistと同じ扱い*/
+				0x0100 ; /*今開いているファイル(自分自身)をヒストリに残さないようにする*/
+
+
 //disableinvert;カーソルキーが表示されなくなるためコメントアウトした。
 call main getarg(1);
 setsearch $g_old_searchbuffer, #g_old_searchoption;
@@ -446,6 +457,9 @@ CursorMoveCommon:
 		return false;
 	}
 	moveto2 column,##next_line_no;
+
+	//秀丸エディタ側の実際のカーソル位置を反映して、
+	//DLL側と秀丸エディタ側のカーソル位置を一致させる
 	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
 	return result;
 
@@ -525,8 +539,14 @@ Filter:
 	//
 	//まずは、行数が増減するためカーソル位置を前候補の位置に移動する
 	moveto2 0,##old_lineno;
-	//次に正しい行番号へ移動する。(そのためにdelt=0としている)
+
+	//次に正しい行番号へ移動する。(そのためにdelta=0としている)
 	call CursorMoveCommon 0;
+	if(! ##return){
+		//処理失敗==ヘッダ部、なので一つ下(delta=1)へ移動する。
+		call CursorMoveCommon 1;
+	}
+
 	refreshtabstop;
 	enabledraw;
 	return result;

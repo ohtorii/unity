@@ -17,17 +17,28 @@ preview:
 	##current_hidemaru	= hidemaruhandle(0);
 	##first_item_index	= 0;
 	##not_found 		= 0;
-	$$user_dataname	= "hidemaru_handle";
 
 	//ウインドウを切り替える
-	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##first_item_index);
-	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionUserDataNumeric",##first_item_index,$$user_dataname,##not_found);
+	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
+	if(##hidemaru_handle!=##not_found){
+		setactivehidemaru ##hidemaru_handle;
 
-	setactivehidemaru ##hidemaru_handle;
+		//少し待つ
+		sleep 1500;
 
-	//少し待つ
-	sleep 1500;
+		//元のウインドウに切り替える
+		setactivehidemaru ##current_hidemaru;
+	}
+	return "1";
 
-	//元のウインドウに切り替える
-	setactivehidemaru ##current_hidemaru;
+
+jump:
+	return "1";
+
+
+only:
+	return "1";
+
+
+close:
 	return "1";

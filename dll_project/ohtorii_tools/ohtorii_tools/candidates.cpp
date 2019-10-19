@@ -178,6 +178,20 @@ bool Candidates::SetActionProcessId(INT_PTR index, INT_PTR process_id) {
 	return false;
 }
 
+bool Candidates::SetActionWindowHandle(INT_PTR index, INT_PTR window_handle) {
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			m_candidates.at(index).m_action.m_window_handle = window_handle;
+			return true;
+		}
+		catch (std::exception) {
+			//pass
+		}
+	}
+	return false;
+}
+
 bool Candidates::SetUserData(INT_PTR index, const WCHAR* key, const WCHAR*data) {
 	ContainerType::scoped_lock locker(m_candidates);
 	{
@@ -332,6 +346,19 @@ INT_PTR		Candidates::GetActionProcessId(INT_PTR index)const {
 		}
 	}
 	return UNITY_INVALID_PROCESS_ID;
+}
+
+INT_PTR		Candidates::GetActionWindowHandle(INT_PTR index)const {
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		try {
+			return m_candidates.at(index).m_action.m_window_handle;
+		}
+		catch (std::exception) {
+			//pass
+		}
+	}
+	return UNITY_HIDEMARU_NULL_HANDLE;
 }
 
 const WCHAR* Candidates::GetDescription(INT_PTR index)const {

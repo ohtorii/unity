@@ -9,9 +9,10 @@ EXPORTS
 	SetCandidateActionFileName
 	SetCandidateActionDirectoryName
 	SetCandidateActionColumn
-	SetCandidateActionLine	
+	SetCandidateActionLine
 	SetCandidateActionCommand
 	SetCandidateActionProcessId
+	SetCandidateActionWindowHandle
 	SetCandidateUserDataString
 	SetCandidateUserDataNumeric
 
@@ -24,6 +25,7 @@ EXPORTS
 	GetSelectionActionLine
 	GetSelectionActionCommand
 	GetSelectionActionProcessId
+	GetSelectionActionWindowHandle
 	GetSelectionUserDataString
 	GetSelectionUserDataNumeric
 	GetSelectionSourceName

@@ -26,6 +26,7 @@ public:
 	bool SetCandidateActionLine(INT_PTR line);
 	bool SetCandidateActionCommand(const WCHAR*command);
 	bool SetCandidateActionProcessId(INT_PTR process_id);
+	bool SetCandidateActionWindowHandle(INT_PTR window_handle);
 
 	bool SetCandidateUserDataString(const WCHAR* key, const WCHAR* data);
 	bool SetCandidateUserDataNumeric(const WCHAR* key, INT_PTR data);

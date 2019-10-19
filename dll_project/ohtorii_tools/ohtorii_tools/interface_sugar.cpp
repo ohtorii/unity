@@ -85,6 +85,10 @@ bool InterfaceSugar::SetCandidateActionProcessId(INT_PTR process_id) {
 	return Unity::Instance().lock()->QueryCandidates().SetActionProcessId(m_current_candidate_index, process_id);
 }
 
+bool InterfaceSugar::SetCandidateActionWindowHandle(INT_PTR window_handle) {
+	return Unity::Instance().lock()->QueryCandidates().SetActionWindowHandle(m_current_candidate_index, window_handle);
+}
+
 bool InterfaceSugar::SetCandidateUserDataString(const WCHAR* key, const WCHAR* data) {
 	return Unity::Instance().lock()->QueryCandidates().SetUserData(m_current_candidate_index, key, data);
 }

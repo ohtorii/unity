@@ -191,6 +191,12 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
 |preview|ウインドウのプレビューを行う||✅|
+|open|open this window buffer|jumpアクションを利用する|❎|
+|jump|move to this window|||
+|only|only this window|||
+|delete|delete windows|closeアクションを利用する|❎|
+|close|ウインドウを閉じる|||
+
 
 # アクション引数
 
@@ -228,5 +234,5 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |action__text||||
 |action__title||||
 |action__type||||
-|action__uri
-|action__window_nr
+|action__uri||||
+|action__window_nr||SetCandidateActionWindowHandle/GetSelectionActionWindowHandle関数を利用する||

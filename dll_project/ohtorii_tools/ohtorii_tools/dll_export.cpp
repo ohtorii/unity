@@ -48,6 +48,10 @@ extern "C" INT_PTR SetCandidateActionProcessId(INT_PTR process_id) {
 	return InterfaceSugar::Instance().SetCandidateActionProcessId(process_id);
 }
 
+extern "C" INT_PTR SetCandidateActionWindowHandle(INT_PTR window_handle) {
+	return InterfaceSugar::Instance().SetCandidateActionWindowHandle(window_handle);
+}
+
 extern "C" INT_PTR SetCandidateUserDataString(const WCHAR* key, WCHAR* data) {
 	return InterfaceSugar::Instance().SetCandidateUserDataString(key, data);
 }
@@ -100,6 +104,11 @@ extern "C" WCHAR* GetSelectionActionCommand(INT_PTR selected_index) {
 extern "C" INT_PTR GetSelectionActionProcessId(INT_PTR selected_index) {
 	auto index = Unity::Instance().lock()->QueryRefineSearch().GetSelectionCandidateIndex(selected_index);
 	return Unity::Instance().lock()->QueryCandidates().GetActionProcessId(index);
+}
+
+extern "C" INT_PTR GetSelectionActionWindowHandle(INT_PTR selected_index) {
+	auto index = Unity::Instance().lock()->QueryRefineSearch().GetSelectionCandidateIndex(selected_index);
+	return Unity::Instance().lock()->QueryCandidates().GetActionWindowHandle(index);
 }
 
 extern "C" WCHAR* GetSelectionSourceName(INT_PTR selected_index) {

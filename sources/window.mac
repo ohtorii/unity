@@ -31,8 +31,6 @@ gather_candidates:
 	0x....はウインドウハンドル
 
 	*/
-	$$user_dataname = "hidemaru_handle";
-
 	##i = 0;
 	while( ##i < tabgrouptotal ) {
 		##grouptop			= gettabhandle( true, ##i, 0 );
@@ -48,7 +46,7 @@ gather_candidates:
 			return "0";
 		}
 
-		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateUserDataNumeric",$$user_dataname,##hidemaru_handle);
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateActionWindowHandle",##hidemaru_handle);
 		if(! ##ret){
 			return "0";
 		}

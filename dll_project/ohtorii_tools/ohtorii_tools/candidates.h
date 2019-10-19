@@ -59,6 +59,7 @@ struct Candidate {
 			m_column = 1;
 			m_line = 1;
 			m_process_id= UNITY_INVALID_PROCESS_ID;
+			m_window_handle = UNITY_HIDEMARU_NULL_HANDLE;
 		};
 
 		template<class Archive> void serialize(Archive & archive) {
@@ -68,7 +69,8 @@ struct Candidate {
 				m_directory_name,
 				m_file_name,
 				m_command,
-				m_process_id);
+				m_process_id,
+				m_window_handle);
 		};
 		///アクションのカラム位置
 		INT_PTR				m_column;
@@ -82,6 +84,8 @@ struct Candidate {
 		std::wstring		m_command;
 		///アクションのプロセスID
 		INT_PTR				m_process_id;
+		///アクションのウインドウハンドル
+		INT_PTR				m_window_handle;
 	};
 	Action				m_action;
 	///ソース名
@@ -149,6 +153,10 @@ public:
 	*/
 	bool SetActionProcessId(INT_PTR index, INT_PTR process_id);
 
+	/**アクションのウインドウハンドルを設定する
+	*/
+	bool SetActionWindowHandle(INT_PTR index, INT_PTR window_handle);
+
 	/**候補の子供を追加する
 	return 候補へのインデックス
 
@@ -184,6 +192,7 @@ public:
 	INT_PTR		GetActionLine(INT_PTR index)const;
 	const WCHAR* GetActionCommand(INT_PTR index)const;
 	INT_PTR		GetActionProcessId(INT_PTR index)const;
+	INT_PTR		GetActionWindowHandle(INT_PTR index)const;
 	const WCHAR* GetDescription(INT_PTR index)const;	
 
 	/*指定ソース名の候補を削除する
