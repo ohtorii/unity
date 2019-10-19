@@ -233,14 +233,6 @@ extern "C" INT_PTR RefineSearchConvertHidemaruLinenNoToCandidateIndex(INT_PTR hi
 	return Unity::Instance().lock()->QueryRefineSearch().ConvertHidemaruLinenNoToCandidateIndex(hidemaru_line_no);
 }
 
-/*extern "C" WCHAR* GetMarkedFilenameFromHidemaruLineNo(INT_PTR hidemaru_line_no) {
-	return Unity::Instance().QueryRefineSearch().GetMarkedFilenameFromHidemaruLineNo(hidemaru_line_no);
-}*/
-
-/*extern "C" WCHAR* GetSelectedFilename(INT_PTR index) {
-	return Unity::Instance().QueryRefineSearch().GetSelectedFilename(index);
-}*/
-
 extern "C" INT_PTR RefineSearchSetHidemaruLineno(INT_PTR hidemaru_line_no) {
 	Unity::Instance().lock()->QueryRefineSearch().SetHidemaruLineno(hidemaru_line_no);
 	return true;
@@ -260,7 +252,6 @@ extern "C" INT_PTR RefineSearchGetFirstSelectionCandidateIndex() {
 
 extern "C" INT_PTR	RefineSearchGetSelectionCandidateCount() {
 	return GetSelectionCount();
-	//return Unity::Instance().QueryRefineSearch().GetSelectionCandidateCount();
 }
 
 extern "C" INT_PTR	RefineSearchGetSelectionCandidateIndex(INT_PTR selected_index) {
@@ -274,11 +265,6 @@ extern "C" INT_PTR	RefineSearchMoveHidemaruCursorLineNo(INT_PTR current_line_no,
 /////////////////////////////////////////////////////////////////////////////
 //source
 /////////////////////////////////////////////////////////////////////////////
-//廃止
-/*extern "C" INT_PTR SetCandidateList(WCHAR* source_filename, WCHAR*source_name, WCHAR*source_description) {
-	return Unity::Instance().SetCandidateList(source_filename, source_name, source_description);
-}*/
-
 extern "C" INT_PTR SourcesLoadAll(const WCHAR* directory) {
 	return Unity::Instance().lock()->QuerySources().LoadSourceAll(directory);
 }
@@ -363,15 +349,6 @@ extern "C" INT_PTR CandidatesClearWithSourceName(const WCHAR*source_name) {
 extern "C" INT_PTR KindsLoadAll(const WCHAR* directory) {
 	return Unity::Instance().lock()->QueryKinds().LoadKindAll(directory);
 }
-/*
-extern "C" INT_PTR KindsClear() {
-	Unity::Instance().lock()->QueryKinds().Clear();
-	return true;
-}
-
-extern "C" WCHAR* KindsCreate(WCHAR* kind_ini) {
-	return Unity::Instance().lock()->QueryKinds().Create(kind_ini);
-}*/
 
 extern "C" INT_PTR KindsGenerateCandidates(INT_PTR instance_index) {
 	return Unity::Instance().lock()->QueryKinds().GenerateKindCandidates(instance_index);
@@ -497,38 +474,6 @@ extern"C" INT_PTR StaticStatusGetIsQuit() {
 	return Unity::Instance().lock()->QueryStaticStatus().m_is_quit;
 }
 
-/*extern"C" INT_PTR StaticStatusGetNumberOfSourceNamesForReacquisitionCandidates() {
-	return Unity::Instance().lock()->QueryStaticStatus().GetNumberOfSourceNamesForReacquisitionCandidates();
-}
-
-extern"C" WCHAR* StaticStatusGetSourceNameForReacquisitionCandidates(INT_PTR index) {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().GetSourceNameForReacquisitionCandidates(index));
-}*/
-
-/*
-extern"C" INT_PTR StatusGetIsRegetCandidates() {
-	if (Unity::Instance().lock()->QueryStatus().m_reget_candidate_source_names.size()) {
-		return true;
-	}
-	return false;
-}*/
-
-/*extern"C" INT_PTR StaticStatusSetCallBackAtEndProcess(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
-	return Unity::Instance().lock()->QueryStaticStatus().SetCallBack(macro_filename,label_name,args);
-}
-
-extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_MacroFilename() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_macro_filename.c_str());
-}
-
-extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_LabelName() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_label_name.c_str());
-}
-
-extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_Args() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_args.c_str());
-}
-*/
 extern"C" INT_PTR StaticStatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
 	Unity::Instance().lock()->QueryStaticStatus().m_target_hidemaruhandle=hidemaru_handle;
 	return true;
@@ -586,9 +531,6 @@ extern "C" INT_PTR FileRegistAfterDeleteFile(const WCHAR* filename) {
 extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {	
 	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n); 
 	Unity::Destroy();
-
-	/*_ASSERTE(_CrtCheckMemory());
-	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n);*/
 	return 0;
 }
 
