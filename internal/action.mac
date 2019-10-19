@@ -2,6 +2,12 @@
 
 引数	[0]		ohtorii_tools_dll_handle
 		[1]		hm_process
+		[20]	ラベル名(""==main)
+		[21]		引数1
+		[22]		引数2
+		[23]		引数3
+		[24]		引数4
+		[25]		引数5
 		[30]	action_name	(default="")
 				実行したいアクション名。(例 "preview","echo",...)
 
@@ -15,6 +21,7 @@
 //==========================================================================
 #g_dll_ohtorii_tools	=val(getarg(0));
 #g_dll_hm_process		=val(getarg(1));
+$g_label_name			=getarg(20);
 $g_do_action_name		=getarg(30);
 
 #g_target_hidemaruhandle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
@@ -24,8 +31,14 @@ $g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMa
 //==========================================================================
 //メイン処理
 //==========================================================================
-call main;
-endmacro $$return;
+if($g_label_name==""){
+	call main;
+	endmacro $$return;
+}else{
+	call $g_label_name, getarg(21),getarg(22),getarg(23),getarg(24),getarg(25);
+	endmacro $$return;
+}
+
 
 
 main:
@@ -57,12 +70,8 @@ main:
 	}
     $$kind_filename =$g_root_macro_directory+"\\kinds\\"+$$kind+".mac";
 
-	execmacro currentmacrodirectory+"\\is_edit.mac", str(#g_dll_ohtorii_tools), $$kind, $$action;
-	##is_edit = val(getresultex(-1));
-	debuginfo "##is_edit="+str(##is_edit);
-
 	call pre_action,$$kind, $$action;
-	call exec_action, $$kind_filename, $$action, ##is_edit;
+	call exec_action, $$kind_filename, $$kind, $$action;
 
 	/*memo
 	is_quitはexecmacro呼び出しで上書きされるためこれ以上何もしない。
@@ -88,8 +97,11 @@ exec_action:
 	debuginfo "internal/action.mac exec_action";
 
 	$$kind_filename	=$$1;
-	$$default_action=$$2;
-	##is_edit		=##3;
+	$$kind			=$$2;
+	$$default_action=$$3;
+
+	execmacro currentmacrodirectory+"\\is_edit.mac", str(#g_dll_ohtorii_tools), $$kind, $$default_action;
+	##is_edit = val(getresultex(-1));
 	##ohtorii_dll_handle=0;
 
 	debuginfo "  -> ##is_edit="+str(##is_edit);
