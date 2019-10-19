@@ -55,5 +55,29 @@ close:
 	return str(##ret);
 
 callback_close:
+	##handle=val($$1);
+	##current_hidemaru = hidemaruhandle(0);
 
-	return ;
+	//ウインドウハンドルを集める
+	setactivehidemaru ##handle;
+	##count = tabtotal;
+	##i = 0;
+	while( ##i < ##count ) {
+	    ##tab_handle[##i] = gettabhandle( true, 0, ##i );
+	    ##i = ##i + 1;
+	}
+
+
+	//ウインドウを閉じる
+	setactivehidemaru ##current_hidemaru;
+	##i = 0;
+	while( ##i < ##count ) {
+		if(updated[##tab_handle[##i]]){
+			//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
+		}else{
+			closehidemaru ##tab_handle[##i];
+		}
+	    ##i = ##i + 1;
+	}
+
+	return str(##return);
