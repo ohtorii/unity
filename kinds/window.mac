@@ -35,7 +35,7 @@ preview:
 jump:
 	##first_item_index	= 0;
 	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusSetCallBackAtEndProcess",currentmacrofilename,"callback_jump",str(##hidemaru_handle));
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_jump",str(##hidemaru_handle));
 	return str(##ret);
 
 
@@ -49,4 +49,11 @@ only:
 
 
 close:
-	return "1";
+	##first_item_index	= 0;
+	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_close",str(##hidemaru_handle));
+	return str(##ret);
+
+callback_close:
+
+	return ;

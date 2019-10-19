@@ -100,9 +100,9 @@ main:
 	##ret = ##return;
 
 	if(#g_dll_ohtorii_tools){
-		$$callback_macro_filename	=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCallBackAtEndProcess_MacroFilename");
-		$$callback_label			=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCallBackAtEndProcess_LabelName");
-		$$callback_args				=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCallBackAtEndProcess_Args");
+		$$callback_macro_filename	=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_MacroFilename");
+		$$callback_label			=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_LabelName");
+		$$callback_args				=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_Args");
 
 	}
 

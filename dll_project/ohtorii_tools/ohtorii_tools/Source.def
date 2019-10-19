@@ -33,7 +33,10 @@ EXPORTS
 
 	
 	StartCandidate
-
+	SetCallBack_ProcessFinish
+	GetCallBack_ProcessFinish_MacroFilename
+	GetCallBack_ProcessFinish_LabelName
+	GetCallBack_ProcessFinish_Args
 
     RefineSearchDo
     RefineSearchGetResult
@@ -113,11 +116,7 @@ EXPORTS
 	StaticStatusGetIsStartSourceName
 	StaticStatusGetIsStartArg
 	StaticStatusSetIsQuit
-	StaticStatusGetIsQuit		
-	StaticStatusSetCallBackAtEndProcess
-	StaticStatusGetCallBackAtEndProcess_MacroFilename
-	StaticStatusGetCallBackAtEndProcess_LabelName
-	StaticStatusGetCallBackAtEndProcess_Args
+	StaticStatusGetIsQuit
 	StaticStatusSetTargetHidemaruHandle
 	StaticStatusGetTargetHidemaruHandle
 	StaticStatusSetCurrentWorkingDirectory

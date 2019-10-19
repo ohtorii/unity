@@ -135,6 +135,24 @@ extern "C" INT_PTR StartCandidate(WCHAR*source_name, WCHAR*arg) {
 	return Unity::Instance().lock()->QueryStaticStatus().GetIsStart().Set(source_name,arg);
 }
 
+//コールバック
+extern "C" INT_PTR SetCallBack_ProcessFinish(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
+	return Unity::Instance().lock()->QueryStaticStatus().SetCallBack(macro_filename, label_name, args);
+}
+
+extern"C" WCHAR* GetCallBack_ProcessFinish_MacroFilename() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_macro_filename.c_str());
+}
+
+extern"C" WCHAR* GetCallBack_ProcessFinish_LabelName() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_label_name.c_str());
+}
+
+extern"C" WCHAR* GetCallBack_ProcessFinish_Args() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_args.c_str());
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 //Unity
 /////////////////////////////////////////////////////////////////////////////
@@ -495,7 +513,7 @@ extern"C" INT_PTR StatusGetIsRegetCandidates() {
 	return false;
 }*/
 
-extern"C" INT_PTR StaticStatusSetCallBackAtEndProcess(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
+/*extern"C" INT_PTR StaticStatusSetCallBackAtEndProcess(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
 	return Unity::Instance().lock()->QueryStaticStatus().SetCallBack(macro_filename,label_name,args);
 }
 
@@ -510,7 +528,7 @@ extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_LabelName() {
 extern"C" WCHAR* StaticStatusGetCallBackAtEndProcess_Args() {
 	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_args.c_str());
 }
-
+*/
 extern"C" INT_PTR StaticStatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
 	Unity::Instance().lock()->QueryStaticStatus().m_target_hidemaruhandle=hidemaru_handle;
 	return true;
