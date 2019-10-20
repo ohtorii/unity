@@ -32,6 +32,9 @@ preview:
 	return "1";
 
 
+//////////////////////////////////////////////////////////////////////////////
+//	jump
+//////////////////////////////////////////////////////////////////////////////
 jump:
 	##first_item_index	= 0;
 	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
@@ -44,40 +47,235 @@ callback_jump:
 	setactivehidemaru ##handle;
 	return str(##return);
 
+
+//////////////////////////////////////////////////////////////////////////////
+//	only
+//////////////////////////////////////////////////////////////////////////////
 only:
+	call make_callback_args;
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_only",$$return);
+	return str(##ret);
+
+callback_only:
+	//閉じないタブグループを集める
+	#g_count_alive_tab_group=0;
+	#g_alive_tab_group[0]=0;
+	{
+		##num_windows = split($$window_str_handles, $$1, "\t" );
+		##i=0;
+		while(##i<##num_windows){
+			##top_window_handle=val($$window_str_handles[##i]);
+
+			//タブグループを集める
+			##tab_group_id = tabgroup[##top_window_handle];
+
+			#g_alive_tab_group[#g_count_alive_tab_group] = ##tab_group_id;
+			#g_count_alive_tab_group = #g_count_alive_tab_group + 1;
+
+			##i = ##i + 1;
+		}
+	}
+
+	//閉じるタブグループを集める
+	##count_close_tab_group=0;
+	##close_tab_group[0]=0;
+	##i = 0;
+	while( ##i < tabgrouptotal ) {
+		##id = tabgroup[##i];
+		call check_close_tab_group ##id;
+		if(##return){
+			//閉じるグループ
+			##close_tab_group[##count_close_tab_group]=##id;
+			##count_close_tab_group = ##count_close_tab_group + 1;
+		}else{
+		}
+		##i = ##i + 1;
+	}
+
+	//閉じるタブグループから閉じるウインドウハンドルへ変換する
+	##count_close_window_handles=0;
+	##close_window_handles[0]=0;
+	##group_index=0;
+	while(##group_index < ##count_close_tab_group){
+		##tab_group_id=##close_tab_group[##group_index];
+
+		##tab_index=0;
+		while( ##tab_index < tabtotal[##tab_group_id]) {
+			##close_window_handles[##count_close_window_handles]=gettabhandle( false, ##tab_group_id, ##tab_index );
+			##count_close_window_handles = ##count_close_window_handles + 1;
+
+
+			##tab_index = ##tab_index + 1;
+		}
+		##group_index = ##group_index + 1;
+	}
+
+	//閉じるウインドウに自分自身が含まれていると閉じることが出来ないため
+	//適切な別のウインドウにフォーカスを移す。
+	##next_hidemaru = getcurrenttab( false, #g_alive_tab_group[0] );
+	setactivehidemaru ##next_hidemaru;
+
+	//ウインドウを閉じる
+	{
+		##i = 0;
+		while( ##i < ##count_close_window_handles ) {
+			if(updated[##close_window_handles[##i]]){
+				//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
+			}else{
+				closehidemaru ##close_window_handles[##i];
+			}
+		    ##i = ##i + 1;
+		}
+	}
 	return "1";
 
 
+check_close_tab_group:
+	##group_id=##1;
+	##i=0;
+	while(##i<#g_count_alive_tab_group){
+		if(##group_id==#g_alive_tab_group[##i]){
+			//閉じないタブグループ
+			return false;
+		}
+		##i = ##i + 1;
+	}
+	//閉じるタブグループ
+	return true;
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+//	close
+//////////////////////////////////////////////////////////////////////////////
 close:
-	##first_item_index	= 0;
-	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_close",str(##hidemaru_handle));
+	call make_callback_args;
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_close",$$return);
 	return str(##ret);
 
 callback_close:
-	##handle=val($$1);
 	##current_hidemaru = hidemaruhandle(0);
 
-	//ウインドウハンドルを集める
-	setactivehidemaru ##handle;
-	##count = tabtotal;
-	##i = 0;
-	while( ##i < ##count ) {
-	    ##tab_handle[##i] = gettabhandle( true, 0, ##i );
-	    ##i = ##i + 1;
+	//閉じる対象のウインドウハンドルと個数
+	#g_count_close_handles=0;
+	#g_close_handles[0]=0;
+
+	//閉じる対象のタブグループと個数
+	#g_count_tab_group=0;
+	#g_tab_group[0]=0;
+
+	{
+		//ウインドウハンドルはタブ区切りの文字列で格納されているため分解する
+		##num_windows = split($$window_str_handles, $$1, "\t" );
+
+		##i=0;
+		while(##i<##num_windows){
+			##top_window_handle=val($$window_str_handles[##i]);
+
+			//タブグループを集める
+			##tab_group_id = tabgroup[##top_window_handle];
+			#g_tab_group[#g_count_tab_group]=##tab_group_id;
+			#g_count_tab_group = #g_count_tab_group + 1;
+
+			//ウインドウに含まれるタブのハンドルを集める
+			##num_tab = tabtotal[##top_window_handle];
+			##tab_index = 0;
+			while( ##tab_index < ##num_tab ) {
+			    #g_close_handles[#g_count_close_handles] = gettabhandle( false, ##tab_group_id, ##tab_index );
+			    #g_count_close_handles = #g_count_close_handles + 1;
+
+			    ##tab_index = ##tab_index + 1;
+			}
+
+			##i = ##i + 1;
+		}
 	}
 
+	//閉じるウインドウに自分自身が含まれていると閉じることが出来ないため
+	//適切な別のウインドウにフォーカスを移す。
+	{
+		##current_tab_group = tabgroup[##current_hidemaru];
+		call contain_tab_group ##current_tab_group;
+		if(##return){
+			call find_window_handle;
+			##next_handle = ##return;
+			setactivehidemaru ##next_handle;
+		}
+	}
 
 	//ウインドウを閉じる
-	setactivehidemaru ##current_hidemaru;
-	##i = 0;
-	while( ##i < ##count ) {
-		if(updated[##tab_handle[##i]]){
-			//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
-		}else{
-			closehidemaru ##tab_handle[##i];
+	{
+		##i = 0;
+		while( ##i < #g_count_close_handles ) {
+			if(updated[#g_close_handles[##i]]){
+				//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
+			}else{
+				closehidemaru #g_close_handles[##i];
+			}
+		    ##i = ##i + 1;
 		}
-	    ##i = ##i + 1;
 	}
+	return "1";
 
-	return str(##return);
+
+//引数##1がタブグループに含まれているか調べる
+contain_tab_group:
+	##current_tab_group=##1;
+	##i=0;
+	while(##i<#g_count_tab_group){
+		if(##current_tab_group==#g_tab_group[##i]){
+			//閉じるウインドウに含まれている
+			return true;
+		}
+		##i = ##i + 1;
+	}
+	return false;
+
+
+contain_tab_handle:
+	##handle=##1;
+	##i=0;
+	while(##i<#g_count_close_handles){
+		if(##handle==#g_close_handles[##i]){
+			//閉じるウインドウに含まれている
+			return true;
+		}
+		##i = ##i + 1;
+	}
+	return false;
+
+
+//閉じるタブグループに含まれないウインドウハンドルを見付ける
+find_window_handle:
+	##i=0;
+	while( ##i < tabgrouptotal ) {
+    	##handle = getcurrenttab( true, ##i );
+    	call contain_tab_handle ##handle;
+    	if(! ##return){
+	    	return ##handle;
+    	}
+
+	    ##i = ##i + 1;
+ 	}
+	return -1;
+
+
+//////////////////////////////////////////////////////////////////////////////
+//	共通ルーチン
+//////////////////////////////////////////////////////////////////////////////
+make_callback_args:
+	$$args="";
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i<##count){
+		##top_window_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##i);
+		//引数をタブ文字で連結する
+		if(##i==0){
+			$$args=str(##top_window_handle);
+		}else{
+			$$args=$$args+"\t"+str(##top_window_handle);
+		}
+
+		##i = ##i + 1;
+	}
+	return $$args;
