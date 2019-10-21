@@ -5,7 +5,7 @@
 //カスタマイズ
 /////////////////////////////////////////////////////////////////////////////
 
-////ハンドルの値を表示するかどうか
+//ハンドルの値を表示するかどうか
 #g_show_handle=false;
 
 
@@ -22,15 +22,37 @@ endmacro $$return;
 
 gather_candidates:
 	/*
-	タブグループ１[0x0000111]	<- 選択対象
-		foo.txt
-		bar.txt
-	タブグループ２[0x0000112]	<- 選択対象
-		hoge.txt
+	【タブモードの場合】
+		タブグループ１	[0x00000111]	<- 選択対象
+			foo.txt						<- 選択させない
+			bar.txt						<- 選択させない
+		タブグループ２	[0x00000112]	<- 選択対象
+			hoge.txt					<- 選択させない
 
-	0x....はウインドウハンドル
+
+
+
+	【ウインドウモードの場合】
+			foo.txt		[0x00000123]	<- 選択対象
+			bar.txt		[0x00000456]	<- 選択対象
+			hoge.txt	[0x00000789]	<- 選択対象
+
+
+
+	※0x....はウインドウハンドル
+	　グローバル変数（#g_show_handle）で表示／非表示を制御できます。
+
 
 	*/
+	if(tabmode){
+		call gater_tab_mode;
+	}else{
+		call gater_window_mode;
+	}
+	return $$return;
+
+
+gater_tab_mode:
 	##i = 0;
 	while( ##i < tabgrouptotal ) {
 		##grouptop			= gettabhandle( true, ##i, 0 );
@@ -54,19 +76,14 @@ gather_candidates:
 		##j = 0;
 		while( ##j < tabtotal[##grouptop] ) {
 			##handle = gettabhandle( true, ##i, ##j );
-			$$name = basename[##handle];
-			if($$name==""){
-				$$name=filetype[##handle];
-			}
-			if(updated[##handle]){
-				$$name=$$name+"  *";
-			}
-			if(#g_show_handle){
-				$$handle=str(##handle);
-			}else{
-				$$handle="";
-			}
-			##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "AppendChildCandidate", $$name, $$handle);
+
+			call make_text ##handle;
+			$$text=$$return;
+
+			call make_descrption, ##handle;
+			$$description=$$return;
+
+			##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "AppendChildCandidate", $$text, $$description);
 			if(##candidate_child_index==-1){
 				return "0";
 			}
@@ -75,5 +92,51 @@ gather_candidates:
 		}
 		##i = ##i + 1;
 	}
-
 	return "1";
+
+
+gater_window_mode:
+	##i=0;
+	while(##i < hidemarucount){
+		##handle=hidemaruhandle(##i);
+
+		call make_text ##handle;
+		$$text=$$return;
+
+		call make_descrption, ##handle;
+		$$description=$$return;
+
+		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$text, $$description);
+		if(##candidate_index==-1){
+			return "0";
+		}
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateActionWindowHandle",##handle);
+		if(! ##ret){
+			return "0";
+		}
+
+		##i = ##i + 1;
+	}
+	return "1";
+
+
+make_text:
+	##handle=##1;
+	$$name = filename2[##handle];
+	if($$name==""){
+		$$name=filetype[##handle];
+	}
+	if(updated[##handle]){
+		$$name=$$name+"  *";
+	}
+	return $$name;
+
+make_descrption:
+	##handle=##1;
+	$$description=basename2[##handle];
+	if(#g_show_handle){
+		$$description=$$description+"\t"+str(##handle);
+	}else{
+		//pass
+	}
+	return $$description;

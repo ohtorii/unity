@@ -32,8 +32,9 @@ preview:
 	return "1";
 
 
+//#region jump
 //////////////////////////////////////////////////////////////////////////////
-//	jump
+//	jump	(tabとwindow両モードで共通の処理)
 //////////////////////////////////////////////////////////////////////////////
 jump:
 	##first_item_index	= 0;
@@ -47,7 +48,11 @@ callback_jump:
 	setactivehidemaru ##handle;
 	return str(##return);
 
+//#endregion
 
+
+
+//#region only
 //////////////////////////////////////////////////////////////////////////////
 //	only
 //////////////////////////////////////////////////////////////////////////////
@@ -57,6 +62,16 @@ only:
 	return str(##ret);
 
 callback_only:
+	if(tabmode){
+		call callback_only_tab_mode $$1;
+	}else{
+		call callback_only_window_mode $$1;
+	}
+	return $$return;
+
+
+//#region only_tab
+callback_only_tab_mode:
 	//閉じないタブグループを集める
 	#g_count_alive_tab_group=0;
 	#g_alive_tab_group[0]=0;
@@ -119,10 +134,11 @@ callback_only:
 	{
 		##i = 0;
 		while( ##i < ##count_close_window_handles ) {
-			if(updated[##close_window_handles[##i]]){
+			##h=##close_window_handles[##i];
+			if(updated[##h]){
 				//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
 			}else{
-				closehidemaru ##close_window_handles[##i];
+				closehidemaru ##h;
 			}
 		    ##i = ##i + 1;
 		}
@@ -143,17 +159,103 @@ check_close_tab_group:
 	//閉じるタブグループ
 	return true;
 
+//#endregion
+
+
+//#region only_window
+callback_only_window_mode:
+	##current_hidemaru = hidemaruhandle(0);
+
+	//ウインドウハンドルはタブ区切りの文字列で格納されているため分解する
+	#g_num_alive_window_handle = split($$window_str_handles, $$1, "\t" );
+	#g_alive_window_handle[0]  = 0;
+	//閉じないウインドウハンドルを取得する
+	##i=0;
+	while(##i<#g_num_alive_window_handle){
+		#g_alive_window_handle[##i]=val($$window_str_handles[##i]);
+		##i = ##i + 1;
+	}
+
+	//閉じるウインドウに自分自身が含まれていると閉じることが出来ないため
+	//適切な別のウインドウにフォーカスを移す。
+	call contain_alive_window ##current_hidemaru;
+	if(! ##return){
+		//生き残るウインドウにフォーカスを移す
+		setactivehidemaru #g_alive_window_handle[0];
+	}
+
+	//閉じるウインドウハンドルを集める
+	##count_close_window_handles=0;
+	##close_window_handles[0]=0;
+	##i=0;
+	while(##i<hidemarucount){
+		##h=hidemaruhandle(##i);
+		call contain_alive_window ##h;
+		if(##return){
+			//生き残るウインドウに含まれているため何もしない
+		}else{
+			if(updated[##h]){
+				//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
+			}else{
+				##close_window_handles[##count_close_window_handles] = ##h;
+				##count_close_window_handles = ##count_close_window_handles + 1;
+			}
+		}
+
+		##i = ##i + 1;
+	}
+
+	//ウインドウを閉じる
+	##i=0;
+	while(##i<##count_close_window_handles){
+		closehidemaru ##close_window_handles[##i];
+
+		##i = ##i + 1;
+	}
+
+	return "1";
+
+
+contain_alive_window:
+	##current_hidemaru=##1;
+	##i=0;
+	while(##i<#g_num_alive_window_handle){
+		if(##current_hidemaru==#g_alive_window_handle[##i]){
+			//生き残るウインドウに含まれている
+			return true;
+		}
+
+		##i = ##i + 1;
+	}
+	//生き残るウインドウに含まれていない
+	return false;
+
+//#endregione
 
 
 //////////////////////////////////////////////////////////////////////////////
-//	close
+//	close	(tabとwindowで別々の処理を行う)
 //////////////////////////////////////////////////////////////////////////////
+//#region close
 close:
 	call make_callback_args;
 	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_close",$$return);
 	return str(##ret);
 
+
 callback_close:
+	if(tabmode){
+		call callback_close_tab_mode $$1;
+	}else{
+		call callback_close_window_mode $$1;
+	}
+	return $$return;
+
+//#region close_tab
+/************************************************
+タブモード
+************************************************/
+callback_close_tab_mode:
 	##current_hidemaru = hidemaruhandle(0);
 
 	//閉じる対象のウインドウハンドルと個数
@@ -197,9 +299,11 @@ callback_close:
 		##current_tab_group = tabgroup[##current_hidemaru];
 		call contain_tab_group ##current_tab_group;
 		if(##return){
-			call find_window_handle;
+			call find_tab_handle;
 			##next_handle = ##return;
-			setactivehidemaru ##next_handle;
+			if(##next_handle != -1){
+				setactivehidemaru ##next_handle;
+			}
 		}
 	}
 
@@ -207,10 +311,11 @@ callback_close:
 	{
 		##i = 0;
 		while( ##i < #g_count_close_handles ) {
-			if(updated[#g_close_handles[##i]]){
+			##h=#g_close_handles[##i];
+			if(updated[##h]){
 				//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
 			}else{
-				closehidemaru #g_close_handles[##i];
+				closehidemaru ##h;
 			}
 		    ##i = ##i + 1;
 		}
@@ -246,7 +351,7 @@ contain_tab_handle:
 
 
 //閉じるタブグループに含まれないウインドウハンドルを見付ける
-find_window_handle:
+find_tab_handle:
 	##i=0;
 	while( ##i < tabgrouptotal ) {
     	##handle = getcurrenttab( true, ##i );
@@ -259,7 +364,82 @@ find_window_handle:
  	}
 	return -1;
 
+//#endregion
 
+//#region close_window
+/************************************************
+ウインドウモード
+************************************************/
+callback_close_window_mode:
+	##current_hidemaru = hidemaruhandle(0);
+
+	//ウインドウハンドルはタブ区切りの文字列で格納されているため分解する
+	#g_num_close_window_handle = split($$window_str_handles, $$1, "\t" );
+	#g_close_window_handle[0]  = 0;
+	//閉じるウインドウハンドルを取得する
+	##i=0;
+	while(##i<#g_num_close_window_handle){
+		#g_close_window_handle[##i]=val($$window_str_handles[##i]);
+		##i = ##i + 1;
+	}
+
+	//閉じるウインドウに自分自身が含まれていると閉じることが出来ないため
+	//適切な別のウインドウにフォーカスを移す。
+	call contain_window_handle ##current_hidemaru;
+	if(##return){
+		call find_window_handle;
+		##next_handle = ##return;
+		if(##next_handle != -1){
+			setactivehidemaru ##next_handle;
+		}
+	}
+
+	//ウインドウを閉じる
+	##i=0;
+	while(##i<#g_num_close_window_handle){
+		##h=#g_close_window_handle[##i];
+		if(updated[##h]){
+			//ファイルが更新されているため無視する。（ユーザーが明示的に閉じる）
+		}else{
+			closehidemaru ##h;
+		}
+		##i = ##i + 1;
+	}
+	return ;
+
+
+//引数##1がタブグループに含まれているか調べる
+contain_window_handle:
+	##handle=##1;
+	##i=0;
+	while(##i<#g_num_close_window_handle){
+		if(##handle==#g_close_window_handle[##i]){
+			//閉じるウインドウに含まれている
+			return true;
+		}
+		##i = ##i + 1;
+	}
+	return false;
+
+//閉じるウインドウに含まれないウインドウハンドルを見付ける
+find_window_handle:
+	##i=0;
+	while(##i<hidemarucount){
+		##handle=hidemaruhandle(##i);
+		call contain_window_handle ##handle;
+		if(! ##return){
+			//閉じるウインドウ一覧に含まれないハンドルを返す
+			return ##handle;
+		}
+		##i = ##i + 1;
+	}
+	return -1;
+
+//#endregion
+//#endregion
+
+
+//#region 共通ルーチン
 //////////////////////////////////////////////////////////////////////////////
 //	共通ルーチン
 //////////////////////////////////////////////////////////////////////////////
@@ -279,3 +459,7 @@ make_callback_args:
 		##i = ##i + 1;
 	}
 	return $$args;
+
+
+//#endregion
+//
