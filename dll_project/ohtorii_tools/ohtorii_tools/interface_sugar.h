@@ -19,6 +19,7 @@ public:
 	bool AppendCandidateHeader(const WCHAR*header, const WCHAR*description);
 	bool AppendCandidate(const WCHAR*candidate, const WCHAR*description);
 	bool AppendCandidateAsASyncFile(const WCHAR* filename);
+	bool AppendCandidateAsString(const WCHAR* string);
 
 	bool SetCandidateActionDirectoryName(const WCHAR*directory_name);
 	bool SetCandidateActionFileName(const WCHAR*file_name);

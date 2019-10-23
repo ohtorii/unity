@@ -126,24 +126,9 @@ GatherCandidatesFromString:
 	$$args[29]=str(#g_dll_hm_process);
 	$$args[30]=str(#g_dll_ohtorii_tools);
 	execmacro $$source_filename, $$args, 31;
-	$$candidates=getresultex(-1);
 
-	execmacro currentmacrodirectory+"\\get_file_basename.mac",$$source_filename;
-	$$source_name=getresultex(-1);
-	if($$source_name==""){
-		return false;
-	}
-
-	##num = split($$tokens,$$candidates,"\n");
-	##i=0;
-	while(##i<##num){
-		##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, $$tokens[##i], "");
-		if(! ##ret){
-			return false;
-		}
-		##i = ##i + 1;
-	}
-	return true;
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsString", getresultex(-1));
+	return ##success;
 
 
 GatherCandidatesFromFile:
@@ -160,6 +145,13 @@ GatherCandidatesFromFile:
 	if($$filelist_name==""){
 		return false;
 	}
+
+	/* todo
+
+	C++側で処理させる。
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsFile", $$filelist_name);
+	*/
+
 	//
 	//$g_file_image変数へファイル内容を読み込む
 	//

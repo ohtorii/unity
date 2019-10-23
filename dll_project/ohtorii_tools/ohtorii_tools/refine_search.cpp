@@ -51,7 +51,7 @@ public:
 					continue;
 				}
 
-				if (MatchAll(candidate.m_text, tokens)) {
+				if (MatchAll(candidate.m_text, tokens) || MatchAll(candidate.m_description, tokens)) {
 					if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
 						//ヘッダー部を挿入する
 						const auto& header_candidate = candidates.at(header_candidate_index);

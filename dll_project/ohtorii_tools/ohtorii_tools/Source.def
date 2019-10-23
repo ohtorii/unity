@@ -5,6 +5,7 @@ EXPORTS
 	AppendCandidateHeader
 	AppendCandidate
 	AppendCandidateAsASyncFile
+	AppendCandidateAsString
 	AppendChildCandidate
 	SetCandidateActionFileName
 	SetCandidateActionDirectoryName

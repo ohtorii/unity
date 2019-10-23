@@ -12,1486 +12,1486 @@ endmacro $$return;
 
 
 gather_candidates:
-	return
-@"😀	grinning face	U+1F600
-😃	grinning face with big eyes	U+1F603
-😄	grinning face with smiling eyes	U+1F604
-😁	beaming face with smiling eyes	U+1F601
-😆	grinning squinting face	U+1F606
-😅	grinning face with sweat	U+1F605
-🤣	rolling on the floor laughing	U+1F923
-😂	face with tears of joy	U+1F602
-🙂	slightly smiling face	U+1F642
-🙃	upside-down face	U+1F643
-😉	winking face	U+1F609
-😊	smiling face with smiling eyes	U+1F60A
-😇	smiling face with halo	U+1F607
-🥰	smiling face with hearts	U+1F970
-😍	smiling face with heart-eyes	U+1F60D
-🤩	star-struck	U+1F929
-😘	face blowing a kiss	U+1F618
-😗	kissing face	U+1F617
-☺	smiling face	U+263A
-😚	kissing face with closed eyes	U+1F61A
-😙	kissing face with smiling eyes	U+1F619
-😋	face savoring food	U+1F60B
-😛	face with tongue	U+1F61B
-😜	winking face with tongue	U+1F61C
-🤪	zany face	U+1F92A
-😝	squinting face with tongue	U+1F61D
-🤑	money-mouth face	U+1F911
-🤗	hugging face	U+1F917
-🤭	face with hand over mouth	U+1F92D
-🤫	shushing face	U+1F92B
-🤔	thinking face	U+1F914
-🤐	zipper-mouth face	U+1F910
-🤨	face with raised eyebrow	U+1F928
-😐	neutral face	U+1F610
-😑	expressionless face	U+1F611
-😶	face without mouth	U+1F636
-😏	smirking face	U+1F60F
-😒	unamused face	U+1F612
-🙄	face with rolling eyes	U+1F644
-😬	grimacing face	U+1F62C
-🤥	lying face	U+1F925
-😌	relieved face	U+1F60C
-😔	pensive face	U+1F614
-😪	sleepy face	U+1F62A
-🤤	drooling face	U+1F924
-😴	sleeping face	U+1F634
-😷	face with medical mask	U+1F637
-🤒	face with thermometer	U+1F912
-🤕	face with head-bandage	U+1F915
-🤢	nauseated face	U+1F922
-🤮	face vomiting	U+1F92E
-🤧	sneezing face	U+1F927
-🥵	hot face	U+1F975
-🥶	cold face	U+1F976
-🥴	woozy face	U+1F974
-😵	dizzy face	U+1F635
-🤯	exploding head	U+1F92F
-🤠	cowboy hat face	U+1F920
-🥳	partying face	U+1F973
-😎	smiling face with sunglasses	U+1F60E
-🤓	nerd face	U+1F913
-🧐	face with monocle	U+1F9D0
-😕	confused face	U+1F615
-😟	worried face	U+1F61F
-🙁	slightly frowning face	U+1F641
-☹	frowning face	U+2639
-😮	face with open mouth	U+1F62E
-😯	hushed face	U+1F62F
-😲	astonished face	U+1F632
-😳	flushed face	U+1F633
-🥺	pleading face	U+1F97A
-😦	frowning face with open mouth	U+1F626
-😧	anguished face	U+1F627
-😨	fearful face	U+1F628
-😰	anxious face with sweat	U+1F630
-😥	sad but relieved face	U+1F625
-😢	crying face	U+1F622
-😭	loudly crying face	U+1F62D
-😱	face screaming in fear	U+1F631
-😖	confounded face	U+1F616
-😣	persevering face	U+1F623
-😞	disappointed face	U+1F61E
-😓	downcast face with sweat	U+1F613
-😩	weary face	U+1F629
-😫	tired face	U+1F62B
-🥱	yawning face	U+1F971
-😤	face with steam from nose	U+1F624
-😡	pouting face	U+1F621
-😠	angry face	U+1F620
-🤬	face with symbols on mouth	U+1F92C
-😈	smiling face with horns	U+1F608
-👿	angry face with horns	U+1F47F
-💀	skull	U+1F480
-☠	skull and crossbones	U+2620
-💩	pile of poo	U+1F4A9
-🤡	clown face	U+1F921
-👹	ogre	U+1F479
-👺	goblin	U+1F47A
-👻	ghost	U+1F47B
-👽	alien	U+1F47D
-👾	alien monster	U+1F47E
-🤖	robot	U+1F916
-😺	grinning cat	U+1F63A
-😸	grinning cat with smiling eyes	U+1F638
-😹	cat with tears of joy	U+1F639
-😻	smiling cat with heart-eyes	U+1F63B
-😼	cat with wry smile	U+1F63C
-😽	kissing cat	U+1F63D
-🙀	weary cat	U+1F640
-😿	crying cat	U+1F63F
-😾	pouting cat	U+1F63E
-🙈	see-no-evil monkey	U+1F648
-🙉	hear-no-evil monkey	U+1F649
-🙊	speak-no-evil monkey	U+1F64A
-💋	kiss mark	U+1F48B
-💌	love letter	U+1F48C
-💘	heart with arrow	U+1F498
-💝	heart with ribbon	U+1F49D
-💖	sparkling heart	U+1F496
-💗	growing heart	U+1F497
-💓	beating heart	U+1F493
-💞	revolving hearts	U+1F49E
-💕	two hearts	U+1F495
-💟	heart decoration	U+1F49F
-❣	heart exclamation	U+2763
-💔	broken heart	U+1F494
-❤	red heart	U+2764
-🧡	orange heart	U+1F9E1
-💛	yellow heart	U+1F49B
-💚	green heart	U+1F49A
-💙	blue heart	U+1F499
-💜	purple heart	U+1F49C
-🤎	brown heart	U+1F90E
-🖤	black heart	U+1F5A4
-🤍	white heart	U+1F90D
-💯	hundred points	U+1F4AF
-💢	anger symbol	U+1F4A2
-💥	collision	U+1F4A5
-💫	dizzy	U+1F4AB
-💦	sweat droplets	U+1F4A6
-💨	dashing away	U+1F4A8
-🕳	hole	U+1F573
-💣	bomb	U+1F4A3
-💬	speech balloon	U+1F4AC
-👁️‍🗨️	eye in speech bubble	U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F
-🗨	left speech bubble	U+1F5E8
-🗯	right anger bubble	U+1F5EF
-💭	thought balloon	U+1F4AD
-💤	zzz	U+1F4A4
-👋	waving hand	U+1F44B
-🤚	raised back of hand	U+1F91A
-🖐	hand with fingers splayed	U+1F590
-✋	raised hand	U+270B
-🖖	vulcan salute	U+1F596
-👌	OK hand	U+1F44C
-🤏	pinching hand	U+1F90F
-✌	victory hand	U+270C
-🤞	crossed fingers	U+1F91E
-🤟	love-you gesture	U+1F91F
-🤘	sign of the horns	U+1F918
-🤙	call me hand	U+1F919
-👈	backhand index pointing left	U+1F448
-👉	backhand index pointing right	U+1F449
-👆	backhand index pointing up	U+1F446
-🖕	middle finger	U+1F595
-👇	backhand index pointing down	U+1F447
-☝	index pointing up	U+261D
-👍	thumbs up	U+1F44D
-👎	thumbs down	U+1F44E
-✊	raised fist	U+270A
-👊	oncoming fist	U+1F44A
-🤛	left-facing fist	U+1F91B
-🤜	right-facing fist	U+1F91C
-👏	clapping hands	U+1F44F
-🙌	raising hands	U+1F64C
-👐	open hands	U+1F450
-🤲	palms up together	U+1F932
-🤝	handshake	U+1F91D
-🙏	folded hands	U+1F64F
-✍	writing hand	U+270D
-💅	nail polish	U+1F485
-🤳	selfie	U+1F933
-💪	flexed biceps	U+1F4AA
-🦾	mechanical arm	U+1F9BE
-🦿	mechanical leg	U+1F9BF
-🦵	leg	U+1F9B5
-🦶	foot	U+1F9B6
-👂	ear	U+1F442
-🦻	ear with hearing aid	U+1F9BB
-👃	nose	U+1F443
-🧠	brain	U+1F9E0
-🦷	tooth	U+1F9B7
-🦴	bone	U+1F9B4
-👀	eyes	U+1F440
-👁	eye	U+1F441
-👅	tongue	U+1F445
-👄	mouth	U+1F444
-👶	baby	U+1F476
-🧒	child	U+1F9D2
-👦	boy	U+1F466
-👧	girl	U+1F467
-🧑	person	U+1F9D1
-👱	person: blond hair	U+1F471
-👨	man	U+1F468
-🧔	man: beard	U+1F9D4
-👨‍🦰	man: red hair	U+1F468 U+200D U+1F9B0
-👨‍🦱	man: curly hair	U+1F468 U+200D U+1F9B1
-👨‍🦳	man: white hair	U+1F468 U+200D U+1F9B3
-👨‍🦲	man: bald	U+1F468 U+200D U+1F9B2
-👩	woman	U+1F469
-👩‍🦰	woman: red hair	U+1F469 U+200D U+1F9B0
-🧑‍🦰	⊛ person: red hair	U+1F9D1 U+200D U+1F9B0
-👩‍🦱	woman: curly hair	U+1F469 U+200D U+1F9B1
-🧑‍🦱	⊛ person: curly hair	U+1F9D1 U+200D U+1F9B1
-👩‍🦳	woman: white hair	U+1F469 U+200D U+1F9B3
-🧑‍🦳	⊛ person: white hair	U+1F9D1 U+200D U+1F9B3
-👩‍🦲	woman: bald	U+1F469 U+200D U+1F9B2
-🧑‍🦲	⊛ person: bald	U+1F9D1 U+200D U+1F9B2
-👱‍♀️	woman: blond hair	U+1F471 U+200D U+2640 U+FE0F
-👱‍♂️	man: blond hair	U+1F471 U+200D U+2642 U+FE0F
-🧓	older person	U+1F9D3
-👴	old man	U+1F474
-👵	old woman	U+1F475
-🙍	person frowning	U+1F64D
-🙍‍♂️	man frowning	U+1F64D U+200D U+2642 U+FE0F
-🙍‍♀️	woman frowning	U+1F64D U+200D U+2640 U+FE0F
-🙎	person pouting	U+1F64E
-🙎‍♂️	man pouting	U+1F64E U+200D U+2642 U+FE0F
-🙎‍♀️	woman pouting	U+1F64E U+200D U+2640 U+FE0F
-🙅	person gesturing NO	U+1F645
-🙅‍♂️	man gesturing NO	U+1F645 U+200D U+2642 U+FE0F
-🙅‍♀️	woman gesturing NO	U+1F645 U+200D U+2640 U+FE0F
-🙆	person gesturing OK	U+1F646
-🙆‍♂️	man gesturing OK	U+1F646 U+200D U+2642 U+FE0F
-🙆‍♀️	woman gesturing OK	U+1F646 U+200D U+2640 U+FE0F
-💁	person tipping hand	U+1F481
-💁‍♂️	man tipping hand	U+1F481 U+200D U+2642 U+FE0F
-💁‍♀️	woman tipping hand	U+1F481 U+200D U+2640 U+FE0F
-🙋	person raising hand	U+1F64B
-🙋‍♂️	man raising hand	U+1F64B U+200D U+2642 U+FE0F
-🙋‍♀️	woman raising hand	U+1F64B U+200D U+2640 U+FE0F
-🧏	deaf person	U+1F9CF
-🧏‍♂️	deaf man	U+1F9CF U+200D U+2642 U+FE0F
-🧏‍♀️	deaf woman	U+1F9CF U+200D U+2640 U+FE0F
-🙇	person bowing	U+1F647
-🙇‍♂️	man bowing	U+1F647 U+200D U+2642 U+FE0F
-🙇‍♀️	woman bowing	U+1F647 U+200D U+2640 U+FE0F
-🤦	person facepalming	U+1F926
-🤦‍♂️	man facepalming	U+1F926 U+200D U+2642 U+FE0F
-🤦‍♀️	woman facepalming	U+1F926 U+200D U+2640 U+FE0F
-🤷	person shrugging	U+1F937
-🤷‍♂️	man shrugging	U+1F937 U+200D U+2642 U+FE0F
-🤷‍♀️	woman shrugging	U+1F937 U+200D U+2640 U+FE0F
-🧑‍⚕️	⊛ health worker	U+1F9D1 U+200D U+2695 U+FE0F
-👨‍⚕️	man health worker	U+1F468 U+200D U+2695 U+FE0F
-👩‍⚕️	woman health worker	U+1F469 U+200D U+2695 U+FE0F
-🧑‍🎓	⊛ student	U+1F9D1 U+200D U+1F393
-👨‍🎓	man student	U+1F468 U+200D U+1F393
-👩‍🎓	woman student	U+1F469 U+200D U+1F393
-🧑‍🏫	⊛ teacher	U+1F9D1 U+200D U+1F3EB
-👨‍🏫	man teacher	U+1F468 U+200D U+1F3EB
-👩‍🏫	woman teacher	U+1F469 U+200D U+1F3EB
-🧑‍⚖️	⊛ judge	U+1F9D1 U+200D U+2696 U+FE0F
-👨‍⚖️	man judge	U+1F468 U+200D U+2696 U+FE0F
-👩‍⚖️	woman judge	U+1F469 U+200D U+2696 U+FE0F
-🧑‍🌾	⊛ farmer	U+1F9D1 U+200D U+1F33E
-👨‍🌾	man farmer	U+1F468 U+200D U+1F33E
-👩‍🌾	woman farmer	U+1F469 U+200D U+1F33E
-🧑‍🍳	⊛ cook	U+1F9D1 U+200D U+1F373
-👨‍🍳	man cook	U+1F468 U+200D U+1F373
-👩‍🍳	woman cook	U+1F469 U+200D U+1F373
-🧑‍🔧	⊛ mechanic	U+1F9D1 U+200D U+1F527
-👨‍🔧	man mechanic	U+1F468 U+200D U+1F527
-👩‍🔧	woman mechanic	U+1F469 U+200D U+1F527
-🧑‍🏭	⊛ factory worker	U+1F9D1 U+200D U+1F3ED
-👨‍🏭	man factory worker	U+1F468 U+200D U+1F3ED
-👩‍🏭	woman factory worker	U+1F469 U+200D U+1F3ED
-🧑‍💼	⊛ office worker	U+1F9D1 U+200D U+1F4BC
-👨‍💼	man office worker	U+1F468 U+200D U+1F4BC
-👩‍💼	woman office worker	U+1F469 U+200D U+1F4BC
-🧑‍🔬	⊛ scientist	U+1F9D1 U+200D U+1F52C
-👨‍🔬	man scientist	U+1F468 U+200D U+1F52C
-👩‍🔬	woman scientist	U+1F469 U+200D U+1F52C
-🧑‍💻	⊛ technologist	U+1F9D1 U+200D U+1F4BB
-👨‍💻	man technologist	U+1F468 U+200D U+1F4BB
-👩‍💻	woman technologist	U+1F469 U+200D U+1F4BB
-🧑‍🎤	⊛ singer	U+1F9D1 U+200D U+1F3A4
-👨‍🎤	man singer	U+1F468 U+200D U+1F3A4
-👩‍🎤	woman singer	U+1F469 U+200D U+1F3A4
-🧑‍🎨	⊛ artist	U+1F9D1 U+200D U+1F3A8
-👨‍🎨	man artist	U+1F468 U+200D U+1F3A8
-👩‍🎨	woman artist	U+1F469 U+200D U+1F3A8
-🧑‍✈️	⊛ pilot	U+1F9D1 U+200D U+2708 U+FE0F
-👨‍✈️	man pilot	U+1F468 U+200D U+2708 U+FE0F
-👩‍✈️	woman pilot	U+1F469 U+200D U+2708 U+FE0F
-🧑‍🚀	⊛ astronaut	U+1F9D1 U+200D U+1F680
-👨‍🚀	man astronaut	U+1F468 U+200D U+1F680
-👩‍🚀	woman astronaut	U+1F469 U+200D U+1F680
-🧑‍🚒	⊛ firefighter	U+1F9D1 U+200D U+1F692
-👨‍🚒	man firefighter	U+1F468 U+200D U+1F692
-👩‍🚒	woman firefighter	U+1F469 U+200D U+1F692
-👮	police officer	U+1F46E
-👮‍♂️	man police officer	U+1F46E U+200D U+2642 U+FE0F
-👮‍♀️	woman police officer	U+1F46E U+200D U+2640 U+FE0F
-🕵	detective	U+1F575
-🕵️‍♂️	man detective	U+1F575 U+FE0F U+200D U+2642 U+FE0F
-🕵️‍♀️	woman detective	U+1F575 U+FE0F U+200D U+2640 U+FE0F
-💂	guard	U+1F482
-💂‍♂️	man guard	U+1F482 U+200D U+2642 U+FE0F
-💂‍♀️	woman guard	U+1F482 U+200D U+2640 U+FE0F
-👷	construction worker	U+1F477
-👷‍♂️	man construction worker	U+1F477 U+200D U+2642 U+FE0F
-👷‍♀️	woman construction worker	U+1F477 U+200D U+2640 U+FE0F
-🤴	prince	U+1F934
-👸	princess	U+1F478
-👳	person wearing turban	U+1F473
-👳‍♂️	man wearing turban	U+1F473 U+200D U+2642 U+FE0F
-👳‍♀️	woman wearing turban	U+1F473 U+200D U+2640 U+FE0F
-👲	man with skullcap	U+1F472
-🧕	woman with headscarf	U+1F9D5
-🤵	man in tuxedo	U+1F935
-👰	bride with veil	U+1F470
-🤰	pregnant woman	U+1F930
-🤱	breast-feeding	U+1F931
-👼	baby angel	U+1F47C
-🎅	Santa Claus	U+1F385
-🤶	Mrs. Claus	U+1F936
-🦸	superhero	U+1F9B8
-🦸‍♂️	man superhero	U+1F9B8 U+200D U+2642 U+FE0F
-🦸‍♀️	woman superhero	U+1F9B8 U+200D U+2640 U+FE0F
-🦹	supervillain	U+1F9B9
-🦹‍♂️	man supervillain	U+1F9B9 U+200D U+2642 U+FE0F
-🦹‍♀️	woman supervillain	U+1F9B9 U+200D U+2640 U+FE0F
-🧙	mage	U+1F9D9
-🧙‍♂️	man mage	U+1F9D9 U+200D U+2642 U+FE0F
-🧙‍♀️	woman mage	U+1F9D9 U+200D U+2640 U+FE0F
-🧚	fairy	U+1F9DA
-🧚‍♂️	man fairy	U+1F9DA U+200D U+2642 U+FE0F
-🧚‍♀️	woman fairy	U+1F9DA U+200D U+2640 U+FE0F
-🧛	vampire	U+1F9DB
-🧛‍♂️	man vampire	U+1F9DB U+200D U+2642 U+FE0F
-🧛‍♀️	woman vampire	U+1F9DB U+200D U+2640 U+FE0F
-🧜	merperson	U+1F9DC
-🧜‍♂️	merman	U+1F9DC U+200D U+2642 U+FE0F
-🧜‍♀️	mermaid	U+1F9DC U+200D U+2640 U+FE0F
-🧝	elf	U+1F9DD
-🧝‍♂️	man elf	U+1F9DD U+200D U+2642 U+FE0F
-🧝‍♀️	woman elf	U+1F9DD U+200D U+2640 U+FE0F
-🧞	genie	U+1F9DE
-🧞‍♂️	man genie	U+1F9DE U+200D U+2642 U+FE0F
-🧞‍♀️	woman genie	U+1F9DE U+200D U+2640 U+FE0F
-🧟	zombie	U+1F9DF
-🧟‍♂️	man zombie	U+1F9DF U+200D U+2642 U+FE0F
-🧟‍♀️	woman zombie	U+1F9DF U+200D U+2640 U+FE0F
-💆	person getting massage	U+1F486
-💆‍♂️	man getting massage	U+1F486 U+200D U+2642 U+FE0F
-💆‍♀️	woman getting massage	U+1F486 U+200D U+2640 U+FE0F
-💇	person getting haircut	U+1F487
-💇‍♂️	man getting haircut	U+1F487 U+200D U+2642 U+FE0F
-💇‍♀️	woman getting haircut	U+1F487 U+200D U+2640 U+FE0F
-🚶	person walking	U+1F6B6
-🚶‍♂️	man walking	U+1F6B6 U+200D U+2642 U+FE0F
-🚶‍♀️	woman walking	U+1F6B6 U+200D U+2640 U+FE0F
-🧍	person standing	U+1F9CD
-🧍‍♂️	man standing	U+1F9CD U+200D U+2642 U+FE0F
-🧍‍♀️	woman standing	U+1F9CD U+200D U+2640 U+FE0F
-🧎	person kneeling	U+1F9CE
-🧎‍♂️	man kneeling	U+1F9CE U+200D U+2642 U+FE0F
-🧎‍♀️	woman kneeling	U+1F9CE U+200D U+2640 U+FE0F
-🧑‍🦯	⊛ person with probing cane	U+1F9D1 U+200D U+1F9AF
-👨‍🦯	man with probing cane	U+1F468 U+200D U+1F9AF
-👩‍🦯	woman with probing cane	U+1F469 U+200D U+1F9AF
-🧑‍🦼	⊛ person in motorized wheelchair	U+1F9D1 U+200D U+1F9BC
-👨‍🦼	man in motorized wheelchair	U+1F468 U+200D U+1F9BC
-👩‍🦼	woman in motorized wheelchair	U+1F469 U+200D U+1F9BC
-🧑‍🦽	⊛ person in manual wheelchair	U+1F9D1 U+200D U+1F9BD
-👨‍🦽	man in manual wheelchair	U+1F468 U+200D U+1F9BD
-👩‍🦽	woman in manual wheelchair	U+1F469 U+200D U+1F9BD
-🏃	person running	U+1F3C3
-🏃‍♂️	man running	U+1F3C3 U+200D U+2642 U+FE0F
-🏃‍♀️	woman running	U+1F3C3 U+200D U+2640 U+FE0F
-💃	woman dancing	U+1F483
-🕺	man dancing	U+1F57A
-🕴	man in suit levitating	U+1F574
-👯	people with bunny ears	U+1F46F
-👯‍♂️	men with bunny ears	U+1F46F U+200D U+2642 U+FE0F
-👯‍♀️	women with bunny ears	U+1F46F U+200D U+2640 U+FE0F
-🧖	person in steamy room	U+1F9D6
-🧖‍♂️	man in steamy room	U+1F9D6 U+200D U+2642 U+FE0F
-🧖‍♀️	woman in steamy room	U+1F9D6 U+200D U+2640 U+FE0F
-🧗	person climbing	U+1F9D7
-🧗‍♂️	man climbing	U+1F9D7 U+200D U+2642 U+FE0F
-🧗‍♀️	woman climbing	U+1F9D7 U+200D U+2640 U+FE0F
-🤺	person fencing	U+1F93A
-🏇	horse racing	U+1F3C7
-⛷	skier	U+26F7
-🏂	snowboarder	U+1F3C2
-🏌	person golfing	U+1F3CC
-🏌️‍♂️	man golfing	U+1F3CC U+FE0F U+200D U+2642 U+FE0F
-🏌️‍♀️	woman golfing	U+1F3CC U+FE0F U+200D U+2640 U+FE0F
-🏄	person surfing	U+1F3C4
-🏄‍♂️	man surfing	U+1F3C4 U+200D U+2642 U+FE0F
-🏄‍♀️	woman surfing	U+1F3C4 U+200D U+2640 U+FE0F
-🚣	person rowing boat	U+1F6A3
-🚣‍♂️	man rowing boat	U+1F6A3 U+200D U+2642 U+FE0F
-🚣‍♀️	woman rowing boat	U+1F6A3 U+200D U+2640 U+FE0F
-🏊	person swimming	U+1F3CA
-🏊‍♂️	man swimming	U+1F3CA U+200D U+2642 U+FE0F
-🏊‍♀️	woman swimming	U+1F3CA U+200D U+2640 U+FE0F
-⛹	person bouncing ball	U+26F9
-⛹️‍♂️	man bouncing ball	U+26F9 U+FE0F U+200D U+2642 U+FE0F
-⛹️‍♀️	woman bouncing ball	U+26F9 U+FE0F U+200D U+2640 U+FE0F
-🏋	person lifting weights	U+1F3CB
-🏋️‍♂️	man lifting weights	U+1F3CB U+FE0F U+200D U+2642 U+FE0F
-🏋️‍♀️	woman lifting weights	U+1F3CB U+FE0F U+200D U+2640 U+FE0F
-🚴	person biking	U+1F6B4
-🚴‍♂️	man biking	U+1F6B4 U+200D U+2642 U+FE0F
-🚴‍♀️	woman biking	U+1F6B4 U+200D U+2640 U+FE0F
-🚵	person mountain biking	U+1F6B5
-🚵‍♂️	man mountain biking	U+1F6B5 U+200D U+2642 U+FE0F
-🚵‍♀️	woman mountain biking	U+1F6B5 U+200D U+2640 U+FE0F
-🤸	person cartwheeling	U+1F938
-🤸‍♂️	man cartwheeling	U+1F938 U+200D U+2642 U+FE0F
-🤸‍♀️	woman cartwheeling	U+1F938 U+200D U+2640 U+FE0F
-🤼	people wrestling	U+1F93C
-🤼‍♂️	men wrestling	U+1F93C U+200D U+2642 U+FE0F
-🤼‍♀️	women wrestling	U+1F93C U+200D U+2640 U+FE0F
-🤽	person playing water polo	U+1F93D
-🤽‍♂️	man playing water polo	U+1F93D U+200D U+2642 U+FE0F
-🤽‍♀️	woman playing water polo	U+1F93D U+200D U+2640 U+FE0F
-🤾	person playing handball	U+1F93E
-🤾‍♂️	man playing handball	U+1F93E U+200D U+2642 U+FE0F
-🤾‍♀️	woman playing handball	U+1F93E U+200D U+2640 U+FE0F
-🤹	person juggling	U+1F939
-🤹‍♂️	man juggling	U+1F939 U+200D U+2642 U+FE0F
-🤹‍♀️	woman juggling	U+1F939 U+200D U+2640 U+FE0F
-🧘	person in lotus position	U+1F9D8
-🧘‍♂️	man in lotus position	U+1F9D8 U+200D U+2642 U+FE0F
-🧘‍♀️	woman in lotus position	U+1F9D8 U+200D U+2640 U+FE0F
-🛀	person taking bath	U+1F6C0
-🛌	person in bed	U+1F6CC
-🧑‍🤝‍🧑	people holding hands	U+1F9D1 U+200D U+1F91D U+200D U+1F9D1
-👭	women holding hands	U+1F46D
-👫	woman and man holding hands	U+1F46B
-👬	men holding hands	U+1F46C
-💏	kiss	U+1F48F
-👩‍❤️‍💋‍👨	kiss: woman, man	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468
-👨‍❤️‍💋‍👨	kiss: man, man	U+1F468 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468
-👩‍❤️‍💋‍👩	kiss: woman, woman	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F469
-💑	couple with heart	U+1F491
-👩‍❤️‍👨	couple with heart: woman, man	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F468
-👨‍❤️‍👨	couple with heart: man, man	U+1F468 U+200D U+2764 U+FE0F U+200D U+1F468
-👩‍❤️‍👩	couple with heart: woman, woman	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F469
-👪	family	U+1F46A
-👨‍👩‍👦	family: man, woman, boy	U+1F468 U+200D U+1F469 U+200D U+1F466
-👨‍👩‍👧	family: man, woman, girl	U+1F468 U+200D U+1F469 U+200D U+1F467
-👨‍👩‍👧‍👦	family: man, woman, girl, boy	U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466
-👨‍👩‍👦‍👦	family: man, woman, boy, boy	U+1F468 U+200D U+1F469 U+200D U+1F466 U+200D U+1F466
-👨‍👩‍👧‍👧	family: man, woman, girl, girl	U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467
-👨‍👨‍👦	family: man, man, boy	U+1F468 U+200D U+1F468 U+200D U+1F466
-👨‍👨‍👧	family: man, man, girl	U+1F468 U+200D U+1F468 U+200D U+1F467
-👨‍👨‍👧‍👦	family: man, man, girl, boy	U+1F468 U+200D U+1F468 U+200D U+1F467 U+200D U+1F466
-👨‍👨‍👦‍👦	family: man, man, boy, boy	U+1F468 U+200D U+1F468 U+200D U+1F466 U+200D U+1F466
-👨‍👨‍👧‍👧	family: man, man, girl, girl	U+1F468 U+200D U+1F468 U+200D U+1F467 U+200D U+1F467
-👩‍👩‍👦	family: woman, woman, boy	U+1F469 U+200D U+1F469 U+200D U+1F466
-👩‍👩‍👧	family: woman, woman, girl	U+1F469 U+200D U+1F469 U+200D U+1F467
-👩‍👩‍👧‍👦	family: woman, woman, girl, boy	U+1F469 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466
-👩‍👩‍👦‍👦	family: woman, woman, boy, boy	U+1F469 U+200D U+1F469 U+200D U+1F466 U+200D U+1F466
-👩‍👩‍👧‍👧	family: woman, woman, girl, girl	U+1F469 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467
-👨‍👦	family: man, boy	U+1F468 U+200D U+1F466
-👨‍👦‍👦	family: man, boy, boy	U+1F468 U+200D U+1F466 U+200D U+1F466
-👨‍👧	family: man, girl	U+1F468 U+200D U+1F467
-👨‍👧‍👦	family: man, girl, boy	U+1F468 U+200D U+1F467 U+200D U+1F466
-👨‍👧‍👧	family: man, girl, girl	U+1F468 U+200D U+1F467 U+200D U+1F467
-👩‍👦	family: woman, boy	U+1F469 U+200D U+1F466
-👩‍👦‍👦	family: woman, boy, boy	U+1F469 U+200D U+1F466 U+200D U+1F466
-👩‍👧	family: woman, girl	U+1F469 U+200D U+1F467
-👩‍👧‍👦	family: woman, girl, boy	U+1F469 U+200D U+1F467 U+200D U+1F466
-👩‍👧‍👧	family: woman, girl, girl	U+1F469 U+200D U+1F467 U+200D U+1F467
-🗣	speaking head	U+1F5E3
-👤	bust in silhouette	U+1F464
-👥	busts in silhouette	U+1F465
-👣	footprints	U+1F463
-🦰	red hair	U+1F9B0
-🦱	curly hair	U+1F9B1
-🦳	white hair	U+1F9B3
-🦲	bald	U+1F9B2
-🐵	monkey face	U+1F435
-🐒	monkey	U+1F412
-🦍	gorilla	U+1F98D
-🦧	orangutan	U+1F9A7
-🐶	dog face	U+1F436
-🐕	dog	U+1F415
-🦮	guide dog	U+1F9AE
-🐕‍🦺	service dog	U+1F415 U+200D U+1F9BA
-🐩	poodle	U+1F429
-🐺	wolf	U+1F43A
-🦊	fox	U+1F98A
-🦝	raccoon	U+1F99D
-🐱	cat face	U+1F431
-🐈	cat	U+1F408
-🦁	lion	U+1F981
-🐯	tiger face	U+1F42F
-🐅	tiger	U+1F405
-🐆	leopard	U+1F406
-🐴	horse face	U+1F434
-🐎	horse	U+1F40E
-🦄	unicorn	U+1F984
-🦓	zebra	U+1F993
-🦌	deer	U+1F98C
-🐮	cow face	U+1F42E
-🐂	ox	U+1F402
-🐃	water buffalo	U+1F403
-🐄	cow	U+1F404
-🐷	pig face	U+1F437
-🐖	pig	U+1F416
-🐗	boar	U+1F417
-🐽	pig nose	U+1F43D
-🐏	ram	U+1F40F
-🐑	ewe	U+1F411
-🐐	goat	U+1F410
-🐪	camel	U+1F42A
-🐫	two-hump camel	U+1F42B
-🦙	llama	U+1F999
-🦒	giraffe	U+1F992
-🐘	elephant	U+1F418
-🦏	rhinoceros	U+1F98F
-🦛	hippopotamus	U+1F99B
-🐭	mouse face	U+1F42D
-🐁	mouse	U+1F401
-🐀	rat	U+1F400
-🐹	hamster	U+1F439
-🐰	rabbit face	U+1F430
-🐇	rabbit	U+1F407
-🐿	chipmunk	U+1F43F
-🦔	hedgehog	U+1F994
-🦇	bat	U+1F987
-🐻	bear	U+1F43B
-🐨	koala	U+1F428
-🐼	panda	U+1F43C
-🦥	sloth	U+1F9A5
-🦦	otter	U+1F9A6
-🦨	skunk	U+1F9A8
-🦘	kangaroo	U+1F998
-🦡	badger	U+1F9A1
-🐾	paw prints	U+1F43E
-🦃	turkey	U+1F983
-🐔	chicken	U+1F414
-🐓	rooster	U+1F413
-🐣	hatching chick	U+1F423
-🐤	baby chick	U+1F424
-🐥	front-facing baby chick	U+1F425
-🐦	bird	U+1F426
-🐧	penguin	U+1F427
-🕊	dove	U+1F54A
-🦅	eagle	U+1F985
-🦆	duck	U+1F986
-🦢	swan	U+1F9A2
-🦉	owl	U+1F989
-🦩	flamingo	U+1F9A9
-🦚	peacock	U+1F99A
-🦜	parrot	U+1F99C
-🐸	frog	U+1F438
-🐊	crocodile	U+1F40A
-🐢	turtle	U+1F422
-🦎	lizard	U+1F98E
-🐍	snake	U+1F40D
-🐲	dragon face	U+1F432
-🐉	dragon	U+1F409
-🦕	sauropod	U+1F995
-🦖	T-Rex	U+1F996
-🐳	spouting whale	U+1F433
-🐋	whale	U+1F40B
-🐬	dolphin	U+1F42C
-🐟	fish	U+1F41F
-🐠	tropical fish	U+1F420
-🐡	blowfish	U+1F421
-🦈	shark	U+1F988
-🐙	octopus	U+1F419
-🐚	spiral shell	U+1F41A
-🐌	snail	U+1F40C
-🦋	butterfly	U+1F98B
-🐛	bug	U+1F41B
-🐜	ant	U+1F41C
-🐝	honeybee	U+1F41D
-🐞	lady beetle	U+1F41E
-🦗	cricket	U+1F997
-🕷	spider	U+1F577
-🕸	spider web	U+1F578
-🦂	scorpion	U+1F982
-🦟	mosquito	U+1F99F
-🦠	microbe	U+1F9A0
-💐	bouquet	U+1F490
-🌸	cherry blossom	U+1F338
-💮	white flower	U+1F4AE
-🏵	rosette	U+1F3F5
-🌹	rose	U+1F339
-🥀	wilted flower	U+1F940
-🌺	hibiscus	U+1F33A
-🌻	sunflower	U+1F33B
-🌼	blossom	U+1F33C
-🌷	tulip	U+1F337
-🌱	seedling	U+1F331
-🌲	evergreen tree	U+1F332
-🌳	deciduous tree	U+1F333
-🌴	palm tree	U+1F334
-🌵	cactus	U+1F335
-🌾	sheaf of rice	U+1F33E
-🌿	herb	U+1F33F
-☘	shamrock	U+2618
-🍀	four leaf clover	U+1F340
-🍁	maple leaf	U+1F341
-🍂	fallen leaf	U+1F342
-🍃	leaf fluttering in wind	U+1F343
-🍇	grapes	U+1F347
-🍈	melon	U+1F348
-🍉	watermelon	U+1F349
-🍊	tangerine	U+1F34A
-🍋	lemon	U+1F34B
-🍌	banana	U+1F34C
-🍍	pineapple	U+1F34D
-🥭	mango	U+1F96D
-🍎	red apple	U+1F34E
-🍏	green apple	U+1F34F
-🍐	pear	U+1F350
-🍑	peach	U+1F351
-🍒	cherries	U+1F352
-🍓	strawberry	U+1F353
-🥝	kiwi fruit	U+1F95D
-🍅	tomato	U+1F345
-🥥	coconut	U+1F965
-🥑	avocado	U+1F951
-🍆	eggplant	U+1F346
-🥔	potato	U+1F954
-🥕	carrot	U+1F955
-🌽	ear of corn	U+1F33D
-🌶	hot pepper	U+1F336
-🥒	cucumber	U+1F952
-🥬	leafy green	U+1F96C
-🥦	broccoli	U+1F966
-🧄	garlic	U+1F9C4
-🧅	onion	U+1F9C5
-🍄	mushroom	U+1F344
-🥜	peanuts	U+1F95C
-🌰	chestnut	U+1F330
-🍞	bread	U+1F35E
-🥐	croissant	U+1F950
-🥖	baguette bread	U+1F956
-🥨	pretzel	U+1F968
-🥯	bagel	U+1F96F
-🥞	pancakes	U+1F95E
-🧇	waffle	U+1F9C7
-🧀	cheese wedge	U+1F9C0
-🍖	meat on bone	U+1F356
-🍗	poultry leg	U+1F357
-🥩	cut of meat	U+1F969
-🥓	bacon	U+1F953
-🍔	hamburger	U+1F354
-🍟	french fries	U+1F35F
-🍕	pizza	U+1F355
-🌭	hot dog	U+1F32D
-🥪	sandwich	U+1F96A
-🌮	taco	U+1F32E
-🌯	burrito	U+1F32F
-🥙	stuffed flatbread	U+1F959
-🧆	falafel	U+1F9C6
-🥚	egg	U+1F95A
-🍳	cooking	U+1F373
-🥘	shallow pan of food	U+1F958
-🍲	pot of food	U+1F372
-🥣	bowl with spoon	U+1F963
-🥗	green salad	U+1F957
-🍿	popcorn	U+1F37F
-🧈	butter	U+1F9C8
-🧂	salt	U+1F9C2
-🥫	canned food	U+1F96B
-🍱	bento box	U+1F371
-🍘	rice cracker	U+1F358
-🍙	rice ball	U+1F359
-🍚	cooked rice	U+1F35A
-🍛	curry rice	U+1F35B
-🍜	steaming bowl	U+1F35C
-🍝	spaghetti	U+1F35D
-🍠	roasted sweet potato	U+1F360
-🍢	oden	U+1F362
-🍣	sushi	U+1F363
-🍤	fried shrimp	U+1F364
-🍥	fish cake with swirl	U+1F365
-🥮	moon cake	U+1F96E
-🍡	dango	U+1F361
-🥟	dumpling	U+1F95F
-🥠	fortune cookie	U+1F960
-🥡	takeout box	U+1F961
-🦀	crab	U+1F980
-🦞	lobster	U+1F99E
-🦐	shrimp	U+1F990
-🦑	squid	U+1F991
-🦪	oyster	U+1F9AA
-🍦	soft ice cream	U+1F366
-🍧	shaved ice	U+1F367
-🍨	ice cream	U+1F368
-🍩	doughnut	U+1F369
-🍪	cookie	U+1F36A
-🎂	birthday cake	U+1F382
-🍰	shortcake	U+1F370
-🧁	cupcake	U+1F9C1
-🥧	pie	U+1F967
-🍫	chocolate bar	U+1F36B
-🍬	candy	U+1F36C
-🍭	lollipop	U+1F36D
-🍮	custard	U+1F36E
-🍯	honey pot	U+1F36F
-🍼	baby bottle	U+1F37C
-🥛	glass of milk	U+1F95B
-☕	hot beverage	U+2615
-🍵	teacup without handle	U+1F375
-🍶	sake	U+1F376
-🍾	bottle with popping cork	U+1F37E
-🍷	wine glass	U+1F377
-🍸	cocktail glass	U+1F378
-🍹	tropical drink	U+1F379
-🍺	beer mug	U+1F37A
-🍻	clinking beer mugs	U+1F37B
-🥂	clinking glasses	U+1F942
-🥃	tumbler glass	U+1F943
-🥤	cup with straw	U+1F964
-🧃	beverage box	U+1F9C3
-🧉	mate	U+1F9C9
-🧊	ice	U+1F9CA
-🥢	chopsticks	U+1F962
-🍽	fork and knife with plate	U+1F37D
-🍴	fork and knife	U+1F374
-🥄	spoon	U+1F944
-🔪	kitchen knife	U+1F52A
-🏺	amphora	U+1F3FA
-🌍	globe showing Europe-Africa	U+1F30D
-🌎	globe showing Americas	U+1F30E
-🌏	globe showing Asia-Australia	U+1F30F
-🌐	globe with meridians	U+1F310
-🗺	world map	U+1F5FA
-🗾	map of Japan	U+1F5FE
-🧭	compass	U+1F9ED
-🏔	snow-capped mountain	U+1F3D4
-⛰	mountain	U+26F0
-🌋	volcano	U+1F30B
-🗻	mount fuji	U+1F5FB
-🏕	camping	U+1F3D5
-🏖	beach with umbrella	U+1F3D6
-🏜	desert	U+1F3DC
-🏝	desert island	U+1F3DD
-🏞	national park	U+1F3DE
-🏟	stadium	U+1F3DF
-🏛	classical building	U+1F3DB
-🏗	building construction	U+1F3D7
-🧱	brick	U+1F9F1
-🏘	houses	U+1F3D8
-🏚	derelict house	U+1F3DA
-🏠	house	U+1F3E0
-🏡	house with garden	U+1F3E1
-🏢	office building	U+1F3E2
-🏣	Japanese post office	U+1F3E3
-🏤	post office	U+1F3E4
-🏥	hospital	U+1F3E5
-🏦	bank	U+1F3E6
-🏨	hotel	U+1F3E8
-🏩	love hotel	U+1F3E9
-🏪	convenience store	U+1F3EA
-🏫	school	U+1F3EB
-🏬	department store	U+1F3EC
-🏭	factory	U+1F3ED
-🏯	Japanese castle	U+1F3EF
-🏰	castle	U+1F3F0
-💒	wedding	U+1F492
-🗼	Tokyo tower	U+1F5FC
-🗽	Statue of Liberty	U+1F5FD
-⛪	church	U+26EA
-🕌	mosque	U+1F54C
-🛕	hindu temple	U+1F6D5
-🕍	synagogue	U+1F54D
-⛩	shinto shrine	U+26E9
-🕋	kaaba	U+1F54B
-⛲	fountain	U+26F2
-⛺	tent	U+26FA
-🌁	foggy	U+1F301
-🌃	night with stars	U+1F303
-🏙	cityscape	U+1F3D9
-🌄	sunrise over mountains	U+1F304
-🌅	sunrise	U+1F305
-🌆	cityscape at dusk	U+1F306
-🌇	sunset	U+1F307
-🌉	bridge at night	U+1F309
-♨	hot springs	U+2668
-🎠	carousel horse	U+1F3A0
-🎡	ferris wheel	U+1F3A1
-🎢	roller coaster	U+1F3A2
-💈	barber pole	U+1F488
-🎪	circus tent	U+1F3AA
-🚂	locomotive	U+1F682
-🚃	railway car	U+1F683
-🚄	high-speed train	U+1F684
-🚅	bullet train	U+1F685
-🚆	train	U+1F686
-🚇	metro	U+1F687
-🚈	light rail	U+1F688
-🚉	station	U+1F689
-🚊	tram	U+1F68A
-🚝	monorail	U+1F69D
-🚞	mountain railway	U+1F69E
-🚋	tram car	U+1F68B
-🚌	bus	U+1F68C
-🚍	oncoming bus	U+1F68D
-🚎	trolleybus	U+1F68E
-🚐	minibus	U+1F690
-🚑	ambulance	U+1F691
-🚒	fire engine	U+1F692
-🚓	police car	U+1F693
-🚔	oncoming police car	U+1F694
-🚕	taxi	U+1F695
-🚖	oncoming taxi	U+1F696
-🚗	automobile	U+1F697
-🚘	oncoming automobile	U+1F698
-🚙	sport utility vehicle	U+1F699
-🚚	delivery truck	U+1F69A
-🚛	articulated lorry	U+1F69B
-🚜	tractor	U+1F69C
-🏎	racing car	U+1F3CE
-🏍	motorcycle	U+1F3CD
-🛵	motor scooter	U+1F6F5
-🦽	manual wheelchair	U+1F9BD
-🦼	motorized wheelchair	U+1F9BC
-🛺	auto rickshaw	U+1F6FA
-🚲	bicycle	U+1F6B2
-🛴	kick scooter	U+1F6F4
-🛹	skateboard	U+1F6F9
-🚏	bus stop	U+1F68F
-🛣	motorway	U+1F6E3
-🛤	railway track	U+1F6E4
-🛢	oil drum	U+1F6E2
-⛽	fuel pump	U+26FD
-🚨	police car light	U+1F6A8
-🚥	horizontal traffic light	U+1F6A5
-🚦	vertical traffic light	U+1F6A6
-🛑	stop sign	U+1F6D1
-🚧	construction	U+1F6A7
-⚓	anchor	U+2693
-⛵	sailboat	U+26F5
-🛶	canoe	U+1F6F6
-🚤	speedboat	U+1F6A4
-🛳	passenger ship	U+1F6F3
-⛴	ferry	U+26F4
-🛥	motor boat	U+1F6E5
-🚢	ship	U+1F6A2
-✈	airplane	U+2708
-🛩	small airplane	U+1F6E9
-🛫	airplane departure	U+1F6EB
-🛬	airplane arrival	U+1F6EC
-🪂	parachute	U+1FA82
-💺	seat	U+1F4BA
-🚁	helicopter	U+1F681
-🚟	suspension railway	U+1F69F
-🚠	mountain cableway	U+1F6A0
-🚡	aerial tramway	U+1F6A1
-🛰	satellite	U+1F6F0
-🚀	rocket	U+1F680
-🛸	flying saucer	U+1F6F8
-🛎	bellhop bell	U+1F6CE
-🧳	luggage	U+1F9F3
-⌛	hourglass done	U+231B
-⏳	hourglass not done	U+23F3
-⌚	watch	U+231A
-⏰	alarm clock	U+23F0
-⏱	stopwatch	U+23F1
-⏲	timer clock	U+23F2
-🕰	mantelpiece clock	U+1F570
-🕛	twelve o’clock	U+1F55B
-🕧	twelve-thirty	U+1F567
-🕐	one o’clock	U+1F550
-🕜	one-thirty	U+1F55C
-🕑	two o’clock	U+1F551
-🕝	two-thirty	U+1F55D
-🕒	three o’clock	U+1F552
-🕞	three-thirty	U+1F55E
-🕓	four o’clock	U+1F553
-🕟	four-thirty	U+1F55F
-🕔	five o’clock	U+1F554
-🕠	five-thirty	U+1F560
-🕕	six o’clock	U+1F555
-🕡	six-thirty	U+1F561
-🕖	seven o’clock	U+1F556
-🕢	seven-thirty	U+1F562
-🕗	eight o’clock	U+1F557
-🕣	eight-thirty	U+1F563
-🕘	nine o’clock	U+1F558
-🕤	nine-thirty	U+1F564
-🕙	ten o’clock	U+1F559
-🕥	ten-thirty	U+1F565
-🕚	eleven o’clock	U+1F55A
-🕦	eleven-thirty	U+1F566
-🌑	new moon	U+1F311
-🌒	waxing crescent moon	U+1F312
-🌓	first quarter moon	U+1F313
-🌔	waxing gibbous moon	U+1F314
-🌕	full moon	U+1F315
-🌖	waning gibbous moon	U+1F316
-🌗	last quarter moon	U+1F317
-🌘	waning crescent moon	U+1F318
-🌙	crescent moon	U+1F319
-🌚	new moon face	U+1F31A
-🌛	first quarter moon face	U+1F31B
-🌜	last quarter moon face	U+1F31C
-🌡	thermometer	U+1F321
-☀	sun	U+2600
-🌝	full moon face	U+1F31D
-🌞	sun with face	U+1F31E
-🪐	ringed planet	U+1FA90
-⭐	star	U+2B50
-🌟	glowing star	U+1F31F
-🌠	shooting star	U+1F320
-🌌	milky way	U+1F30C
-☁	cloud	U+2601
-⛅	sun behind cloud	U+26C5
-⛈	cloud with lightning and rain	U+26C8
-🌤	sun behind small cloud	U+1F324
-🌥	sun behind large cloud	U+1F325
-🌦	sun behind rain cloud	U+1F326
-🌧	cloud with rain	U+1F327
-🌨	cloud with snow	U+1F328
-🌩	cloud with lightning	U+1F329
-🌪	tornado	U+1F32A
-🌫	fog	U+1F32B
-🌬	wind face	U+1F32C
-🌀	cyclone	U+1F300
-🌈	rainbow	U+1F308
-🌂	closed umbrella	U+1F302
-☂	umbrella	U+2602
-☔	umbrella with rain drops	U+2614
-⛱	umbrella on ground	U+26F1
-⚡	high voltage	U+26A1
-❄	snowflake	U+2744
-☃	snowman	U+2603
-⛄	snowman without snow	U+26C4
-☄	comet	U+2604
-🔥	fire	U+1F525
-💧	droplet	U+1F4A7
-🌊	water wave	U+1F30A
-🎃	jack-o-lantern	U+1F383
-🎄	Christmas tree	U+1F384
-🎆	fireworks	U+1F386
-🎇	sparkler	U+1F387
-🧨	firecracker	U+1F9E8
-✨	sparkles	U+2728
-🎈	balloon	U+1F388
-🎉	party popper	U+1F389
-🎊	confetti ball	U+1F38A
-🎋	tanabata tree	U+1F38B
-🎍	pine decoration	U+1F38D
-🎎	Japanese dolls	U+1F38E
-🎏	carp streamer	U+1F38F
-🎐	wind chime	U+1F390
-🎑	moon viewing ceremony	U+1F391
-🧧	red envelope	U+1F9E7
-🎀	ribbon	U+1F380
-🎁	wrapped gift	U+1F381
-🎗	reminder ribbon	U+1F397
-🎟	admission tickets	U+1F39F
-🎫	ticket	U+1F3AB
-🎖	military medal	U+1F396
-🏆	trophy	U+1F3C6
-🏅	sports medal	U+1F3C5
-🥇	1st place medal	U+1F947
-🥈	2nd place medal	U+1F948
-🥉	3rd place medal	U+1F949
-⚽	soccer ball	U+26BD
-⚾	baseball	U+26BE
-🥎	softball	U+1F94E
-🏀	basketball	U+1F3C0
-🏐	volleyball	U+1F3D0
-🏈	american football	U+1F3C8
-🏉	rugby football	U+1F3C9
-🎾	tennis	U+1F3BE
-🥏	flying disc	U+1F94F
-🎳	bowling	U+1F3B3
-🏏	cricket game	U+1F3CF
-🏑	field hockey	U+1F3D1
-🏒	ice hockey	U+1F3D2
-🥍	lacrosse	U+1F94D
-🏓	ping pong	U+1F3D3
-🏸	badminton	U+1F3F8
-🥊	boxing glove	U+1F94A
-🥋	martial arts uniform	U+1F94B
-🥅	goal net	U+1F945
-⛳	flag in hole	U+26F3
-⛸	ice skate	U+26F8
-🎣	fishing pole	U+1F3A3
-🤿	diving mask	U+1F93F
-🎽	running shirt	U+1F3BD
-🎿	skis	U+1F3BF
-🛷	sled	U+1F6F7
-🥌	curling stone	U+1F94C
-🎯	direct hit	U+1F3AF
-🪀	yo-yo	U+1FA80
-🪁	kite	U+1FA81
-🎱	pool 8 ball	U+1F3B1
-🔮	crystal ball	U+1F52E
-🧿	nazar amulet	U+1F9FF
-🎮	video game	U+1F3AE
-🕹	joystick	U+1F579
-🎰	slot machine	U+1F3B0
-🎲	game die	U+1F3B2
-🧩	puzzle piece	U+1F9E9
-🧸	teddy bear	U+1F9F8
-♠	spade suit	U+2660
-♥	heart suit	U+2665
-♦	diamond suit	U+2666
-♣	club suit	U+2663
-♟	chess pawn	U+265F
-🃏	joker	U+1F0CF
-🀄	mahjong red dragon	U+1F004
-🎴	flower playing cards	U+1F3B4
-🎭	performing arts	U+1F3AD
-🖼	framed picture	U+1F5BC
-🎨	artist palette	U+1F3A8
-🧵	thread	U+1F9F5
-🧶	yarn	U+1F9F6
-👓	glasses	U+1F453
-🕶	sunglasses	U+1F576
-🥽	goggles	U+1F97D
-🥼	lab coat	U+1F97C
-🦺	safety vest	U+1F9BA
-👔	necktie	U+1F454
-👕	t-shirt	U+1F455
-👖	jeans	U+1F456
-🧣	scarf	U+1F9E3
-🧤	gloves	U+1F9E4
-🧥	coat	U+1F9E5
-🧦	socks	U+1F9E6
-👗	dress	U+1F457
-👘	kimono	U+1F458
-🥻	sari	U+1F97B
-🩱	one-piece swimsuit	U+1FA71
-🩲	briefs	U+1FA72
-🩳	shorts	U+1FA73
-👙	bikini	U+1F459
-👚	woman’s clothes	U+1F45A
-👛	purse	U+1F45B
-👜	handbag	U+1F45C
-👝	clutch bag	U+1F45D
-🛍	shopping bags	U+1F6CD
-🎒	backpack	U+1F392
-👞	man’s shoe	U+1F45E
-👟	running shoe	U+1F45F
-🥾	hiking boot	U+1F97E
-🥿	flat shoe	U+1F97F
-👠	high-heeled shoe	U+1F460
-👡	woman’s sandal	U+1F461
-🩰	ballet shoes	U+1FA70
-👢	woman’s boot	U+1F462
-👑	crown	U+1F451
-👒	woman’s hat	U+1F452
-🎩	top hat	U+1F3A9
-🎓	graduation cap	U+1F393
-🧢	billed cap	U+1F9E2
-⛑	rescue worker’s helmet	U+26D1
-📿	prayer beads	U+1F4FF
-💄	lipstick	U+1F484
-💍	ring	U+1F48D
-💎	gem stone	U+1F48E
-🔇	muted speaker	U+1F507
-🔈	speaker low volume	U+1F508
-🔉	speaker medium volume	U+1F509
-🔊	speaker high volume	U+1F50A
-📢	loudspeaker	U+1F4E2
-📣	megaphone	U+1F4E3
-📯	postal horn	U+1F4EF
-🔔	bell	U+1F514
-🔕	bell with slash	U+1F515
-🎼	musical score	U+1F3BC
-🎵	musical note	U+1F3B5
-🎶	musical notes	U+1F3B6
-🎙	studio microphone	U+1F399
-🎚	level slider	U+1F39A
-🎛	control knobs	U+1F39B
-🎤	microphone	U+1F3A4
-🎧	headphone	U+1F3A7
-📻	radio	U+1F4FB
-🎷	saxophone	U+1F3B7
-🎸	guitar	U+1F3B8
-🎹	musical keyboard	U+1F3B9
-🎺	trumpet	U+1F3BA
-🎻	violin	U+1F3BB
-🪕	banjo	U+1FA95
-🥁	drum	U+1F941
-📱	mobile phone	U+1F4F1
-📲	mobile phone with arrow	U+1F4F2
-☎	telephone	U+260E
-📞	telephone receiver	U+1F4DE
-📟	pager	U+1F4DF
-📠	fax machine	U+1F4E0
-🔋	battery	U+1F50B
-🔌	electric plug	U+1F50C
-💻	laptop	U+1F4BB
-🖥	desktop computer	U+1F5A5
-🖨	printer	U+1F5A8
-⌨	keyboard	U+2328
-🖱	computer mouse	U+1F5B1
-🖲	trackball	U+1F5B2
-💽	computer disk	U+1F4BD
-💾	floppy disk	U+1F4BE
-💿	optical disk	U+1F4BF
-📀	dvd	U+1F4C0
-🧮	abacus	U+1F9EE
-🎥	movie camera	U+1F3A5
-🎞	film frames	U+1F39E
-📽	film projector	U+1F4FD
-🎬	clapper board	U+1F3AC
-📺	television	U+1F4FA
-📷	camera	U+1F4F7
-📸	camera with flash	U+1F4F8
-📹	video camera	U+1F4F9
-📼	videocassette	U+1F4FC
-🔍	magnifying glass tilted left	U+1F50D
-🔎	magnifying glass tilted right	U+1F50E
-🕯	candle	U+1F56F
-💡	light bulb	U+1F4A1
-🔦	flashlight	U+1F526
-🏮	red paper lantern	U+1F3EE
-🪔	diya lamp	U+1FA94
-📔	notebook with decorative cover	U+1F4D4
-📕	closed book	U+1F4D5
-📖	open book	U+1F4D6
-📗	green book	U+1F4D7
-📘	blue book	U+1F4D8
-📙	orange book	U+1F4D9
-📚	books	U+1F4DA
-📓	notebook	U+1F4D3
-📒	ledger	U+1F4D2
-📃	page with curl	U+1F4C3
-📜	scroll	U+1F4DC
-📄	page facing up	U+1F4C4
-📰	newspaper	U+1F4F0
-🗞	rolled-up newspaper	U+1F5DE
-📑	bookmark tabs	U+1F4D1
-🔖	bookmark	U+1F516
-🏷	label	U+1F3F7
-💰	money bag	U+1F4B0
-💴	yen banknote	U+1F4B4
-💵	dollar banknote	U+1F4B5
-💶	euro banknote	U+1F4B6
-💷	pound banknote	U+1F4B7
-💸	money with wings	U+1F4B8
-💳	credit card	U+1F4B3
-🧾	receipt	U+1F9FE
-💹	chart increasing with yen	U+1F4B9
-💱	currency exchange	U+1F4B1
-💲	heavy dollar sign	U+1F4B2
-✉	envelope	U+2709
-📧	e-mail	U+1F4E7
-📨	incoming envelope	U+1F4E8
-📩	envelope with arrow	U+1F4E9
-📤	outbox tray	U+1F4E4
-📥	inbox tray	U+1F4E5
-📦	package	U+1F4E6
-📫	closed mailbox with raised flag	U+1F4EB
-📪	closed mailbox with lowered flag	U+1F4EA
-📬	open mailbox with raised flag	U+1F4EC
-📭	open mailbox with lowered flag	U+1F4ED
-📮	postbox	U+1F4EE
-🗳	ballot box with ballot	U+1F5F3
-✏	pencil	U+270F
-✒	black nib	U+2712
-🖋	fountain pen	U+1F58B
-🖊	pen	U+1F58A
-🖌	paintbrush	U+1F58C
-🖍	crayon	U+1F58D
-📝	memo	U+1F4DD
-💼	briefcase	U+1F4BC
-📁	file folder	U+1F4C1
-📂	open file folder	U+1F4C2
-🗂	card index dividers	U+1F5C2
-📅	calendar	U+1F4C5
-📆	tear-off calendar	U+1F4C6
-🗒	spiral notepad	U+1F5D2
-🗓	spiral calendar	U+1F5D3
-📇	card index	U+1F4C7
-📈	chart increasing	U+1F4C8
-📉	chart decreasing	U+1F4C9
-📊	bar chart	U+1F4CA
-📋	clipboard	U+1F4CB
-📌	pushpin	U+1F4CC
-📍	round pushpin	U+1F4CD
-📎	paperclip	U+1F4CE
-🖇	linked paperclips	U+1F587
-📏	straight ruler	U+1F4CF
-📐	triangular ruler	U+1F4D0
-✂	scissors	U+2702
-🗃	card file box	U+1F5C3
-🗄	file cabinet	U+1F5C4
-🗑	wastebasket	U+1F5D1
-🔒	locked	U+1F512
-🔓	unlocked	U+1F513
-🔏	locked with pen	U+1F50F
-🔐	locked with key	U+1F510
-🔑	key	U+1F511
-🗝	old key	U+1F5DD
-🔨	hammer	U+1F528
-🪓	axe	U+1FA93
-⛏	pick	U+26CF
-⚒	hammer and pick	U+2692
-🛠	hammer and wrench	U+1F6E0
-🗡	dagger	U+1F5E1
-⚔	crossed swords	U+2694
-🔫	pistol	U+1F52B
-🏹	bow and arrow	U+1F3F9
-🛡	shield	U+1F6E1
-🔧	wrench	U+1F527
-🔩	nut and bolt	U+1F529
-⚙	gear	U+2699
-🗜	clamp	U+1F5DC
-⚖	balance scale	U+2696
-🦯	probing cane	U+1F9AF
-🔗	link	U+1F517
-⛓	chains	U+26D3
-🧰	toolbox	U+1F9F0
-🧲	magnet	U+1F9F2
-⚗	alembic	U+2697
-🧪	test tube	U+1F9EA
-🧫	petri dish	U+1F9EB
-🧬	dna	U+1F9EC
-🔬	microscope	U+1F52C
-🔭	telescope	U+1F52D
-📡	satellite antenna	U+1F4E1
-💉	syringe	U+1F489
-🩸	drop of blood	U+1FA78
-💊	pill	U+1F48A
-🩹	adhesive bandage	U+1FA79
-🩺	stethoscope	U+1FA7A
-🚪	door	U+1F6AA
-🛏	bed	U+1F6CF
-🛋	couch and lamp	U+1F6CB
-🪑	chair	U+1FA91
-🚽	toilet	U+1F6BD
-🚿	shower	U+1F6BF
-🛁	bathtub	U+1F6C1
-🪒	razor	U+1FA92
-🧴	lotion bottle	U+1F9F4
-🧷	safety pin	U+1F9F7
-🧹	broom	U+1F9F9
-🧺	basket	U+1F9FA
-🧻	roll of paper	U+1F9FB
-🧼	soap	U+1F9FC
-🧽	sponge	U+1F9FD
-🧯	fire extinguisher	U+1F9EF
-🛒	shopping cart	U+1F6D2
-🚬	cigarette	U+1F6AC
-⚰	coffin	U+26B0
-⚱	funeral urn	U+26B1
-🗿	moai	U+1F5FF
-🏧	ATM sign	U+1F3E7
-🚮	litter in bin sign	U+1F6AE
-🚰	potable water	U+1F6B0
-♿	wheelchair symbol	U+267F
-🚹	men’s room	U+1F6B9
-🚺	women’s room	U+1F6BA
-🚻	restroom	U+1F6BB
-🚼	baby symbol	U+1F6BC
-🚾	water closet	U+1F6BE
-🛂	passport control	U+1F6C2
-🛃	customs	U+1F6C3
-🛄	baggage claim	U+1F6C4
-🛅	left luggage	U+1F6C5
-⚠	warning	U+26A0
-🚸	children crossing	U+1F6B8
-⛔	no entry	U+26D4
-🚫	prohibited	U+1F6AB
-🚳	no bicycles	U+1F6B3
-🚭	no smoking	U+1F6AD
-🚯	no littering	U+1F6AF
-🚱	non-potable water	U+1F6B1
-🚷	no pedestrians	U+1F6B7
-📵	no mobile phones	U+1F4F5
-🔞	no one under eighteen	U+1F51E
-☢	radioactive	U+2622
-☣	biohazard	U+2623
-⬆	up arrow	U+2B06
-↗	up-right arrow	U+2197
-➡	right arrow	U+27A1
-↘	down-right arrow	U+2198
-⬇	down arrow	U+2B07
-↙	down-left arrow	U+2199
-⬅	left arrow	U+2B05
-↖	up-left arrow	U+2196
-↕	up-down arrow	U+2195
-↔	left-right arrow	U+2194
-↩	right arrow curving left	U+21A9
-↪	left arrow curving right	U+21AA
-⤴	right arrow curving up	U+2934
-⤵	right arrow curving down	U+2935
-🔃	clockwise vertical arrows	U+1F503
-🔄	counterclockwise arrows button	U+1F504
-🔙	BACK arrow	U+1F519
-🔚	END arrow	U+1F51A
-🔛	ON! arrow	U+1F51B
-🔜	SOON arrow	U+1F51C
-🔝	TOP arrow	U+1F51D
-🛐	place of worship	U+1F6D0
-⚛	atom symbol	U+269B
-🕉	om	U+1F549
-✡	star of David	U+2721
-☸	wheel of dharma	U+2638
-☯	yin yang	U+262F
-✝	latin cross	U+271D
-☦	orthodox cross	U+2626
-☪	star and crescent	U+262A
-☮	peace symbol	U+262E
-🕎	menorah	U+1F54E
-🔯	dotted six-pointed star	U+1F52F
-♈	Aries	U+2648
-♉	Taurus	U+2649
-♊	Gemini	U+264A
-♋	Cancer	U+264B
-♌	Leo	U+264C
-♍	Virgo	U+264D
-♎	Libra	U+264E
-♏	Scorpio	U+264F
-♐	Sagittarius	U+2650
-♑	Capricorn	U+2651
-♒	Aquarius	U+2652
-♓	Pisces	U+2653
-⛎	Ophiuchus	U+26CE
-🔀	shuffle tracks button	U+1F500
-🔁	repeat button	U+1F501
-🔂	repeat single button	U+1F502
-▶	play button	U+25B6
-⏩	fast-forward button	U+23E9
-⏭	next track button	U+23ED
-⏯	play or pause button	U+23EF
-◀	reverse button	U+25C0
-⏪	fast reverse button	U+23EA
-⏮	last track button	U+23EE
-🔼	upwards button	U+1F53C
-⏫	fast up button	U+23EB
-🔽	downwards button	U+1F53D
-⏬	fast down button	U+23EC
-⏸	pause button	U+23F8
-⏹	stop button	U+23F9
-⏺	record button	U+23FA
-⏏	eject button	U+23CF
-🎦	cinema	U+1F3A6
-🔅	dim button	U+1F505
-🔆	bright button	U+1F506
-📶	antenna bars	U+1F4F6
-📳	vibration mode	U+1F4F3
-📴	mobile phone off	U+1F4F4
-♀	female sign	U+2640
-♂	male sign	U+2642
-⚕	medical symbol	U+2695
-♾	infinity	U+267E
-♻	recycling symbol	U+267B
-⚜	fleur-de-lis	U+269C
-🔱	trident emblem	U+1F531
-📛	name badge	U+1F4DB
-🔰	Japanese symbol for beginner	U+1F530
-⭕	hollow red circle	U+2B55
-✅	check mark button	U+2705
-☑	check box with check	U+2611
-✔	check mark	U+2714
-✖	multiplication sign	U+2716
-❌	cross mark	U+274C
-❎	cross mark button	U+274E
-➕	plus sign	U+2795
-➖	minus sign	U+2796
-➗	division sign	U+2797
-➰	curly loop	U+27B0
-➿	double curly loop	U+27BF
-〽	part alternation mark	U+303D
-✳	eight-spoked asterisk	U+2733
-✴	eight-pointed star	U+2734
-❇	sparkle	U+2747
-‼	double exclamation mark	U+203C
-⁉	exclamation question mark	U+2049
-❓	question mark	U+2753
-❔	white question mark	U+2754
-❕	white exclamation mark	U+2755
-❗	exclamation mark	U+2757
-〰	wavy dash	U+3030
-©	copyright	U+00A9
-®	registered	U+00AE
-™	trade mark	U+2122
-#️⃣	keycap: #	U+0023 U+FE0F U+20E3
-*️⃣	keycap: *	U+002A U+FE0F U+20E3
-0️⃣	keycap: 0	U+0030 U+FE0F U+20E3
-1️⃣	keycap: 1	U+0031 U+FE0F U+20E3
-2️⃣	keycap: 2	U+0032 U+FE0F U+20E3
-3️⃣	keycap: 3	U+0033 U+FE0F U+20E3
-4️⃣	keycap: 4	U+0034 U+FE0F U+20E3
-5️⃣	keycap: 5	U+0035 U+FE0F U+20E3
-6️⃣	keycap: 6	U+0036 U+FE0F U+20E3
-7️⃣	keycap: 7	U+0037 U+FE0F U+20E3
-8️⃣	keycap: 8	U+0038 U+FE0F U+20E3
-9️⃣	keycap: 9	U+0039 U+FE0F U+20E3
-🔟	keycap: 10	U+1F51F
-🔠	input latin uppercase	U+1F520
-🔡	input latin lowercase	U+1F521
-🔢	input numbers	U+1F522
-🔣	input symbols	U+1F523
-🔤	input latin letters	U+1F524
-🅰	A button (blood type)	U+1F170
-🆎	AB button (blood type)	U+1F18E
-🅱	B button (blood type)	U+1F171
-🆑	CL button	U+1F191
-🆒	COOL button	U+1F192
-🆓	FREE button	U+1F193
-ℹ	information	U+2139
-🆔	ID button	U+1F194
-Ⓜ	circled M	U+24C2
-🆕	NEW button	U+1F195
-🆖	NG button	U+1F196
-🅾	O button (blood type)	U+1F17E
-🆗	OK button	U+1F197
-🅿	P button	U+1F17F
-🆘	SOS button	U+1F198
-🆙	UP! button	U+1F199
-🆚	VS button	U+1F19A
-🈁	Japanese “here” button	U+1F201
-🈂	Japanese “service charge” button	U+1F202
-🈷	Japanese “monthly amount” button	U+1F237
-🈶	Japanese “not free of charge” button	U+1F236
-🈯	Japanese “reserved” button	U+1F22F
-🉐	Japanese “bargain” button	U+1F250
-🈹	Japanese “discount” button	U+1F239
-🈚	Japanese “free of charge” button	U+1F21A
-🈲	Japanese “prohibited” button	U+1F232
-🉑	Japanese “acceptable” button	U+1F251
-🈸	Japanese “application” button	U+1F238
-🈴	Japanese “passing grade” button	U+1F234
-🈳	Japanese “vacancy” button	U+1F233
-㊗	Japanese “congratulations” button	U+3297
-㊙	Japanese “secret” button	U+3299
-🈺	Japanese “open for business” button	U+1F23A
-🈵	Japanese “no vacancy” button	U+1F235
-🔴	red circle	U+1F534
-🟠	orange circle	U+1F7E0
-🟡	yellow circle	U+1F7E1
-🟢	green circle	U+1F7E2
-🔵	blue circle	U+1F535
-🟣	purple circle	U+1F7E3
-🟤	brown circle	U+1F7E4
-⚫	black circle	U+26AB
-⚪	white circle	U+26AA
-🟥	red square	U+1F7E5
-🟧	orange square	U+1F7E7
-🟨	yellow square	U+1F7E8
-🟩	green square	U+1F7E9
-🟦	blue square	U+1F7E6
-🟪	purple square	U+1F7EA
-🟫	brown square	U+1F7EB
-⬛	black large square	U+2B1B
-⬜	white large square	U+2B1C
-◼	black medium square	U+25FC
-◻	white medium square	U+25FB
-◾	black medium-small square	U+25FE
-◽	white medium-small square	U+25FD
-▪	black small square	U+25AA
-▫	white small square	U+25AB
-🔶	large orange diamond	U+1F536
-🔷	large blue diamond	U+1F537
-🔸	small orange diamond	U+1F538
-🔹	small blue diamond	U+1F539
-🔺	red triangle pointed up	U+1F53A
-🔻	red triangle pointed down	U+1F53B
-💠	diamond with a dot	U+1F4A0
-🔘	radio button	U+1F518
-🔳	white square button	U+1F533
-🔲	black square button	U+1F532
-🏁	chequered flag	U+1F3C1
-🚩	triangular flag	U+1F6A9
-🎌	crossed flags	U+1F38C
-🏴	black flag	U+1F3F4
-🏳	white flag	U+1F3F3
-🏳️‍🌈	rainbow flag	U+1F3F3 U+FE0F U+200D U+1F308
-🏴‍☠️	pirate flag	U+1F3F4 U+200D U+2620 U+FE0F
+return
+@"😀	@description	grinning face	U+1F600
+😃	@description	grinning face with big eyes	U+1F603
+😄	@description	grinning face with smiling eyes	U+1F604
+😁	@description	beaming face with smiling eyes	U+1F601
+😆	@description	grinning squinting face	U+1F606
+😅	@description	grinning face with sweat	U+1F605
+🤣	@description	rolling on the floor laughing	U+1F923
+😂	@description	face with tears of joy	U+1F602
+🙂	@description	slightly smiling face	U+1F642
+🙃	@description	upside-down face	U+1F643
+😉	@description	winking face	U+1F609
+😊	@description	smiling face with smiling eyes	U+1F60A
+😇	@description	smiling face with halo	U+1F607
+🥰	@description	smiling face with hearts	U+1F970
+😍	@description	smiling face with heart-eyes	U+1F60D
+🤩	@description	star-struck	U+1F929
+😘	@description	face blowing a kiss	U+1F618
+😗	@description	kissing face	U+1F617
+☺	@description	smiling face	U+263A
+😚	@description	kissing face with closed eyes	U+1F61A
+😙	@description	kissing face with smiling eyes	U+1F619
+😋	@description	face savoring food	U+1F60B
+😛	@description	face with tongue	U+1F61B
+😜	@description	winking face with tongue	U+1F61C
+🤪	@description	zany face	U+1F92A
+😝	@description	squinting face with tongue	U+1F61D
+🤑	@description	money-mouth face	U+1F911
+🤗	@description	hugging face	U+1F917
+🤭	@description	face with hand over mouth	U+1F92D
+🤫	@description	shushing face	U+1F92B
+🤔	@description	thinking face	U+1F914
+🤐	@description	zipper-mouth face	U+1F910
+🤨	@description	face with raised eyebrow	U+1F928
+😐	@description	neutral face	U+1F610
+😑	@description	expressionless face	U+1F611
+😶	@description	face without mouth	U+1F636
+😏	@description	smirking face	U+1F60F
+😒	@description	unamused face	U+1F612
+🙄	@description	face with rolling eyes	U+1F644
+😬	@description	grimacing face	U+1F62C
+🤥	@description	lying face	U+1F925
+😌	@description	relieved face	U+1F60C
+😔	@description	pensive face	U+1F614
+😪	@description	sleepy face	U+1F62A
+🤤	@description	drooling face	U+1F924
+😴	@description	sleeping face	U+1F634
+😷	@description	face with medical mask	U+1F637
+🤒	@description	face with thermometer	U+1F912
+🤕	@description	face with head-bandage	U+1F915
+🤢	@description	nauseated face	U+1F922
+🤮	@description	face vomiting	U+1F92E
+🤧	@description	sneezing face	U+1F927
+🥵	@description	hot face	U+1F975
+🥶	@description	cold face	U+1F976
+🥴	@description	woozy face	U+1F974
+😵	@description	dizzy face	U+1F635
+🤯	@description	exploding head	U+1F92F
+🤠	@description	cowboy hat face	U+1F920
+🥳	@description	partying face	U+1F973
+😎	@description	smiling face with sunglasses	U+1F60E
+🤓	@description	nerd face	U+1F913
+🧐	@description	face with monocle	U+1F9D0
+😕	@description	confused face	U+1F615
+😟	@description	worried face	U+1F61F
+🙁	@description	slightly frowning face	U+1F641
+☹	@description	frowning face	U+2639
+😮	@description	face with open mouth	U+1F62E
+😯	@description	hushed face	U+1F62F
+😲	@description	astonished face	U+1F632
+😳	@description	flushed face	U+1F633
+🥺	@description	pleading face	U+1F97A
+😦	@description	frowning face with open mouth	U+1F626
+😧	@description	anguished face	U+1F627
+😨	@description	fearful face	U+1F628
+😰	@description	anxious face with sweat	U+1F630
+😥	@description	sad but relieved face	U+1F625
+😢	@description	crying face	U+1F622
+😭	@description	loudly crying face	U+1F62D
+😱	@description	face screaming in fear	U+1F631
+😖	@description	confounded face	U+1F616
+😣	@description	persevering face	U+1F623
+😞	@description	disappointed face	U+1F61E
+😓	@description	downcast face with sweat	U+1F613
+😩	@description	weary face	U+1F629
+😫	@description	tired face	U+1F62B
+🥱	@description	yawning face	U+1F971
+😤	@description	face with steam from nose	U+1F624
+😡	@description	pouting face	U+1F621
+😠	@description	angry face	U+1F620
+🤬	@description	face with symbols on mouth	U+1F92C
+😈	@description	smiling face with horns	U+1F608
+👿	@description	angry face with horns	U+1F47F
+💀	@description	skull	U+1F480
+☠	@description	skull and crossbones	U+2620
+💩	@description	pile of poo	U+1F4A9
+🤡	@description	clown face	U+1F921
+👹	@description	ogre	U+1F479
+👺	@description	goblin	U+1F47A
+👻	@description	ghost	U+1F47B
+👽	@description	alien	U+1F47D
+👾	@description	alien monster	U+1F47E
+🤖	@description	robot	U+1F916
+😺	@description	grinning cat	U+1F63A
+😸	@description	grinning cat with smiling eyes	U+1F638
+😹	@description	cat with tears of joy	U+1F639
+😻	@description	smiling cat with heart-eyes	U+1F63B
+😼	@description	cat with wry smile	U+1F63C
+😽	@description	kissing cat	U+1F63D
+🙀	@description	weary cat	U+1F640
+😿	@description	crying cat	U+1F63F
+😾	@description	pouting cat	U+1F63E
+🙈	@description	see-no-evil monkey	U+1F648
+🙉	@description	hear-no-evil monkey	U+1F649
+🙊	@description	speak-no-evil monkey	U+1F64A
+💋	@description	kiss mark	U+1F48B
+💌	@description	love letter	U+1F48C
+💘	@description	heart with arrow	U+1F498
+💝	@description	heart with ribbon	U+1F49D
+💖	@description	sparkling heart	U+1F496
+💗	@description	growing heart	U+1F497
+💓	@description	beating heart	U+1F493
+💞	@description	revolving hearts	U+1F49E
+💕	@description	two hearts	U+1F495
+💟	@description	heart decoration	U+1F49F
+❣	@description	heart exclamation	U+2763
+💔	@description	broken heart	U+1F494
+❤	@description	red heart	U+2764
+🧡	@description	orange heart	U+1F9E1
+💛	@description	yellow heart	U+1F49B
+💚	@description	green heart	U+1F49A
+💙	@description	blue heart	U+1F499
+💜	@description	purple heart	U+1F49C
+🤎	@description	brown heart	U+1F90E
+🖤	@description	black heart	U+1F5A4
+🤍	@description	white heart	U+1F90D
+💯	@description	hundred points	U+1F4AF
+💢	@description	anger symbol	U+1F4A2
+💥	@description	collision	U+1F4A5
+💫	@description	dizzy	U+1F4AB
+💦	@description	sweat droplets	U+1F4A6
+💨	@description	dashing away	U+1F4A8
+🕳	@description	hole	U+1F573
+💣	@description	bomb	U+1F4A3
+💬	@description	speech balloon	U+1F4AC
+👁️‍🗨️	@description	eye in speech bubble	U+1F441 U+FE0F U+200D U+1F5E8 U+FE0F
+🗨	@description	left speech bubble	U+1F5E8
+🗯	@description	right anger bubble	U+1F5EF
+💭	@description	thought balloon	U+1F4AD
+💤	@description	zzz	U+1F4A4
+👋	@description	waving hand	U+1F44B
+🤚	@description	raised back of hand	U+1F91A
+🖐	@description	hand with fingers splayed	U+1F590
+✋	@description	raised hand	U+270B
+🖖	@description	vulcan salute	U+1F596
+👌	@description	OK hand	U+1F44C
+🤏	@description	pinching hand	U+1F90F
+✌	@description	victory hand	U+270C
+🤞	@description	crossed fingers	U+1F91E
+🤟	@description	love-you gesture	U+1F91F
+🤘	@description	sign of the horns	U+1F918
+🤙	@description	call me hand	U+1F919
+👈	@description	backhand index pointing left	U+1F448
+👉	@description	backhand index pointing right	U+1F449
+👆	@description	backhand index pointing up	U+1F446
+🖕	@description	middle finger	U+1F595
+👇	@description	backhand index pointing down	U+1F447
+☝	@description	index pointing up	U+261D
+👍	@description	thumbs up	U+1F44D
+👎	@description	thumbs down	U+1F44E
+✊	@description	raised fist	U+270A
+👊	@description	oncoming fist	U+1F44A
+🤛	@description	left-facing fist	U+1F91B
+🤜	@description	right-facing fist	U+1F91C
+👏	@description	clapping hands	U+1F44F
+🙌	@description	raising hands	U+1F64C
+👐	@description	open hands	U+1F450
+🤲	@description	palms up together	U+1F932
+🤝	@description	handshake	U+1F91D
+🙏	@description	folded hands	U+1F64F
+✍	@description	writing hand	U+270D
+💅	@description	nail polish	U+1F485
+🤳	@description	selfie	U+1F933
+💪	@description	flexed biceps	U+1F4AA
+🦾	@description	mechanical arm	U+1F9BE
+🦿	@description	mechanical leg	U+1F9BF
+🦵	@description	leg	U+1F9B5
+🦶	@description	foot	U+1F9B6
+👂	@description	ear	U+1F442
+🦻	@description	ear with hearing aid	U+1F9BB
+👃	@description	nose	U+1F443
+🧠	@description	brain	U+1F9E0
+🦷	@description	tooth	U+1F9B7
+🦴	@description	bone	U+1F9B4
+👀	@description	eyes	U+1F440
+👁	@description	eye	U+1F441
+👅	@description	tongue	U+1F445
+👄	@description	mouth	U+1F444
+👶	@description	baby	U+1F476
+🧒	@description	child	U+1F9D2
+👦	@description	boy	U+1F466
+👧	@description	girl	U+1F467
+🧑	@description	person	U+1F9D1
+👱	@description	person: blond hair	U+1F471
+👨	@description	man	U+1F468
+🧔	@description	man: beard	U+1F9D4
+👨‍🦰	@description	man: red hair	U+1F468 U+200D U+1F9B0
+👨‍🦱	@description	man: curly hair	U+1F468 U+200D U+1F9B1
+👨‍🦳	@description	man: white hair	U+1F468 U+200D U+1F9B3
+👨‍🦲	@description	man: bald	U+1F468 U+200D U+1F9B2
+👩	@description	woman	U+1F469
+👩‍🦰	@description	woman: red hair	U+1F469 U+200D U+1F9B0
+🧑‍🦰	@description	⊛ person: red hair	U+1F9D1 U+200D U+1F9B0
+👩‍🦱	@description	woman: curly hair	U+1F469 U+200D U+1F9B1
+🧑‍🦱	@description	⊛ person: curly hair	U+1F9D1 U+200D U+1F9B1
+👩‍🦳	@description	woman: white hair	U+1F469 U+200D U+1F9B3
+🧑‍🦳	@description	⊛ person: white hair	U+1F9D1 U+200D U+1F9B3
+👩‍🦲	@description	woman: bald	U+1F469 U+200D U+1F9B2
+🧑‍🦲	@description	⊛ person: bald	U+1F9D1 U+200D U+1F9B2
+👱‍♀️	@description	woman: blond hair	U+1F471 U+200D U+2640 U+FE0F
+👱‍♂️	@description	man: blond hair	U+1F471 U+200D U+2642 U+FE0F
+🧓	@description	older person	U+1F9D3
+👴	@description	old man	U+1F474
+👵	@description	old woman	U+1F475
+🙍	@description	person frowning	U+1F64D
+🙍‍♂️	@description	man frowning	U+1F64D U+200D U+2642 U+FE0F
+🙍‍♀️	@description	woman frowning	U+1F64D U+200D U+2640 U+FE0F
+🙎	@description	person pouting	U+1F64E
+🙎‍♂️	@description	man pouting	U+1F64E U+200D U+2642 U+FE0F
+🙎‍♀️	@description	woman pouting	U+1F64E U+200D U+2640 U+FE0F
+🙅	@description	person gesturing NO	U+1F645
+🙅‍♂️	@description	man gesturing NO	U+1F645 U+200D U+2642 U+FE0F
+🙅‍♀️	@description	woman gesturing NO	U+1F645 U+200D U+2640 U+FE0F
+🙆	@description	person gesturing OK	U+1F646
+🙆‍♂️	@description	man gesturing OK	U+1F646 U+200D U+2642 U+FE0F
+🙆‍♀️	@description	woman gesturing OK	U+1F646 U+200D U+2640 U+FE0F
+💁	@description	person tipping hand	U+1F481
+💁‍♂️	@description	man tipping hand	U+1F481 U+200D U+2642 U+FE0F
+💁‍♀️	@description	woman tipping hand	U+1F481 U+200D U+2640 U+FE0F
+🙋	@description	person raising hand	U+1F64B
+🙋‍♂️	@description	man raising hand	U+1F64B U+200D U+2642 U+FE0F
+🙋‍♀️	@description	woman raising hand	U+1F64B U+200D U+2640 U+FE0F
+🧏	@description	deaf person	U+1F9CF
+🧏‍♂️	@description	deaf man	U+1F9CF U+200D U+2642 U+FE0F
+🧏‍♀️	@description	deaf woman	U+1F9CF U+200D U+2640 U+FE0F
+🙇	@description	person bowing	U+1F647
+🙇‍♂️	@description	man bowing	U+1F647 U+200D U+2642 U+FE0F
+🙇‍♀️	@description	woman bowing	U+1F647 U+200D U+2640 U+FE0F
+🤦	@description	person facepalming	U+1F926
+🤦‍♂️	@description	man facepalming	U+1F926 U+200D U+2642 U+FE0F
+🤦‍♀️	@description	woman facepalming	U+1F926 U+200D U+2640 U+FE0F
+🤷	@description	person shrugging	U+1F937
+🤷‍♂️	@description	man shrugging	U+1F937 U+200D U+2642 U+FE0F
+🤷‍♀️	@description	woman shrugging	U+1F937 U+200D U+2640 U+FE0F
+🧑‍⚕️	@description	⊛ health worker	U+1F9D1 U+200D U+2695 U+FE0F
+👨‍⚕️	@description	man health worker	U+1F468 U+200D U+2695 U+FE0F
+👩‍⚕️	@description	woman health worker	U+1F469 U+200D U+2695 U+FE0F
+🧑‍🎓	@description	⊛ student	U+1F9D1 U+200D U+1F393
+👨‍🎓	@description	man student	U+1F468 U+200D U+1F393
+👩‍🎓	@description	woman student	U+1F469 U+200D U+1F393
+🧑‍🏫	@description	⊛ teacher	U+1F9D1 U+200D U+1F3EB
+👨‍🏫	@description	man teacher	U+1F468 U+200D U+1F3EB
+👩‍🏫	@description	woman teacher	U+1F469 U+200D U+1F3EB
+🧑‍⚖️	@description	⊛ judge	U+1F9D1 U+200D U+2696 U+FE0F
+👨‍⚖️	@description	man judge	U+1F468 U+200D U+2696 U+FE0F
+👩‍⚖️	@description	woman judge	U+1F469 U+200D U+2696 U+FE0F
+🧑‍🌾	@description	⊛ farmer	U+1F9D1 U+200D U+1F33E
+👨‍🌾	@description	man farmer	U+1F468 U+200D U+1F33E
+👩‍🌾	@description	woman farmer	U+1F469 U+200D U+1F33E
+🧑‍🍳	@description	⊛ cook	U+1F9D1 U+200D U+1F373
+👨‍🍳	@description	man cook	U+1F468 U+200D U+1F373
+👩‍🍳	@description	woman cook	U+1F469 U+200D U+1F373
+🧑‍🔧	@description	⊛ mechanic	U+1F9D1 U+200D U+1F527
+👨‍🔧	@description	man mechanic	U+1F468 U+200D U+1F527
+👩‍🔧	@description	woman mechanic	U+1F469 U+200D U+1F527
+🧑‍🏭	@description	⊛ factory worker	U+1F9D1 U+200D U+1F3ED
+👨‍🏭	@description	man factory worker	U+1F468 U+200D U+1F3ED
+👩‍🏭	@description	woman factory worker	U+1F469 U+200D U+1F3ED
+🧑‍💼	@description	⊛ office worker	U+1F9D1 U+200D U+1F4BC
+👨‍💼	@description	man office worker	U+1F468 U+200D U+1F4BC
+👩‍💼	@description	woman office worker	U+1F469 U+200D U+1F4BC
+🧑‍🔬	@description	⊛ scientist	U+1F9D1 U+200D U+1F52C
+👨‍🔬	@description	man scientist	U+1F468 U+200D U+1F52C
+👩‍🔬	@description	woman scientist	U+1F469 U+200D U+1F52C
+🧑‍💻	@description	⊛ technologist	U+1F9D1 U+200D U+1F4BB
+👨‍💻	@description	man technologist	U+1F468 U+200D U+1F4BB
+👩‍💻	@description	woman technologist	U+1F469 U+200D U+1F4BB
+🧑‍🎤	@description	⊛ singer	U+1F9D1 U+200D U+1F3A4
+👨‍🎤	@description	man singer	U+1F468 U+200D U+1F3A4
+👩‍🎤	@description	woman singer	U+1F469 U+200D U+1F3A4
+🧑‍🎨	@description	⊛ artist	U+1F9D1 U+200D U+1F3A8
+👨‍🎨	@description	man artist	U+1F468 U+200D U+1F3A8
+👩‍🎨	@description	woman artist	U+1F469 U+200D U+1F3A8
+🧑‍✈️	@description	⊛ pilot	U+1F9D1 U+200D U+2708 U+FE0F
+👨‍✈️	@description	man pilot	U+1F468 U+200D U+2708 U+FE0F
+👩‍✈️	@description	woman pilot	U+1F469 U+200D U+2708 U+FE0F
+🧑‍🚀	@description	⊛ astronaut	U+1F9D1 U+200D U+1F680
+👨‍🚀	@description	man astronaut	U+1F468 U+200D U+1F680
+👩‍🚀	@description	woman astronaut	U+1F469 U+200D U+1F680
+🧑‍🚒	@description	⊛ firefighter	U+1F9D1 U+200D U+1F692
+👨‍🚒	@description	man firefighter	U+1F468 U+200D U+1F692
+👩‍🚒	@description	woman firefighter	U+1F469 U+200D U+1F692
+👮	@description	police officer	U+1F46E
+👮‍♂️	@description	man police officer	U+1F46E U+200D U+2642 U+FE0F
+👮‍♀️	@description	woman police officer	U+1F46E U+200D U+2640 U+FE0F
+🕵	@description	detective	U+1F575
+🕵️‍♂️	@description	man detective	U+1F575 U+FE0F U+200D U+2642 U+FE0F
+🕵️‍♀️	@description	woman detective	U+1F575 U+FE0F U+200D U+2640 U+FE0F
+💂	@description	guard	U+1F482
+💂‍♂️	@description	man guard	U+1F482 U+200D U+2642 U+FE0F
+💂‍♀️	@description	woman guard	U+1F482 U+200D U+2640 U+FE0F
+👷	@description	construction worker	U+1F477
+👷‍♂️	@description	man construction worker	U+1F477 U+200D U+2642 U+FE0F
+👷‍♀️	@description	woman construction worker	U+1F477 U+200D U+2640 U+FE0F
+🤴	@description	prince	U+1F934
+👸	@description	princess	U+1F478
+👳	@description	person wearing turban	U+1F473
+👳‍♂️	@description	man wearing turban	U+1F473 U+200D U+2642 U+FE0F
+👳‍♀️	@description	woman wearing turban	U+1F473 U+200D U+2640 U+FE0F
+👲	@description	man with skullcap	U+1F472
+🧕	@description	woman with headscarf	U+1F9D5
+🤵	@description	man in tuxedo	U+1F935
+👰	@description	bride with veil	U+1F470
+🤰	@description	pregnant woman	U+1F930
+🤱	@description	breast-feeding	U+1F931
+👼	@description	baby angel	U+1F47C
+🎅	@description	Santa Claus	U+1F385
+🤶	@description	Mrs. Claus	U+1F936
+🦸	@description	superhero	U+1F9B8
+🦸‍♂️	@description	man superhero	U+1F9B8 U+200D U+2642 U+FE0F
+🦸‍♀️	@description	woman superhero	U+1F9B8 U+200D U+2640 U+FE0F
+🦹	@description	supervillain	U+1F9B9
+🦹‍♂️	@description	man supervillain	U+1F9B9 U+200D U+2642 U+FE0F
+🦹‍♀️	@description	woman supervillain	U+1F9B9 U+200D U+2640 U+FE0F
+🧙	@description	mage	U+1F9D9
+🧙‍♂️	@description	man mage	U+1F9D9 U+200D U+2642 U+FE0F
+🧙‍♀️	@description	woman mage	U+1F9D9 U+200D U+2640 U+FE0F
+🧚	@description	fairy	U+1F9DA
+🧚‍♂️	@description	man fairy	U+1F9DA U+200D U+2642 U+FE0F
+🧚‍♀️	@description	woman fairy	U+1F9DA U+200D U+2640 U+FE0F
+🧛	@description	vampire	U+1F9DB
+🧛‍♂️	@description	man vampire	U+1F9DB U+200D U+2642 U+FE0F
+🧛‍♀️	@description	woman vampire	U+1F9DB U+200D U+2640 U+FE0F
+🧜	@description	merperson	U+1F9DC
+🧜‍♂️	@description	merman	U+1F9DC U+200D U+2642 U+FE0F
+🧜‍♀️	@description	mermaid	U+1F9DC U+200D U+2640 U+FE0F
+🧝	@description	elf	U+1F9DD
+🧝‍♂️	@description	man elf	U+1F9DD U+200D U+2642 U+FE0F
+🧝‍♀️	@description	woman elf	U+1F9DD U+200D U+2640 U+FE0F
+🧞	@description	genie	U+1F9DE
+🧞‍♂️	@description	man genie	U+1F9DE U+200D U+2642 U+FE0F
+🧞‍♀️	@description	woman genie	U+1F9DE U+200D U+2640 U+FE0F
+🧟	@description	zombie	U+1F9DF
+🧟‍♂️	@description	man zombie	U+1F9DF U+200D U+2642 U+FE0F
+🧟‍♀️	@description	woman zombie	U+1F9DF U+200D U+2640 U+FE0F
+💆	@description	person getting massage	U+1F486
+💆‍♂️	@description	man getting massage	U+1F486 U+200D U+2642 U+FE0F
+💆‍♀️	@description	woman getting massage	U+1F486 U+200D U+2640 U+FE0F
+💇	@description	person getting haircut	U+1F487
+💇‍♂️	@description	man getting haircut	U+1F487 U+200D U+2642 U+FE0F
+💇‍♀️	@description	woman getting haircut	U+1F487 U+200D U+2640 U+FE0F
+🚶	@description	person walking	U+1F6B6
+🚶‍♂️	@description	man walking	U+1F6B6 U+200D U+2642 U+FE0F
+🚶‍♀️	@description	woman walking	U+1F6B6 U+200D U+2640 U+FE0F
+🧍	@description	person standing	U+1F9CD
+🧍‍♂️	@description	man standing	U+1F9CD U+200D U+2642 U+FE0F
+🧍‍♀️	@description	woman standing	U+1F9CD U+200D U+2640 U+FE0F
+🧎	@description	person kneeling	U+1F9CE
+🧎‍♂️	@description	man kneeling	U+1F9CE U+200D U+2642 U+FE0F
+🧎‍♀️	@description	woman kneeling	U+1F9CE U+200D U+2640 U+FE0F
+🧑‍🦯	@description	⊛ person with probing cane	U+1F9D1 U+200D U+1F9AF
+👨‍🦯	@description	man with probing cane	U+1F468 U+200D U+1F9AF
+👩‍🦯	@description	woman with probing cane	U+1F469 U+200D U+1F9AF
+🧑‍🦼	@description	⊛ person in motorized wheelchair	U+1F9D1 U+200D U+1F9BC
+👨‍🦼	@description	man in motorized wheelchair	U+1F468 U+200D U+1F9BC
+👩‍🦼	@description	woman in motorized wheelchair	U+1F469 U+200D U+1F9BC
+🧑‍🦽	@description	⊛ person in manual wheelchair	U+1F9D1 U+200D U+1F9BD
+👨‍🦽	@description	man in manual wheelchair	U+1F468 U+200D U+1F9BD
+👩‍🦽	@description	woman in manual wheelchair	U+1F469 U+200D U+1F9BD
+🏃	@description	person running	U+1F3C3
+🏃‍♂️	@description	man running	U+1F3C3 U+200D U+2642 U+FE0F
+🏃‍♀️	@description	woman running	U+1F3C3 U+200D U+2640 U+FE0F
+💃	@description	woman dancing	U+1F483
+🕺	@description	man dancing	U+1F57A
+🕴	@description	man in suit levitating	U+1F574
+👯	@description	people with bunny ears	U+1F46F
+👯‍♂️	@description	men with bunny ears	U+1F46F U+200D U+2642 U+FE0F
+👯‍♀️	@description	women with bunny ears	U+1F46F U+200D U+2640 U+FE0F
+🧖	@description	person in steamy room	U+1F9D6
+🧖‍♂️	@description	man in steamy room	U+1F9D6 U+200D U+2642 U+FE0F
+🧖‍♀️	@description	woman in steamy room	U+1F9D6 U+200D U+2640 U+FE0F
+🧗	@description	person climbing	U+1F9D7
+🧗‍♂️	@description	man climbing	U+1F9D7 U+200D U+2642 U+FE0F
+🧗‍♀️	@description	woman climbing	U+1F9D7 U+200D U+2640 U+FE0F
+🤺	@description	person fencing	U+1F93A
+🏇	@description	horse racing	U+1F3C7
+⛷	@description	skier	U+26F7
+🏂	@description	snowboarder	U+1F3C2
+🏌	@description	person golfing	U+1F3CC
+🏌️‍♂️	@description	man golfing	U+1F3CC U+FE0F U+200D U+2642 U+FE0F
+🏌️‍♀️	@description	woman golfing	U+1F3CC U+FE0F U+200D U+2640 U+FE0F
+🏄	@description	person surfing	U+1F3C4
+🏄‍♂️	@description	man surfing	U+1F3C4 U+200D U+2642 U+FE0F
+🏄‍♀️	@description	woman surfing	U+1F3C4 U+200D U+2640 U+FE0F
+🚣	@description	person rowing boat	U+1F6A3
+🚣‍♂️	@description	man rowing boat	U+1F6A3 U+200D U+2642 U+FE0F
+🚣‍♀️	@description	woman rowing boat	U+1F6A3 U+200D U+2640 U+FE0F
+🏊	@description	person swimming	U+1F3CA
+🏊‍♂️	@description	man swimming	U+1F3CA U+200D U+2642 U+FE0F
+🏊‍♀️	@description	woman swimming	U+1F3CA U+200D U+2640 U+FE0F
+⛹	@description	person bouncing ball	U+26F9
+⛹️‍♂️	@description	man bouncing ball	U+26F9 U+FE0F U+200D U+2642 U+FE0F
+⛹️‍♀️	@description	woman bouncing ball	U+26F9 U+FE0F U+200D U+2640 U+FE0F
+🏋	@description	person lifting weights	U+1F3CB
+🏋️‍♂️	@description	man lifting weights	U+1F3CB U+FE0F U+200D U+2642 U+FE0F
+🏋️‍♀️	@description	woman lifting weights	U+1F3CB U+FE0F U+200D U+2640 U+FE0F
+🚴	@description	person biking	U+1F6B4
+🚴‍♂️	@description	man biking	U+1F6B4 U+200D U+2642 U+FE0F
+🚴‍♀️	@description	woman biking	U+1F6B4 U+200D U+2640 U+FE0F
+🚵	@description	person mountain biking	U+1F6B5
+🚵‍♂️	@description	man mountain biking	U+1F6B5 U+200D U+2642 U+FE0F
+🚵‍♀️	@description	woman mountain biking	U+1F6B5 U+200D U+2640 U+FE0F
+🤸	@description	person cartwheeling	U+1F938
+🤸‍♂️	@description	man cartwheeling	U+1F938 U+200D U+2642 U+FE0F
+🤸‍♀️	@description	woman cartwheeling	U+1F938 U+200D U+2640 U+FE0F
+🤼	@description	people wrestling	U+1F93C
+🤼‍♂️	@description	men wrestling	U+1F93C U+200D U+2642 U+FE0F
+🤼‍♀️	@description	women wrestling	U+1F93C U+200D U+2640 U+FE0F
+🤽	@description	person playing water polo	U+1F93D
+🤽‍♂️	@description	man playing water polo	U+1F93D U+200D U+2642 U+FE0F
+🤽‍♀️	@description	woman playing water polo	U+1F93D U+200D U+2640 U+FE0F
+🤾	@description	person playing handball	U+1F93E
+🤾‍♂️	@description	man playing handball	U+1F93E U+200D U+2642 U+FE0F
+🤾‍♀️	@description	woman playing handball	U+1F93E U+200D U+2640 U+FE0F
+🤹	@description	person juggling	U+1F939
+🤹‍♂️	@description	man juggling	U+1F939 U+200D U+2642 U+FE0F
+🤹‍♀️	@description	woman juggling	U+1F939 U+200D U+2640 U+FE0F
+🧘	@description	person in lotus position	U+1F9D8
+🧘‍♂️	@description	man in lotus position	U+1F9D8 U+200D U+2642 U+FE0F
+🧘‍♀️	@description	woman in lotus position	U+1F9D8 U+200D U+2640 U+FE0F
+🛀	@description	person taking bath	U+1F6C0
+🛌	@description	person in bed	U+1F6CC
+🧑‍🤝‍🧑	@description	people holding hands	U+1F9D1 U+200D U+1F91D U+200D U+1F9D1
+👭	@description	women holding hands	U+1F46D
+👫	@description	woman and man holding hands	U+1F46B
+👬	@description	men holding hands	U+1F46C
+💏	@description	kiss	U+1F48F
+👩‍❤️‍💋‍👨	@description	kiss: woman, man	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468
+👨‍❤️‍💋‍👨	@description	kiss: man, man	U+1F468 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F468
+👩‍❤️‍💋‍👩	@description	kiss: woman, woman	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F48B U+200D U+1F469
+💑	@description	couple with heart	U+1F491
+👩‍❤️‍👨	@description	couple with heart: woman, man	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F468
+👨‍❤️‍👨	@description	couple with heart: man, man	U+1F468 U+200D U+2764 U+FE0F U+200D U+1F468
+👩‍❤️‍👩	@description	couple with heart: woman, woman	U+1F469 U+200D U+2764 U+FE0F U+200D U+1F469
+👪	@description	family	U+1F46A
+👨‍👩‍👦	@description	family: man, woman, boy	U+1F468 U+200D U+1F469 U+200D U+1F466
+👨‍👩‍👧	@description	family: man, woman, girl	U+1F468 U+200D U+1F469 U+200D U+1F467
+👨‍👩‍👧‍👦	@description	family: man, woman, girl, boy	U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466
+👨‍👩‍👦‍👦	@description	family: man, woman, boy, boy	U+1F468 U+200D U+1F469 U+200D U+1F466 U+200D U+1F466
+👨‍👩‍👧‍👧	@description	family: man, woman, girl, girl	U+1F468 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467
+👨‍👨‍👦	@description	family: man, man, boy	U+1F468 U+200D U+1F468 U+200D U+1F466
+👨‍👨‍👧	@description	family: man, man, girl	U+1F468 U+200D U+1F468 U+200D U+1F467
+👨‍👨‍👧‍👦	@description	family: man, man, girl, boy	U+1F468 U+200D U+1F468 U+200D U+1F467 U+200D U+1F466
+👨‍👨‍👦‍👦	@description	family: man, man, boy, boy	U+1F468 U+200D U+1F468 U+200D U+1F466 U+200D U+1F466
+👨‍👨‍👧‍👧	@description	family: man, man, girl, girl	U+1F468 U+200D U+1F468 U+200D U+1F467 U+200D U+1F467
+👩‍👩‍👦	@description	family: woman, woman, boy	U+1F469 U+200D U+1F469 U+200D U+1F466
+👩‍👩‍👧	@description	family: woman, woman, girl	U+1F469 U+200D U+1F469 U+200D U+1F467
+👩‍👩‍👧‍👦	@description	family: woman, woman, girl, boy	U+1F469 U+200D U+1F469 U+200D U+1F467 U+200D U+1F466
+👩‍👩‍👦‍👦	@description	family: woman, woman, boy, boy	U+1F469 U+200D U+1F469 U+200D U+1F466 U+200D U+1F466
+👩‍👩‍👧‍👧	@description	family: woman, woman, girl, girl	U+1F469 U+200D U+1F469 U+200D U+1F467 U+200D U+1F467
+👨‍👦	@description	family: man, boy	U+1F468 U+200D U+1F466
+👨‍👦‍👦	@description	family: man, boy, boy	U+1F468 U+200D U+1F466 U+200D U+1F466
+👨‍👧	@description	family: man, girl	U+1F468 U+200D U+1F467
+👨‍👧‍👦	@description	family: man, girl, boy	U+1F468 U+200D U+1F467 U+200D U+1F466
+👨‍👧‍👧	@description	family: man, girl, girl	U+1F468 U+200D U+1F467 U+200D U+1F467
+👩‍👦	@description	family: woman, boy	U+1F469 U+200D U+1F466
+👩‍👦‍👦	@description	family: woman, boy, boy	U+1F469 U+200D U+1F466 U+200D U+1F466
+👩‍👧	@description	family: woman, girl	U+1F469 U+200D U+1F467
+👩‍👧‍👦	@description	family: woman, girl, boy	U+1F469 U+200D U+1F467 U+200D U+1F466
+👩‍👧‍👧	@description	family: woman, girl, girl	U+1F469 U+200D U+1F467 U+200D U+1F467
+🗣	@description	speaking head	U+1F5E3
+👤	@description	bust in silhouette	U+1F464
+👥	@description	busts in silhouette	U+1F465
+👣	@description	footprints	U+1F463
+🦰	@description	red hair	U+1F9B0
+🦱	@description	curly hair	U+1F9B1
+🦳	@description	white hair	U+1F9B3
+🦲	@description	bald	U+1F9B2
+🐵	@description	monkey face	U+1F435
+🐒	@description	monkey	U+1F412
+🦍	@description	gorilla	U+1F98D
+🦧	@description	orangutan	U+1F9A7
+🐶	@description	dog face	U+1F436
+🐕	@description	dog	U+1F415
+🦮	@description	guide dog	U+1F9AE
+🐕‍🦺	@description	service dog	U+1F415 U+200D U+1F9BA
+🐩	@description	poodle	U+1F429
+🐺	@description	wolf	U+1F43A
+🦊	@description	fox	U+1F98A
+🦝	@description	raccoon	U+1F99D
+🐱	@description	cat face	U+1F431
+🐈	@description	cat	U+1F408
+🦁	@description	lion	U+1F981
+🐯	@description	tiger face	U+1F42F
+🐅	@description	tiger	U+1F405
+🐆	@description	leopard	U+1F406
+🐴	@description	horse face	U+1F434
+🐎	@description	horse	U+1F40E
+🦄	@description	unicorn	U+1F984
+🦓	@description	zebra	U+1F993
+🦌	@description	deer	U+1F98C
+🐮	@description	cow face	U+1F42E
+🐂	@description	ox	U+1F402
+🐃	@description	water buffalo	U+1F403
+🐄	@description	cow	U+1F404
+🐷	@description	pig face	U+1F437
+🐖	@description	pig	U+1F416
+🐗	@description	boar	U+1F417
+🐽	@description	pig nose	U+1F43D
+🐏	@description	ram	U+1F40F
+🐑	@description	ewe	U+1F411
+🐐	@description	goat	U+1F410
+🐪	@description	camel	U+1F42A
+🐫	@description	two-hump camel	U+1F42B
+🦙	@description	llama	U+1F999
+🦒	@description	giraffe	U+1F992
+🐘	@description	elephant	U+1F418
+🦏	@description	rhinoceros	U+1F98F
+🦛	@description	hippopotamus	U+1F99B
+🐭	@description	mouse face	U+1F42D
+🐁	@description	mouse	U+1F401
+🐀	@description	rat	U+1F400
+🐹	@description	hamster	U+1F439
+🐰	@description	rabbit face	U+1F430
+🐇	@description	rabbit	U+1F407
+🐿	@description	chipmunk	U+1F43F
+🦔	@description	hedgehog	U+1F994
+🦇	@description	bat	U+1F987
+🐻	@description	bear	U+1F43B
+🐨	@description	koala	U+1F428
+🐼	@description	panda	U+1F43C
+🦥	@description	sloth	U+1F9A5
+🦦	@description	otter	U+1F9A6
+🦨	@description	skunk	U+1F9A8
+🦘	@description	kangaroo	U+1F998
+🦡	@description	badger	U+1F9A1
+🐾	@description	paw prints	U+1F43E
+🦃	@description	turkey	U+1F983
+🐔	@description	chicken	U+1F414
+🐓	@description	rooster	U+1F413
+🐣	@description	hatching chick	U+1F423
+🐤	@description	baby chick	U+1F424
+🐥	@description	front-facing baby chick	U+1F425
+🐦	@description	bird	U+1F426
+🐧	@description	penguin	U+1F427
+🕊	@description	dove	U+1F54A
+🦅	@description	eagle	U+1F985
+🦆	@description	duck	U+1F986
+🦢	@description	swan	U+1F9A2
+🦉	@description	owl	U+1F989
+🦩	@description	flamingo	U+1F9A9
+🦚	@description	peacock	U+1F99A
+🦜	@description	parrot	U+1F99C
+🐸	@description	frog	U+1F438
+🐊	@description	crocodile	U+1F40A
+🐢	@description	turtle	U+1F422
+🦎	@description	lizard	U+1F98E
+🐍	@description	snake	U+1F40D
+🐲	@description	dragon face	U+1F432
+🐉	@description	dragon	U+1F409
+🦕	@description	sauropod	U+1F995
+🦖	@description	T-Rex	U+1F996
+🐳	@description	spouting whale	U+1F433
+🐋	@description	whale	U+1F40B
+🐬	@description	dolphin	U+1F42C
+🐟	@description	fish	U+1F41F
+🐠	@description	tropical fish	U+1F420
+🐡	@description	blowfish	U+1F421
+🦈	@description	shark	U+1F988
+🐙	@description	octopus	U+1F419
+🐚	@description	spiral shell	U+1F41A
+🐌	@description	snail	U+1F40C
+🦋	@description	butterfly	U+1F98B
+🐛	@description	bug	U+1F41B
+🐜	@description	ant	U+1F41C
+🐝	@description	honeybee	U+1F41D
+🐞	@description	lady beetle	U+1F41E
+🦗	@description	cricket	U+1F997
+🕷	@description	spider	U+1F577
+🕸	@description	spider web	U+1F578
+🦂	@description	scorpion	U+1F982
+🦟	@description	mosquito	U+1F99F
+🦠	@description	microbe	U+1F9A0
+💐	@description	bouquet	U+1F490
+🌸	@description	cherry blossom	U+1F338
+💮	@description	white flower	U+1F4AE
+🏵	@description	rosette	U+1F3F5
+🌹	@description	rose	U+1F339
+🥀	@description	wilted flower	U+1F940
+🌺	@description	hibiscus	U+1F33A
+🌻	@description	sunflower	U+1F33B
+🌼	@description	blossom	U+1F33C
+🌷	@description	tulip	U+1F337
+🌱	@description	seedling	U+1F331
+🌲	@description	evergreen tree	U+1F332
+🌳	@description	deciduous tree	U+1F333
+🌴	@description	palm tree	U+1F334
+🌵	@description	cactus	U+1F335
+🌾	@description	sheaf of rice	U+1F33E
+🌿	@description	herb	U+1F33F
+☘	@description	shamrock	U+2618
+🍀	@description	four leaf clover	U+1F340
+🍁	@description	maple leaf	U+1F341
+🍂	@description	fallen leaf	U+1F342
+🍃	@description	leaf fluttering in wind	U+1F343
+🍇	@description	grapes	U+1F347
+🍈	@description	melon	U+1F348
+🍉	@description	watermelon	U+1F349
+🍊	@description	tangerine	U+1F34A
+🍋	@description	lemon	U+1F34B
+🍌	@description	banana	U+1F34C
+🍍	@description	pineapple	U+1F34D
+🥭	@description	mango	U+1F96D
+🍎	@description	red apple	U+1F34E
+🍏	@description	green apple	U+1F34F
+🍐	@description	pear	U+1F350
+🍑	@description	peach	U+1F351
+🍒	@description	cherries	U+1F352
+🍓	@description	strawberry	U+1F353
+🥝	@description	kiwi fruit	U+1F95D
+🍅	@description	tomato	U+1F345
+🥥	@description	coconut	U+1F965
+🥑	@description	avocado	U+1F951
+🍆	@description	eggplant	U+1F346
+🥔	@description	potato	U+1F954
+🥕	@description	carrot	U+1F955
+🌽	@description	ear of corn	U+1F33D
+🌶	@description	hot pepper	U+1F336
+🥒	@description	cucumber	U+1F952
+🥬	@description	leafy green	U+1F96C
+🥦	@description	broccoli	U+1F966
+🧄	@description	garlic	U+1F9C4
+🧅	@description	onion	U+1F9C5
+🍄	@description	mushroom	U+1F344
+🥜	@description	peanuts	U+1F95C
+🌰	@description	chestnut	U+1F330
+🍞	@description	bread	U+1F35E
+🥐	@description	croissant	U+1F950
+🥖	@description	baguette bread	U+1F956
+🥨	@description	pretzel	U+1F968
+🥯	@description	bagel	U+1F96F
+🥞	@description	pancakes	U+1F95E
+🧇	@description	waffle	U+1F9C7
+🧀	@description	cheese wedge	U+1F9C0
+🍖	@description	meat on bone	U+1F356
+🍗	@description	poultry leg	U+1F357
+🥩	@description	cut of meat	U+1F969
+🥓	@description	bacon	U+1F953
+🍔	@description	hamburger	U+1F354
+🍟	@description	french fries	U+1F35F
+🍕	@description	pizza	U+1F355
+🌭	@description	hot dog	U+1F32D
+🥪	@description	sandwich	U+1F96A
+🌮	@description	taco	U+1F32E
+🌯	@description	burrito	U+1F32F
+🥙	@description	stuffed flatbread	U+1F959
+🧆	@description	falafel	U+1F9C6
+🥚	@description	egg	U+1F95A
+🍳	@description	cooking	U+1F373
+🥘	@description	shallow pan of food	U+1F958
+🍲	@description	pot of food	U+1F372
+🥣	@description	bowl with spoon	U+1F963
+🥗	@description	green salad	U+1F957
+🍿	@description	popcorn	U+1F37F
+🧈	@description	butter	U+1F9C8
+🧂	@description	salt	U+1F9C2
+🥫	@description	canned food	U+1F96B
+🍱	@description	bento box	U+1F371
+🍘	@description	rice cracker	U+1F358
+🍙	@description	rice ball	U+1F359
+🍚	@description	cooked rice	U+1F35A
+🍛	@description	curry rice	U+1F35B
+🍜	@description	steaming bowl	U+1F35C
+🍝	@description	spaghetti	U+1F35D
+🍠	@description	roasted sweet potato	U+1F360
+🍢	@description	oden	U+1F362
+🍣	@description	sushi	U+1F363
+🍤	@description	fried shrimp	U+1F364
+🍥	@description	fish cake with swirl	U+1F365
+🥮	@description	moon cake	U+1F96E
+🍡	@description	dango	U+1F361
+🥟	@description	dumpling	U+1F95F
+🥠	@description	fortune cookie	U+1F960
+🥡	@description	takeout box	U+1F961
+🦀	@description	crab	U+1F980
+🦞	@description	lobster	U+1F99E
+🦐	@description	shrimp	U+1F990
+🦑	@description	squid	U+1F991
+🦪	@description	oyster	U+1F9AA
+🍦	@description	soft ice cream	U+1F366
+🍧	@description	shaved ice	U+1F367
+🍨	@description	ice cream	U+1F368
+🍩	@description	doughnut	U+1F369
+🍪	@description	cookie	U+1F36A
+🎂	@description	birthday cake	U+1F382
+🍰	@description	shortcake	U+1F370
+🧁	@description	cupcake	U+1F9C1
+🥧	@description	pie	U+1F967
+🍫	@description	chocolate bar	U+1F36B
+🍬	@description	candy	U+1F36C
+🍭	@description	lollipop	U+1F36D
+🍮	@description	custard	U+1F36E
+🍯	@description	honey pot	U+1F36F
+🍼	@description	baby bottle	U+1F37C
+🥛	@description	glass of milk	U+1F95B
+☕	@description	hot beverage	U+2615
+🍵	@description	teacup without handle	U+1F375
+🍶	@description	sake	U+1F376
+🍾	@description	bottle with popping cork	U+1F37E
+🍷	@description	wine glass	U+1F377
+🍸	@description	cocktail glass	U+1F378
+🍹	@description	tropical drink	U+1F379
+🍺	@description	beer mug	U+1F37A
+🍻	@description	clinking beer mugs	U+1F37B
+🥂	@description	clinking glasses	U+1F942
+🥃	@description	tumbler glass	U+1F943
+🥤	@description	cup with straw	U+1F964
+🧃	@description	beverage box	U+1F9C3
+🧉	@description	mate	U+1F9C9
+🧊	@description	ice	U+1F9CA
+🥢	@description	chopsticks	U+1F962
+🍽	@description	fork and knife with plate	U+1F37D
+🍴	@description	fork and knife	U+1F374
+🥄	@description	spoon	U+1F944
+🔪	@description	kitchen knife	U+1F52A
+🏺	@description	amphora	U+1F3FA
+🌍	@description	globe showing Europe-Africa	U+1F30D
+🌎	@description	globe showing Americas	U+1F30E
+🌏	@description	globe showing Asia-Australia	U+1F30F
+🌐	@description	globe with meridians	U+1F310
+🗺	@description	world map	U+1F5FA
+🗾	@description	map of Japan	U+1F5FE
+🧭	@description	compass	U+1F9ED
+🏔	@description	snow-capped mountain	U+1F3D4
+⛰	@description	mountain	U+26F0
+🌋	@description	volcano	U+1F30B
+🗻	@description	mount fuji	U+1F5FB
+🏕	@description	camping	U+1F3D5
+🏖	@description	beach with umbrella	U+1F3D6
+🏜	@description	desert	U+1F3DC
+🏝	@description	desert island	U+1F3DD
+🏞	@description	national park	U+1F3DE
+🏟	@description	stadium	U+1F3DF
+🏛	@description	classical building	U+1F3DB
+🏗	@description	building construction	U+1F3D7
+🧱	@description	brick	U+1F9F1
+🏘	@description	houses	U+1F3D8
+🏚	@description	derelict house	U+1F3DA
+🏠	@description	house	U+1F3E0
+🏡	@description	house with garden	U+1F3E1
+🏢	@description	office building	U+1F3E2
+🏣	@description	Japanese post office	U+1F3E3
+🏤	@description	post office	U+1F3E4
+🏥	@description	hospital	U+1F3E5
+🏦	@description	bank	U+1F3E6
+🏨	@description	hotel	U+1F3E8
+🏩	@description	love hotel	U+1F3E9
+🏪	@description	convenience store	U+1F3EA
+🏫	@description	school	U+1F3EB
+🏬	@description	department store	U+1F3EC
+🏭	@description	factory	U+1F3ED
+🏯	@description	Japanese castle	U+1F3EF
+🏰	@description	castle	U+1F3F0
+💒	@description	wedding	U+1F492
+🗼	@description	Tokyo tower	U+1F5FC
+🗽	@description	Statue of Liberty	U+1F5FD
+⛪	@description	church	U+26EA
+🕌	@description	mosque	U+1F54C
+🛕	@description	hindu temple	U+1F6D5
+🕍	@description	synagogue	U+1F54D
+⛩	@description	shinto shrine	U+26E9
+🕋	@description	kaaba	U+1F54B
+⛲	@description	fountain	U+26F2
+⛺	@description	tent	U+26FA
+🌁	@description	foggy	U+1F301
+🌃	@description	night with stars	U+1F303
+🏙	@description	cityscape	U+1F3D9
+🌄	@description	sunrise over mountains	U+1F304
+🌅	@description	sunrise	U+1F305
+🌆	@description	cityscape at dusk	U+1F306
+🌇	@description	sunset	U+1F307
+🌉	@description	bridge at night	U+1F309
+♨	@description	hot springs	U+2668
+🎠	@description	carousel horse	U+1F3A0
+🎡	@description	ferris wheel	U+1F3A1
+🎢	@description	roller coaster	U+1F3A2
+💈	@description	barber pole	U+1F488
+🎪	@description	circus tent	U+1F3AA
+🚂	@description	locomotive	U+1F682
+🚃	@description	railway car	U+1F683
+🚄	@description	high-speed train	U+1F684
+🚅	@description	bullet train	U+1F685
+🚆	@description	train	U+1F686
+🚇	@description	metro	U+1F687
+🚈	@description	light rail	U+1F688
+🚉	@description	station	U+1F689
+🚊	@description	tram	U+1F68A
+🚝	@description	monorail	U+1F69D
+🚞	@description	mountain railway	U+1F69E
+🚋	@description	tram car	U+1F68B
+🚌	@description	bus	U+1F68C
+🚍	@description	oncoming bus	U+1F68D
+🚎	@description	trolleybus	U+1F68E
+🚐	@description	minibus	U+1F690
+🚑	@description	ambulance	U+1F691
+🚒	@description	fire engine	U+1F692
+🚓	@description	police car	U+1F693
+🚔	@description	oncoming police car	U+1F694
+🚕	@description	taxi	U+1F695
+🚖	@description	oncoming taxi	U+1F696
+🚗	@description	automobile	U+1F697
+🚘	@description	oncoming automobile	U+1F698
+🚙	@description	sport utility vehicle	U+1F699
+🚚	@description	delivery truck	U+1F69A
+🚛	@description	articulated lorry	U+1F69B
+🚜	@description	tractor	U+1F69C
+🏎	@description	racing car	U+1F3CE
+🏍	@description	motorcycle	U+1F3CD
+🛵	@description	motor scooter	U+1F6F5
+🦽	@description	manual wheelchair	U+1F9BD
+🦼	@description	motorized wheelchair	U+1F9BC
+🛺	@description	auto rickshaw	U+1F6FA
+🚲	@description	bicycle	U+1F6B2
+🛴	@description	kick scooter	U+1F6F4
+🛹	@description	skateboard	U+1F6F9
+🚏	@description	bus stop	U+1F68F
+🛣	@description	motorway	U+1F6E3
+🛤	@description	railway track	U+1F6E4
+🛢	@description	oil drum	U+1F6E2
+⛽	@description	fuel pump	U+26FD
+🚨	@description	police car light	U+1F6A8
+🚥	@description	horizontal traffic light	U+1F6A5
+🚦	@description	vertical traffic light	U+1F6A6
+🛑	@description	stop sign	U+1F6D1
+🚧	@description	construction	U+1F6A7
+⚓	@description	anchor	U+2693
+⛵	@description	sailboat	U+26F5
+🛶	@description	canoe	U+1F6F6
+🚤	@description	speedboat	U+1F6A4
+🛳	@description	passenger ship	U+1F6F3
+⛴	@description	ferry	U+26F4
+🛥	@description	motor boat	U+1F6E5
+🚢	@description	ship	U+1F6A2
+✈	@description	airplane	U+2708
+🛩	@description	small airplane	U+1F6E9
+🛫	@description	airplane departure	U+1F6EB
+🛬	@description	airplane arrival	U+1F6EC
+🪂	@description	parachute	U+1FA82
+💺	@description	seat	U+1F4BA
+🚁	@description	helicopter	U+1F681
+🚟	@description	suspension railway	U+1F69F
+🚠	@description	mountain cableway	U+1F6A0
+🚡	@description	aerial tramway	U+1F6A1
+🛰	@description	satellite	U+1F6F0
+🚀	@description	rocket	U+1F680
+🛸	@description	flying saucer	U+1F6F8
+🛎	@description	bellhop bell	U+1F6CE
+🧳	@description	luggage	U+1F9F3
+⌛	@description	hourglass done	U+231B
+⏳	@description	hourglass not done	U+23F3
+⌚	@description	watch	U+231A
+⏰	@description	alarm clock	U+23F0
+⏱	@description	stopwatch	U+23F1
+⏲	@description	timer clock	U+23F2
+🕰	@description	mantelpiece clock	U+1F570
+🕛	@description	twelve o’clock	U+1F55B
+🕧	@description	twelve-thirty	U+1F567
+🕐	@description	one o’clock	U+1F550
+🕜	@description	one-thirty	U+1F55C
+🕑	@description	two o’clock	U+1F551
+🕝	@description	two-thirty	U+1F55D
+🕒	@description	three o’clock	U+1F552
+🕞	@description	three-thirty	U+1F55E
+🕓	@description	four o’clock	U+1F553
+🕟	@description	four-thirty	U+1F55F
+🕔	@description	five o’clock	U+1F554
+🕠	@description	five-thirty	U+1F560
+🕕	@description	six o’clock	U+1F555
+🕡	@description	six-thirty	U+1F561
+🕖	@description	seven o’clock	U+1F556
+🕢	@description	seven-thirty	U+1F562
+🕗	@description	eight o’clock	U+1F557
+🕣	@description	eight-thirty	U+1F563
+🕘	@description	nine o’clock	U+1F558
+🕤	@description	nine-thirty	U+1F564
+🕙	@description	ten o’clock	U+1F559
+🕥	@description	ten-thirty	U+1F565
+🕚	@description	eleven o’clock	U+1F55A
+🕦	@description	eleven-thirty	U+1F566
+🌑	@description	new moon	U+1F311
+🌒	@description	waxing crescent moon	U+1F312
+🌓	@description	first quarter moon	U+1F313
+🌔	@description	waxing gibbous moon	U+1F314
+🌕	@description	full moon	U+1F315
+🌖	@description	waning gibbous moon	U+1F316
+🌗	@description	last quarter moon	U+1F317
+🌘	@description	waning crescent moon	U+1F318
+🌙	@description	crescent moon	U+1F319
+🌚	@description	new moon face	U+1F31A
+🌛	@description	first quarter moon face	U+1F31B
+🌜	@description	last quarter moon face	U+1F31C
+🌡	@description	thermometer	U+1F321
+☀	@description	sun	U+2600
+🌝	@description	full moon face	U+1F31D
+🌞	@description	sun with face	U+1F31E
+🪐	@description	ringed planet	U+1FA90
+⭐	@description	star	U+2B50
+🌟	@description	glowing star	U+1F31F
+🌠	@description	shooting star	U+1F320
+🌌	@description	milky way	U+1F30C
+☁	@description	cloud	U+2601
+⛅	@description	sun behind cloud	U+26C5
+⛈	@description	cloud with lightning and rain	U+26C8
+🌤	@description	sun behind small cloud	U+1F324
+🌥	@description	sun behind large cloud	U+1F325
+🌦	@description	sun behind rain cloud	U+1F326
+🌧	@description	cloud with rain	U+1F327
+🌨	@description	cloud with snow	U+1F328
+🌩	@description	cloud with lightning	U+1F329
+🌪	@description	tornado	U+1F32A
+🌫	@description	fog	U+1F32B
+🌬	@description	wind face	U+1F32C
+🌀	@description	cyclone	U+1F300
+🌈	@description	rainbow	U+1F308
+🌂	@description	closed umbrella	U+1F302
+☂	@description	umbrella	U+2602
+☔	@description	umbrella with rain drops	U+2614
+⛱	@description	umbrella on ground	U+26F1
+⚡	@description	high voltage	U+26A1
+❄	@description	snowflake	U+2744
+☃	@description	snowman	U+2603
+⛄	@description	snowman without snow	U+26C4
+☄	@description	comet	U+2604
+🔥	@description	fire	U+1F525
+💧	@description	droplet	U+1F4A7
+🌊	@description	water wave	U+1F30A
+🎃	@description	jack-o-lantern	U+1F383
+🎄	@description	Christmas tree	U+1F384
+🎆	@description	fireworks	U+1F386
+🎇	@description	sparkler	U+1F387
+🧨	@description	firecracker	U+1F9E8
+✨	@description	sparkles	U+2728
+🎈	@description	balloon	U+1F388
+🎉	@description	party popper	U+1F389
+🎊	@description	confetti ball	U+1F38A
+🎋	@description	tanabata tree	U+1F38B
+🎍	@description	pine decoration	U+1F38D
+🎎	@description	Japanese dolls	U+1F38E
+🎏	@description	carp streamer	U+1F38F
+🎐	@description	wind chime	U+1F390
+🎑	@description	moon viewing ceremony	U+1F391
+🧧	@description	red envelope	U+1F9E7
+🎀	@description	ribbon	U+1F380
+🎁	@description	wrapped gift	U+1F381
+🎗	@description	reminder ribbon	U+1F397
+🎟	@description	admission tickets	U+1F39F
+🎫	@description	ticket	U+1F3AB
+🎖	@description	military medal	U+1F396
+🏆	@description	trophy	U+1F3C6
+🏅	@description	sports medal	U+1F3C5
+🥇	@description	1st place medal	U+1F947
+🥈	@description	2nd place medal	U+1F948
+🥉	@description	3rd place medal	U+1F949
+⚽	@description	soccer ball	U+26BD
+⚾	@description	baseball	U+26BE
+🥎	@description	softball	U+1F94E
+🏀	@description	basketball	U+1F3C0
+🏐	@description	volleyball	U+1F3D0
+🏈	@description	american football	U+1F3C8
+🏉	@description	rugby football	U+1F3C9
+🎾	@description	tennis	U+1F3BE
+🥏	@description	flying disc	U+1F94F
+🎳	@description	bowling	U+1F3B3
+🏏	@description	cricket game	U+1F3CF
+🏑	@description	field hockey	U+1F3D1
+🏒	@description	ice hockey	U+1F3D2
+🥍	@description	lacrosse	U+1F94D
+🏓	@description	ping pong	U+1F3D3
+🏸	@description	badminton	U+1F3F8
+🥊	@description	boxing glove	U+1F94A
+🥋	@description	martial arts uniform	U+1F94B
+🥅	@description	goal net	U+1F945
+⛳	@description	flag in hole	U+26F3
+⛸	@description	ice skate	U+26F8
+🎣	@description	fishing pole	U+1F3A3
+🤿	@description	diving mask	U+1F93F
+🎽	@description	running shirt	U+1F3BD
+🎿	@description	skis	U+1F3BF
+🛷	@description	sled	U+1F6F7
+🥌	@description	curling stone	U+1F94C
+🎯	@description	direct hit	U+1F3AF
+🪀	@description	yo-yo	U+1FA80
+🪁	@description	kite	U+1FA81
+🎱	@description	pool 8 ball	U+1F3B1
+🔮	@description	crystal ball	U+1F52E
+🧿	@description	nazar amulet	U+1F9FF
+🎮	@description	video game	U+1F3AE
+🕹	@description	joystick	U+1F579
+🎰	@description	slot machine	U+1F3B0
+🎲	@description	game die	U+1F3B2
+🧩	@description	puzzle piece	U+1F9E9
+🧸	@description	teddy bear	U+1F9F8
+♠	@description	spade suit	U+2660
+♥	@description	heart suit	U+2665
+♦	@description	diamond suit	U+2666
+♣	@description	club suit	U+2663
+♟	@description	chess pawn	U+265F
+🃏	@description	joker	U+1F0CF
+🀄	@description	mahjong red dragon	U+1F004
+🎴	@description	flower playing cards	U+1F3B4
+🎭	@description	performing arts	U+1F3AD
+🖼	@description	framed picture	U+1F5BC
+🎨	@description	artist palette	U+1F3A8
+🧵	@description	thread	U+1F9F5
+🧶	@description	yarn	U+1F9F6
+👓	@description	glasses	U+1F453
+🕶	@description	sunglasses	U+1F576
+🥽	@description	goggles	U+1F97D
+🥼	@description	lab coat	U+1F97C
+🦺	@description	safety vest	U+1F9BA
+👔	@description	necktie	U+1F454
+👕	@description	t-shirt	U+1F455
+👖	@description	jeans	U+1F456
+🧣	@description	scarf	U+1F9E3
+🧤	@description	gloves	U+1F9E4
+🧥	@description	coat	U+1F9E5
+🧦	@description	socks	U+1F9E6
+👗	@description	dress	U+1F457
+👘	@description	kimono	U+1F458
+🥻	@description	sari	U+1F97B
+🩱	@description	one-piece swimsuit	U+1FA71
+🩲	@description	briefs	U+1FA72
+🩳	@description	shorts	U+1FA73
+👙	@description	bikini	U+1F459
+👚	@description	woman’s clothes	U+1F45A
+👛	@description	purse	U+1F45B
+👜	@description	handbag	U+1F45C
+👝	@description	clutch bag	U+1F45D
+🛍	@description	shopping bags	U+1F6CD
+🎒	@description	backpack	U+1F392
+👞	@description	man’s shoe	U+1F45E
+👟	@description	running shoe	U+1F45F
+🥾	@description	hiking boot	U+1F97E
+🥿	@description	flat shoe	U+1F97F
+👠	@description	high-heeled shoe	U+1F460
+👡	@description	woman’s sandal	U+1F461
+🩰	@description	ballet shoes	U+1FA70
+👢	@description	woman’s boot	U+1F462
+👑	@description	crown	U+1F451
+👒	@description	woman’s hat	U+1F452
+🎩	@description	top hat	U+1F3A9
+🎓	@description	graduation cap	U+1F393
+🧢	@description	billed cap	U+1F9E2
+⛑	@description	rescue worker’s helmet	U+26D1
+📿	@description	prayer beads	U+1F4FF
+💄	@description	lipstick	U+1F484
+💍	@description	ring	U+1F48D
+💎	@description	gem stone	U+1F48E
+🔇	@description	muted speaker	U+1F507
+🔈	@description	speaker low volume	U+1F508
+🔉	@description	speaker medium volume	U+1F509
+🔊	@description	speaker high volume	U+1F50A
+📢	@description	loudspeaker	U+1F4E2
+📣	@description	megaphone	U+1F4E3
+📯	@description	postal horn	U+1F4EF
+🔔	@description	bell	U+1F514
+🔕	@description	bell with slash	U+1F515
+🎼	@description	musical score	U+1F3BC
+🎵	@description	musical note	U+1F3B5
+🎶	@description	musical notes	U+1F3B6
+🎙	@description	studio microphone	U+1F399
+🎚	@description	level slider	U+1F39A
+🎛	@description	control knobs	U+1F39B
+🎤	@description	microphone	U+1F3A4
+🎧	@description	headphone	U+1F3A7
+📻	@description	radio	U+1F4FB
+🎷	@description	saxophone	U+1F3B7
+🎸	@description	guitar	U+1F3B8
+🎹	@description	musical keyboard	U+1F3B9
+🎺	@description	trumpet	U+1F3BA
+🎻	@description	violin	U+1F3BB
+🪕	@description	banjo	U+1FA95
+🥁	@description	drum	U+1F941
+📱	@description	mobile phone	U+1F4F1
+📲	@description	mobile phone with arrow	U+1F4F2
+☎	@description	telephone	U+260E
+📞	@description	telephone receiver	U+1F4DE
+📟	@description	pager	U+1F4DF
+📠	@description	fax machine	U+1F4E0
+🔋	@description	battery	U+1F50B
+🔌	@description	electric plug	U+1F50C
+💻	@description	laptop	U+1F4BB
+🖥	@description	desktop computer	U+1F5A5
+🖨	@description	printer	U+1F5A8
+⌨	@description	keyboard	U+2328
+🖱	@description	computer mouse	U+1F5B1
+🖲	@description	trackball	U+1F5B2
+💽	@description	computer disk	U+1F4BD
+💾	@description	floppy disk	U+1F4BE
+💿	@description	optical disk	U+1F4BF
+📀	@description	dvd	U+1F4C0
+🧮	@description	abacus	U+1F9EE
+🎥	@description	movie camera	U+1F3A5
+🎞	@description	film frames	U+1F39E
+📽	@description	film projector	U+1F4FD
+🎬	@description	clapper board	U+1F3AC
+📺	@description	television	U+1F4FA
+📷	@description	camera	U+1F4F7
+📸	@description	camera with flash	U+1F4F8
+📹	@description	video camera	U+1F4F9
+📼	@description	videocassette	U+1F4FC
+🔍	@description	magnifying glass tilted left	U+1F50D
+🔎	@description	magnifying glass tilted right	U+1F50E
+🕯	@description	candle	U+1F56F
+💡	@description	light bulb	U+1F4A1
+🔦	@description	flashlight	U+1F526
+🏮	@description	red paper lantern	U+1F3EE
+🪔	@description	diya lamp	U+1FA94
+📔	@description	notebook with decorative cover	U+1F4D4
+📕	@description	closed book	U+1F4D5
+📖	@description	open book	U+1F4D6
+📗	@description	green book	U+1F4D7
+📘	@description	blue book	U+1F4D8
+📙	@description	orange book	U+1F4D9
+📚	@description	books	U+1F4DA
+📓	@description	notebook	U+1F4D3
+📒	@description	ledger	U+1F4D2
+📃	@description	page with curl	U+1F4C3
+📜	@description	scroll	U+1F4DC
+📄	@description	page facing up	U+1F4C4
+📰	@description	newspaper	U+1F4F0
+🗞	@description	rolled-up newspaper	U+1F5DE
+📑	@description	bookmark tabs	U+1F4D1
+🔖	@description	bookmark	U+1F516
+🏷	@description	label	U+1F3F7
+💰	@description	money bag	U+1F4B0
+💴	@description	yen banknote	U+1F4B4
+💵	@description	dollar banknote	U+1F4B5
+💶	@description	euro banknote	U+1F4B6
+💷	@description	pound banknote	U+1F4B7
+💸	@description	money with wings	U+1F4B8
+💳	@description	credit card	U+1F4B3
+🧾	@description	receipt	U+1F9FE
+💹	@description	chart increasing with yen	U+1F4B9
+💱	@description	currency exchange	U+1F4B1
+💲	@description	heavy dollar sign	U+1F4B2
+✉	@description	envelope	U+2709
+📧	@description	e-mail	U+1F4E7
+📨	@description	incoming envelope	U+1F4E8
+📩	@description	envelope with arrow	U+1F4E9
+📤	@description	outbox tray	U+1F4E4
+📥	@description	inbox tray	U+1F4E5
+📦	@description	package	U+1F4E6
+📫	@description	closed mailbox with raised flag	U+1F4EB
+📪	@description	closed mailbox with lowered flag	U+1F4EA
+📬	@description	open mailbox with raised flag	U+1F4EC
+📭	@description	open mailbox with lowered flag	U+1F4ED
+📮	@description	postbox	U+1F4EE
+🗳	@description	ballot box with ballot	U+1F5F3
+✏	@description	pencil	U+270F
+✒	@description	black nib	U+2712
+🖋	@description	fountain pen	U+1F58B
+🖊	@description	pen	U+1F58A
+🖌	@description	paintbrush	U+1F58C
+🖍	@description	crayon	U+1F58D
+📝	@description	memo	U+1F4DD
+💼	@description	briefcase	U+1F4BC
+📁	@description	file folder	U+1F4C1
+📂	@description	open file folder	U+1F4C2
+🗂	@description	card index dividers	U+1F5C2
+📅	@description	calendar	U+1F4C5
+📆	@description	tear-off calendar	U+1F4C6
+🗒	@description	spiral notepad	U+1F5D2
+🗓	@description	spiral calendar	U+1F5D3
+📇	@description	card index	U+1F4C7
+📈	@description	chart increasing	U+1F4C8
+📉	@description	chart decreasing	U+1F4C9
+📊	@description	bar chart	U+1F4CA
+📋	@description	clipboard	U+1F4CB
+📌	@description	pushpin	U+1F4CC
+📍	@description	round pushpin	U+1F4CD
+📎	@description	paperclip	U+1F4CE
+🖇	@description	linked paperclips	U+1F587
+📏	@description	straight ruler	U+1F4CF
+📐	@description	triangular ruler	U+1F4D0
+✂	@description	scissors	U+2702
+🗃	@description	card file box	U+1F5C3
+🗄	@description	file cabinet	U+1F5C4
+🗑	@description	wastebasket	U+1F5D1
+🔒	@description	locked	U+1F512
+🔓	@description	unlocked	U+1F513
+🔏	@description	locked with pen	U+1F50F
+🔐	@description	locked with key	U+1F510
+🔑	@description	key	U+1F511
+🗝	@description	old key	U+1F5DD
+🔨	@description	hammer	U+1F528
+🪓	@description	axe	U+1FA93
+⛏	@description	pick	U+26CF
+⚒	@description	hammer and pick	U+2692
+🛠	@description	hammer and wrench	U+1F6E0
+🗡	@description	dagger	U+1F5E1
+⚔	@description	crossed swords	U+2694
+🔫	@description	pistol	U+1F52B
+🏹	@description	bow and arrow	U+1F3F9
+🛡	@description	shield	U+1F6E1
+🔧	@description	wrench	U+1F527
+🔩	@description	nut and bolt	U+1F529
+⚙	@description	gear	U+2699
+🗜	@description	clamp	U+1F5DC
+⚖	@description	balance scale	U+2696
+🦯	@description	probing cane	U+1F9AF
+🔗	@description	link	U+1F517
+⛓	@description	chains	U+26D3
+🧰	@description	toolbox	U+1F9F0
+🧲	@description	magnet	U+1F9F2
+⚗	@description	alembic	U+2697
+🧪	@description	test tube	U+1F9EA
+🧫	@description	petri dish	U+1F9EB
+🧬	@description	dna	U+1F9EC
+🔬	@description	microscope	U+1F52C
+🔭	@description	telescope	U+1F52D
+📡	@description	satellite antenna	U+1F4E1
+💉	@description	syringe	U+1F489
+🩸	@description	drop of blood	U+1FA78
+💊	@description	pill	U+1F48A
+🩹	@description	adhesive bandage	U+1FA79
+🩺	@description	stethoscope	U+1FA7A
+🚪	@description	door	U+1F6AA
+🛏	@description	bed	U+1F6CF
+🛋	@description	couch and lamp	U+1F6CB
+🪑	@description	chair	U+1FA91
+🚽	@description	toilet	U+1F6BD
+🚿	@description	shower	U+1F6BF
+🛁	@description	bathtub	U+1F6C1
+🪒	@description	razor	U+1FA92
+🧴	@description	lotion bottle	U+1F9F4
+🧷	@description	safety pin	U+1F9F7
+🧹	@description	broom	U+1F9F9
+🧺	@description	basket	U+1F9FA
+🧻	@description	roll of paper	U+1F9FB
+🧼	@description	soap	U+1F9FC
+🧽	@description	sponge	U+1F9FD
+🧯	@description	fire extinguisher	U+1F9EF
+🛒	@description	shopping cart	U+1F6D2
+🚬	@description	cigarette	U+1F6AC
+⚰	@description	coffin	U+26B0
+⚱	@description	funeral urn	U+26B1
+🗿	@description	moai	U+1F5FF
+🏧	@description	ATM sign	U+1F3E7
+🚮	@description	litter in bin sign	U+1F6AE
+🚰	@description	potable water	U+1F6B0
+♿	@description	wheelchair symbol	U+267F
+🚹	@description	men’s room	U+1F6B9
+🚺	@description	women’s room	U+1F6BA
+🚻	@description	restroom	U+1F6BB
+🚼	@description	baby symbol	U+1F6BC
+🚾	@description	water closet	U+1F6BE
+🛂	@description	passport control	U+1F6C2
+🛃	@description	customs	U+1F6C3
+🛄	@description	baggage claim	U+1F6C4
+🛅	@description	left luggage	U+1F6C5
+⚠	@description	warning	U+26A0
+🚸	@description	children crossing	U+1F6B8
+⛔	@description	no entry	U+26D4
+🚫	@description	prohibited	U+1F6AB
+🚳	@description	no bicycles	U+1F6B3
+🚭	@description	no smoking	U+1F6AD
+🚯	@description	no littering	U+1F6AF
+🚱	@description	non-potable water	U+1F6B1
+🚷	@description	no pedestrians	U+1F6B7
+📵	@description	no mobile phones	U+1F4F5
+🔞	@description	no one under eighteen	U+1F51E
+☢	@description	radioactive	U+2622
+☣	@description	biohazard	U+2623
+⬆	@description	up arrow	U+2B06
+↗	@description	up-right arrow	U+2197
+➡	@description	right arrow	U+27A1
+↘	@description	down-right arrow	U+2198
+⬇	@description	down arrow	U+2B07
+↙	@description	down-left arrow	U+2199
+⬅	@description	left arrow	U+2B05
+↖	@description	up-left arrow	U+2196
+↕	@description	up-down arrow	U+2195
+↔	@description	left-right arrow	U+2194
+↩	@description	right arrow curving left	U+21A9
+↪	@description	left arrow curving right	U+21AA
+⤴	@description	right arrow curving up	U+2934
+⤵	@description	right arrow curving down	U+2935
+🔃	@description	clockwise vertical arrows	U+1F503
+🔄	@description	counterclockwise arrows button	U+1F504
+🔙	@description	BACK arrow	U+1F519
+🔚	@description	END arrow	U+1F51A
+🔛	@description	ON! arrow	U+1F51B
+🔜	@description	SOON arrow	U+1F51C
+🔝	@description	TOP arrow	U+1F51D
+🛐	@description	place of worship	U+1F6D0
+⚛	@description	atom symbol	U+269B
+🕉	@description	om	U+1F549
+✡	@description	star of David	U+2721
+☸	@description	wheel of dharma	U+2638
+☯	@description	yin yang	U+262F
+✝	@description	latin cross	U+271D
+☦	@description	orthodox cross	U+2626
+☪	@description	star and crescent	U+262A
+☮	@description	peace symbol	U+262E
+🕎	@description	menorah	U+1F54E
+🔯	@description	dotted six-pointed star	U+1F52F
+♈	@description	Aries	U+2648
+♉	@description	Taurus	U+2649
+♊	@description	Gemini	U+264A
+♋	@description	Cancer	U+264B
+♌	@description	Leo	U+264C
+♍	@description	Virgo	U+264D
+♎	@description	Libra	U+264E
+♏	@description	Scorpio	U+264F
+♐	@description	Sagittarius	U+2650
+♑	@description	Capricorn	U+2651
+♒	@description	Aquarius	U+2652
+♓	@description	Pisces	U+2653
+⛎	@description	Ophiuchus	U+26CE
+🔀	@description	shuffle tracks button	U+1F500
+🔁	@description	repeat button	U+1F501
+🔂	@description	repeat single button	U+1F502
+▶	@description	play button	U+25B6
+⏩	@description	fast-forward button	U+23E9
+⏭	@description	next track button	U+23ED
+⏯	@description	play or pause button	U+23EF
+◀	@description	reverse button	U+25C0
+⏪	@description	fast reverse button	U+23EA
+⏮	@description	last track button	U+23EE
+🔼	@description	upwards button	U+1F53C
+⏫	@description	fast up button	U+23EB
+🔽	@description	downwards button	U+1F53D
+⏬	@description	fast down button	U+23EC
+⏸	@description	pause button	U+23F8
+⏹	@description	stop button	U+23F9
+⏺	@description	record button	U+23FA
+⏏	@description	eject button	U+23CF
+🎦	@description	cinema	U+1F3A6
+🔅	@description	dim button	U+1F505
+🔆	@description	bright button	U+1F506
+📶	@description	antenna bars	U+1F4F6
+📳	@description	vibration mode	U+1F4F3
+📴	@description	mobile phone off	U+1F4F4
+♀	@description	female sign	U+2640
+♂	@description	male sign	U+2642
+⚕	@description	medical symbol	U+2695
+♾	@description	infinity	U+267E
+♻	@description	recycling symbol	U+267B
+⚜	@description	fleur-de-lis	U+269C
+🔱	@description	trident emblem	U+1F531
+📛	@description	name badge	U+1F4DB
+🔰	@description	Japanese symbol for beginner	U+1F530
+⭕	@description	hollow red circle	U+2B55
+✅	@description	check mark button	U+2705
+☑	@description	check box with check	U+2611
+✔	@description	check mark	U+2714
+✖	@description	multiplication sign	U+2716
+❌	@description	cross mark	U+274C
+❎	@description	cross mark button	U+274E
+➕	@description	plus sign	U+2795
+➖	@description	minus sign	U+2796
+➗	@description	division sign	U+2797
+➰	@description	curly loop	U+27B0
+➿	@description	double curly loop	U+27BF
+〽	@description	part alternation mark	U+303D
+✳	@description	eight-spoked asterisk	U+2733
+✴	@description	eight-pointed star	U+2734
+❇	@description	sparkle	U+2747
+‼	@description	double exclamation mark	U+203C
+⁉	@description	exclamation question mark	U+2049
+❓	@description	question mark	U+2753
+❔	@description	white question mark	U+2754
+❕	@description	white exclamation mark	U+2755
+❗	@description	exclamation mark	U+2757
+〰	@description	wavy dash	U+3030
+©	@description	copyright	U+00A9
+®	@description	registered	U+00AE
+™	@description	trade mark	U+2122
+#️⃣	@description	keycap: #	U+0023 U+FE0F U+20E3
+*️⃣	@description	keycap: *	U+002A U+FE0F U+20E3
+0️⃣	@description	keycap: 0	U+0030 U+FE0F U+20E3
+1️⃣	@description	keycap: 1	U+0031 U+FE0F U+20E3
+2️⃣	@description	keycap: 2	U+0032 U+FE0F U+20E3
+3️⃣	@description	keycap: 3	U+0033 U+FE0F U+20E3
+4️⃣	@description	keycap: 4	U+0034 U+FE0F U+20E3
+5️⃣	@description	keycap: 5	U+0035 U+FE0F U+20E3
+6️⃣	@description	keycap: 6	U+0036 U+FE0F U+20E3
+7️⃣	@description	keycap: 7	U+0037 U+FE0F U+20E3
+8️⃣	@description	keycap: 8	U+0038 U+FE0F U+20E3
+9️⃣	@description	keycap: 9	U+0039 U+FE0F U+20E3
+🔟	@description	keycap: 10	U+1F51F
+🔠	@description	input latin uppercase	U+1F520
+🔡	@description	input latin lowercase	U+1F521
+🔢	@description	input numbers	U+1F522
+🔣	@description	input symbols	U+1F523
+🔤	@description	input latin letters	U+1F524
+🅰	@description	A button (blood type)	U+1F170
+🆎	@description	AB button (blood type)	U+1F18E
+🅱	@description	B button (blood type)	U+1F171
+🆑	@description	CL button	U+1F191
+🆒	@description	COOL button	U+1F192
+🆓	@description	FREE button	U+1F193
+ℹ	@description	information	U+2139
+🆔	@description	ID button	U+1F194
+Ⓜ	@description	circled M	U+24C2
+🆕	@description	NEW button	U+1F195
+🆖	@description	NG button	U+1F196
+🅾	@description	O button (blood type)	U+1F17E
+🆗	@description	OK button	U+1F197
+🅿	@description	P button	U+1F17F
+🆘	@description	SOS button	U+1F198
+🆙	@description	UP! button	U+1F199
+🆚	@description	VS button	U+1F19A
+🈁	@description	Japanese “here” button	U+1F201
+🈂	@description	Japanese “service charge” button	U+1F202
+🈷	@description	Japanese “monthly amount” button	U+1F237
+🈶	@description	Japanese “not free of charge” button	U+1F236
+🈯	@description	Japanese “reserved” button	U+1F22F
+🉐	@description	Japanese “bargain” button	U+1F250
+🈹	@description	Japanese “discount” button	U+1F239
+🈚	@description	Japanese “free of charge” button	U+1F21A
+🈲	@description	Japanese “prohibited” button	U+1F232
+🉑	@description	Japanese “acceptable” button	U+1F251
+🈸	@description	Japanese “application” button	U+1F238
+🈴	@description	Japanese “passing grade” button	U+1F234
+🈳	@description	Japanese “vacancy” button	U+1F233
+㊗	@description	Japanese “congratulations” button	U+3297
+㊙	@description	Japanese “secret” button	U+3299
+🈺	@description	Japanese “open for business” button	U+1F23A
+🈵	@description	Japanese “no vacancy” button	U+1F235
+🔴	@description	red circle	U+1F534
+🟠	@description	orange circle	U+1F7E0
+🟡	@description	yellow circle	U+1F7E1
+🟢	@description	green circle	U+1F7E2
+🔵	@description	blue circle	U+1F535
+🟣	@description	purple circle	U+1F7E3
+🟤	@description	brown circle	U+1F7E4
+⚫	@description	black circle	U+26AB
+⚪	@description	white circle	U+26AA
+🟥	@description	red square	U+1F7E5
+🟧	@description	orange square	U+1F7E7
+🟨	@description	yellow square	U+1F7E8
+🟩	@description	green square	U+1F7E9
+🟦	@description	blue square	U+1F7E6
+🟪	@description	purple square	U+1F7EA
+🟫	@description	brown square	U+1F7EB
+⬛	@description	black large square	U+2B1B
+⬜	@description	white large square	U+2B1C
+◼	@description	black medium square	U+25FC
+◻	@description	white medium square	U+25FB
+◾	@description	black medium-small square	U+25FE
+◽	@description	white medium-small square	U+25FD
+▪	@description	black small square	U+25AA
+▫	@description	white small square	U+25AB
+🔶	@description	large orange diamond	U+1F536
+🔷	@description	large blue diamond	U+1F537
+🔸	@description	small orange diamond	U+1F538
+🔹	@description	small blue diamond	U+1F539
+🔺	@description	red triangle pointed up	U+1F53A
+🔻	@description	red triangle pointed down	U+1F53B
+💠	@description	diamond with a dot	U+1F4A0
+🔘	@description	radio button	U+1F518
+🔳	@description	white square button	U+1F533
+🔲	@description	black square button	U+1F532
+🏁	@description	chequered flag	U+1F3C1
+🚩	@description	triangular flag	U+1F6A9
+🎌	@description	crossed flags	U+1F38C
+🏴	@description	black flag	U+1F3F4
+🏳	@description	white flag	U+1F3F3
+🏳️‍🌈	@description	rainbow flag	U+1F3F3 U+FE0F U+200D U+1F308
+🏴‍☠️	@description	pirate flag	U+1F3F4 U+200D U+2620 U+FE0F
 ";

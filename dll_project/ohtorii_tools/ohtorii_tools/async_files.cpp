@@ -129,17 +129,19 @@ void ASyncFile::DoLine(WCHAR*line) {
 		candidates.emplace_back(m_source_name.c_str(), candidate_text.c_str());
 
 		if (3 <= num) {
-			const auto	&action_name = tokens.at(1);
-			const auto	&action_text = TrimString(tokens.at(2), _T("\n\r"));
-			auto		&action = candidates.back().m_action;
+			const auto	&action_name= tokens.at(1);
+			auto		action_text	= TrimString(tokens.at(2), _T("\n\r"));
+			auto		&candidate	= candidates.back();
+			auto		&action		= candidate.m_action;
 
 			if (action_name == _T("@action_directory")) {
 				action.m_directory_name.append(action_text);
 			}
 			else if (action_name == _T("@action_filename")) {
 				action.m_file_name.append(action_text);
-			}
-			else {
+			}else if (action_name == _T("@description")) {
+				candidate.m_description.assign(action_text);
+			}else{
 				//pass
 			}
 		}
