@@ -9,9 +9,9 @@ endmacro str(##return);
 LoadDll:
 	//ohtorii_toolsを読み込む
 	if(platform&0x00080000){
-		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\resources\\ohtorii_tools_x64.dll");
+		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\bin\\ohtorii_tools_x64.dll");
 	}else{
-		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\resources\\ohtorii_tools_x86.dll");
+		##dll_ohtorii_tools = loaddll($g_root_macro_directory + "\\bin\\ohtorii_tools_x86.dll");
 	}
 	if (##dll_ohtorii_tools==0) {
 		message "dll\\ohtorii_tools.dllのロードに失敗しました";
