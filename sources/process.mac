@@ -52,17 +52,12 @@ create_process_candidates:
 			break;
 		}
 		$$name=getpropstr( ##item, "Name" );
-		/*if(! getresultex(10)){
-			debuginfo "Failed:Name";
-			return "0";
-		}*/
 		##process_id=getpropnum( ##item, "ProcessId" );//uint32
 		$$process_id=str(##process_id);
 
 		call number_format val(getpropstr( ##item, "WorkingSetSize" ))/1024;
 		$$working_set_size=$$return + "K";
 
-		//$$command_line=getpropstr(##item,"CommandLine");
 		##success = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$name, $$process_id+"\t"+$$working_set_size);
 		if(! ##success){
 			return "0";
