@@ -95,10 +95,51 @@ base_kind=最高優先度 次の優先度 ... 最低優先度
 ## 取得(kind側)
 $$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionPath",##first_item_index);
 
+#  カインドの種類
 
-# ファイルフォーマットについて
+candidateの種類
 
-candidate_typeが以下の時のファイルフォーマットについて。
+- string
+- file
+- async_file
+- function
+
+## string
+
+候補を文字列から生成します。
+
+### サンプル
+
+sources\emoji.macを参照してください。
+
+
+## file
+
+候補をファイル（同期）から生成します。
+
+## async_file
+
+候補をファイル（非同期）から生成します。
+時間のかかる処理に向いています。(c:\windows以下のファイルを列挙する場合など)
+
+### サンプル
+sources\file_recursive.mac を参照してください。
+
+
+## function
+
+候補をohtorii_toolsの関数を利用して生成します。
+関数を直接利用するので最も細かく制御できます。
+
+### サンプル
+
+process.mac を参照してください。
+
+
+# フォーマットについて
+
+candidate_typeが以下の時のフォーマットについて。
+- string
 - file
 - async_file
 
@@ -106,7 +147,11 @@ candidate_typeが以下の時のファイルフォーマットについて。
 
 UTF16LE-BOM
 
-## ファイル内容の例１（最もシンプル）
+## ファイルフォーマット
+
+ファイルフォーマットは2種類あります。
+
+### ファイル内容の例１（シンプル）
 
 	候補テキスト１
 	候補テキスト２
@@ -115,7 +160,9 @@ UTF16LE-BOM
 	候補テキストN
 
 
-## ファイル内容の例２
+### ファイル内容の例２（汎用）
+	
+候補に続いてタブ区切りで追加情報を並べます。
 
 	候補テキスト１	action名１	アクションに紐付いたテキスト１
 	候補テキスト２	action名２	アクションに紐付いたテキスト２
@@ -123,11 +170,20 @@ UTF16LE-BOM
 		...
 	候補テキストN	action名４	アクションに紐付いたテキストN
 
-## action名について
+#### action名について
 
-以下のいずれかを指定する。
-@action_directory
-@action_filename
+以下のいずれかを指定します。
+- @action_directory
+- @action_filename
+- @description
+
+## サンプル
+
+|candidate_type|サンプルのファイル名|
+|--|--|
+|string|sources\emoji.mac|
+|file|後で用意する|
+|async_file|sources\file_recursive.mac|
 
 
 # コールバックの登録
