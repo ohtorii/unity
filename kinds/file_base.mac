@@ -54,27 +54,35 @@ do_action:
 //	Action.
 ////////////////////////////////////////////////////////////////////////////
 open:
-	##new_hidemaru_handle=0;
-	##current_hidemaru_handle=hidemaruhandle(0);
-	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	##i=0;
-	while(##i < ##count){
-		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
-		if($$text!=""){
-			if(existfile($$text)){
-				if((existfile($$text,1)&0x00000010) == 0){
-					//パスが存在している、かつ、ファイルである
-					openfile $$text;
-					##new_hidemaru_handle = hidemaruhandle(0);
-					setactivehidemaru(##current_hidemaru_handle);
+	##new_hidemaru_handle=-1;
+	{
+		##current_hidemaru_handle=hidemaruhandle(0);
+		##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+		##i=0;
+		while(##i < ##count){
+			$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
+			if($$text!=""){
+				if(existfile($$text)){
+					if((existfile($$text,1)&0x00000010) == 0){
+						//パスが存在している、かつ、ファイルである
+						openfile $$text;
+						if(result){
+							##new_hidemaru_handle = hidemaruhandle(0);
+						}
+					}
 				}
 			}
-		}
 
-		##i = ##i + 1;
+			##i = ##i + 1;
+		}
+		setactivehidemaru(##current_hidemaru_handle);
 	}
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_open",str(##new_hidemaru_handle));
-	return str(##ret);
+
+	if(##new_hidemaru_handle!=-1){
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_open",str(##new_hidemaru_handle));
+		return str(##ret);
+	}
+	return "1";
 
 callback_open:
 	##handle=val($$1);

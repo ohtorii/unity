@@ -22,7 +22,6 @@ do_action:
 	return $$return;
 
 do:
-	debuginfo 1;
 	debuginfo "kinds/action.mac  do";
 	/////////////////////////////////////////////////////////////////////////
 	//アクションを取得する

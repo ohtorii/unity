@@ -134,30 +134,16 @@ GatherCandidatesFromString:
 		return false;
 	}
 
-	execmacro currentmacrodirectory+"\\load_dll.mac","DengakuDLL.dll";
-	##dll=val(getresultex(-1));
-	if(##dll==0){
-		return false;
-	}
-
-	##success=true;
-	$$token = dllfuncstr(##dll,"GETTOKEN",$$candidates,"\n\r");
-	while (1) {
-	    if($$token!=""){
-			##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, $$token, "");
-			if(##ret==-1){
-				##success=false;
-				break;
-			}
+	##num = split($$tokens,$$candidates,"\n");
+	##i=0;
+	while(##i<##num){
+		##ret=dllfuncw(#g_dll_ohtorii_tools, "CandidatesAppend", $$source_name, $$tokens[##i], "");
+		if(! ##ret){
+			return false;
 		}
-	    if (dllfunc(##dll,"HASMORETOKENS") == 0) {
-			break;
-		}
-	    $$token = dllfuncstr(##dll,"GETTOKEN","","\n\r");
+		##i = ##i + 1;
 	}
-
-	freedll ##dll;
-	return ##success;
+	return true;
 
 
 GatherCandidatesFromFile:

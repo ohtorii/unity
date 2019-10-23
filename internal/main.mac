@@ -73,7 +73,7 @@ $g_old_searchbuffer = searchbuffer;
 #g_old_searchoption = searchoption;
 #g_target_hidemaru  = hidemaruhandle(0);
 
-debuginfo 1;
+debuginfo 0;
 disablebreak;
 disablehistory
 				//0x0001 /*ファイルヒストリ*/
@@ -127,7 +127,13 @@ return	アクションが最後まで実行されたかどうか(bool)
 		true	実行されていない
 */
 Start:
-	$$source_list	=$$1;
+	if(0){
+		//debug
+		$$source_list="emoji";
+	}else{
+		$$source_list=$$1;
+	}
+
 	if($$source_list==""){
 		return false;
 	}
