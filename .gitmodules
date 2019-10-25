@@ -1,0 +1,3 @@
+[submodule "internal/3rd_party/command-line"]
+	path = internal/3rd_party/command-line
+	url = https://github.com/ohtorii/command-line
