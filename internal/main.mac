@@ -48,7 +48,7 @@ $g_root_macro_directory=getarg(0);
 /*****************************************************************************
 	グローバル変数(const)
 *****************************************************************************/
-//command-lineへのパス（暫定）
+//command-lineへのパス
 $g_command_line_path=currentmacrodirectory+"\\3rd_party\\command-line\\command-line-internal";
 //空白文字の定義
 $g_space = "\r\n\t 　";
