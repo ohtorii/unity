@@ -32,6 +32,56 @@ void AsyncFileReader::Sequence(){
 
 	std::wstring wide_string;
 	{
+#if 0
+		{
+			HINSTANCE hinstExe = GetModuleHandle(NULL);
+			if (hinstExe == 0) {
+				return;
+			}
+
+			int (WINAPI* pfnHidemaru_AnalyzeEncoding)(WCHAR*, DWORD_PTR, DWORD_PTR);
+			*(FARPROC*)&pfnHidemaru_AnalyzeEncoding = GetProcAddress(hinstExe, "Hidemaru_AnalyzeEncoding");
+			if (pfnHidemaru_AnalyzeEncoding == 0) {
+				return;
+			}
+			auto result = pfnHidemaru_AnalyzeEncoding(const_cast<WCHAR*>(m_filename.c_str()), 0, 0);
+			auto encode = result & 0x3F;
+			/*
+			0 　新規作成直後
+			1 　Shift-JIS
+			2 　Unicode
+			3 　EUC
+			4 　JIS
+			5 　UTF-7
+			6 　UTF-8
+			7 　Unicode (Big-Endian)
+			8 　欧文
+			9 　簡体字中国語
+			10　繁体字中国語
+			11　韓国語
+			12　韓国語(Johab)
+			13　中央ヨーロッパ言語
+			14　バルト語
+			15　ギリシャ語
+			16　キリル言語
+			17　シンボル
+			18　トルコ語
+			19　ヘブライ語
+			20　アラビア語
+			21　タイ語
+			22　ベトナム語
+			23　Macintosh
+			24　OEM/DOS
+			25　その他
+			26　バイナリモード
+			27　UTF-32 (V8.00以降)
+			28　UTF-32 (Big-Endian) (V8.00以降)
+			*/
+			DebugLog(_T("encode=%d"),encode);
+			
+		}
+#endif
+
 		//読み込んだファイル内容
 		std::vector<uint8_t>		fileimage;
 
