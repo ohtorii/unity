@@ -1,8 +1,5 @@
 ﻿
-$g_format=R"(setactivehidemaru %d;
-loadhilight "%s", 0;
-setactivehidemaru %d;
-)";
+$g_format=R"(setactivehidemaru %d;  loadhilight "%s", 1, 0x1f;  setactivehidemaru %d;)";
 
 
 #g_dll_dengaku=0;
@@ -22,8 +19,9 @@ gather_candidates:
 	##target_hidemaruhandle	=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
 	##current_hidemaru		=hidemaruhandle(0);
 
+	$$root_dir		= settingdir;
 	##objFSO		= createobject("Scripting.FileSystemObject");
-	##objFolder 	=member( ##objFSO, "GetFolder", settingdir );
+	##objFolder 	=member( ##objFSO, "GetFolder", $$root_dir );
 	##objCollection =getpropobj(##objFolder,"Files");
 	while(1){
 		##objFile = getcollection( ##objCollection );
@@ -48,6 +46,9 @@ gather_candidates:
 		/*if(! ##success){
 			return "0";
 		}*/
+
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName",$$path);
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$root_dir);
 	}
 
 	releaseobject ##objFSO;
