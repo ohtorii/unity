@@ -1,6 +1,14 @@
 ﻿/*ハイライト
 */
 
+/*
+＊取り得る値
+	""			初期値
+	"restore"	設定を元に戻す
+	"ignore"	コールバックを無視する
+*/
+$g_static_variable="unity.kind.hilight";
+
 #g_dll_ohtorii_tools=val(getarg(30));
 $label				=getarg(0);
 $arg				=getarg(1);
@@ -18,10 +26,58 @@ do_action:
 	call $$action;
 	return $$return;
 
+
 //ハイライトのプレビュー
 preview:
+	$$value=getstaticvariable($g_static_variable , 0 );
+	if($$value==""){
+		//終了後に設定を戻す。
+		$$args=currentconfigset+"\t"+str(configstate)+"\t"+str(hidemaruhandle(0));
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"restore_configset",$$args);	setstaticvariable $g_static_variable, "restore",0;
+	}
+
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",0);
+	//(memo) 0 == 一時的な設定
 	loadhilight $$text, 0, 0x1f;
-	debuginfo $$text;
-	debuginfo "result="+str(result);
 	return "1";
+
+
+//ハイライトを適用する
+execute:
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",0);
+	//(memo) 1 == 設定を保存する
+	loadhilight $$text, 1, 0x1f;
+	//設定を元に戻すコールバック(restore_configset:)を無視する
+	setstaticvariable $g_static_variable, "ignore",0;
+	return "1";
+
+
+restore_configset:
+	$$value=getstaticvariable($g_static_variable , 0 );
+	if($$value!="restore"){
+		return "1";
+	}
+
+	##num = split($$args, $$1, "\t" );
+	if(##num!=3){
+		return "0";
+	}
+
+	$$config			=$$args[0];
+	##state 			=val($$args[1]);
+	##target_hidemaru	=val($$args[2]);
+
+	##current_hidemaru=hidemaruhandle(0);
+
+	setactivehidemaru ##target_hidemaru;
+	if(##state & 0x0001){
+		//元から一時的な設定
+		configset $$config, 0;
+	}else{
+		configset $$config, 1;
+	}
+
+	##ret=##return;
+	setactivehidemaru ##current_hidemaru;
+	return str(##ret);
+
