@@ -645,14 +645,14 @@ TrimString:
 
 //#region 秀丸の編集画面
 NewFile:
+	newfile;
+	if(result==0){
+		#g_open_newfile=false;
+		return false;
+	}
 	if(0){
 		//独立したウインドウで起動する
 		//主にhilightソース向け
-		newfile;
-		if(result==0){
-			#g_open_newfile=false;
-			return false;
-		}
 		settabgroup hidemaruhandle(0),-1;
 	}
 
