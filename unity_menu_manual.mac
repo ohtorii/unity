@@ -1,0 +1,55 @@
+﻿/* unity呼び出しメニュー（マニュアル版）
+
+ご自身が利用したいソースのみメニュー表示します、
+なのでカスタマイズしてご利用ください。
+*/
+
+
+call main;
+endmacro;
+
+main:
+	call LoadSources;
+	//メニュー表示までの遅延時間(ミリ秒)
+	setmenudelay 500;
+
+	menuarray $g_source_menu,#g_source_names_num;
+	if(result==0){
+		return false;
+	}
+	##index=result-1;
+	$sources=$g_source_names[##index];
+	execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources;
+	return getresultex(-1);
+
+/*
+ご自身の都合の良いように、以下テーブルを調整してください。
+*/
+LoadSources:
+	##i=0;
+	$g_source_menu[##i]="H)hilight";
+	$g_source_names[##i]="hilight";
+	##i = ##i + 1;
+	$g_source_menu[##i]="G)grep_result";
+	$g_source_names[##i]="grep_result";
+	##i = ##i + 1;
+	$g_source_menu[##i]="F)file";
+	$g_source_names[##i]="file";
+	##i = ##i + 1;
+	$g_source_menu[##i]="D)directory";
+	$g_source_names[##i]="directory";
+	##i = ##i + 1;
+	$g_source_menu[##i]="M)file_mru";
+	$g_source_names[##i]="file_mru";
+	##i = ##i + 1;
+	$g_source_menu[##i]="D)directory_mru";
+	$g_source_names[##i]="directory_mru";
+	##i = ##i + 1;
+	$g_source_menu[##i]="W)window";
+	$g_source_names[##i]="window";
+	##i = ##i + 1;
+	$g_source_menu[##i]="P)process";
+	$g_source_names[##i]="process";
+	##i = ##i + 1;
+	#g_source_names_num=##i;
+	return ;
