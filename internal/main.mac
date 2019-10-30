@@ -1,16 +1,17 @@
 ﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
 
 usage:
-	unity.mac root_dir sources
+	unity.mac root_dir sources options
 
-引数
+引数:
 	root_dir	unityマクロのルートディレクトリ
-	sources 	タブ区切りのソース名
-				(例)"file_mru\tprocess"
 
-===============================================================================
-Unite-vimの説明。
-https://www.youtube.com/watch?v=Co4Np4SXOOc
+	sources 	タブ区切りのソース名
+				（例）"file_mru\tprocess"
+
+	options		タブ区切りのオプション
+				（例）"-auto-preview\t-foo-option"
+
 */
 
 #g_tick_prev=tickcount;
@@ -86,9 +87,9 @@ disablehistory
 				0x0080 | /*/nオプション,またはopenfileのnoaddhistと同じ扱い*/
 				0x0100 ; /*今開いているファイル(自分自身)をヒストリに残さないようにする*/
 
-
 //disableinvert;カーソルキーが表示されなくなるためコメントアウトした。
-call main getarg(1);
+
+call main getarg(1), getarg(2);
 setsearch $g_old_searchbuffer, #g_old_searchoption;
 endmacro;
 
@@ -96,6 +97,7 @@ main:
 	##old_column=column;
 	##old_lineno=lineno;
 
+	call ParseOptions $$2;
 	call Start $$1;
 	##ret = ##return;
 
@@ -120,6 +122,18 @@ main:
 	}
 
 	return ##ret;
+
+ParseOptions:
+	#g_option_auto_preview=false;//ディフォルト値で初期化
+	##num=split($$options,$$1,"\t");
+	##i=0;
+	while(##i<##num){
+		if($$options[##i]=="-auto-preview"){
+			#g_option_auto_preview=true;
+		}
+		##i = ##i + 1;
+	}
+	return;
 
 /*
 return	アクションが最後まで実行されたかどうか(bool)

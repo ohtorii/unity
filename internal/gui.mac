@@ -1,13 +1,14 @@
 ﻿/* ソース選択ダイアログ
 
-複数ソースを絞り込み検索したいときに利用します。
-
-
-引数	ソースのディレクトリ
+# 引数
+	ソースのディレクトリ
 	(例) "c:\hidemaru\makuro\unity\sources"
 
-返値	ソース名をタブ区切りで返す
-	(例) "file_mru\twindow"
+
+# 返値
+	ソース名1\tソース名2\t...ソース名N\nオプション1\tオプション2\t...オプションN
+	(例) "file_mru\twindow\n-auto-preview\t-foo-option"
+
 */
 
 //ソースのファイルが格納されているディレクトリ
@@ -19,6 +20,10 @@ $g_sources_dir=getarg(0);
 //ソース名のコントロール名
 //配列長は #g_source_names_num
 $g_source_checkctrl_names[0]="";
+
+//auto-previewのON/OFF
+$g_auto_preview_checkctrl_name="auto_preview";
+
 
 //ディスクから読み込んだソース名と個数
 $g_source_names[0]="";
@@ -54,9 +59,9 @@ Start:
 		return "";
 	}
 	call MessageLoop;
-	$$select_sources=$$return;
+	$$ret=$$return;
 	call EndDialog;
-	return $$select_sources;
+	return $$ret;
 
 
 CreateDialog:
@@ -80,6 +85,17 @@ CreateDialog:
 		##i = ##i + 1;
 	}
 
+	//
+	//オプション
+	//
+	if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"hline", "", "") == 0){
+		message "hlinkの作成に失敗";
+		return false;
+	}
+	if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"check", $g_auto_preview_checkctrl_name, "auto_preview") == 0){
+		message "checkの作成に失敗";
+		return false;
+	}
 
 	if (!dllfunc(#g_dengaku_dll,"SHOWDIALOG",hidemaruhandle(0),1)){
 		message "SHOWDIALOG に失敗しました";
@@ -87,9 +103,23 @@ CreateDialog:
 	}
 	return true;
 
+#K_CTRL 	= 0x11;
+#K_ENTER	= 0x0d;
+#K_LEFT 	= 0x25;
+#K_RIGHT	= 0x27;
+#K_UP		= 0x26;
+#K_DOWN 	= 0x28;
+#K_SHIFT	= 0x10;
 
 MessageLoop:
 	while(1){
+		if(iskeydown(#K_UP)){
+			//フォーカス前移動
+
+		}else if(iskeydown(#K_DOWN)){
+			//フォーカス次へ移動
+
+		}
 		$$notify = dllfuncstr(#g_dengaku_dll,"WAITCTRLNOTIFY",0);
 		if($$notify == "0"){
 			//キャンセル
@@ -103,9 +133,10 @@ MessageLoop:
 	return "";
 
 GetSelectSources:
-	/*選択されたソースを取得する
-	返値	選択されたソースをタブ区切りで返す
-		(例) "file_mru\tprocess"
+	/*選択されたソースとオプションを取得する
+
+	返値	選択されたソースとオプションを返す
+		(例) "file_mru\tprocess\n-auto-preview\t-foo-option"
 	*/
 	$$select_sources="";
 	##i=0;
@@ -121,7 +152,15 @@ GetSelectSources:
 		}
 		##i = ##i + 1;
 	}
-	return $$select_sources;
+	$$options="";
+	$$state = dllfuncstr(#g_dengaku_dll, "GETCTRLSTATE",$g_auto_preview_checkctrl_name);
+	if($$state=="1"){
+		$$options="-auto-preview";
+	}
+	if($$options==""){
+		return $$select_sources;
+	}
+	return $$select_sources+"\n"+$$options;
 
 
 EndDialog:
@@ -132,17 +171,17 @@ EndDialog:
 LoadSources:
 	#g_source_names_num=0;
 
-	##objFSO = createobject("Scripting.FileSystemObject");
+	##objFSO    = createobject("Scripting.FileSystemObject");
 	##objFolder = callmethod_returnobj(##objFSO,"GetFolder",$g_sources_dir);
-	##objFiles = getpropobj(##objFolder,"Files");
+	##objFiles  = getpropobj(##objFolder,"Files");
 	while(1){
 		##objFile = getcollection(##objFiles);
 		if(##objFile==0){
 			break;
 		}
-		$$name=getpropstr(##objFile,"Name");
-		$$basename=member( ##objFSO, "GetBaseName", $$name );
-		$$ext=tolower(member( ##objFSO, "GetExtensionName", $$name ));
+		$$name		=getpropstr(##objFile,"Name");
+		$$basename	=member( ##objFSO, "GetBaseName", $$name );
+		$$ext		=tolower(member( ##objFSO, "GetExtensionName", $$name ));
 		releaseobject ##objFile;
 
 		if($$ext!="mac"){

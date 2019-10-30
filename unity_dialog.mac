@@ -1,10 +1,19 @@
-﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
-
-usage:
-  unity.mac mode
-
+﻿/* ソース選択GUI
 */
-//execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,getarg(0);
-execmacro currentmacrodirectory+"\\internal\\gui.mac", currentmacrodirectory+"\\sources";
-$sources=getresultex(-1);
-execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources;
+call main;
+endmacro $$return;
+
+main:
+	execmacro currentmacrodirectory+"\\internal\\gui.mac", currentmacrodirectory+"\\sources";
+	##num=split($$contents,getresultex(-1),"\n");
+	if(##num==1){
+		$$sources=$$contents[0];
+		$$options="";
+	}else if(##num==2){
+		$$sources=$$contents[0];
+		$$options=$$contents[1];
+	}else{
+		return "0";
+	}
+	execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$$sources,$$options;
+	return getresultex(-1);
