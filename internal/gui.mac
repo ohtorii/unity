@@ -1,4 +1,7 @@
-﻿/* ソース選択のgui
+﻿/* ソース選択ダイアログ
+
+複数ソースを絞り込み検索したいときに利用します。
+
 
 引数	ソースのディレクトリ
 	(例) "c:\hidemaru\makuro\unity\sources"
@@ -127,32 +130,31 @@ EndDialog:
 
 
 LoadSources:
-	//仮実装
-	//$g_sources_dirを利用する
-	##i=0;
-	$g_source_names[##i]="hilight";
-	##i = ##i + 1;
-	$g_source_names[##i]="file_recursive";
-	##i = ##i + 1;
-	$g_source_names[##i]="directory_recursive";
-	##i = ##i + 1;
-	$g_source_names[##i]="grep_result";
-	##i = ##i + 1;
-	$g_source_names[##i]="file";
-	##i = ##i + 1;
-	$g_source_names[##i]="directory";
-	##i = ##i + 1;
-	$g_source_names[##i]="file_mru";
-	##i = ##i + 1;
-	$g_source_names[##i]="directory_mru";
-	##i = ##i + 1;
-	$g_source_names[##i]="window";
-	##i = ##i + 1;
-	$g_source_names[##i]="process";
-	##i = ##i + 1;
-	#g_source_names_num=##i;
-	return true;
+	#g_source_names_num=0;
 
+	##objFSO = createobject("Scripting.FileSystemObject");
+	##objFolder = callmethod_returnobj(##objFSO,"GetFolder",$g_sources_dir);
+	##objFiles = getpropobj(##objFolder,"Files");
+	while(1){
+		##objFile = getcollection(##objFiles);
+		if(##objFile==0){
+			break;
+		}
+		$$name=getpropstr(##objFile,"Name");
+		$$basename=member( ##objFSO, "GetBaseName", $$name );
+		$$ext=tolower(member( ##objFSO, "GetExtensionName", $$name ));
+		releaseobject ##objFile;
+
+		if($$ext!="mac"){
+			continue;
+		}
+		$g_source_names[#g_source_names_num]=$$basename;
+		#g_source_names_num = #g_source_names_num + 1;
+	}
+	releaseobject ##objFiles;
+	releaseobject ##objFolder;
+	releaseobject ##objFSO;
+	return ;
 
 
 LoadDll:
