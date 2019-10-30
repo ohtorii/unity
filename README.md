@@ -7,6 +7,13 @@
 
 Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的存在。
 
+
+## 動画
+
+Unite-vimの説明
+https://www.youtube.com/watch?v=Co4Np4SXOOc
+
+
 # 動作イメージ
 
 準備中
