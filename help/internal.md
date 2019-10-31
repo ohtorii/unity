@@ -21,14 +21,22 @@
 
 # kindについて
 
-|種類|説明|ディフォルト値|
+## propertyの属性
+|属性|説明|ディフォルト値|
+|description|説明|""|
+|default_action|ディフォルトのアクション名|""|
+|base_kind|基底カインド|""|
+
+
+## アクションの属性
+
+|属性|説明|ディフォルト値|
 |:--:|:--:|:--:|
 |is_quit|アクション実行後に終了するかどうか|false|
 |is_multi_selectable|複数選択に対応したアクションかどうか|false|
 |is_edit|テキストを編集するアクションかどうか|false|
 |is_start|アクション実行後に候補を生成しアクションを開始するかどうか|false|
 |is_reget_candidates|アクション実行後に候補を再取得するかどうか|false|
-
 
 # 固有名詞
 
@@ -136,7 +144,7 @@ sources\file_recursive.mac を参照してください。
 process.mac を参照してください。
 
 
-# フォーマットについて
+# 候補のフォーマットについて
 
 candidate_typeが以下の時のフォーマットについて。
 - string
