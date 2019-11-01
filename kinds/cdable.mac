@@ -103,8 +103,13 @@ hidemaru_filer:
 file:
 	##first_item_index	= 0;
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
-	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
-	$$parent_folder=getresultex(-1)+"\\";
+	if($$text==""){
+		$$parent_folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##first_item_index);
+	}else{
+		execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+		$$parent_folder=getresultex(-1)+"\\";
+	}
+
 	$$source="file";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$parent_folder);
 	if(##ret){
@@ -116,6 +121,11 @@ file:
 narrow:
 	##first_item_index	= 0;
 	$$folder=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##first_item_index);
+	if($$folder==""){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
+		execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+		$$folder=getresultex(-1)+"\\";
+	}
 	$$source="file";
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StartCandidate",$$source,$$folder);
 	if(##ret){
