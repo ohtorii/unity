@@ -1,4 +1,4 @@
-#include"stdafx.h"
+﻿#include"stdafx.h"
 
 
 UTF_BOM_TYPE GetBomType(const uint8_t*buffer, size_t buffer_byte_size) {

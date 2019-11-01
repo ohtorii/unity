@@ -1,4 +1,4 @@
-#include"stdafx.h"
+ï»¿#include"stdafx.h"
 
 
 
@@ -27,7 +27,7 @@ void RecurringTask::Update() {
 }
 
 void RecurringTask::Main(){
-	//ƒ^ƒXƒN‚ğÀs‚·‚é
+	//ã‚¿ã‚¹ã‚¯ã‚’å®Ÿè¡Œã™ã‚‹
 	for (auto &task:m_tasks) {
 		if (task->Finished()) {
 			continue;
@@ -35,7 +35,7 @@ void RecurringTask::Main(){
 		task->Excute();
 	}
 
-	//I—¹‚µ‚½ƒ^ƒXƒN‚ğíœ‚·‚é
+	//çµ‚äº†ã—ãŸã‚¿ã‚¹ã‚¯ã‚’å‰Šé™¤ã™ã‚‹
 	auto first = m_tasks.begin();
 	auto end = m_tasks.end();
 	for (; first != end;) {

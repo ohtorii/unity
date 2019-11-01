@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-/*ƒRƒ“ƒeƒLƒXƒg–ˆ‚Ìó‘Ô
+/*ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆæ¯ã®çŠ¶æ…‹
 */
 class ContextStatus {
 public:

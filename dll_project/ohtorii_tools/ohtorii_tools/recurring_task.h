@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <functional>
 #include <utility>
 #include<list>
@@ -7,16 +7,16 @@
 class TaskBase {
 public:
 	virtual ~TaskBase() {};
-	///Às‚·‚é
+	///å®Ÿè¡Œã™ã‚‹
 	virtual void Excute()=0;	
-	///I—¹‚³‚¹‚é
+	///çµ‚äº†ã•ã›ã‚‹
 	virtual void Terminate()=0;
-	///I—¹‚µ‚½‚©‚Ç‚¤‚©’²‚×‚é
+	///çµ‚äº†ã—ãŸã‹ã©ã†ã‹èª¿ã¹ã‚‹
 	virtual bool Finished() = 0;
 };
 
 
-///’èŠú“I‚Èˆ—‚ğs‚¤ƒNƒ‰ƒX
+///å®šæœŸçš„ãªå‡¦ç†ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
 class RecurringTask {
 public:
 	typedef std::unique_ptr<TaskBase> TaskType;
@@ -25,10 +25,10 @@ public:
 	~RecurringTask();
 	void Destroy();
 
-	///ƒƒCƒ“ƒXƒŒƒbƒh‚©‚ç’èŠú“I‚ÉŒÄ‚Ôˆ—
+	///ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰å®šæœŸçš„ã«å‘¼ã¶å‡¦ç†
 	void Update();
 
-	///Às‚·‚éƒ^ƒXƒN‚Ì“o˜^
+	///å®Ÿè¡Œã™ã‚‹ã‚¿ã‚¹ã‚¯ã®ç™»éŒ²
 	template<typename T, class... _Valty>
 	bool Register(_Valty&&... _Val) {
 		try {
