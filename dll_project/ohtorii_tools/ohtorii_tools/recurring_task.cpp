@@ -27,8 +27,6 @@ void RecurringTask::Update() {
 }
 
 void RecurringTask::Main(){
-	//DebugLog(_T("RecurringTask::Update"));
-
 	//タスクを実行する
 	for (auto &task:m_tasks) {
 		if (task->Finished()) {
