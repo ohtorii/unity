@@ -85,20 +85,23 @@ private:
 	static	std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	m_instances;
 	static	size_t					m_current_instance_index;
 	bool			m_changed_candidates;
-
-	static Sources		m_sources;
+	
 	File				m_file;
 	Candidates			m_candidates;
 	RefineSearch		m_refine_search;
 	Inheritance			m_inheritance;	
 	UserData			m_user_data;
 	ASyncFiles			m_async_files;
-	RecurringTask		m_recurring_task;
 	ContextStatus		m_context_status;
-	static StaticStatus	m_static_status;
 
+	//
+	//staticな情報
+	//
+	static Sources			m_sources;
+	static RecurringTask	m_recurring_task;	
+	static StaticStatus		m_static_status;
 	///カインドはインスタンス共通で利用するため静的領域とする
-	static Kinds		m_kinds;	
+	static Kinds			m_kinds;	
 	///秀丸エディタの関数
 	static HidemaruFunctions	m_hidemaru_functions;
 
