@@ -11,6 +11,7 @@ size_t					Unity::m_current_instance_index = 0;
 Sources					Unity::m_sources;
 Kinds					Unity::m_kinds;
 StaticStatus			Unity::m_static_status;
+RecurringTask			Unity::m_recurring_task;
 HidemaruFunctions		Unity::m_hidemaru_functions;
 
 
