@@ -1,0 +1,5 @@
+﻿/* directoryソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"directory","";
+endmacro getresultex(-1);

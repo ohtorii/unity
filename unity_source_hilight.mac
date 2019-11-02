@@ -1,0 +1,5 @@
+﻿/* hilightソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"hilight","";
+endmacro getresultex(-1);

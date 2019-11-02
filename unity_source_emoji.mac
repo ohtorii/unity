@@ -1,0 +1,5 @@
+﻿/* emojiソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"emoji","";
+endmacro getresultex(-1);

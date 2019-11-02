@@ -1,0 +1,5 @@
+﻿/* windowソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"window","";
+endmacro getresultex(-1);

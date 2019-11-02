@@ -1,0 +1,5 @@
+﻿/* processソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"process","";
+endmacro getresultex(-1);

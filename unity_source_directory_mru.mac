@@ -1,0 +1,5 @@
+﻿/* directory_mruソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"directory_mru","";
+endmacro getresultex(-1);

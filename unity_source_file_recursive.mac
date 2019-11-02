@@ -1,0 +1,5 @@
+﻿/* file_recursiveソース
+
+*/
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"file_recursive","";
+endmacro getresultex(-1);
