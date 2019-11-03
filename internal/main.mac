@@ -288,8 +288,20 @@ RefineSearchMain:
 		##page_down	=iskeydown(0x22);
 		##ctrl 		=iskeydown(0x11);
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
+			//カーソル位置を保存する
+			##old_column=column;
+			##old_lineno=lineno;
+
 			call Enter ;
-			if(##return==#g_result_continue){call Continue $$key_buffer; continue;}
+			if(##return==#g_result_continue){
+				call Continue $$key_buffer;
+
+				//カーソル位置を元に戻す
+				moveto2 ##old_column,##old_lineno;
+				call CursorMoveCommon 0;
+
+				continue;
+			}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
 		}else if($$keycode=="27"){			return #g_result_cancel;} //Escapeが押された
@@ -301,6 +313,11 @@ RefineSearchMain:
 		else if($$keycode == "31"){ 		call CursorDown;}	//[↓]
 		else if($$keycode=="9"){								//tab
 			/*	アクションを選択する */
+
+			//カーソル位置を保存する
+			##old_column=column;
+			##old_lineno=lineno;
+
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
 			call NewCandidate currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
 			if(##return==#g_result_continue){
@@ -308,6 +325,11 @@ RefineSearchMain:
 					return #g_result_faile;
 				}
 				call Continue $$key_buffer;
+
+				//カーソル位置を元に戻す
+				moveto2 ##old_column,##old_lineno;
+				call CursorMoveCommon 0;
+
 				continue;
 			}
 			if(##return==#g_result_quit)	{return #g_result_success;}
@@ -414,8 +436,8 @@ NewCandidate:
 		debuginfo "  [Failed]Pop";
 		return #g_result_faile;
 	}
-	call TryRegetCandidates $$source_arg;
 
+	call TryRegetCandidates $$source_arg;
 	if(##search_result==#g_result_cancel){
 		//キャンセル
 		debuginfo "   cancel.";
