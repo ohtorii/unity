@@ -22,7 +22,7 @@ private:
 	void Sequence();
 	void LoadFileImage(std::vector<uint8_t>&out_fileimage);
 	void ConvertToWideChar(std::wstring&out, const std::vector<uint8_t>&fileimage);
-	void ConvertToHidemaruMacro(std::wstring&out, std::wstring&in);
+	void ConvertToHidemaruMacro(std::wstring&out, const WCHAR*unicode, size_t unicode_count);
 
 	///読み込むバイト数
 	const size_t		m_request_read_byte;
