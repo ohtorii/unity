@@ -30,58 +30,53 @@ void AsyncFileReader::Sequence(){
 		return;
 	}
 
+#if 0
+	HGLOBAL unicode_string_handle	= NULL;
+	UINT	unicode_count	= 0;
+	
+	{
+		HINSTANCE hinstExe = GetModuleHandle(NULL);
+		if (hinstExe == 0) {
+			m_terminate_request = true;
+			return;
+		}
+
+		int (WINAPI* pfnHidemaru_AnalyzeEncoding)(const WCHAR*, DWORD_PTR, DWORD_PTR);
+		*(FARPROC*)&pfnHidemaru_AnalyzeEncoding = GetProcAddress(hinstExe, "Hidemaru_AnalyzeEncoding");
+
+		HGLOBAL(WINAPI* pfnHidemaru_LoadFileUnicode)(const WCHAR*, int, UINT*, DWORD_PTR, DWORD_PTR);
+		*(FARPROC*)&pfnHidemaru_LoadFileUnicode = GetProcAddress(hinstExe, "Hidemaru_LoadFileUnicode");
+
+		if ((pfnHidemaru_AnalyzeEncoding == 0) || (pfnHidemaru_LoadFileUnicode == 0)) {
+			m_terminate_request = true;
+			return;
+		}
+		const auto result = pfnHidemaru_AnalyzeEncoding(m_filename.c_str(), 0, 0);
+		if (result < 0) {
+			//error
+			m_terminate_request = true;
+			return;
+		}
+		const auto encode = result & 0x3F;
+		unicode_string_handle = pfnHidemaru_LoadFileUnicode(m_filename.c_str(), encode, &unicode_count, 0, 0);
+	}
+
+	if (unicode_string_handle == NULL) {
+		m_terminate_request = true;
+		return;
+	}
+
+	{
+		WCHAR* unicode_string = (WCHAR*)GlobalLock(unicode_string_handle);
+		if (unicode_string != nullptr) {
+			ConvertToHidemaruMacro(m_hidemaru_script, static_cast<WCHAR*>(unicode_string), unicode_count);
+			GlobalUnlock(unicode_string_handle);
+		}
+	}
+	GlobalFree(unicode_string_handle);
+#else
 	std::wstring wide_string;
 	{
-#if 0
-		{
-			HINSTANCE hinstExe = GetModuleHandle(NULL);
-			if (hinstExe == 0) {
-				return;
-			}
-
-			int (WINAPI* pfnHidemaru_AnalyzeEncoding)(WCHAR*, DWORD_PTR, DWORD_PTR);
-			*(FARPROC*)&pfnHidemaru_AnalyzeEncoding = GetProcAddress(hinstExe, "Hidemaru_AnalyzeEncoding");
-			if (pfnHidemaru_AnalyzeEncoding == 0) {
-				return;
-			}
-			auto result = pfnHidemaru_AnalyzeEncoding(const_cast<WCHAR*>(m_filename.c_str()), 0, 0);
-			auto encode = result & 0x3F;
-			/*
-			0 　新規作成直後
-			1 　Shift-JIS
-			2 　Unicode
-			3 　EUC
-			4 　JIS
-			5 　UTF-7
-			6 　UTF-8
-			7 　Unicode (Big-Endian)
-			8 　欧文
-			9 　簡体字中国語
-			10　繁体字中国語
-			11　韓国語
-			12　韓国語(Johab)
-			13　中央ヨーロッパ言語
-			14　バルト語
-			15　ギリシャ語
-			16　キリル言語
-			17　シンボル
-			18　トルコ語
-			19　ヘブライ語
-			20　アラビア語
-			21　タイ語
-			22　ベトナム語
-			23　Macintosh
-			24　OEM/DOS
-			25　その他
-			26　バイナリモード
-			27　UTF-32 (V8.00以降)
-			28　UTF-32 (Big-Endian) (V8.00以降)
-			*/
-			DebugLog(_T("encode=%d"),encode);
-			
-		}
-#endif
-
 		//読み込んだファイル内容
 		std::vector<uint8_t>		fileimage;
 
@@ -95,7 +90,8 @@ void AsyncFileReader::Sequence(){
 
 		ConvertToWideChar(wide_string, fileimage);
 	}
-	ConvertToHidemaruMacro(m_hidemaru_script,wide_string);
+	ConvertToHidemaruMacro(m_hidemaru_script, wide_string.c_str(), wide_string.size());
+#endif
 }
 
 void AsyncFileReader::LoadFileImage(std::vector<uint8_t>&out_fileimage) {
@@ -189,7 +185,7 @@ void AsyncFileReader::ConvertToWideChar(std::wstring&out, const std::vector<uint
 	return;
 }
 
-void AsyncFileReader::ConvertToHidemaruMacro(std::wstring&out, std::wstring&in) {
+void AsyncFileReader::ConvertToHidemaruMacro(std::wstring&out, const WCHAR*unicode, size_t unicode_count) {
 	static  const auto format = _T(R"(
 call main;
 endmacro;
@@ -209,10 +205,10 @@ return;
 )");
 
 	std::vector<std::wstring::value_type> macro;
-	const auto len = in.size() + 10 * 1024;
+	const auto len = unicode_count + 10 * 1024;
 	const auto len2 = wcslen(format);
 	macro.resize(len+len2);
-	_snwprintf_s(&macro.at(0), macro.size(), _TRUNCATE, format, in.c_str());
+	_snwprintf_s(&macro.at(0), macro.size(), _TRUNCATE, format, unicode);
 	out.assign(&macro.at(0));
 }
 
