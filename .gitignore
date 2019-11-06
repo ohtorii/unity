@@ -39,3 +39,4 @@ dll_project/ohtorii_tools/UnitTest/x64/Release
 dll_project/file_searcher/.vs/file_searcher
 dll_project/file_searcher/file_searcher/obj
 dll_project/file_searcher/file_searcher/bin/
+internal/gui.mac.ini
