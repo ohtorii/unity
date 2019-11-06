@@ -17,12 +17,16 @@ $g_sources_dir=getarg(0);
 #g_dengaku_dll=0;
 #g_dialog_width=80;
 
+//GUIのオプション設定を保存したファイル
+$g_ini_filename=currentmacrofilename+".ini";
+$g_ini_section_name="unity_dialog_setting";
+
 //ソース名のコントロール名
 //配列長は #g_source_names_num
 $g_source_checkctrl_names[0]="";
 
 //auto-previewのON/OFF
-$g_auto_preview_checkctrl_name="auto_preview";
+$g_auto_preview_checkctrl_name="option_auto_preview";
 
 
 //ディスクから読み込んだソース名と個数
@@ -60,6 +64,7 @@ Start:
 	}
 	call MessageLoop;
 	$$ret=$$return;
+	call SaveDialogSetting;
 	call EndDialog;
 	return $$ret;
 
@@ -75,13 +80,19 @@ CreateDialog:
 	//
 	##i=0;
 	while(##i<#g_source_names_num){
-		$$source_name = $g_source_names[##i];
-		$$check_ctrl_name = "check_"+$$source_name;
-		if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"check", $$check_ctrl_name, $$source_name) == 0){
+		$$source_name     = $g_source_names[##i];
+		$$check_ctrl_name = "ctrl_"+$$source_name;
+		if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"check", $$check_ctrl_name, "&"+$$source_name) == 0){
 			message "チェックコントールの作成に失敗";
 			return false;
 		}
 		$g_source_checkctrl_names[##i]=$$check_ctrl_name;
+
+		//コントロールの設定を反映する
+		$$state=getinistrw($g_ini_filename,$g_ini_section_name,$$check_ctrl_name);
+		##n=dllfunc(#g_dengaku_dll,"SETCTRLSTATE",	$$check_ctrl_name, $$state);
+
+
 		##i = ##i + 1;
 	}
 
@@ -92,11 +103,17 @@ CreateDialog:
 		message "hlinkの作成に失敗";
 		return false;
 	}
-	if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"check", $g_auto_preview_checkctrl_name, "auto_preview") == 0){
+	if(dllfunc(#g_dengaku_dll,"NEWCONTROL",	"check", $g_auto_preview_checkctrl_name, "&auto_preview") == 0){
 		message "checkの作成に失敗";
 		return false;
 	}
+	//コントロールの設定を反映する
+	$$state=getinistrw($g_ini_filename,$g_ini_section_name,$g_auto_preview_checkctrl_name);
+	##n=dllfunc(#g_dengaku_dll,"SETCTRLSTATE",$g_auto_preview_checkctrl_name, $$state);
 
+	//
+	//ダイアログの表示
+	//
 	if (!dllfunc(#g_dengaku_dll,"SHOWDIALOG",hidemaruhandle(0),1)){
 		message "SHOWDIALOG に失敗しました";
 		return false;
@@ -131,6 +148,38 @@ MessageLoop:
 		}
 	}
 	return "";
+
+
+SaveDialogSetting:
+	/*ダイアログの設定をiniファイルへ保存する
+
+	＊iniの書式（例）
+		[unity-dialog-setting]
+		ctrl_file_mru=1
+		ctrl_file_recursive=0
+		ctrl_window=1
+		option_auto_preview=0
+	*/
+
+	deletefile $g_ini_filename;
+
+	//
+	//ソース
+	//
+	while(##i<#g_source_names_num){
+		$$ctrl_name=$g_source_checkctrl_names[##i];
+		$$state = dllfuncstr(#g_dengaku_dll, "GETCTRLSTATE",$$ctrl_name);
+		writeinistrw $g_ini_filename, $g_ini_section_name,$$ctrl_name,$$state;
+		##i = ##i + 1;
+	}
+
+	//
+	//オプション
+	//
+	$$state = dllfuncstr(#g_dengaku_dll, "GETCTRLSTATE",$g_auto_preview_checkctrl_name);
+	writeinistrw $g_ini_filename, $g_ini_section_name,$g_auto_preview_checkctrl_name,$$state;
+	return ;
+
 
 GetSelectSources:
 	/*選択されたソースとオプションを取得する
@@ -193,6 +242,16 @@ LoadSources:
 	releaseobject ##objFiles;
 	releaseobject ##objFolder;
 	releaseobject ##objFSO;
+	return ;
+
+
+SaveToFile:
+	$$filename =$$1;
+	$$save_text=$$2;
+	##objFso =createobject("Scripting.FileSystemObject");
+	##objFile=member(##objFso,"OpenTextFile",$$filename,2,1);
+	member ##objFile,"Write",$$save_text;
+	member ##objFile,"Close";
 	return ;
 
 
