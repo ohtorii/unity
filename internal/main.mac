@@ -254,9 +254,9 @@ RefineSearchMain:
 	*/
 	$$keybord_buffer="";
 
-	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "cursor"		, $$keybord_buffer;
+	execmacro $g_command_line_path+"\\parse_result.mac" , "cursor"		, $$keybord_buffer;
 	$$cursor_pos=getresultex(-1);
-	execmacro $g_root_macro_directory+"\\..\\command-line\\command-line-internal\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
+	execmacro $g_command_line_path+"\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 	$$key_buffer=getresultex(-1);
 
 	deletecolormarkerall "gather";
