@@ -28,21 +28,18 @@ static bool StringToBool(const WCHAR* str) {
 }
 
 
+//[action.*]セクションのパース	
 static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* filename) {
 	WCHAR buf[2 * 1024];
-	//[action.*]セクションのパース
-	//static const std::wstring	prefix(_T("action."));
-	//const		size_t			prefix_size = prefix.size();
-	
+	buf[0] = 0;
+
 	GetPrivateProfileSectionNames(buf, _countof(buf), filename);
 	
 	size_t i = 0;
 	while (((i + 1) < _countof(buf)) && (buf[i] != 0) && (buf[i + 1] != 0)) {
 		WCHAR* top = &buf[i];
-		//DebugLog(top);
 		if (ContainsAction(top)) {
 			dst.push_back(top);
-			//DebugLog(top);
 		}
 		i += wcslen(top) + 1;//+1で'\0'を読み飛ばす
 	}
@@ -52,6 +49,7 @@ static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHA
 	/*アクションのセクションをパースする
 	*/
 	WCHAR buf[2*1024];
+	buf[0] = 0;
 
 	//memo: "action.nop" -> "nop"
 	dst.m_name.assign(section_name+gs_prefix_size);
@@ -408,7 +406,7 @@ bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
 	{
 		GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), buf, _countof(buf), ini_filename);
 		Tokenize(dst.m_base_kind, buf, _T(" \t"));
-		if (1) {
+		if (0) {
 			//debug
 			DebugLog(_T("  ==== Inheritance ===="));
 			for (const auto&item : dst.m_base_kind) {
@@ -416,7 +414,7 @@ bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
 			}
 		}
 	}
-
+	
 	{
 		std::vector<std::wstring> action_sections;
 		action_sections.reserve(16);
@@ -425,7 +423,6 @@ bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
 		Action action;
 		for (const auto& section_name : action_sections) {
 			ParseActionSection(action, section_name.c_str(), ini_filename);
-			//dst.m_actions.emplace(section_name, action);
 			dst.m_actions.emplace_back(action);
 		}
 	}
