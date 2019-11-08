@@ -8,14 +8,16 @@ Inheritance::Inheritance(Unity*instance) : m_instance(instance){
 }
 
 bool Inheritance::GenerateResolveActions() {
-	/**選択された候補で利用している共通カインド
+	DebugLog(_T("Inheritance::::GenerateResolveActions()"));
+
+	/** 選択された候補で利用している共通カインド
 	(例)
 	common_kinds[0]="common";
 	common_kinds[1]="cdable";
 	*/
-	DebugLog(_T("Inheritance::::GenerateResolveActions()"));
-
 	std::vector<std::wstring> common_kinds;
+
+
 	FindCommonKind(common_kinds);
 	if (true) {
 		//
@@ -195,15 +197,15 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 
 	（出力）
 	m_resolve_actions
-		[1/9]file_mru.preview(0)			<--file_mruのpreviewを呼び出す。
-		[2/9]common.nop(0)
-		[3/9]common.yank(1)
-		[4/9]common.yank_escape(2)
-		[5/9]common.insert(3)
-		[6/9]common.append(4)
+		[1/9]file_mru.preview		(0)		<-- (説明)file_mruのpreviewを呼び出すという意味です。
+		[2/9]common.nop				(0)
+		[3/9]common.yank			(1)
+		[4/9]common.yank_escape		(2)
+		[5/9]common.insert			(3)
+		[6/9]common.append			(4)
 		[7/9]common.insert_directory(5)
 		[8/9]common.append_directory(6)
-		[9/9]common.echo(8)
+		[9/9]common.echo			(8)
 	*/
 	m_resolve_actions.clear();
 	/*基底カインドから処理するため配列を逆順にする。*/
@@ -227,10 +229,12 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 				m_resolve_actions.push_back({ kind_name, action_index, action.m_name});
 			}
 			else {
+				//（その1）
 				//既存のアクションを派生カインドで上書きする
 				//it->m_kind_name = kind_name;
 				//indexを設定する。
 
+				//（その2）
 				//同名のアクションを見付けた。（派生カインドを優先するため何もしない）
 				//
 			}
@@ -333,8 +337,8 @@ const WCHAR* Inheritance::FindActionKind(const WCHAR*action_name) {
 	if (!GenerateResolveActions()) {
 		return gs_empty;
 	}
-	auto it = std::find_if(m_resolve_actions.begin(), m_resolve_actions.end(), [action_name](auto&item) {return item.m_action_name.compare(action_name) == 0; });
-	if (it == m_resolve_actions.end()) {
+	auto it = std::find_if(m_resolve_actions.cbegin(), m_resolve_actions.cend(), [action_name](auto&item) {return item.m_action_name.compare(action_name) == 0; });
+	if (it == m_resolve_actions.cend()) {
 		return gs_empty;
 	}
 	return it->m_kind_name.c_str();
