@@ -48,21 +48,14 @@ do:
 	}
 
 	call pre_action $$user_data_kind,$$action_name;
-	if(1){
-		$$args[0]=str(#g_dll_ohtorii_tools);
-		$$args[1]="0";	//hm_process.dll
-		$$args[20]="exec_action";
-		$$args[21]=$$kind_filename;
-		$$args[22]=$$user_data_kind;
-		$$args[23]=$$action_name;
-		execmacro $g_root_macro_directory+"\\internal\\action.mac", $$args, 31;
-		$$action_result=getresultex(-1);
-	}else{
-		//旧コード、
-		//常にis_edit==0となる不具合あり
-		call exec_action, $$kind_filename, $$action_name;
-		$$action_result=$$return;
-	}
+	$$args[0]=str(#g_dll_ohtorii_tools);
+	$$args[1]="0";	//hm_process.dll
+	$$args[20]="exec_action";
+	$$args[21]=$$kind_filename;
+	$$args[22]=$$user_data_kind;
+	$$args[23]=$$action_name;
+	execmacro $g_root_macro_directory+"\\internal\\action.mac", $$args, 31;
+	$$action_result=getresultex(-1);
 
 	//コンテキストを元に戻す
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"PushContext", ##exist_context_then_delete);
