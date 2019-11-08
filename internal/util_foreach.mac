@@ -4,11 +4,15 @@
 0	ohtorii_dllのハンドル
 1	コールバックのファイル名
 2	コールバックのラベル名
+3	アクション名(空白文字列ならディフォルトの GetSelectionText を使用する)
 */
 #g_dll_ohtorii_tools	=val(getarg(0));
 $g_callback_filename	=getarg(1);
 $g_callback_labelname	=getarg(2);
-
+$g_calback_action		=getarg(3);
+if($g_calback_action==""){
+	$g_calback_action="GetSelectionText";
+}
 
 
 call Foreach;
@@ -22,7 +26,7 @@ Foreach:
 	##count	=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i		=0;
 	while(##i < ##count){
-		$$args[2]=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionText",##i);
+		$$args[1]=dllfuncstrw(#g_dll_ohtorii_tools,$g_calback_action,##i);
 		execmacro  $g_callback_filename, $$args, 31;
 		##i = ##i + 1;
 	}
