@@ -2,6 +2,7 @@
 
 
 
+
 ///////////////////////////////////////////////////////////////////////////////
 //	global variable
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,10 +13,43 @@ static WCHAR	gs_empty[] = { 0 };
 ///////////////////////////////////////////////////////////////////////////////
 //	static function
 ///////////////////////////////////////////////////////////////////////////////
+static bool ExistUpper(const std::wstring&word) {
+	if (word.end() != std::find_if(word.cbegin(), word.cend(), [](auto&c) {return iswupper(c); })) {
+		return true;
+	}
+	return false;
+}
+
+/*大文字小文字を区別せずに文字列str1の中に文字列str2が存在するかどうか調べる
+
+引数
+str1	大文字と小文字が混在した文字列
+str2	全て小文字
+*/
+static bool StrStrNoCase(const std::wstring &str1, const std::wstring &str2) {
+	std::wstring lower;
+	lower.resize(str1.size());
+	std::transform(str1.cbegin(), str1.cend(), lower.begin(), towlower);
+	if (lower.find(str2) == std::wstring::npos) {
+		return false;
+	}	
+	return true;
+}
+
 static bool MatchAll(const std::wstring &line, const std::vector<std::wstring>& tokens) {
 	for (auto&word : tokens) {
-		if (line.find(word) == std::wstring::npos) {
-			return false;
+		if (ExistUpper(word)) {
+			//英大文字（A-Z）あり
+			//大文字と小文字を区別して検索する。
+			if (line.find(word) == std::wstring::npos) {
+				return false;
+			}
+		} else {
+			//英大文字（A-Z）なし
+			//大文字と小文字を区別せず検索する。
+			if (! StrStrNoCase(line, word)) {
+				return false;
+			}
 		}
 	}
 	return true;
