@@ -20,13 +20,13 @@ do_action:
 	return $$return;
 
 start:
-	execmacro $g_root_macro_directory+"\\internal\\util_foreach.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "start_proc";
+	execmacro $g_root_macro_directory+"\\internal\\util_foreach.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "start_proc", "GetSelectionActionFileName";
 	return getresultex(-1);
 
 
 
 start_proc:
-	$$command = "cmd.exe /c start \"\" " + "\""+$$1+"\"";
+	$$command = sprintf(R"(cmd.exe /c start "" "%s")", $$1);
 	runex $$command
 		, 0 			//sync	  0:async 1:sync
 		, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
