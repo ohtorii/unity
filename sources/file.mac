@@ -3,7 +3,6 @@
 
 $g_user_data_name = "file.current_dir";
 
-#g_dll_dengaku=0;
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
 $arg1=getarg(1);
@@ -27,18 +26,8 @@ endmacro $$return;
 */
 gather_candidates:
 	$$root_dir=$$1;
-	execmacro $g_root_macro_directory+"\\internal\\load_dll.mac", "DengakuDLL.dll";
-	#g_dll_dengaku=val(getresultex(-1));
-	if(#g_dll_dengaku==0){
-		return "0";
-	}
-
 	call gather_candidates_main,$$root_dir;
 	$$ret=$$return;
-
-	freedll(#g_dll_dengaku);
-	#g_dll_dengaku=0;
-
 	return $$ret;
 
 
@@ -53,18 +42,13 @@ gather_candidates_main:
 	}
 
 	$$parent_dir= dllfuncstrw(#g_dll_ohtorii_tools,"GetUserDataString",$g_user_data_name,"");
-	debuginfo "$$parent_dir="+$$parent_dir;
 	$$root_dir 	= $$parent_dir+$$sub_dir;
 	##r=dllfuncw(#g_dll_ohtorii_tools,"SetUserDataString",$g_user_data_name,$$root_dir);
-	debuginfo "$$root_dir="+$$root_dir;
 	//memo: ディレクトリ区切り(\)で終端させる。
 	$$directory_separator=wcsrightstr($$root_dir,1);
 	if(($$directory_separator!="\\") && ($$directory_separator!="/")){
 		$$root_dir = $$root_dir + "\\";
 	}
-
-	$$pattern=$$root_dir+"*.*";
-	debuginfo "$$pattern="+$$pattern;
 
 	//////////////////////////////////////////////////////////////////////////
 	//ディレクトリを登録する
@@ -73,20 +57,7 @@ gather_candidates_main:
 	if(!##r){
 		return "0";
 	}
-	##r = dllfunc(#g_dll_dengaku,"ENUMDIR",$$pattern);
-	while (1) {
-		$$dir = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
-		if ($$dir == "") {
-			break;
-		}
-		if($$dir == "."){
-			continue;
-		}
-
-		$$dir=$$dir+"\\";
-		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir, "");
-		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$root_dir+$$dir);
-	}
+	call AppendDirectories $$root_dir;
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -96,15 +67,54 @@ gather_candidates_main:
 	if(!##r){
 		return "0";
 	}
-	##r = dllfunc(#g_dll_dengaku,"ENUMFILE",$$pattern);
-	while (1) {
-		$$file = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
-		if ($$file == "") {
+	call AppendFolders $$root_dir;
+	return "1";
+
+
+AppendDirectories:
+	$$root_dir = $$1;
+
+	//(memo) ..はVBSで列挙されないため手動で追加する
+	$$dir="..\\";
+	##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir, "");
+	##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$root_dir+$$dir);
+
+	//通常の処理
+	##objFSO		= createobject("Scripting.FileSystemObject");
+	##objFolder 	= callmethod_returnobj(##objFSO,"GetFolder",$$root_dir);
+	##objSubFolders = getpropobj(##objFolder,"SubFolders");
+	while(1){
+		##objFile = getcollection(##objSubFolders);
+		if(##objFile==0){
 			break;
 		}
+		$$dir=getpropstr(##objFile,"Name")+"\\";
+		releaseobject ##objFile;
+
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir, "");
+		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$root_dir+$$dir);
+	}
+	return ;
+
+
+AppendFolders:
+	$$root_dir=$$1;
+	##objFSO	= createobject("Scripting.FileSystemObject");
+	##objFolder = callmethod_returnobj(##objFSO,"GetFolder",$$root_dir);
+	##objFiles	= getpropobj(##objFolder,"Files");
+	while(1){
+		##objFile = getcollection(##objFiles);
+		if(##objFile==0){
+			break;
+		}
+		$$file=getpropstr(##objFile,"Name");
+		releaseobject ##objFile;
+
 		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$file, "");
 		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $$root_dir+$$file);
 	}
+	releaseobject ##objFiles;
+	releaseobject ##objFolder;
+	releaseobject ##objFSO;
 
-	return "1";
-
+	return ;
