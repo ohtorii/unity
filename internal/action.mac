@@ -145,6 +145,7 @@ exec_action:
 	debuginfo "  $$default_action="+ $$default_action;
 	$$args[0]="do_action";
 	$$args[1]=$$default_action;
+	$$args[29]=str(#g_dll_hm_process);
 	$$args[30]=str(##ohtorii_dll_handle);
 	execmacro $$kind_filename, $$args, 31;
 	$$action_result = getresultex(-1);

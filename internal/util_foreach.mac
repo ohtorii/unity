@@ -1,15 +1,17 @@
 ﻿/*
 
 引数
-0	ohtorii_dllのハンドル
-1	コールバックのファイル名
-2	コールバックのラベル名
-3	アクション名(空白文字列ならディフォルトの GetSelectionText を使用する)
+0	ohtorii_tools.dllのハンドル
+1	hm_process.dllのハンドル
+2	コールバックのファイル名
+3	コールバックのラベル名
+4	アクション名(空白文字列ならディフォルトの GetSelectionText を使用する)
 */
 #g_dll_ohtorii_tools	=val(getarg(0));
-$g_callback_filename	=getarg(1);
-$g_callback_labelname	=getarg(2);
-$g_calback_action		=getarg(3);
+#g_dll_hm_process		=val(getarg(1));
+$g_callback_filename	=getarg(2);
+$g_callback_labelname	=getarg(3);
+$g_calback_action		=getarg(4);
 if($g_calback_action==""){
 	$g_calback_action="GetSelectionText";
 }
@@ -21,6 +23,7 @@ endmacro $$return;
 
 Foreach:
 	$$args[0]=$g_callback_labelname;
+	$$args[29]=str(#g_dll_hm_process);
 	$$args[30]=str(#g_dll_ohtorii_tools);
 
 	##count	=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");

@@ -1,6 +1,7 @@
 ﻿/*アクションの実行
 */
 
+#g_dll_hm_process	=val(getarg(29));
 #g_dll_ohtorii_tools=val(getarg(30));
 $label				=getarg(0);
 $arg				=getarg(1);
@@ -49,7 +50,7 @@ do:
 
 	call pre_action $$user_data_kind,$$action_name;
 	$$args[0]=str(#g_dll_ohtorii_tools);
-	$$args[1]="0";	//hm_process.dll
+	$$args[1]=str(#g_dll_hm_process);
 	$$args[20]="exec_action";
 	$$args[21]=$$kind_filename;
 	$$args[22]=$$user_data_kind;
@@ -94,6 +95,7 @@ exec_action:
 
 	$$args[0]="do_action";
 	$$args[1]=$$action_name;
+	$$args[29]=str(#g_dll_hm_process);
 	$$args[30]=str(#g_dll_ohtorii_tools);
 	execmacro $$kind_filename, $$args, 31;
 	$$action_result = getresultex(-1);
