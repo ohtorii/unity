@@ -57,10 +57,19 @@ open:
 	##new_hidemaru_handle=-1;
 	{
 		##current_hidemaru_handle=hidemaruhandle(0);
+
 		##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+		$$filenames[0]="";
 		##i=0;
 		while(##i < ##count){
-			$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
+			$$filenames[##i]=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
+			##i = ##i + 1;
+		}
+
+
+		##i=0;
+		while(##i < ##count){
+			$$text = $$filenames[##i];
 			if($$text!=""){
 				if(existfile($$text)){
 					if((existfile($$text,1)&0x00000010) == 0){
