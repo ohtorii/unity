@@ -3,6 +3,17 @@
 */
 
 $filename=getarg(0);
+/*
+Set obj = CreateObject("Scripting.FileSystemObject")
+obj.GetBaseName("c:\temp\hoge.txt")
+*/
+##obj = createobject("Scripting.FileSystemObject");
+$basename=member(##obj,"GetBaseName",$filename);
+releaseobject ##obj;
+endmacro $basename;
+
+/*
+
 execmacro currentmacrodirectory + "\\load_dll.mac", "ht_tools.dll";
 #dll=val(getresultex(-1));
 if(#dll==0){
@@ -12,3 +23,4 @@ $basename = dllfuncstr(#dll,"GetFileBaseName", $filename);
 freedll #dll;
 endmacro $basename;
 
+*/
