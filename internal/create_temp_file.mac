@@ -11,7 +11,6 @@
 		失敗時は空白文字列を返す。
 */
 
-#g_ht_tools_dll=0;
 $g_tmpdir_base_name 	= "tmp_hidemaru_unity";
 
 call main getarg(0),getarg(1);
@@ -80,35 +79,12 @@ CreateDir:
 
 
 CreateEmptyFile:
-	$$tempfile = $$1;
-	call LoadDll;
-	if(! ##return){
-		return false;
-	}
-	##handle=dllfunc(#g_ht_tools_dll,"FileOpen",$$tempfile,"w");
-	if(##handle==0){
-		call FreeDll;
-		return false;
-	}
-	##n=dllfunc(#g_ht_tools_dll,"FileClose",##handle);
-	call FreeDll;
-	return existfile( $$tempfile );
-
-
-LoadDll:
-	if(#g_ht_tools_dll!=0){
-		return true;
-	}
-	execmacro currentmacrodirectory+"\\load_dll.mac", "ht_tools.dll";
-	#g_ht_tools_dll = val(getresultex(-1));
-	if(#g_ht_tools_dll!=0){
-		return true;
-	}
-
-	message "ht_tool.dllのロードに失敗しました\n" + "ht_tool.dllが秀丸のディレクトリに存在するか確認してください";
-	return false;
-
-FreeDll:
-	freedll #g_ht_tools_dll;
-	#g_ht_tools_dll=0;
-	return ;
+	/*
+	Set fso1 = CreateObject("Scripting.FileSystemObject")
+	Call fso1.CreateTextFile("C:\test.txt")
+	*/
+	##objFso=createobject("Scripting.FileSystemObject");
+	##objFile=member(##objFso,"CreateTextFile",$$1);
+	releaseobject ##objFile;
+	releaseobject ##objFso;
+	return existfile($$1);
