@@ -76,18 +76,23 @@ explorer:
 
 
 hidemaru_filer:
-	call find_hidemaru_filer;
-	$$path = $$return;
-	if($$path==""){
+	$$ini_filename=$g_root_macro_directory+"\\config.ini";
+	call find_hidemaru_filer $$ini_filename;
+	$$exe = $$return;
+	if($$exe==""){
 		return "0";
 	}
+	$$arguments=getinistrw($$ini_filename,"hidemaru_filer_classic","arguments");
+
 	##first_item_index	= 0;
 	call GetPathName ##first_item_index;
-	$$text=$$return;
-	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
-	$$parent_folder=getresultex(-1);
+	$$folder=$$return;
+	if($$folder==""){
+		return "0";
+	}
 
-	runex $$path+" " +"\""+$$parent_folder+"\""
+	$$command = sprintf(R"("%s" %s%s)",$$exe,$$arguments,$$folder);
+	runex $$command
 			, 0 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
 			, 0, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
@@ -138,8 +143,9 @@ narrow:
 //	ユーティリティ
 //////////////////////////////////////////////////////////////////////////////
 find_hidemaru_filer:
-	$$x64="C:\\Program Files\\HmFilerClassic\\HmFilerClassic.exe";
-	$$x86="C:\\Program Files (x86)\\HmFilerClassic\\HmFilerClassic.exe";
+	$$ini_filename=$$1;
+	$$x64=getinistrw($$ini_filename,"hidemaru_filer_classic", "path_x64");
+	$$x86=getinistrw($$ini_filename,"hidemaru_filer_classic", "path_x86");
 	if(existfile($$x64)){
 		return $$x64;
 	}
@@ -155,5 +161,7 @@ GetPathName:
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##index);
 	if($$text!=""){
 		return $$text;
+		/*execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+		return getresultex(-1);*/
 	}
 	return dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##index);
