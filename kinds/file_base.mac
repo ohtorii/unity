@@ -10,6 +10,7 @@ $g_marker="#layer0";
 ////////////////////////////////////////////////////////////////////////////
 //	メイン処理
 ////////////////////////////////////////////////////////////////////////////
+#g_dll_hm_process=val(getarg(29));
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
 $arg1=getarg(1);
@@ -50,9 +51,14 @@ do_action:
 	call $$action;
 	return $$return;
 
+
 ////////////////////////////////////////////////////////////////////////////
 //	Action.
 ////////////////////////////////////////////////////////////////////////////
+
+//
+//open
+//
 open:
 	##new_hidemaru_handle=-1;
 	{
@@ -98,32 +104,74 @@ callback_open:
 	setactivehidemaru ##handle;
 	return str(##return);
 
+
+//
+//start
+//
+start:
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	execmacro $$root_macro_directory+"\\internal\\util_foreach.mac", str(#g_dll_ohtorii_tools), str(#g_dll_hm_process), currentmacrofilename, "start_proc", "GetSelectionActionFileName";
+	return getresultex(-1);
+
+start_proc:
+	if(0){
+		$$command = sprintf(R"(/c start "" "%s")", $$1);
+		##handle =dllfuncw(#g_dll_hm_process,"SpawnWithRedirect","cmd.exe","",true,true);
+		##success=dllfuncw(#g_dll_hm_process,"SetArguments",##handle,$$command);
+		##success=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
+		##success=dllfuncw(#g_dll_hm_process,"Start",##handle);
+		##exit   =dllfuncw(#g_dll_hm_process,"WaitForExitWithTimeOut",##handle,1000);
+	}else{
+		$$command = sprintf(R"(cmd.exe /c start "" "%s")", $$1);
+		runex $$command
+			, 0 			//sync	  0:async 1:sync
+			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
+			, 0, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
+			, 0, "" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+			, 2 			//show	  0:auto 1:show 2:hide
+			, 1 			//nodraw  0:draw 1:no draw
+			, 0 			//unicode 0:ansi 2:unicode
+			;
+	}
+	return "1";
+
+
+//
+//insert_directory
+//
 insert_directory:
-	$$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
-	execmacro $$g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "insert_directory_proc";
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	execmacro $$root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "insert_directory_proc";
 	return getresultex(-1);
 
 
 overwrite_directory:
-	$$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
-	execmacro $$g_root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "overwrite_directory_proc";
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	execmacro $$root_macro_directory+"\\internal\\util_foreach_join.mac", str(#g_dll_ohtorii_tools), currentmacrofilename, "overwrite_directory_proc";
 	return getresultex(-1);
 
 
+//
+//preview
+//
 preview:
 	##first_item_index	= 0;
 	$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
 	##ret=dllfuncw(#g_dll_ohtorii_tools, "AutoPreviewRegist", $$filename);
 	return "1";
 
+
+
+
 ////////////////////////////////////////////////////////////////////////////
 //	Proc.
 ////////////////////////////////////////////////////////////////////////////
 overwrite_directory_proc:
-	$$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
 	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
 		//ディレクトリ区切りあり
-		execmacro $$g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$2;
+		execmacro $$root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$2;
 		$$parent_folder=getresultex(-1);
 		insert($$parent_folder);
 	}else{
@@ -134,10 +182,10 @@ overwrite_directory_proc:
 
 
 insert_directory_proc:
-	$$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
 	if((strstr($$2,"\\")!=-1) || (strstr($$2,"/")!=-1)){
 		//ディレクトリ区切りあり
-		execmacro $$g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$2;
+		execmacro $$root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$2;
 		$$parent_folder=getresultex(-1);
 		insert($$parent_folder);
 	}else{
