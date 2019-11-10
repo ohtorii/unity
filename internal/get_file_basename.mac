@@ -11,16 +11,3 @@ obj.GetBaseName("c:\temp\hoge.txt")
 $basename=member(##obj,"GetBaseName",$filename);
 releaseobject ##obj;
 endmacro $basename;
-
-/*
-
-execmacro currentmacrodirectory + "\\load_dll.mac", "ht_tools.dll";
-#dll=val(getresultex(-1));
-if(#dll==0){
-	endmacro "";
-}
-$basename = dllfuncstr(#dll,"GetFileBaseName", $filename);
-freedll #dll;
-endmacro $basename;
-
-*/
