@@ -23,8 +23,15 @@ void Tokenize(std::vector<std::wstring>& tokens, const std::wstring& str, const 
 
 std::wstring TrimString(const std::wstring& src, const WCHAR*trimCharacterList)
 {
+	if (src.size() == 0) {
+		return _T("");
+	}
 	const std::wstring::size_type left = src.find_first_not_of(trimCharacterList);
 	const std::wstring::size_type right = src.find_last_not_of(trimCharacterList);
+	if (left == right) {
+		// src=="\n"
+		return _T("");
+	}
 
 	if (left == std::wstring::npos) {
 		if (right == std::wstring::npos) {
