@@ -501,6 +501,7 @@ CursorMoveCommon:
 	if(##next_line_no == -1){
 		return false;
 	}
+	//実際にカーソル位置を移動する
 	moveto2 column,##next_line_no;
 
 	//秀丸エディタ側の実際のカーソル位置を反映して、
@@ -520,11 +521,13 @@ CursorDown:
 
 PageUp:
 	halfprevpage;
+	call CursorMoveCommon 0;
 	return;
 
 PageDown:
 	halfnextpage;
-	return;
+	call CursorMoveCommon 0;
+	return ;
 
 Mark:
 	//カーソル行に色を塗る
@@ -707,6 +710,8 @@ NewFile:
 	config "xGuideLine:0x00";
 	config "xOrikaeshiLine:0";
 
+	//カーソル行の下線やカーソル位置の縦線の描画を有効にします。（V8.90β6以降）
+	setcompatiblemode(compatiblemode|0x02000000);
 
 	return true;
 
