@@ -72,13 +72,18 @@ bool InterfaceSugar::AppendCandidateAsString(const WCHAR*string) {
 		Candidates::ContainerType::scoped_lock	locker(candidates);
 
 		for (auto &token : tokens) {
+			token = TrimString(token);
+			if (token.size() == 0) {
+				continue;
+			}
+
 			const auto position_1st = token.find(_T("\t"));
 			if (position_1st != std::wstring::npos) {
 				const auto position_2nd = token.find(_T("\t"), position_1st + 1);
 				if (position_2nd != std::wstring::npos) {
 
 					/*\tが二つあるので以下フォーマット
-					候補\t@action\t続き
+					候補\t@action種類\taction種類に応じた書式
 					*/
 
 					//候補を取り出す
