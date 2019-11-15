@@ -287,6 +287,13 @@ RefineSearchMain:
 		##page_up  	=iskeydown(0x21);
 		##page_down	=iskeydown(0x22);
 		##ctrl 		=iskeydown(0x11);
+
+		if(0){
+			if($$keycode!="0"){
+				debuginfo(sprintf("$$keycode=%s / ctrl=%d",$$keycode,##ctrl));
+			}
+		}
+
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
 			//カーソル位置を保存する
 			##old_column=column;
@@ -307,8 +314,7 @@ RefineSearchMain:
 		}else if($$keycode=="27"){			return #g_result_cancel;} //Escapeが押された
 		else if($$keycode=="16"){			call CursorUp;} 	//ctrl-p
 		else if($$keycode=="14"){			call CursorDown;}	//ctrl-n
-		else if($$keycode=="18"){			call Mark;call CursorDown;} 		//ctrl-space
-		else if(##ctrl&&($$keycode=="32")){ call Mark;call CursorDown;} 		//ctrl-space
+		else if(##ctrl && ($$keycode=="32"))	{ call Mark;call CursorDown;} 		//ctrl-space
 		else if($$keycode == "29"){ 		call CursorUp;} 	//[↑]
 		else if($$keycode == "31"){ 		call CursorDown;}	//[↓]
 		else if($$keycode=="9"){								//tab
@@ -507,7 +513,7 @@ CursorMoveCommon:
 	//秀丸エディタ側の実際のカーソル位置を反映して、
 	//DLL側と秀丸エディタ側のカーソル位置を一致させる
 	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
-	return result;
+	return ##n;
 
 
 CursorUp:
