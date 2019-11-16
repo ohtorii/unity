@@ -100,6 +100,8 @@ public:
 private:
 	Unity	*m_instance;
 
+	static bool CheckMultiSelectable(bool action_is_multi_selectable, bool multiple_candidates_selected);
+
 	//--------------------------------------------------------------------------
 	//		ResolveActions
 	//--------------------------------------------------------------------------
