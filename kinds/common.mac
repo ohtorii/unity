@@ -195,7 +195,7 @@ yank_escape_proc:
 	if(##is_separetor){
 		addclipboard "\x0D\x0A";
 	}else{
-		call Escape $$2;
+		call EscapeC $$2;
 		addclipboard $$return;
 	}
 	return ;
@@ -204,7 +204,10 @@ yank_escape_proc:
 ////////////////////////////////////////////////////////////////////////////
 //	Utility.
 ////////////////////////////////////////////////////////////////////////////
-Escape:
+EscapeC:
+	//
+	//C言語のエスケープ文字
+	//
 	if(#g_dll_dengaku==0){
 		execmacro $g_root_macro_directory+"\\internal\\load_dll.mac","DengakuDLL.dll";
 		#g_dll_dengaku=val(getresultex(-1));
@@ -215,12 +218,14 @@ Escape:
 	$$r=$$1;
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\\",	"\\\\", -1);
 	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\"",	"\\\"", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x07", "\\a", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x08", "\\b", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\t",   "\\t", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\n",   "\\n", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x0b", "\\v", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\r",   "",    -1);
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x00", "\\0", -1);//x00
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x07", "\\a", -1);//x07
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x08", "\\b", -1);//x08
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\t",   "\\t", -1);//x09
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\n",   "\\n", -1);//x0a
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x0b", "\\v", -1);//x0b
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x0c", "\\f", -1);//x0c
+	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\r",   "\\r", -1);//x0d
 
 	freedll #g_dll_dengaku;
 	#g_dll_dengaku=0;
