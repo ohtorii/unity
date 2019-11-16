@@ -134,6 +134,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |argadd||||
 |execute_command||||
 |exrename||||
+|🆕start||uri.startから移動file_baseへ移動しました|✅|
 
 ## file_mru
 |機能|説明|補足|秀丸の実装状況|
@@ -185,7 +186,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
-|start|open uri by browser|候補を関連付けで開く|✅|
+|start|open uri by browser|file_base.startへ移動しました|✅|
 
 ## window
 |機能|説明|補足|秀丸の実装状況|
