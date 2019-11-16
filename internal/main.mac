@@ -287,6 +287,7 @@ RefineSearchMain:
 		##page_up  	=iskeydown(0x21);
 		##page_down	=iskeydown(0x22);
 		##ctrl 		=iskeydown(0x11);
+		##q			=iskeydown(0x51);
 
 		if(0){
 			if($$keycode!="0"){
@@ -295,7 +296,6 @@ RefineSearchMain:
 		}
 
 		if($$keycode=="13"){		/*Enter / ctrl-m*/
-			//カーソル位置を保存する
 			##old_column=column;
 			##old_lineno=lineno;
 
@@ -309,18 +309,19 @@ RefineSearchMain:
 
 				continue;
 			}
-			if(##return==#g_result_quit)	{return #g_result_success;}
+			if(##return==#g_result_quit){return #g_result_success;}
 			return ##return;
-		}else if($$keycode=="27"){			return #g_result_cancel;} //Escapeが押された
-		else if($$keycode=="16"){			call CursorUp;} 	//ctrl-p
-		else if($$keycode=="14"){			call CursorDown;}	//ctrl-n
-		else if(##ctrl && ($$keycode=="32"))	{ call Mark;call CursorDown;} 		//ctrl-space
-		else if($$keycode == "29"){ 		call CursorUp;} 	//[↑]
-		else if($$keycode == "31"){ 		call CursorDown;}	//[↓]
-		else if($$keycode=="9"){								//tab
+		}else if($$keycode=="27")				{return #g_result_cancel;}		//Escape
+		else if($$keycode=="16")				{call CursorUp;}				//ctrl-p
+		else if($$keycode=="14")				{call CursorDown;}				//ctrl-n
+		else if(##ctrl && ($$keycode=="32"))	{call Mark;call CursorDown;}	//ctrl-space
+		else if($$keycode == "29")				{call CursorUp;}				//↑
+		else if($$keycode == "31")				{call CursorDown;}				//↓
+		else if(##page_up)						{call PageUp;}					//PageUp
+		else if(##page_down)					{call PageDown;}				//PageDown
+		else if(($$keycode=="3") || (##ctrl&&##q))	{return #g_result_quit;}	//ctrl-c / ctrl-q
+		else if($$keycode=="9"){												//tab
 			/*	アクションを選択する */
-
-			//カーソル位置を保存する
 			##old_column=column;
 			##old_lineno=lineno;
 
@@ -340,9 +341,7 @@ RefineSearchMain:
 			}
 			if(##return==#g_result_quit)	{return #g_result_success;}
 			return ##return;
-		}else if(##page_up){					call PageUp;}	//PageUp
-		else if(##page_down){					call PageDown;}	//PageDown
-		else{
+		}else{
 			//候補の更新
 			##canged_candidates=dllfuncw(#g_dll_ohtorii_tools,"ClearChangedCandidatesAndReturnPrevStatus");
 			if((##canged_candidates) || (($$prev_pattern != $$key_buffer) && (##candidates_update_interval<(tickcount-##candidates_update_prev_tickcount)))){
