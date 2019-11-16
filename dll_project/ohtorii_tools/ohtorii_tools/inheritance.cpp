@@ -211,6 +211,9 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 	/*基底カインドから処理するため配列を逆順にする。*/
 	//std::reverse(common_kinds.begin(), common_kinds.end());
 
+	//候補を複数選択しているかどうか	
+	const auto multiple_candidates_selected = m_instance->QueryRefineSearch().GetSelectionCandidateCount()==1?false:true;
+
 	auto&kinds = m_instance->QueryKinds();
 	for (const auto&kind_name:common_kinds) {
 		auto*kind=kinds.FindKind(kind_name.c_str());
@@ -220,29 +223,39 @@ void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
 		
 		size_t action_index = 0;
 		for (const auto& action:kind->m_actions) {
-			auto it = std::find_if(	m_resolve_actions.begin(), 
-									m_resolve_actions.end(), 
-									[&kind_name, &action](const auto &item) {return /*(item.m_kind_name==kind_name) &&*/ (item.m_action_name==action.m_name); });
-			
-			if (it == m_resolve_actions.end()) {
-				//新規追加
-				m_resolve_actions.push_back({ kind_name, action_index, action.m_name});
-			}
-			else {
-				//（その1）
-				//既存のアクションを派生カインドで上書きする
-				//it->m_kind_name = kind_name;
-				//indexを設定する。
+			if (CheckMultiSelectable(action.m_is_multi_selectable, multiple_candidates_selected)) {
+				auto it = std::find_if(m_resolve_actions.begin(),
+					m_resolve_actions.end(),
+					[&kind_name, &action](const auto &item) {return /*(item.m_kind_name==kind_name) &&*/ (item.m_action_name == action.m_name); });
 
-				//（その2）
-				//同名のアクションを見付けた。（派生カインドを優先するため何もしない）
-				//
+				if (it == m_resolve_actions.end()) {
+					//新規追加
+					m_resolve_actions.push_back({ kind_name, action_index, action.m_name });
+				}
+				else {
+					//（その1）
+					//既存のアクションを派生カインドで上書きする
+					//it->m_kind_name = kind_name;
+					//indexを設定する。
+
+					//（その2）
+					//同名のアクションを見付けた。（派生カインドを優先するため何もしない）
+					//
+				}
 			}
 			++action_index;
 		}
 	}
 }
-
+bool Inheritance::CheckMultiSelectable(bool action_is_multi_selectable, bool multiple_candidates_selected) {
+	if (action_is_multi_selectable) {
+		return true;
+	}
+	if (multiple_candidates_selected) {
+		return false;
+	}
+	return true;
+}
 
 /*ディフォルトカインドとアクションを生成する
 
