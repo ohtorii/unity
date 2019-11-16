@@ -19,6 +19,9 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 後で書く
 
+端的に書くと「名詞→動詞」の構文です。
+
+
 ## source（ソース）とは
 
 ## kind（カインド）とは
@@ -26,10 +29,20 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 # 画面の名称
 
-検索バッファ
+二つの画面（バッファ）があります。
 
-候補バッファ
+- 検索バッファ
+- 候補バッファ
 
+![インターフェース](help/images/interface.png "インターフェース")
+
+## 検索バッファ
+
+検索の候補を入力します。
+
+## 候補バッファ
+
+絞り込み検索した結果をリアルタイムで表示し、操作対象の候補（赤文字の行）を選択します。
 
 # キー操作
 
@@ -76,10 +89,6 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 |キー|説明|備考|
 |--|--|--|
 |Ctrl-c or Ctrl-q|マクロを終了する||
-||||
-||||
-||||
-
 
 # マクロの導入方法
 
@@ -94,14 +103,16 @@ masterブランチを取得しても多分動作しないです。（動作確�
 
 コピー後のディレクトリ構成
 
-	hidemaru_editor_script_directory
-	 └unity
-	    ├─bin
-	    ├─dll_project
-	    ├─help
-	    ├─internal
-	    ├─kinds
-	    └─sources
+```
+hidemaru-editor-script-directory
+ └unity
+    ├─bin
+    ├─dll_project
+    ├─help
+    ├─internal
+    ├─kinds
+    └─sources
+```
 
 ## ショートカットキー
 
@@ -110,8 +121,11 @@ masterブランチを取得しても多分動作しないです。（動作確�
 （例）
 - Ctrl-@
 - Ctrl-:
+- Ctrl-;
+- Ctrl-.
+- Ctrl-/
 
-私はコマンド実行っぽいキーに割り当ててます。
+コマンド実行っぽいキーを列挙してみました。
 
 ## unity_dialog.macを起動する
 
@@ -120,8 +134,7 @@ masterブランチを取得しても多分動作しないです。（動作確�
 ショートカットキーを押下して`unity_dialog.mac` を起動すると、↑こんなダイアログが開くのでソース(file_mruとかprocessとか)を選んでEnterキーを押下すると絞り込み検索が始まります😙
 
 
-## いろいろな方法でUnityを呼び出す
-
+# いろいろな方法でUnityマクロを呼び出す
 
 以下の表からご自身の都合に合うマクロをショートカットキーに割り当ててご利用ください。
 汎用型マクロと特化型マクロの二通りを用意しました。
@@ -142,22 +155,22 @@ masterブランチを取得しても多分動作しないです。（動作確�
 |unity_source_process.mac				|processソースを指定して起動|×|×|
 |unity_source_window.mac				|windowソースを指定して起動|×|×|
 
-### 備考
+## 備考
 
-それぞれ数行のマクロなのでカスタマイズしてお使いください。
+それぞれ数行のマクロで理解しやすいと思います、ヒデマラーの皆様におかれましてはカスタマイズしてお使いください。
 
 
 # 動作環境
 
-準備中
 - 秀丸エディタ ver xxx 以降
-- 田楽DLL
-- 
+- 田楽DLL ver 3.22 以降
 
-## 動作を確認した環境
+## 動作確認を行った環境
 
-- Windows10 64bit 
-- 秀丸エディタ 64bit ver xxx 
+ご参考までに。
+
+- Windows 10 64bit 
+- 秀丸エディタ 64bit ver xxx
 - 田楽DLL 64bit ver 3.22
 
 ## 備考
