@@ -3,6 +3,8 @@
 ![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+# はじめに
+
 作成途中なのでまだ動かないです。
 
 
@@ -22,8 +24,64 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 ## kind（カインド）とは
 
 
+# 画面の名称
 
-# マクロの導入方法（準備中）
+検索バッファ
+
+候補バッファ
+
+
+# キー操作
+
+## 検索バッファ
+
+行編集が主なので概ね[Bash](https://www.google.com/search?q=bash)に準拠しています。
+
+
+### カーソル移動
+
+|キー|説明|備考|
+|--|--|--|
+|← or Ctrl-b|カーソル左||
+|→ or Ctrl-f|カーソル右||
+|Home or Ctrl-a|先頭へ||
+|End or Ctrl-e|最後へ||
+
+
+### テキスト編集
+
+|キー|説明|備考|
+|--|--|--|
+|Del or Ctrl-d or Ctrl-Backspace|Delete||
+|Ctrl-t|Transpose||
+|Ctrl-k|KillLine||
+|Ctrl-u|LineDiscard||
+|Ctrl-w|WordRubout||
+|Backspace or Ctrl-h|Backspace||
+
+
+## 候補バッファ
+
+|キー|説明|備考|
+|--|--|--|
+|↑|前候補へ移動||
+|↓|次候補へ移動||
+|Ctrl-space|マーク||
+|Enter|ディフォルトアクションを実行する||
+|Esc|一つ前のバッファに戻る||
+
+
+## 共通
+
+|キー|説明|備考|
+|--|--|--|
+|Ctrl-c or Ctrl-q|マクロを終了する||
+||||
+||||
+||||
+
+
+# マクロの導入方法
 
 まずは、動作確認を行った安定バージョンをダウンロードして下さい。
 https://github.com/ohtorii/unity/releases
@@ -36,50 +94,75 @@ masterブランチを取得しても多分動作しないです。（動作確�
 
 コピー後のディレクトリ構成
 
-	unity
-	  ├─bin
-	  ├─dll_project
-	  ├─help
-	  ├─internal
-	  ├─kinds
-	  └─sources
+	hidemaru_editor_script_directory
+	 └unity
+	    ├─bin
+	    ├─dll_project
+	    ├─help
+	    ├─internal
+	    ├─kinds
+	    └─sources
 
-## ショートカットキー割り当て
+## ショートカットキー
 
 `unity_dialog.mac` をショートカットキーに割り当てて下さい。
 
-### 割り当ての例
-
+（例）
 - Ctrl-@
 - Ctrl-:
 
 私はコマンド実行っぽいキーに割り当ててます。
 
+## unity_dialog.macを起動する
+
+画像を用意する。
+
+ショートカットキーを押下して`unity_dialog.mac` を起動すると、↑こんなダイアログが開くのでソース(file_mruとかprocessとか)を選んでEnterキーを押下すると絞り込み検索が始まります😙
+
 
 ## いろいろな方法でUnityを呼び出す
 
-以下の表からご自身の都合に合うマクロをショートカットキーに割り当ててご利用ください。
 
-|ファイル名|説明|ソース選択|オプション選択|
+以下の表からご自身の都合に合うマクロをショートカットキーに割り当ててご利用ください。
+汎用型マクロと特化型マクロの二通りを用意しました。
+
+|ファイル名|説明|ソースの複数選択|オプション選択|
 |--|--|--|--|
-|unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能で最も汎用的|複数|○|
-|unity_menu.mac							|メニューからソースを一つだけ選択して呼び出す|一つ|×|
-|unity_menu_manual.mac					|頻繁に利用するソースのみメニュー化する例|一つ|×|
-|unity_source_directory.mac				|directroyソースを指定して起動||×|
-|unity_source_directory_mru.mac			|directroy_mruソースを指定して起動|一つ|×|
-|unity_source_directory_recursive.mac	|directroy_recursiveソースを指定して起動|一つ|×|
-|unity_source_emoji.mac					|emojiソースを指定して起動|一つ|Ｘ|
-|unity_source_file.mac					|fileソースを指定して起動|一つ|Ｘ|
-|unity_source_file_mru.mac				|file_mruソースを指定して起動|一つ|Ｘ|
-|unity_source_file_recursive.mac		|file_recursiveソースを指定して起動|一つ|Ｘ|
-|unity_source_hilight.mac				|hilightソースを指定して起動|一つ|Ｘ|
-|unity_source_process.mac				|processソースを指定して起動|一つ|Ｘ|
-|unity_source_window.mac				|windowソースを指定して起動|一つ|Ｘ|
+|unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能。全機能を利用可能|○|○|
+|unity_menu.mac							|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|
+|unity_menu_manual.mac					|利用頻度の高いソースをメニュー化する例|×|×|
+|unity_source_directory.mac				|directroyソースを指定して起動|×|×|
+|unity_source_directory_mru.mac			|directroy_mruソースを指定して起動|×|×|
+|unity_source_directory_recursive.mac	|directroy_recursiveソースを指定して起動|×|×|
+|unity_source_emoji.mac					|emojiソースを指定して起動|×|×|
+|unity_source_file.mac					|fileソースを指定して起動|×|×|
+|unity_source_file_mru.mac				|file_mruソースを指定して起動|×|×|
+|unity_source_file_recursive.mac		|file_recursiveソースを指定して起動|×|×|
+|unity_source_hilight.mac				|hilightソースを指定して起動|×|×|
+|unity_source_process.mac				|processソースを指定して起動|×|×|
+|unity_source_window.mac				|windowソースを指定して起動|×|×|
+
+### 備考
+
+それぞれ数行のマクロなのでカスタマイズしてお使いください。
 
 
 # 動作環境
 
 準備中
+- 秀丸エディタ ver xxx 以降
+- 田楽DLL
+- 
+
+## 動作を確認した環境
+
+- Windows10 64bit 
+- 秀丸エディタ 64bit ver xxx 
+- 田楽DLL 64bit ver 3.22
+
+## 備考
+
+秀丸マクロの新命令を利用しているため最新バージョンをお使いください。
 
 
 # ダウンロード
