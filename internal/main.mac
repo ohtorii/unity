@@ -65,6 +65,10 @@ $g_space = "\r\n\t 　";
 #g_option_auto_preview=false;
 $g_option_auto_preview_context_candidate="";
 
+/*キー入力の間隔(単位＝ミリ秒)
+(memo)定数は環境毎に調整する必要があるかも。
+*/
+#keyinput_interval = 80;
 
 /*****************************************************************************
 	メイン処理
@@ -284,10 +288,9 @@ RefineSearchMain:
 		execmacro $g_command_line_path+"\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 		$$key_buffer=getresultex(-1);
 
-		##page_up  	=iskeydown(0x21);
-		##page_down	=iskeydown(0x22);
-		##ctrl 		=iskeydown(0x11);
-		##q			=iskeydown(0x51);
+		call UpdateKeyStatus;
+		##ctrl 	=iskeydown(0x11);
+		##q		=iskeydown(0x51);
 
 		if(0){
 			if($$keycode!="0"){
@@ -295,7 +298,7 @@ RefineSearchMain:
 			}
 		}
 
-		if($$keycode=="13"){		/*Enter / ctrl-m*/
+		if($$keycode=="13"){													/*Enter / ctrl-m*/
 			##old_column=column;
 			##old_lineno=lineno;
 
@@ -317,8 +320,10 @@ RefineSearchMain:
 		else if(##ctrl && ($$keycode=="32"))	{call Mark;call CursorDown;}	//ctrl-space
 		else if($$keycode == "29")				{call CursorUp;}				//↑
 		else if($$keycode == "31")				{call CursorDown;}				//↓
-		else if(##page_up)						{call PageUp;}					//PageUp
-		else if(##page_down)					{call PageDown;}				//PageDown
+		else if(#g_keyprss_page_up)				{call PageUp;}					//PageUp
+		else if(#g_keyprss_page_down)			{call PageDown;}				//PageDown
+		else if(##ctrl && #g_keyprss_home)		{call GoFileTop;}				//ctrl-home
+		else if(##ctrl && #g_keyprss_end)		{call GoFileEnd;}				//ctrl-end
 		else if(($$keycode=="3") || (##ctrl&&##q))	{return #g_result_quit;}	//ctrl-c / ctrl-q
 		else if($$keycode=="9"){												//tab
 			/*	アクションを選択する */
@@ -500,6 +505,42 @@ TryRegetCandidates:
 	return ;
 
 
+UpdateKeyStatus:
+	/*キー入力の処理
+
+	(memo)
+	・キーリピートを自力で処理しています。
+	・見ての通りやっつけ仕事です。
+	*/
+	#g_keyprss_page_up  =false;
+	#g_keyprss_page_down=false;
+	#g_keyprss_home		=false;
+	#g_keyprss_end		=false;
+
+	$$variable_name = "unity_keydown_tickcount";
+	##share=0;
+
+	##prev = val(getstaticvariable($$variable_name, ##share ));
+	##diff = tickcount - ##prev;
+	if(##diff < #keyinput_interval){
+		return false;
+	}
+
+	#g_keyprss_page_up  =iskeydown(0x21);
+	#g_keyprss_page_down=iskeydown(0x22);
+	#g_keyprss_home		=iskeydown(0x24);
+	#g_keyprss_end		=iskeydown(0x23);
+	if(	#g_keyprss_page_up	||
+		#g_keyprss_page_down||
+		#g_keyprss_home		||
+		#g_keyprss_end
+	){
+		setstaticvariable $$variable_name, str(tickcount), ##share;
+		return true;
+	}
+	return false;
+
+
 CursorMoveCommon:
 	##delta = ##1;
 	##next_line_no=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchMoveHidemaruCursorLineNo",lineno,##delta);
@@ -514,6 +555,18 @@ CursorMoveCommon:
 	##n=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchSetHidemaruLineno",lineno);
 	return ##n;
 
+
+GoFileTop:
+	gofiletop;
+	golinetop2;
+	call CursorMoveCommon 0;
+	return ##return;
+
+GoFileEnd:
+	gofileend;
+	golinetop2;
+	call CursorMoveCommon 0;
+	return ##return;
 
 CursorUp:
 	call CursorMoveCommon -1;
@@ -784,4 +837,3 @@ ShowPerformanceCounter:
 	debuginfo sprintf("[%d]%s",##diff,$$1);
 	#g_tick_prev=tickcount;
 	return ;
-
