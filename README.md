@@ -44,12 +44,11 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 絞り込み検索した結果をリアルタイムで表示し、操作対象の候補（赤文字の行）を選択します。
 
-# キー操作
+# 操作方法
 
 ## 検索バッファ
 
 行編集が主なので概ね[Bash](https://www.google.com/search?q=bash)に準拠しています。
-
 
 ### カーソル移動
 
@@ -79,7 +78,9 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 |--|--|--|
 |↑|前候補へ移動||
 |↓|次候補へ移動||
-|Ctrl-space|マーク||
+|PageUp|１ページ前へ移動||
+|PageDown|１ページ後ろへ移動||
+|Ctrl-space|候補をマークする|複数の候補を選択するとき利用します|
 |Enter|ディフォルトアクションを実行する||
 |Esc|一つ前のバッファに戻る||
 
