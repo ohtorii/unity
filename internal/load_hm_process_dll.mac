@@ -5,9 +5,10 @@ endmacro str(##return);
 
 
 LoadDll:
-	##dll = loaddll(currentmacrodirectory + "\\bin\\hm_process.dll");
+	$$dll=currentmacrodirectory + "\\3rd_party\\hm_process\\hm_process.dll";
+	##dll = loaddll($$dll);
 	if (##dll==0) {
-		message "bin\\hm_process.dllのロードに失敗しました";
+		message "dllのロードに失敗しました。\n"+$$dll;
 		return 0;
 	}
 	return ##dll;
