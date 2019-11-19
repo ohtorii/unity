@@ -23,8 +23,8 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |file/new			|ファイルの新規作成|||
 |file_mru			|最近開いたファイルの一覧||✅|
 |file_point			|ファイル名か URI に一致するデータを出力する|||
-|file_rec			|カレントディレクトリの全てのファイルの一覧|||
-|file_rec/async		|file_rec の非同期処理版|||
+|file_rec			|カレントディレクトリの全てのファイルの一覧|file_recursiveへ名前を変更|✅|
+|file_rec/async		|file_rec の非同期処理版|Unityマクロは非同期処理が基本なのでfile_recursiveへ統合した。|✅|
 |find				|外部コマンド "find" の結果を出力|||
 |function			|Vim の組み込み関数と unite.vim、neocomplcache で定義されている関数の一覧|||
 |grep				|外部コマンド "grep" の結果を出力|||
@@ -136,12 +136,12 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |exrename||||
 |🆕start||uri.startから移動file_baseへ移動しました|✅|
 
-## file_mru
+## file_mru🆕
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
 |🆕remove|ファイル履歴から削除する|新規追加|✅|
 
-## directory_mru
+## directory_mru🆕
 |機能|説明|補足|秀丸の実装状況|
 |:---|:---|:---|:---|
 |🆕remove|フォルダ履歴から削除する|新規追加|✅|
