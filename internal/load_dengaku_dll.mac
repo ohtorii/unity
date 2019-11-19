@@ -1,0 +1,19 @@
+﻿/*
+*/
+call LoadDll;
+endmacro str(##return);
+
+
+LoadDll:
+	if(platform&0x00080000){
+		$$postfix="x64";
+	}else{
+		$$postfix="x86";
+	}
+	$$dll=sprintf("%s\\bin\\dengaku_%s\\DengakuDLL.dll", currentmacrodirectory,$$postfix);
+	##dll = loaddll($$dll);
+	if (##dll==0) {
+		message "DLLのロードに失敗しました。\n" + $$dll;
+		return 0;
+	}
+	return ##dll;

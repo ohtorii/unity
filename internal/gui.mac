@@ -256,7 +256,7 @@ SaveToFile:
 
 
 LoadDll:
-	execmacro currentmacrodirectory+"\\load_dll.mac", "DengakuDLL.dll";
+	execmacro currentmacrodirectory+"\\load_dengaku_dll.mac";
 	#g_dengaku_dll=val(getresultex(-1));
 	if(#g_dengaku_dll==0){
 		return false;

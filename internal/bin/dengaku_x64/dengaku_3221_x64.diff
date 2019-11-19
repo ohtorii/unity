@@ -1,0 +1,1447 @@
+diff -uNr dengaku_322_org/common/bregexp_mngr.cpp dengaku_322_x64/common/bregexp_mngr.cpp
+--- dengaku_322_org/common/bregexp_mngr.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/bregexp_mngr.cpp	2013-02-17 09:35:55.076795000 +0900
+@@ -58,14 +58,14 @@
+ 	if (ret <= 0) {
+ 		result = REDLL_RESULT_FAILED;
+ 	} else {
+-		result = make_dword(pBRegExp->startp[0] - pstr,
+-							pBRegExp->endp[0] - pBRegExp->startp[0]);
++		result = make_dword(static_cast<int>(pBRegExp->startp[0] - pstr),
++							static_cast<int>(pBRegExp->endp[0] - pBRegExp->startp[0]));
+ 		if (pBRegExp->nparens > 0) {
+ 			pResultList = new ResultList(pBRegExp->nparens);
+ 			for (int i = 1; i <= pBRegExp->nparens; i++)
+ 				pResultList->m_pResults[i-1]
+-					= make_dword(pBRegExp->startp[i] - pstr,
+-								 pBRegExp->endp[i] - pBRegExp->startp[i]);
++					= make_dword(static_cast<int>(pBRegExp->startp[i] - pstr),
++								 static_cast<int>(pBRegExp->endp[i] - pBRegExp->startp[i]));
+ 		}
+ 	}
+ 
+@@ -165,7 +165,7 @@
+ 			for (int i = 0; i < ret; i++) {
+ 				const char** ppStr = pBRegExp->splitp + (i << 1);
+ 				pResultList->m_pResults[i]
+-					= make_dword(*ppStr - pstr, *(ppStr + 1) - *ppStr);
++					= make_dword(static_cast<int>(*ppStr - pstr), static_cast<int>(*(ppStr + 1) - *ppStr));
+ 			}
+ 		}
+ 	}
+diff -uNr dengaku_322_org/common/bregexp_mngr.h dengaku_322_x64/common/bregexp_mngr.h
+--- dengaku_322_org/common/bregexp_mngr.h	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/bregexp_mngr.h	2013-02-17 09:35:55.082795300 +0900
+@@ -20,7 +20,7 @@
+ typedef void (*PFN_BREGFREE)(BREGEXP*);
+ typedef char* (*PFN_BREGEXPVERSION)(void);
+ 
+-#define BREGEXP_FILENAME "bregexp.dll"
++#define BREGEXP_FILENAME "bregonig.dll"
+ #define BREGEXP_BMATCH   "BMatch"
+ #define BREGEXP_BSUBST   "BSubst"
+ #define BREGEXP_BTRANS   "BTrans"
+diff -uNr dengaku_322_org/common/cmdline.cpp dengaku_322_x64/common/cmdline.cpp
+--- dengaku_322_org/common/cmdline.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/cmdline.cpp	2013-02-17 09:35:55.087795600 +0900
+@@ -123,7 +123,7 @@
+ 			*(pBuf + len) = '\0'; // terminator
+ 		}
+ #endif
+-		this->addItem(new CmdArgv(pBuf, head, len));
++		this->addItem(new CmdArgv(pBuf, static_cast<int>(head), static_cast<int>(len)));
+ 		if (*pstrCmdLine == '\0') break;
+ 	}
+ 
+diff -uNr dengaku_322_org/common/ctrldata.cpp dengaku_322_x64/common/ctrldata.cpp
+--- dengaku_322_org/common/ctrldata.cpp	2013-02-17 00:32:52.000000000 +0900
++++ dengaku_322_x64/common/ctrldata.cpp	2013-02-17 09:35:55.100796400 +0900
+@@ -6,7 +6,7 @@
+ 
+ //	チェックリストで使うチェックボックスのビットマップを得るためのおまじない
+ #define	OEMRESOURCE
+-
++#define  _CRT_SECURE_NO_WARNINGS
+ #include "strutils.h"
+ #include "session.h"
+ #include "ctrldata.h"
+@@ -228,8 +228,8 @@
+ 	if (m_hwndCtrl == NULL) return FALSE;
+ //	m_pCtrl->getParentPage().getDlgFrame().setWindowTheme(m_hwndCtrl);
+ 	m_pfnDefCallback = (WNDPROC)::SetWindowLongPtr(m_hwndCtrl,
+-												   GWLP_WNDPROC,
+-												   (LONG)CtrlListItemProc);
++												GWLP_WNDPROC,
++												(LONG_PTR)CtrlListItemProc);
+ 	::SetWindowLongPtr(m_hwndCtrl, GWLP_USERDATA, (LONG_PTR)this);
+ 	return TRUE;
+ }
+@@ -319,7 +319,7 @@
+ 		TreeItemData* tid = this->getNextItem();
+ 		if (tid == NULL) continue;
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.write(tid->getName(), keybuf, nbuf, nullStr);
+ 		tid->dumpData(ddfile);
+ 	}
+@@ -339,7 +339,7 @@
+ 	StringBuffer namebuf(32);
+ 	for (int i = 0; i < num; i++) {
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.read(namebuf, keybuf, nbuf, nullStr);
+ 		if (namebuf.length() <= 0) continue;
+ 		TreeItemData* tid = new TreeItemData(namebuf, nullStr);
+@@ -822,7 +822,7 @@
+ 	int len = buf.length();
+ 	for (int i = 0; i < sizeof(m_notify) / sizeof(m_notify[0]); i++) {
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.write(m_notify[i], buf, nbuf, nullStr);
+ 	}
+ 	ddfile.write(m_width, GetString(STR_DLGDATA_WIDTH), nullStr);
+@@ -850,7 +850,7 @@
+ 	buf.append((TCHAR)'_');
+ 	for (int i = 0; i < sizeof(m_notify) / sizeof(m_notify[0]); i++) {
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		if (!ddfile.read(&m_notify[i], buf, nbuf, nullStr)) {
+ 			m_notify[i] = 0xFFFF;
+ 		}
+@@ -1075,7 +1075,7 @@
+ 	}
+ 	else
+ 	{
+-		lbr.lbColor = ::GetBkColor(hDc);
++	lbr.lbColor = ::GetBkColor(hDc);
+ 	}
+ 	lbr.lbStyle = BS_SOLID;
+ 	m_pcp->m_hbrBackground = ::CreateBrushIndirect(&lbr);
+@@ -1158,7 +1158,7 @@
+ WORD
+ BtnCtrl::getDefID() const
+ {
+-//	DWORD dwStyle = ::GetWindowLong(m_pcp->m_hwndCtrl, GWL_STYLE);
++//	DWORD dwStyle = ::GetWindowLongPtr(m_pcp->m_hwndCtrl, GWL_STYLE);
+ //	if (dwStyle & BS_DEFPUSHBUTTON) return m_pcp->m_id;
+ #if 0
+ 	TCHAR buf[80];
+@@ -1977,7 +1977,7 @@
+ 		ItemData* id = m_item->getNextItem();
+ 		if (id == NULL) continue;
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.write(id->getText(), buf, nbuf, nullStr);
+ 	}
+ 	ddfile.write(num, GetString(STR_DLGDATA_ITEMNUM), nullStr);
+@@ -1995,7 +1995,7 @@
+ 	for (int i = 0; i < num; i++) {
+ 		ItemData* id = new ItemData(nullStr);
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.read(id->getText(), buf, nbuf, nullStr);
+ 		m_item->addItem(id);
+ 	}
+@@ -2115,8 +2115,8 @@
+ 		pCCSci->m_pCtrl = this;
+ 		pCCSci->m_pfnDefCallback
+ 			= (WNDPROC)::SetWindowLongPtr(hCtrl,
+-										  GWLP_WNDPROC,
+-										  (LONG_PTR)ChildCtrlProc);
++										GWLP_WNDPROC,
++										(LONG_PTR)ChildCtrlProc);
+ 		::SetWindowLongPtr(hCtrl, GWLP_USERDATA, (LONG_PTR)pCCSci);
+ 	}
+ 	return TRUE;
+@@ -2343,11 +2343,11 @@
+ 	while ((id = m_item->getNextItem()) != NULL) {
+ 		int index;
+ 		if (m_bSorted) {
+-			index = ::SendMessage(m_pcp->m_hwndCtrl, m_msg_addstr,
+-								  0, (LPARAM)id->getText().getBufPtr());
++			index = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, m_msg_addstr,
++								  0, (LPARAM)id->getText().getBufPtr()));
+ 		} else {
+-			index = ::SendMessage(m_pcp->m_hwndCtrl, m_msg_setstr,
+-								  ind++, (LPARAM)id->getText().getBufPtr());
++			index = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, m_msg_setstr,
++								  ind++, (LPARAM)id->getText().getBufPtr()));
+ 		}
+ 		::SendMessage(m_pcp->m_hwndCtrl, m_msg_setdata,
+ 						index, (LPARAM)id);
+@@ -2428,11 +2428,11 @@
+ 		int vindex = id->getViewIndex();
+ 		::SendMessage(m_pcp->m_hwndCtrl, m_msg_delstr, vindex, 0);
+ 		if (m_bSorted) {
+-			vindex = ::SendMessage(m_pcp->m_hwndCtrl, m_msg_addstr,
+-								   0, (LPARAM)id->getText().getBufPtr());
++			vindex = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, m_msg_addstr,
++								   0, (LPARAM)id->getText().getBufPtr()));
+ 		} else {
+-			vindex = ::SendMessage(m_pcp->m_hwndCtrl, m_msg_setstr,
+-								   vindex, (LPARAM)id->getText().getBufPtr());
++			vindex = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, m_msg_setstr,
++								   vindex, (LPARAM)id->getText().getBufPtr()));
+ 		}
+ 		::SendMessage(m_pcp->m_hwndCtrl, m_msg_setdata,
+ 					  vindex, (LPARAM)id);
+@@ -2458,11 +2458,11 @@
+ 		ItemData* id = m_item->getItemByIndex(ind);
+ 		int index;
+ 		if (m_bSorted) {
+-			index = ::SendMessage(m_pcp->m_hwndCtrl, m_msg_addstr,
+-								  0, (LPARAM)id->getText().getBufPtr());
++			index = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, m_msg_addstr,
++								  0, (LPARAM)id->getText().getBufPtr()));
+ 		} else {
+-			index = ::SendMessage(m_pcp->m_hwndCtrl, m_msg_setstr,
+-								  ind, (LPARAM)id->getText().getBufPtr());
++			index = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, m_msg_setstr,
++								  ind, (LPARAM)id->getText().getBufPtr()));
+ 		}
+ 		::SendMessage(m_pcp->m_hwndCtrl, m_msg_setdata, index, (LPARAM)id);
+ 		this->setViewIndex();
+@@ -2518,7 +2518,7 @@
+ 	case LBN_DBLCLK: return m_notify[0];
+ 	case LBN_SELCHANGE:
+ 		if (m_state > 0) {
+-			int sel = ::SendMessage(m_pcp->m_hwndCtrl, LB_GETCURSEL, 0, 0);
++			int sel = static_cast<int>(::SendMessage(m_pcp->m_hwndCtrl, LB_GETCURSEL, 0, 0));
+ //			::SendMessage(m_pcp->m_hwndCtrl, LB_SETTOPINDEX, (WPARAM)sel, 0);
+ 		}
+ 		return m_notify[1];
+@@ -2650,7 +2650,7 @@
+ 		if (wParam == VK_DOWN &&
+ 			!::SendMessage(hwndCombo, CB_GETDROPPEDSTATE, 0, 0)) {
+ 			::SendMessage(hwndCombo, CB_SHOWDROPDOWN, TRUE, 0);
+-			int cursel = ::SendMessage(hwndCombo, CB_GETCURSEL, 0, 0);
++			int cursel = static_cast<int>(::SendMessage(hwndCombo, CB_GETCURSEL, 0, 0));
+ 			if (cursel == CB_ERR) cursel = 0;
+ 			::SendMessage(hwndCombo, CB_SETCURSEL, cursel, 0);
+ 			return 0;
+@@ -2753,8 +2753,8 @@
+ 		::SetWindowLongPtr(m_pcp->m_hwndCtrl, GWLP_USERDATA, (LONG_PTR)pCCSci);
+ 		pCCSci->m_pfnDefCallback
+ 			= (WNDPROC)::SetWindowLongPtr(m_pcp->m_hwndCtrl,
+-										  GWLP_WNDPROC,
+-										  (LONG_PTR)ComboChildCtrlProc);
++										GWLP_WNDPROC,
++										(LONG_PTR)ComboChildCtrlProc);
+ #endif
+ 	}
+ //	::SetWindowText(m_pcp->m_hwndCtrl, m_pcp->m_text);
+@@ -2898,7 +2898,7 @@
+ 		if (uMsg == WM_KEYDOWN && wParam == VK_DOWN &&
+ 			!::SendMessage(hwndCombo, CB_GETDROPPEDSTATE, 0, 0)) {
+ 			::SendMessage(hwndCombo, CB_SHOWDROPDOWN, TRUE, 0);
+-			int cursel = ::SendMessage(hwndCombo, CB_GETCURSEL, 0, 0);
++			int cursel = static_cast<int>(::SendMessage(hwndCombo, CB_GETCURSEL, 0, 0));
+ 			if (cursel == CB_ERR) cursel = 0;
+ 			::SendMessage(hwndCombo, CB_SETCURSEL, cursel, 0);
+ 			return 0;
+@@ -2932,7 +2932,7 @@
+ WORD
+ RefBtnCtrl::getDefID() const
+ {
+-//	DWORD dwStyle = ::GetWindowLong(m_pcp->m_hwndCtrl, GWL_STYLE);
++//	DWORD dwStyle = ::GetWindowLongPtr(m_pcp->m_hwndCtrl, GWL_STYLE);
+ //	if (dwStyle & BS_DEFPUSHBUTTON) return m_pcp->m_id;
+ 	if (m_pcp->m_style & BS_DEFPUSHBUTTON) return m_pcp->m_id;
+ 	return 0xFFFF;
+@@ -4093,7 +4093,7 @@
+ 			ItemData* id = m_hdr->getNextItem();
+ 			if (id == NULL) break;
+ 			char nbuf[16];
+-			itoa(i, nbuf, 10);
++			_itoa(i, nbuf, 10);
+ 			ddfile.write(id->getText(), keybuf, nbuf, nullStr);
+ 		}
+ 	}
+@@ -4111,7 +4111,7 @@
+ 			ItemData* id = lvid->getNextItem();
+ 			if (id != NULL) continue;
+ 			char nbuf[16];
+-			itoa(j, nbuf, 10);
++			_itoa(j, nbuf, 10);
+ 			ddfile.write(id->getText(), keybuf, nbuf, nullStr);
+ 		}
+ 	}
+@@ -4133,7 +4133,7 @@
+ 		if (!m_hdr) m_hdr = new LViewItemData();
+ 		for (int i = 0; i < (int)m_colnum; i++) {
+ 			char nbuf[16];
+-			itoa(i, nbuf, 10);
++			_itoa(i, nbuf, 10);
+ 			ItemData* id = new ItemData(nullStr);
+ 			ddfile.read(id->getText(), keybuf, nbuf, nullStr);
+ 			m_hdr->addItem(id);
+@@ -4148,7 +4148,7 @@
+ 		keybuf.append(i).append((TCHAR)'_');
+ 		for (int j = 0; j < m_colnum; j++) {
+ 			char nbuf[16];
+-			itoa(j, nbuf, 10);
++			_itoa(j, nbuf, 10);
+ 			ItemData* id = new ItemData(nullStr);
+ 			ddfile.read(id->getText(), keybuf, nbuf, nullStr);
+ 			lvid->addItem(id);
+@@ -4397,7 +4397,7 @@
+ 			tid = static_cast<TreeItemData*>(m_item->getNextItem());
+ 		if (tid == NULL) continue;
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.write(tid->getName(), keybuf, nbuf, nullStr);
+ 		tid->dumpData(ddfile);
+ 	}
+@@ -4421,7 +4421,7 @@
+ 			.append((TCHAR)'_');
+ 	for (int i = 0; i < num; i++) {
+ 		char nbuf[16];
+-		itoa(i, nbuf, 10);
++		_itoa(i, nbuf, 10);
+ 		ddfile.read(namebuf, keybuf, nbuf, nullStr);
+ 		if (namebuf.length() <= 0) continue;
+ 		TreeItemData* tid = new TreeItemData(namebuf, nullStr);
+@@ -4553,8 +4553,8 @@
+ 		::GetTextMetrics(hDC, &tm);
+ 		::ReleaseDC(hDlg, hDC);
+ 
+-		m_poffset.x = dwLPX * fontsize * 4 / (72 * 2 * tm.tmAveCharWidth);
+-		m_poffset.y = dwLPY * fontsize * 8 * 4 / (72 * 3 * tm.tmHeight);
++		m_poffset.x = static_cast<SHORT>(dwLPX * fontsize * 4 / (72 * 2 * tm.tmAveCharWidth));
++		m_poffset.y = static_cast<SHORT>(dwLPY * fontsize * 8 * 4 / (72 * 3 * tm.tmHeight));
+ 	}
+ 	
+ 	num = 0;
+@@ -4784,8 +4784,8 @@
+ 	::GetTextMetrics(hDC, &tm);
+ 	::ReleaseDC(hDlg, hDC);
+ 
+-	m_poffset.x = dwLPX * fontsize * 4 / (72 * 2 * tm.tmAveCharWidth);
+-	m_poffset.y = dwLPY * fontsize * 8 * 2 / (72 * tm.tmHeight);
++	m_poffset.x = static_cast<SHORT>(dwLPX * fontsize * 4 / (72 * 2 * tm.tmAveCharWidth));
++	m_poffset.y = static_cast<SHORT>(dwLPY * fontsize * 8 * 2 / (72 * tm.tmHeight));
+ 	
+ 	TC_ITEM	tci;
+ 	tci.mask = TCIF_TEXT|TCIF_PARAM;
+@@ -5324,7 +5324,7 @@
+ OkCancelCtrl::getDefID() const
+ {
+ 	for (int i = 0; i < 2; i++) {
+-//		DWORD dwStyle = ::GetWindowLong(m_pcp[i].m_hwndCtrl, GWL_STYLE);
++//		DWORD dwStyle = ::GetWindowLongPtr(m_pcp[i].m_hwndCtrl, GWL_STYLE);
+ //		if (dwStyle & BS_DEFPUSHBUTTON) return m_pcp[i].m_id;
+ 		if (m_pcp[i].m_style & BS_DEFPUSHBUTTON) {
+ 			return m_pcp[i].m_id;
+diff -uNr dengaku_322_org/common/ctrldata.h dengaku_322_x64/common/ctrldata.h
+--- dengaku_322_org/common/ctrldata.h	2013-02-17 00:32:52.000000000 +0900
++++ dengaku_322_x64/common/ctrldata.h	2013-02-17 09:35:55.106796700 +0900
+@@ -88,7 +88,7 @@
+ class ItemData {
+ public:
+ 	ItemData(const StringBuffer& str = nullStr)
+-		:	m_text(str)
++		: m_text(str)
+ 	{}	//	nothing to do more.
+ 	virtual ~ItemData() {}
+ 
+@@ -375,7 +375,7 @@
+ };
+ 
+ //	コントロールの子(または兄弟)コントロールをサブクラス化する時
+-//	GWL_USERDATA で渡すクラス
++//	GWLP_USERDATA で渡すクラス
+ struct ChildCtrlSubClassInfo {
+ 	WNDPROC m_pfnDefCallback;
+ 	CtrlListItem* m_pCtrl;
+diff -uNr dengaku_322_org/common/dirlist.cpp dengaku_322_x64/common/dirlist.cpp
+--- dengaku_322_org/common/dirlist.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/dirlist.cpp	2013-02-17 09:35:55.110796900 +0900
+@@ -28,7 +28,7 @@
+ 			return TRUE;
+ 		}
+ 		ptr++; // 最後の "\" も含めてコピー
+-		pbuf.reset(tmpbuf,0,ptr - tmpbuf);
++		pbuf.reset(tmpbuf,0,static_cast<int>(ptr - tmpbuf));
+ 	} else {
+ 		//	local path
+ 		pbuf.reset(ptr,0,3);
+diff -uNr dengaku_322_org/common/dlgdata.cpp dengaku_322_x64/common/dlgdata.cpp
+--- dengaku_322_org/common/dlgdata.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/dlgdata.cpp	2013-02-17 09:35:55.115797200 +0900
+@@ -681,7 +681,7 @@
+ DlgPage::onNotify(WPARAM wParam, LPARAM lParam)
+ {
+ 	NMHDR* pnmh = reinterpret_cast<NMHDR*>(lParam);
+-	CtrlListItem* cli = GetCtrlListItemByID(m_hwndPage, pnmh->idFrom);
++	CtrlListItem* cli = GetCtrlListItemByID(m_hwndPage, static_cast<WORD>(pnmh->idFrom));
+ 	return cli ? cli->onWmNotify(wParam, lParam) : 0xFFFF;
+ }
+ 
+@@ -942,7 +942,7 @@
+ 				wDefID = IDOK;
+ 			}
+ #endif
+-			::SetWindowLongPtr(hDlg, DWLP_MSGRESULT, (DC_HASDEFID << 16) | wDefID);
++			::SetWindowLongPtr(hDlg, DWLP_MSGRESULT, (LONG_PTR)(DC_HASDEFID << 16) | wDefID);
+ 		}
+ 		break;
+ 
+diff -uNr dengaku_322_org/common/env_var.cpp dengaku_322_x64/common/env_var.cpp
+--- dengaku_322_org/common/env_var.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/env_var.cpp	2013-02-17 09:35:55.119797500 +0900
+@@ -80,7 +80,7 @@
+ 	}
+ 	if (m_psma->index(pEnvHeader) == 0) {
+ 		//	変数は未定義…新たに定義する
+-		int index = m_psma->alloc(sizeof(ENV_HEADER));
++		INT_PTR index = m_psma->alloc(sizeof(ENV_HEADER));
+ 		if (index == 0) {
+ 			m_psma->release();
+ 			throw NoMemoryError();
+@@ -109,7 +109,7 @@
+ 	} else if (lstrlen((LPCSTR)m_psma->addr(pEnvHeader->m_pEnvString))
+ 		!= env_var.length()) {
+ 		//	変数が既に定義されており、値のバッファサイズが異なる
+-		int newindex = m_psma->alloc(ev_len + 1);
++		INT_PTR newindex = m_psma->alloc(ev_len + 1);
+ 		if (newindex == 0) {
+ 			m_psma->release();
+ 			throw NoMemoryError();
+@@ -228,7 +228,7 @@
+ 						NULL,&dwType,
+ 						NULL,&dwVarLength
+ 					) != ERROR_NO_MORE_ITEMS) {
+-			int sma_index = m_psma->alloc(sizeof(ENV_HEADER));
++			INT_PTR sma_index = m_psma->alloc(sizeof(ENV_HEADER));
+ 			if (sma_index == 0) break;	//	メモリ確保に失敗
+ 			if (dwIndex == 0) m_psma->setMasterIndex(sma_index);
+ 			else pHeader->m_pNextHeader = sma_index;
+diff -uNr dengaku_322_org/common/env_var.h dengaku_322_x64/common/env_var.h
+--- dengaku_322_org/common/env_var.h	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/env_var.h	2017-12-01 20:06:48.911567600 +0900
+@@ -17,11 +17,15 @@
+ //	変数の名前、値を管理するための構造体
+ //	ここでいう「ポインタ」とは、SMAlloc クラスで管理される共有メモリ内のみで
+ //	有効な相対アドレスを格納する変数を指す。
++#ifdef _WIN64
++#pragma pack(push,env_header,8)
++#else
+ #pragma pack(push,env_header,4)
++#endif
+ typedef struct {
+-	UINT m_pNextHeader;	//	次の変数の ENV_HEADER 構造体へのポインタ
+-	UINT m_pEnvName;	//	変数名へのポインタ
+-	UINT m_pEnvString;	//	変数値へのポインタ
++	UINT_PTR m_pNextHeader;	//	次の変数の ENV_HEADER 構造体へのポインタ
++	UINT_PTR m_pEnvName;	//	変数名へのポインタ
++	UINT_PTR m_pEnvString;	//	変数値へのポインタ
+ } ENV_HEADER, *LPENV_HEADER;
+ #pragma pack(pop,env_header)
+ 
+@@ -46,7 +50,7 @@
+ private:
+ 	StringBuffer m_env_name;	//	共有メモリの名前
+ 	SMAlloc* m_psma;	//	メモリマッピングオブジェクト内のメモリ管理クラス
+-	UINT m_enumindex;	//	next_env() で返す変数の
++	UINT_PTR m_enumindex;	//	next_env() で返す変数の
+ 						//	ENV_HEADER への(SMAlloc の意味の)ポインタ
+ 
+ 	BOOL loadEnv();		//	永続的変数の読込みを行う
+diff -uNr dengaku_322_org/common/JREUSR.H dengaku_322_x64/common/JREUSR.H
+--- dengaku_322_org/common/JREUSR.H	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/JREUSR.H	2013-02-17 09:35:55.127797900 +0900
+@@ -182,7 +182,7 @@
+ 	WORD wTranslate;				// 変換テーブル番号.
+ 	LPSTR lpszTable;				// 変換テーブル.
+ 	FARPROC lpfnUsrFunc;			// コールバック関数へのFARポインタ(使わないように).
+-	UINT nCompData1;					// コンパイルデータ1.
++	UINT_PTR nCompData1;			// コンパイルデータ1.  WIN64対応で修正。
+ 	MEMID hCompData2;		// コンパイルデータ2.ハンドル.
+ 	MEMID hCompData3;		// コンパイルデータ3.ハンドル.
+ 	MEMID hCompData4;		// コンパイルデータ4.ハンドル.
+diff -uNr dengaku_322_org/common/misc.cpp dengaku_322_x64/common/misc.cpp
+--- dengaku_322_org/common/misc.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/misc.cpp	2013-02-17 09:35:55.131798100 +0900
+@@ -4,6 +4,7 @@
+  *	雑多なユーティリティ関数
+  */
+ 
++#define  _CRT_SECURE_NO_WARNINGS
+ #include "strutils.h"
+ #include "strbuf.h"
+ #include "misc.h"
+@@ -19,14 +20,14 @@
+ 	DWORD dwThreadID = ::GetCurrentThreadId();
+ 	wsprintf(buf, "[tid:%08x] ", dwThreadID);
+ 
+-	int len = strlen(buf);
++	int len = static_cast<int>(strlen(buf));
+ 
+ 	va_list list;
+ 	va_start(list, pszFormat);
+ 
+ 	wvsprintf(buf + len, pszFormat, list);
+ 
+-	len += strlen(buf + len);
++	len += static_cast<int>(strlen(buf + len));
+ 	if (len < sizeof(buf) - 1) {
+ 		strcpy(buf + len, "\n");
+ 	}
+diff -uNr dengaku_322_org/common/pathname.cpp dengaku_322_x64/common/pathname.cpp
+--- dengaku_322_org/common/pathname.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/pathname.cpp	2013-02-17 09:35:55.135798400 +0900
+@@ -16,7 +16,7 @@
+ 	LPCSTR top = str;
+ 	while (*str != '\0' && *str != sep)
+ 		str = ToNextChar(str);
+-	return str - top;
++	return static_cast<int>(str - top);
+ }
+ 
+ int
+@@ -161,7 +161,7 @@
+ 				}
+ 				s++;
+ 			}
+-			this->StringBuffer::setlength(s - (LPCSTR)*this);
++			this->StringBuffer::setlength(static_cast<int>(s - (LPCSTR)*this));
+ 			this->refresh();
+ 		}
+ 	}
+diff -uNr dengaku_322_org/common/seldir.cpp dengaku_322_x64/common/seldir.cpp
+--- dengaku_322_org/common/seldir.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/seldir.cpp	2013-02-17 09:35:55.140798700 +0900
+@@ -682,8 +682,8 @@
+ 	m_hTreeView = hTreeView;
+ 	setImgListToTreeView();
+ 	if (m_flag & DBPA_DISABLEMODIFY) {
+-		LONG old = ::GetWindowLong(hTreeView, GWL_STYLE);
+-		::SetWindowLong(hTreeView, GWL_STYLE, old & ~TVS_EDITLABELS);
++		LONG_PTR old = ::GetWindowLongPtr(hTreeView, GWL_STYLE);
++		::SetWindowLongPtr(hTreeView, GWL_STYLE, (LONG_PTR)(old & ~TVS_EDITLABELS));
+ 	}
+ 
+ 	LPITEMIDLIST
+@@ -811,7 +811,7 @@
+ 	switch (uMsg) {
+ 	case WM_INITDIALOG:
+ 		{
+-			::SetWindowLongPtr(hDlg, DWLP_USER, lParam);
++			::SetWindowLongPtr(hDlg, DWLP_USER, static_cast<LONG_PTR>(lParam));
+ 			SelectDirByDlg* psdbd = (SelectDirByDlg*)lParam;
+ 			::SetDlgItemText(hDlg, IDC_TITLE, psdbd->getTitle());
+ 			psdbd->initTreeView(::GetDlgItem(hDlg, IDC_TREE));
+diff -uNr dengaku_322_org/common/shobj_wrapper.cpp dengaku_322_x64/common/shobj_wrapper.cpp
+--- dengaku_322_org/common/shobj_wrapper.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/shobj_wrapper.cpp	2013-02-17 09:35:55.144798900 +0900
+@@ -155,8 +155,8 @@
+ 				  NETACCOUNTPARAM* pNAP)
+ {
+ 	HINSTANCE hInst = (HINSTANCE)::GetWindowLongPtr(hwndOwner, GWLP_HINSTANCE);
+-	return ::DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_NETACCOUNT),
+-							hwndOwner, (DLGPROC)NetAccountDlgProc, (LPARAM)pNAP);
++	return static_cast<BOOL>(::DialogBoxParam(hInst, MAKEINTRESOURCE(IDD_NETACCOUNT),
++							hwndOwner, (DLGPROC)NetAccountDlgProc, (LPARAM)pNAP));
+ }
+ 
+ void
+diff -uNr dengaku_322_org/common/shobj_wrapper.h dengaku_322_x64/common/shobj_wrapper.h
+--- dengaku_322_org/common/shobj_wrapper.h	2011-10-02 18:49:44.000000000 +0900
++++ dengaku_322_x64/common/shobj_wrapper.h	2013-02-17 09:35:55.149799200 +0900
+@@ -85,7 +85,7 @@
+ class LPIDL_Wrapper : public LPSHOBJ_Wrapper<ITEMIDLIST> {
+ public:
+ 	LPIDL_Wrapper(LPITEMIDLIST lpidl = NULL)
+-		: LPSHOBJ_Wrapper<ITEMIDLIST>(lpidl), m_pEnumHeader(NULL)
++		: LPSHOBJ_Wrapper<ITEMIDLIST>((ITEMIDLIST *)lpidl), m_pEnumHeader(NULL)
+ 	{}
+ 	LPIDL_Wrapper(const LPIDL_Wrapper& rhs)
+ 		: LPSHOBJ_Wrapper<ITEMIDLIST>(rhs), m_pEnumHeader(NULL)
+@@ -98,7 +98,7 @@
+ 	}
+ 	LPIDL_Wrapper& operator=(LPITEMIDLIST lpidl)
+ 	{
+-		this->LPSHOBJ_Wrapper<ITEMIDLIST>::operator=(lpidl);
++		this->LPSHOBJ_Wrapper<ITEMIDLIST>::operator=((ITEMIDLIST *)lpidl);
+ 		m_pEnumHeader = NULL;
+ 		return *this;
+ 	}
+diff -uNr dengaku_322_org/common/si_comdlg.cpp dengaku_322_x64/common/si_comdlg.cpp
+--- dengaku_322_org/common/si_comdlg.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/si_comdlg.cpp	2013-02-17 09:35:55.153799400 +0900
+@@ -80,7 +80,7 @@
+ 
+ 	LPSTR pfbuf = pszFilter;
+ 	LPCSTR av, phead, ptop, pend;
+-	int i = 0;
++	INT_PTR i = 0;
+ 	ptrdiff_t	slen, flen;
+ 	while (i < exp_num && (av = exp_list[i++]) != NULL) {
+ 		//	"explanation(filters)" の "filters" 部分を取得
+diff -uNr dengaku_322_org/common/si_dialog.cpp dengaku_322_x64/common/si_dialog.cpp
+--- dengaku_322_org/common/si_dialog.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/si_dialog.cpp	2013-02-17 09:35:55.157799600 +0900
+@@ -33,7 +33,7 @@
+ 	nm.hdr.hwndFrom = hDlg;
+ 	nm.hdr.idFrom = 0; // not used
+ 	nm.wVKey = VK_TAB;
+-	nm.flags = lpMsg->lParam;
++	nm.flags = static_cast<UINT>(lpMsg->lParam);
+ 	pCtrl->onWmNotify(0, (LPARAM)&nm);
+ 
+ 	return TRUE;
+diff -uNr dengaku_322_org/common/si_file.cpp dengaku_322_x64/common/si_file.cpp
+--- dengaku_322_org/common/si_file.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/si_file.cpp	2013-02-17 09:35:55.162799900 +0900
+@@ -203,7 +203,7 @@
+ 		if (h == NULL ||
+ 			(h = lstrchr(++h,'\\')) == NULL) return nullStr; // 不正なパス名
+ 		olen = ++h - (LPCSTR)buf;
+-		newname.append(buf,0,olen);
++		newname.append(buf,0,static_cast<int>(olen));
+ 	}
+ 
+ 	//	残りのパス名の処理
+@@ -260,7 +260,7 @@
+ 		if (h == NULL ||
+ 			(h = lstrchr(++h,'\\')) == NULL) return nullStr; // 不正なパス名
+ 		olen = ++h - (LPCSTR)buf;
+-		newname.append(buf,0,olen);
++		newname.append(buf,0,static_cast<int>(olen));
+ 	}
+ 
+ 	//	残りのパス名の処理
+diff -uNr dengaku_322_org/common/si_menu.cpp dengaku_322_x64/common/si_menu.cpp
+--- dengaku_322_org/common/si_menu.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/si_menu.cpp	2013-02-17 09:35:55.166800100 +0900
+@@ -141,7 +141,7 @@
+ 			::TranslateMessage(&msg);
+ 			::DispatchMessage(&msg);
+ 		}
+-		ret = msg.wParam;
++		ret = static_cast<DWORD>(msg.wParam);
+ 	}
+ 	::UnregisterClass(pszClassName, (HINSTANCE)wc.hInstance);
+ 
+diff -uNr dengaku_322_org/common/si_string.cpp dengaku_322_x64/common/si_string.cpp
+--- dengaku_322_org/common/si_string.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/si_string.cpp	2013-02-17 09:35:55.171800400 +0900
+@@ -211,7 +211,7 @@
+ {
+ 	LPCSTR ptr = str;
+ 	while (IsCharSpace(*ptr)) ptr++;
+-	return str.extract(ptr - (LPCSTR)str, str.length());
++	return str.extract(static_cast<int>(ptr - (LPCSTR)str), str.length());
+ }
+ 
+ StringBuffer
+@@ -227,7 +227,7 @@
+ 			break;
+ 		}
+ 	}
+-	return ++tail > head ? str.extract(0, tail - head) : nullStr;
++	return ++tail > head ? str.extract(0, static_cast<int>(tail - head)) : nullStr;
+ }
+ 
+ StringBuffer
+diff -uNr dengaku_322_org/common/smalloc.cpp dengaku_322_x64/common/smalloc.cpp
+--- dengaku_322_org/common/smalloc.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/smalloc.cpp	2017-12-01 20:14:47.031436900 +0900
+@@ -14,7 +14,7 @@
+ 
+ 	::SetLastError(0L);
+ 	m_hFileMap = ::CreateFileMapping(
+-							(HANDLE)0xFFFFFFFF,
++							(HANDLE)INVALID_HANDLE_VALUE,
+ 							NULL,
+ 							PAGE_READWRITE,
+ 							0, pagesize,
+@@ -41,7 +41,7 @@
+ void*
+ FileMap::addr(ptrdiff_t iptr)
+ {
+-	return iptr < m_pagesize ? ((char*)m_header + iptr) : NULL;
++	return iptr < static_cast<INT_PTR>(m_pagesize) ? ((char*)m_header + iptr) : NULL;
+ }
+ 
+ #ifdef _DEBUG
+@@ -114,7 +114,7 @@
+ SMAlloc::initAllocator(PageHeader* pHeader)
+ {
+ 	LPSMAHeader p = (LPSMAHeader)((char*)pHeader + allocate_offset());
+-	UINT next_offset = allocate_offset() + sizeof(SMAHeader);
++	UINT_PTR next_offset = allocate_offset() + sizeof(SMAHeader);
+ 	p->m_info.m_size = 1;
+ 	p->m_info.m_iptr = next_offset;
+ #ifdef DEBUG_SMALLOC
+@@ -134,7 +134,7 @@
+ ptrdiff_t
+ SMAlloc::alloc(UINT size)
+ {
+-	UINT nunits = (size + sizeof(SMAHeader) - 1) / sizeof(SMAHeader) + 1;
++	UINT_PTR nunits = (size + sizeof(SMAHeader) - 1) / sizeof(SMAHeader) + 1;
+ 
+ 	PageHeader* pHeader = getPageHeader();
+ 
+@@ -146,7 +146,7 @@
+ 	for (p = (LPSMAHeader)addr(prevp->m_info.m_iptr);
+ 		 /* p != freep */;
+ 		 prevp = p, p = (LPSMAHeader)addr(p->m_info.m_iptr)) {
+-		if (p->m_info.m_size >= nunits) {
++		if (p->m_info.m_size >= static_cast<ptrdiff_t>(nunits)) {
+ 			if (p->m_info.m_size == nunits) {
+ 				prevp->m_info.m_iptr = p->m_info.m_iptr;
+ 			} else {
+@@ -221,7 +221,7 @@
+ }
+ 
+ void
+-SMAlloc::setMasterIndex(UINT index)
++SMAlloc::setMasterIndex(UINT_PTR index)
+ {
+ 	SMA_AutoLock lock(*this);
+ 	getPageHeader()->m_idxMaster = index;
+diff -uNr dengaku_322_org/common/smalloc.h dengaku_322_x64/common/smalloc.h
+--- dengaku_322_org/common/smalloc.h	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/smalloc.h	2017-11-30 23:10:06.839083700 +0900
+@@ -32,19 +32,19 @@
+ 		ptrdiff_t m_iptr; // index of next header
+ 		ptrdiff_t m_size; // size of block
+ 	} m_info;
+-	ULONG m_align;
++	ULONG_PTR m_align;
+ };
+ #endif
+ 
+ typedef SMAHeader* LPSMAHeader;
+ 
+ struct PageHeader {
+-	UINT m_nShareCount;
++	UINT_PTR m_nShareCount;
+ 	ptrdiff_t m_idxMaster;
+ 	ptrdiff_t m_idxFreeP;
+ };
+ 
+-static inline int
++static inline INT_PTR
+ allocate_offset()
+ {
+ 	return ((sizeof(PageHeader) + sizeof(SMAHeader) - 1) / sizeof(SMAHeader))
+@@ -57,7 +57,7 @@
+ 	virtual ~FileMap();
+ 
+ 	void* m_header;
+-	UINT m_pagesize;
++	UINT_PTR m_pagesize;
+ 	BOOL m_bAlreadyExist;
+ 	const StringBuffer m_name;
+ 
+@@ -109,11 +109,11 @@
+ 	void lock() const { ::WaitForSingleObject(m_hMutex, INFINITE); }
+ 	void release() const { ::ReleaseMutex(m_hMutex); }
+ 
+-	UINT sharedNum() { return getPageHeader()->m_nShareCount; }
++	UINT_PTR sharedNum() { return getPageHeader()->m_nShareCount; }
+ 	BOOL isShared() { return sharedNum() > 1; }
+ 
+ 	ptrdiff_t getMasterIndex() { return getPageHeader()->m_idxMaster; }
+-	void setMasterIndex(UINT index);
++	void setMasterIndex(UINT_PTR index);
+ 
+ private:
+ 	HANDLE m_hMutex;
+diff -uNr dengaku_322_org/common/spi_mngr.cpp dengaku_322_x64/common/spi_mngr.cpp
+--- dengaku_322_org/common/spi_mngr.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/spi_mngr.cpp	2013-02-17 09:35:55.183801100 +0900
+@@ -51,7 +51,7 @@
+ 	DWORD fsize = fPicture.readFile(buf, SPISUPPORTED_BUF_SIZE);
+ 	if (fsize > 0) {
+ 		if (fsize < SPISUPPORTED_BUF_SIZE) buf.zero(fsize, -1);
+-		ret = (*m_pfnSPISupported)((LPCSTR)filename, (DWORD)(BYTE*)buf);
++		ret = (*m_pfnSPISupported)((LPCSTR)filename, (void *)(BYTE*)buf);
+ 	}
+ 	return ret;
+ }
+@@ -59,7 +59,8 @@
+ StringBuffer
+ SPI_Manager::getPicInfo(const StringBuffer& filename) const
+ {
+-	PIC_INFO pi;
++	PIC_INFO pi = {0};	// 初期化しないとtopやleftにゴミが入るPlug-inがある
++						// http://www2f.biglobe.ne.jp/~kana/develop.html
+ 	pi.hInfo = NULL;
+ 	if ((*m_pfnSPIGetPicInfo)(filename,0,0,&pi) != 0 &&
+ 		(*m_pfnSPIGetPicInfo)(filename,128,0,&pi) != 0)
+diff -uNr dengaku_322_org/common/spi_mngr.h dengaku_322_x64/common/spi_mngr.h
+--- dengaku_322_org/common/spi_mngr.h	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/spi_mngr.h	2013-02-17 09:35:55.187801300 +0900
+@@ -9,7 +9,7 @@
+ 
+ #include "strbuf.h"
+ 
+-#pragma pack(push,pic_info,8)
++#pragma pack(push,1)
+ typedef struct {
+ 	LONG	left, top;
+ 	LONG	width;
+@@ -17,13 +17,16 @@
+ 	WORD	x_density;
+ 	WORD	y_density;
+ 	SHORT	colorDepth;
++    #ifdef _WIN64
++      char  dummy[2]; // アラインメント
++    #endif
+ 	HLOCAL	hInfo;
+ } PIC_INFO;
+-#pragma pack(pop,pic_info)
++#pragma pack(pop)
+ 
+ typedef int (__stdcall *PFNSPIINFO)(int,LPSTR,int);
+-typedef int (__stdcall *PFNSPISUPPORTED)(LPCSTR,DWORD);
+-typedef int (__stdcall *PFNSPIGETPICINFO)(LPCSTR,LONG,UINT,PIC_INFO*);
++typedef int (__stdcall *PFNSPISUPPORTED)(LPCSTR, void *);
++typedef int (__stdcall *PFNSPIGETPICINFO)(LPCSTR,LONG_PTR,UINT,PIC_INFO*);
+ 
+ class SPI_Manager {
+ public:
+diff -uNr dengaku_322_org/common/strbuf.cpp dengaku_322_x64/common/strbuf.cpp
+--- dengaku_322_org/common/strbuf.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/strbuf.cpp	2013-02-17 09:35:55.191801600 +0900
+@@ -475,7 +475,7 @@
+ {
+ 	if (!m_sbuf->isShareable()) m_sbuf->recalc();
+ 	LPCSTR	s = lstrchr(m_sbuf->m_buf, ch);
+-	return s != NULL ? (s - m_sbuf->m_buf) : -1;
++	return s != NULL ? static_cast<int>(s - m_sbuf->m_buf) : -1;
+ }
+ 
+ int
+@@ -484,7 +484,7 @@
+ 	if (ch == '\0') return m_sbuf->m_len;
+ 	if (!m_sbuf->isShareable()) m_sbuf->recalc();
+ 	LPCSTR	s = lstrrchr(m_sbuf->m_buf,ch);
+-	return s != NULL ? (s - m_sbuf->m_buf) : -1;
++	return s != NULL ? static_cast<int>(s - m_sbuf->m_buf) : -1;
+ }
+ 
+ int
+@@ -493,7 +493,7 @@
+ 	if (!IsValidPtr(lpstr)) return -1;
+ 	if (!m_sbuf->isShareable()) m_sbuf->recalc();
+ 	LPCSTR	s = lstrstr(m_sbuf->m_buf,lpstr);
+-	return s != NULL ? (s - m_sbuf->m_buf) : -1;
++	return s != NULL ? static_cast<int>(s - m_sbuf->m_buf) : -1;
+ }
+ 
+ int
+@@ -509,7 +509,7 @@
+ 	for ( ; (str = lstrstr(ToNextChar(nstr), lpstr)) != NULL; nstr = str)
+ 		/* no operation here */;
+ 
+-	return nstr - m_sbuf->m_buf;
++	return static_cast<int>(nstr - m_sbuf->m_buf);
+ }
+ 
+ StringBuffer
+@@ -567,6 +567,6 @@
+ 	if (head+len > len2) len = len2 - head;
+ 	LPCSTR	h = lstrninc(m_sbuf->m_buf, head),
+ 			t = lstrninc(h, len);
+-	return StringBuffer(h, t - h);
++	return StringBuffer(h, static_cast<int>(t - h));
+ }
+ 
+diff -uNr dengaku_322_org/common/ThemeWrapper.h dengaku_322_x64/common/ThemeWrapper.h
+--- dengaku_322_org/common/ThemeWrapper.h	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/common/ThemeWrapper.h	2013-02-17 09:35:55.196801900 +0900
+@@ -9,7 +9,8 @@
+ 
+ #include <windows.h>
+ #include <UxTheme.h>
+-#include <TmSchema.h>
++//#include <TmSchema.h>
++#include <vssym32.h>
+ 
+ #define GET_ADDR(func) \
+ 	m_pfn##func = (pfn##func)::GetProcAddress(m_hmUxTheme, #func); \
+diff -uNr dengaku_322_org/dll/bs_func.cpp dengaku_322_x64/dll/bs_func.cpp
+--- dengaku_322_org/dll/bs_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/bs_func.cpp	2013-02-17 09:35:55.201802100 +0900
+@@ -82,10 +82,10 @@
+ }
+ 
+ DENGAKUDLL_API HIDEDLL_NUMTYPE
+-BRE_SPLIT(LPCSTR pattern, LPCSTR str, int limit)
++BRE_SPLIT(LPCSTR pattern, LPCSTR str, HIDEDLL_NUMTYPE limit)
+ {
+ 	try {
+-		return g_pSessionInstance->si_bregexp_split(pattern, str, limit);
++		return g_pSessionInstance->si_bregexp_split(pattern, str, static_cast<int>(limit));
+ 	} catch (...) {
+ 		return 0;
+ 	}
+diff -uNr dengaku_322_org/dll/cs_func.cpp dengaku_322_x64/dll/cs_func.cpp
+--- dengaku_322_org/dll/cs_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/cs_func.cpp	2013-02-17 09:35:55.204802300 +0900
+@@ -82,7 +82,7 @@
+ SLEEP(HIDEDLL_NUMTYPE nTime)
+ {
+ 	try {
+-		return g_pSessionInstance->si_sleep(nTime);
++		return g_pSessionInstance->si_sleep(static_cast<int>(nTime));
+ 	} catch (...) {
+ 		return 0;
+ 	}
+diff -uNr dengaku_322_org/dll/DengakuDLL.dll.manifest dengaku_322_x64/dll/DengakuDLL.dll.manifest
+--- dengaku_322_org/dll/DengakuDLL.dll.manifest	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/DengakuDLL.dll.manifest	2013-02-17 09:35:55.208802500 +0900
+@@ -2,7 +2,7 @@
+ <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+ <assemblyIdentity
+     version="1.0.0.0"
+-    processorArchitecture="X86"
++    processorArchitecture="*"
+     name="M.Sugiura.DengakuDLL"
+     type="win32"
+ />
+@@ -13,7 +13,7 @@
+             type="win32"
+             name="Microsoft.Windows.Common-Controls"
+             version="6.0.0.0"
+-            processorArchitecture="X86"
++            processorArchitecture="*"
+             publicKeyToken="6595b64144ccf1df"
+             language="*"
+         />
+diff -uNr dengaku_322_org/dll/DengakuDLL.h dengaku_322_x64/dll/DengakuDLL.h
+--- dengaku_322_org/dll/DengakuDLL.h	2013-02-17 00:32:52.000000000 +0900
++++ dengaku_322_x64/dll/DengakuDLL.h	2013-02-17 09:35:55.213802800 +0900
+@@ -38,7 +38,7 @@
+ 
+ //	int 版と double 版の両方でコードを再利用するためのトリック
+ #ifndef HIDEDLL_DOUBLE
+-typedef int HIDEDLL_NUMTYPE;
++typedef INT_PTR HIDEDLL_NUMTYPE;
+ #else
+ typedef double HIDEDLL_NUMTYPE;
+ #endif
+diff -uNr dengaku_322_org/dll/DengakuDLL.rc dengaku_322_x64/dll/DengakuDLL.rc
+--- dengaku_322_org/dll/DengakuDLL.rc	2013-02-17 00:32:52.000000000 +0900
++++ dengaku_322_x64/dll/DengakuDLL.rc	2017-12-01 22:43:49.073487300 +0900
+@@ -7,8 +7,9 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "afxres.h"
+-
++//#include "afxres.h"
++#include <windows.h>
++#define IDC_STATIC      (-1)
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+ 
+@@ -107,8 +108,8 @@
+ //
+ 
+ VS_VERSION_INFO VERSIONINFO
+- FILEVERSION 3,2,2,0
+- PRODUCTVERSION 2013,2,16,0
++ FILEVERSION 3,2,2,1
++ PRODUCTVERSION 2013,2,17,0
+  FILEFLAGSMASK 0x3fL
+ #ifdef _DEBUG
+  FILEFLAGS 0x1L
+@@ -126,12 +127,12 @@
+             VALUE "Comments", "田楽(でんがく)ＤＬＬ"
+             VALUE "CompanyName", "M. Sugiura"
+             VALUE "FileDescription", "DengakuDLL"
+-            VALUE "FileVersion", "3, 2, 2, 0"
++            VALUE "FileVersion", "3, 2, 2, 1"
+             VALUE "InternalName", "DengakuDLL"
+             VALUE "LegalCopyright", "Copyright (C) 1998-2013 M. Sugiura, All rights reserved."
+             VALUE "OriginalFilename", "DengakuDLL.dll"
+             VALUE "ProductName", "田楽(でんがく)ＤＬＬ"
+-            VALUE "ProductVersion", "2013, 2, 16, 0"
++            VALUE "ProductVersion", "2017, 12, 1, 0"
+         END
+     END
+     BLOCK "VarFileInfo"
+diff -uNr dengaku_322_org/dll/dlltest.cpp dengaku_322_x64/dll/dlltest.cpp
+--- dengaku_322_org/dll/dlltest.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/dlltest.cpp	2013-02-17 09:35:55.252805100 +0900
+@@ -154,62 +154,62 @@
+ 
+ #define DENGAKUDLL_API extern "C" __declspec(dllimport)
+ 
+-DENGAKUDLL_API LPCSTR GETDIRNAME(int, LPCSTR, LPCSTR);
++DENGAKUDLL_API LPCSTR GETDIRNAME(INT_PTR, LPCSTR, LPCSTR);
+ 
+ DENGAKUDLL_API LPCSTR GETDRIVES();
+ DENGAKUDLL_API LPCSTR GETLONGNAME(LPCSTR);
+-DENGAKUDLL_API int    SETCURDIR(LPCSTR);
++DENGAKUDLL_API INT_PTR    SETCURDIR(LPCSTR);
+ DENGAKUDLL_API LPCSTR GETCURDIR();
+-DENGAKUDLL_API int    MKDIR(LPCSTR);
+-DENGAKUDLL_API int    RMDIR(LPCSTR);
+-DENGAKUDLL_API int    COPY(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    MOVE(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    REMOVE(LPCSTR);
+-DENGAKUDLL_API int    TOUCH(LPCSTR);
+-DENGAKUDLL_API int    RUN(LPCSTR);
+-DENGAKUDLL_API int    ENUMFILE(LPCSTR);
+-DENGAKUDLL_API int    ENUMDIR(LPCSTR);
+-DENGAKUDLL_API int    ENUMPATH(LPCSTR);
++DENGAKUDLL_API INT_PTR    MKDIR(LPCSTR);
++DENGAKUDLL_API INT_PTR    RMDIR(LPCSTR);
++DENGAKUDLL_API INT_PTR    COPY(LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR    MOVE(LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR    REMOVE(LPCSTR);
++DENGAKUDLL_API INT_PTR    TOUCH(LPCSTR);
++DENGAKUDLL_API INT_PTR    RUN(LPCSTR);
++DENGAKUDLL_API INT_PTR    ENUMFILE(LPCSTR);
++DENGAKUDLL_API INT_PTR    ENUMDIR(LPCSTR);
++DENGAKUDLL_API INT_PTR    ENUMPATH(LPCSTR);
+ DENGAKUDLL_API LPCSTR FINDNEXT();
+ DENGAKUDLL_API LPCSTR SIZEOF(LPCSTR);
+ DENGAKUDLL_API LPCSTR TIMESTAMPOF(LPCSTR);
+ DENGAKUDLL_API LPCSTR TIMECOUNTOF(LPCSTR);
+ DENGAKUDLL_API LPCSTR ATTRIBUTEOF(LPCSTR);
+ 
+-DENGAKUDLL_API int    STRICMP(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    STRCOUNT(LPCSTR, LPCSTR);
+-DENGAKUDLL_API LPCSTR GSUB(LPCSTR, LPCSTR, LPCSTR, int);
++DENGAKUDLL_API INT_PTR    STRICMP(LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR    STRCOUNT(LPCSTR, LPCSTR);
++DENGAKUDLL_API LPCSTR GSUB(LPCSTR, LPCSTR, LPCSTR, INT_PTR);
+ DENGAKUDLL_API LPCSTR GETTOKEN(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    HASMORETOKENS();
++DENGAKUDLL_API INT_PTR    HASMORETOKENS();
+ DENGAKUDLL_API LPCSTR LTRIM(LPCSTR);
+ DENGAKUDLL_API LPCSTR RTRIM(LPCSTR);
+-DENGAKUDLL_API int    STRLEN(LPCSTR);
+-DENGAKUDLL_API int    STRLEN2(LPCSTR);
+-DENGAKUDLL_API int    STRSTR(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    STRSTR2(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    STRRSTR(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int    STRRSTR2(LPCSTR, LPCSTR);
+-DENGAKUDLL_API LPCSTR LEFTSTR(LPCSTR, int);
+-DENGAKUDLL_API LPCSTR LEFTSTR2(LPCSTR, int);
+-DENGAKUDLL_API LPCSTR RIGHTSTR(LPCSTR, int);
+-DENGAKUDLL_API LPCSTR RIGHTSTR2(LPCSTR, int);
+-DENGAKUDLL_API LPCSTR MIDSTR(LPCSTR, int, int);
+-DENGAKUDLL_API LPCSTR MIDSTR2(LPCSTR, int, int);
++DENGAKUDLL_API INT_PTR    STRLEN(LPCSTR);
++DENGAKUDLL_API INT_PTR    STRLEN2(LPCSTR);
++DENGAKUDLL_API INT_PTR    STRSTR(LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR    STRSTR2(LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR    STRRSTR(LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR    STRRSTR2(LPCSTR, LPCSTR);
++DENGAKUDLL_API LPCSTR LEFTSTR(LPCSTR, INT_PTR);
++DENGAKUDLL_API LPCSTR LEFTSTR2(LPCSTR, INT_PTR);
++DENGAKUDLL_API LPCSTR RIGHTSTR(LPCSTR, INT_PTR);
++DENGAKUDLL_API LPCSTR RIGHTSTR2(LPCSTR, INT_PTR);
++DENGAKUDLL_API LPCSTR MIDSTR(LPCSTR, INT_PTR, INT_PTR);
++DENGAKUDLL_API LPCSTR MIDSTR2(LPCSTR, INT_PTR, INT_PTR);
+ DENGAKUDLL_API LPCSTR TOLOWER(LPCSTR);
+ DENGAKUDLL_API LPCSTR TOLOWER2(LPCSTR);
+ DENGAKUDLL_API LPCSTR TOUPPER(LPCSTR);
+ DENGAKUDLL_API LPCSTR TOUPPER2(LPCSTR);
+ 
+-DENGAKUDLL_API int NEWDIALOG(LPCSTR, int, LPCSTR);
+-DENGAKUDLL_API int NEWCONTROL(LPCSTR, LPCSTR, LPCSTR);
+-DENGAKUDLL_API int SHOWDIALOG(int, int);
+-DENGAKUDLL_API int WAITCTRLNOTIFY(int);
+-DENGAKUDLL_API int ENDDIALOG();
++DENGAKUDLL_API INT_PTR NEWDIALOG(LPCSTR, INT_PTR, LPCSTR);
++DENGAKUDLL_API INT_PTR NEWCONTROL(LPCSTR, LPCSTR, LPCSTR);
++DENGAKUDLL_API INT_PTR SHOWDIALOG(INT_PTR, INT_PTR);
++DENGAKUDLL_API INT_PTR WAITCTRLNOTIFY(INT_PTR);
++DENGAKUDLL_API INT_PTR ENDDIALOG();
+ 
+-DENGAKUDLL_API int BRE_LOAD(LPCSTR);
++DENGAKUDLL_API INT_PTR BRE_LOAD(LPCSTR);
+ DENGAKUDLL_API LPCSTR BRE_SUBST(LPCSTR, LPCSTR);
+ DENGAKUDLL_API LPCSTR BRE_TRANS(LPCSTR, LPCSTR);
+-DENGAKUDLL_API int BRE_FREE();
++DENGAKUDLL_API INT_PTR BRE_FREE();
+ 
+ #define NO_OUTPUT
+ #define PROF_FILE
+@@ -301,7 +301,7 @@
+ 
+ void enumtest(const char* parent)
+ {
+-	int n = ENUMDIR((string(parent) + "\\*.*").c_str());
++	INT_PTR n = ENUMDIR((string(parent) + "\\*.*").c_str());
+ 	if (n == 0) {
+ 		MessageBox(NULL, NULL, "Error: 検索失敗", MB_OK);
+ 	} else if (n == 1) {
+@@ -640,7 +640,7 @@
+ 	BRE_FREE();
+ #endif
+ 
+-	int	nRet = ENUMFILE("/o n c:\\temp\\*.*");
++	INT_PTR	nRet = ENUMFILE("/o n c:\\temp\\*.*");
+ 
+ 	return 0;
+ }
+diff -uNr dengaku_322_org/dll/ds_func.cpp dengaku_322_x64/dll/ds_func.cpp
+--- dengaku_322_org/dll/ds_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/ds_func.cpp	2013-02-17 09:35:55.256805300 +0900
+@@ -111,7 +111,7 @@
+ {
+ 	OUTPUT_TICK_COUNT("SETCTRLIMESTATE");
+ 	try {
+-		return g_pSessionInstance->si_setctrlimestate(str1,num2);
++		return g_pSessionInstance->si_setctrlimestate(str1,static_cast<int>(num2));
+ 	} catch (...) {
+ 		return 0;
+ 	}
+@@ -187,7 +187,7 @@
+ 	OUTPUT_TICK_COUNT("ENABLECTRL");
+ 	try {
+ 		RealCmdLineParser argv(str);
+-		return g_pSessionInstance->si_enablectrl(num,argv);
++		return g_pSessionInstance->si_enablectrl(static_cast<BOOL>(num),argv);
+ 	} catch (...) {
+ 		return 0;
+ 	}
+@@ -297,7 +297,7 @@
+ {
+ 	OUTPUT_TICK_COUNT("SETDLGIMESTATE");
+ 	try {
+-		return g_pSessionInstance->si_setdlgimestate(num1);
++		return g_pSessionInstance->si_setdlgimestate(static_cast<int>(num1));
+ 	} catch (...) {
+ 		return 0;
+ 	}
+@@ -610,7 +610,7 @@
+ {
+ 	OUTPUT_TICK_COUNT("SETDLGPOS");
+ 	try {
+-		return g_pSessionInstance->si_setdlgpos(x, y, pszOrigin, pszUnit);
++		return g_pSessionInstance->si_setdlgpos(static_cast<int>(x), static_cast<int>(y), pszOrigin, pszUnit);
+ 	} catch (...) {
+ 		return 0;
+ 	}
+diff -uNr dengaku_322_org/dll/hs_func.cpp dengaku_322_x64/dll/hs_func.cpp
+--- dengaku_322_org/dll/hs_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/hs_func.cpp	2013-02-17 09:35:55.260805500 +0900
+@@ -38,10 +38,10 @@
+ }
+ 
+ DENGAKUDLL_API LPCSTR
+-HMJRE_MATCH(LPCSTR pszFind, LPCSTR pszTarget, int nOffset, int nFlags, int nRegExp)
++HMJRE_MATCH(LPCSTR pszFind, LPCSTR pszTarget, HIDEDLL_NUMTYPE nOffset, HIDEDLL_NUMTYPE nFlags, HIDEDLL_NUMTYPE nRegExp)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_hmjre_match(pszFind, pszTarget, nOffset, nFlags, nRegExp);
++		g_strBuffer = g_pSessionInstance->si_hmjre_match(pszFind, pszTarget, static_cast<int>(nOffset), static_cast<int>(nFlags), static_cast<int>(nRegExp));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -49,10 +49,10 @@
+ }
+ 
+ DENGAKUDLL_API LPCSTR
+-HMJRE_GET_TAG_POSITION(int nTagNumber)
++HMJRE_GET_TAG_POSITION(HIDEDLL_NUMTYPE nTagNumber)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_hmjre_get_tag_position(nTagNumber);
++		g_strBuffer = g_pSessionInstance->si_hmjre_get_tag_position(static_cast<int>(nTagNumber));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -71,30 +71,30 @@
+ }
+ 
+ DENGAKUDLL_API HIDEDLL_NUMTYPE
+-HMJRE_FIND_REGULAR(LPCSTR pszRE, LPCSTR pszTarget, int nOffset)
++HMJRE_FIND_REGULAR(LPCSTR pszRE, LPCSTR pszTarget, HIDEDLL_NUMTYPE nOffset)
+ {
+ 	try {
+-		return g_pSessionInstance->si_hmjre_find_regular(pszRE, pszTarget, nOffset);
++		return g_pSessionInstance->si_hmjre_find_regular(pszRE, pszTarget, static_cast<int>(nOffset));
+ 	} catch (...) {
+ 		return -1;
+ 	}
+ }
+ 
+ DENGAKUDLL_API HIDEDLL_NUMTYPE
+-HMJRE_FIND_REGULAR_NO_CASE_SENSE(LPCSTR pszRE, LPCSTR pszTarget, int nOffset)
++HMJRE_FIND_REGULAR_NO_CASE_SENSE(LPCSTR pszRE, LPCSTR pszTarget, HIDEDLL_NUMTYPE nOffset)
+ {
+ 	try {
+-		return g_pSessionInstance->si_hmjre_find_regular_no_case_sense(pszRE, pszTarget, nOffset);
++		return g_pSessionInstance->si_hmjre_find_regular_no_case_sense(pszRE, pszTarget, static_cast<int>(nOffset));
+ 	} catch (...) {
+ 		return -1;
+ 	}
+ }
+ 
+ DENGAKUDLL_API LPCSTR
+-HMJRE_REPLACE_REGULAR(LPCSTR pszRE, LPCSTR pszTarget, int nOffset, LPCSTR pszReplace, int fReplaceAll)
++HMJRE_REPLACE_REGULAR(LPCSTR pszRE, LPCSTR pszTarget, HIDEDLL_NUMTYPE nOffset, LPCSTR pszReplace, HIDEDLL_NUMTYPE fReplaceAll)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_hmjre_replace_regular(pszRE, pszTarget, nOffset, pszReplace, fReplaceAll);
++		g_strBuffer = g_pSessionInstance->si_hmjre_replace_regular(pszRE, pszTarget, static_cast<int>(nOffset), pszReplace, static_cast<int>(fReplaceAll));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -102,10 +102,10 @@
+ }
+ 
+ DENGAKUDLL_API LPCSTR
+-HMJRE_REPLACE_REGULAR_NO_CASE_SENSE(LPCSTR pszRE, LPCSTR pszTarget, int nOffset, LPCSTR pszReplace, int fReplaceAll)
++HMJRE_REPLACE_REGULAR_NO_CASE_SENSE(LPCSTR pszRE, LPCSTR pszTarget, HIDEDLL_NUMTYPE nOffset, LPCSTR pszReplace, HIDEDLL_NUMTYPE fReplaceAll)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_hmjre_replace_regular_no_case_sense(pszRE, pszTarget, nOffset, pszReplace, fReplaceAll);
++		g_strBuffer = g_pSessionInstance->si_hmjre_replace_regular_no_case_sense(pszRE, pszTarget, static_cast<int>(nOffset), pszReplace, static_cast<int>(fReplaceAll));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -123,20 +123,20 @@
+ }
+ 
+ DENGAKUDLL_API HIDEDLL_NUMTYPE
+-HMJRE_GET_LAST_MATCH_TAG_POSITION(int nTagNumber)
++HMJRE_GET_LAST_MATCH_TAG_POSITION(HIDEDLL_NUMTYPE nTagNumber)
+ {
+ 	try {
+-		return g_pSessionInstance->si_hmjre_get_last_match_tag_position(nTagNumber);
++		return g_pSessionInstance->si_hmjre_get_last_match_tag_position(static_cast<int>(nTagNumber));
+ 	} catch (...) {
+ 		return -1;
+ 	}
+ }
+ 
+ DENGAKUDLL_API HIDEDLL_NUMTYPE
+-HMJRE_GET_LAST_MATCH_TAG_LENGTH(int nTagNumber)
++HMJRE_GET_LAST_MATCH_TAG_LENGTH(HIDEDLL_NUMTYPE nTagNumber)
+ {
+ 	try {
+-		return g_pSessionInstance->si_hmjre_get_last_match_tag_length(nTagNumber);
++		return g_pSessionInstance->si_hmjre_get_last_match_tag_length(static_cast<int>(nTagNumber));
+ 	} catch (...) {
+ 		return -1;
+ 	}
+@@ -153,10 +153,10 @@
+ }
+ 
+ DENGAKUDLL_API HIDEDLL_NUMTYPE
+-HMJRE_OPTION_DIALOG(int nHwnd, int nDisableFlags)
++HMJRE_OPTION_DIALOG(HIDEDLL_NUMTYPE nHwnd, HIDEDLL_NUMTYPE nDisableFlags)
+ {
+ 	try {
+-		return g_pSessionInstance->si_hmjre_option_dialog(nHwnd, nDisableFlags);
++		return g_pSessionInstance->si_hmjre_option_dialog(static_cast<int>(nHwnd), static_cast<int>(nDisableFlags));
+ 	} catch (...) {
+ 		return -1;
+ 	}
+diff -uNr dengaku_322_org/dll/is_func.cpp dengaku_322_x64/dll/is_func.cpp
+--- dengaku_322_org/dll/is_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/is_func.cpp	2013-02-17 09:35:55.265805800 +0900
+@@ -33,7 +33,7 @@
+ GETSPIINFO(HIDEDLL_NUMTYPE type)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_getspiinfo(type);
++		g_strBuffer = g_pSessionInstance->si_getspiinfo(static_cast<int>(type));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+diff -uNr dengaku_322_org/dll/ms_func.cpp dengaku_322_x64/dll/ms_func.cpp
+--- dengaku_322_org/dll/ms_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/ms_func.cpp	2013-02-17 09:35:55.273806300 +0900
+@@ -59,12 +59,12 @@
+ 			::GetCaretPos(&pt);
+ 			HWND hWndActualHavingCaret = GetActualHavingCaretWindow((HWND)hWndHavingCaret);
+ 			::ClientToScreen(hWndActualHavingCaret, &pt);
+-			pt.x += x_offset;
+-			pt.y += y_offset;
++			pt.x += static_cast<LONG>(x_offset);
++			pt.y += static_cast<LONG>(y_offset);
+ 		} else {
+ 			// マウスカーソル位置基準(マウスカーソル位置は後で取得)
+-			pt.x = x_offset;
+-			pt.y = y_offset;
++			pt.x = static_cast<LONG>(x_offset);
++			pt.y = static_cast<LONG>(y_offset);
+ 		}
+ 
+ 		//	showMenuThread() 内でも同じコードがあるが、
+@@ -159,7 +159,7 @@
+ CHANGEMENUITEMEX(LPCSTR name, HIDEDLL_NUMTYPE index, LPCSTR str, LPCSTR opt)
+ {
+ 	try {
+-		return g_pSessionInstance->si_changemenuitem(name,index,str,opt);
++		return g_pSessionInstance->si_changemenuitem(name,static_cast<int>(index),str,opt);
+ 	} catch (...) {
+ 		return 0;
+ 	}
+@@ -170,7 +170,7 @@
+ CHANGEMENUITEM(LPCSTR name, HIDEDLL_NUMTYPE index, LPCSTR str)
+ {
+ 	try {
+-		return g_pSessionInstance->si_changemenuitem(name,index,str,nullStr);
++		return g_pSessionInstance->si_changemenuitem(name,static_cast<int>(index),str,nullStr);
+ 	} catch (...) {
+ 		return 0;
+ 	}
+@@ -181,7 +181,7 @@
+ DELETEMENUITEM(LPCSTR menuname, HIDEDLL_NUMTYPE index)
+ {
+ 	try {
+-		return g_pSessionInstance->si_deletemenuitem(menuname,index);
++		return g_pSessionInstance->si_deletemenuitem(menuname,static_cast<int>(index));
+ 	} catch (...) {
+ 		return 0;
+ 	}
+diff -uNr dengaku_322_org/dll/ss_func.cpp dengaku_322_x64/dll/ss_func.cpp
+--- dengaku_322_org/dll/ss_func.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/dll/ss_func.cpp	2013-02-17 09:35:55.278806500 +0900
+@@ -22,7 +22,7 @@
+ ITOA(HIDEDLL_NUMTYPE val, HIDEDLL_NUMTYPE radix)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_itoa(val,radix);
++		g_strBuffer = g_pSessionInstance->si_itoa(static_cast<int>(val),static_cast<int>(radix));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -56,7 +56,7 @@
+ GSUB(LPCSTR str1, LPCSTR str2, LPCSTR str3, HIDEDLL_NUMTYPE num)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_gsub(str1,str2,str3,num);
++		g_strBuffer = g_pSessionInstance->si_gsub(str1,str2,str3,static_cast<int>(num));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -137,7 +137,7 @@
+ LEFTSTR(LPCSTR str, HIDEDLL_NUMTYPE num)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_leftstr(str,num);
++		g_strBuffer = g_pSessionInstance->si_leftstr(str,static_cast<int>(num));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -149,7 +149,7 @@
+ MIDSTR(LPCSTR str, HIDEDLL_NUMTYPE num1, HIDEDLL_NUMTYPE num2)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_midstr(str,num1,num2);
++		g_strBuffer = g_pSessionInstance->si_midstr(str,static_cast<int>(num1),static_cast<int>(num2));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -161,7 +161,7 @@
+ RIGHTSTR(LPCSTR str, HIDEDLL_NUMTYPE num)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_rightstr(str,num);
++		g_strBuffer = g_pSessionInstance->si_rightstr(str,static_cast<int>(num));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -278,7 +278,7 @@
+ LEFTSTR2(LPCSTR str, HIDEDLL_NUMTYPE num)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_leftstr2(str,num);
++		g_strBuffer = g_pSessionInstance->si_leftstr2(str,static_cast<int>(num));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -290,7 +290,7 @@
+ MIDSTR2(LPCSTR str, HIDEDLL_NUMTYPE num1, HIDEDLL_NUMTYPE num2)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_midstr2(str,num1,num2);
++		g_strBuffer = g_pSessionInstance->si_midstr2(str,static_cast<int>(num1),static_cast<int>(num2));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+@@ -302,7 +302,7 @@
+ RIGHTSTR2(LPCSTR str, HIDEDLL_NUMTYPE num)
+ {
+ 	try {
+-		g_strBuffer = g_pSessionInstance->si_rightstr2(str,num);
++		g_strBuffer = g_pSessionInstance->si_rightstr2(str,static_cast<int>(num));
+ 		return g_strBuffer;
+ 	} catch (...) {
+ 		return "";
+diff -uNr dengaku_322_org/server/cds_handler.cpp dengaku_322_x64/server/cds_handler.cpp
+--- dengaku_322_org/server/cds_handler.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/server/cds_handler.cpp	2013-02-17 09:35:55.282806800 +0900
+@@ -86,7 +86,7 @@
+ 			::TranslateMessage(&msg);
+ 			::DispatchMessage(&msg);
+ 		}
+-		ret = msg.wParam;
++		ret = static_cast<DWORD>(msg.wParam);
+ 	}
+ 	::UnregisterClass(wc.lpszClassName, (HINSTANCE)wc.hInstance);
+ 
+diff -uNr dengaku_322_org/server/main.cpp dengaku_322_x64/server/main.cpp
+--- dengaku_322_org/server/main.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/server/main.cpp	2013-02-17 09:35:55.287807100 +0900
+@@ -181,12 +181,13 @@
+ MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+ {
+ 	DDEServerInfo*
+-		pdsi = reinterpret_cast<DDEServerInfo*>(::GetWindowLongPtr(hWnd, DWLP_USER));
++		pdsi = reinterpret_cast<DDEServerInfo*>(::GetWindowLong(hWnd,
++																DWLP_USER));
+ 
+ 	switch (uMsg) {
+ 	case WM_INITDIALOG:	//	メインウィンドウの初期化処理
+ 		//	lParam : サーバ情報の入った構造体へのポインタ
+-		::SetWindowLongPtr(hWnd,DWLP_USER,lParam);
++		::SetWindowLongPtr(hWnd,DWLP_USER,static_cast<LONG_PTR>(lParam));
+ 		pdsi = reinterpret_cast<DDEServerInfo*>(lParam);
+ 
+ 		//	ウィンドウハンドルの登録
+@@ -296,7 +297,7 @@
+ 
+ 	case WM_USER_SHOWICON:	//	タスクトレイのアイコンの表示/非表示の切替
+ 		if (static_cast<WPARAM>(pdsi->m_bHideIcon) != wParam) {
+-			pdsi->m_bHideIcon = wParam;
++			pdsi->m_bHideIcon = static_cast<BOOL>(wParam);
+ 			::Shell_NotifyIcon(pdsi->m_bHideIcon ? NIM_DELETE : NIM_ADD,
+ 								&pdsi->m_NotifyIconData);
+ 		}
+@@ -542,7 +543,7 @@
+ 			}
+ 			DEBUG_OUTPUT(("Leave: msg=%08x,w=%08x,l=%08x", msg.message, msg.wParam, msg.lParam));
+ 		}
+-		ret_code = msg.wParam;
++		ret_code = static_cast<int>(msg.wParam);
+ 	} else {
+ 		ErrorMessageBox(MSG_ERR_START);
+ 		ret_code = 1;
+diff -uNr dengaku_322_org/server/pdparser.cpp dengaku_322_x64/server/pdparser.cpp
+--- dengaku_322_org/server/pdparser.cpp	2011-02-24 00:18:06.000000000 +0900
++++ dengaku_322_x64/server/pdparser.cpp	2013-02-17 09:35:55.291807300 +0900
+@@ -71,8 +71,8 @@
+ 			while (IS_BLANK(*pe)) *pe-- = '\0';
+ 			while (pt < pe && IS_BLANK(*pt)) pt++;
+ 		} else pe++;
+-		head = pt - pBuf;
+-		size = pe - pt;
++		head = static_cast<int>(pt - pBuf);
++		size = static_cast<int>(pe - pt);
+ 		if (IS_QUOTE(*pt)) { pt++;  *pe-- = '\0'; }
+ 		this->addItem(new CmdArgv(pt,head,size));
+ 	}
