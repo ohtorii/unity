@@ -1,13 +1,11 @@
 ﻿/*
 */
-$g_root_macro_directory =currentmacrodirectory+"\\..";
-
 call LoadDll;
 endmacro str(##return);
 
 
 LoadDll:
-	##dll = loaddll($g_root_macro_directory + "\\bin\\hm_process.dll");
+	##dll = loaddll(currentmacrodirectory + "\\bin\\hm_process.dll");
 	if (##dll==0) {
 		message "bin\\hm_process.dllのロードに失敗しました";
 		return 0;

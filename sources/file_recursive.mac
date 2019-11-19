@@ -40,7 +40,7 @@ gather_candidates:
 	call remove_terminate $$root_dir;
 	$$root_dir=$$return;
 
-	$$exe=$g_root_macro_directory+R"(\bin\file_searcher.exe)";
+	$$exe=$g_root_macro_directory+R"(\internal\bin\file_searcher.exe)";
 	$$args = sprintf(R"(--output "%s" --mode file --working_directory "%s" --path "%s" --delay %d)",$$temp_filename,$g_current_working_directory,$$root_dir,0);
 	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirect",$$exe,$$args,true,true);
 	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
