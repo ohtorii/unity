@@ -61,6 +61,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\resources\"</PostBuildEvent>
+    <PostBuildEvent>copy /B /Y "$(TargetPath)" "$(SolutionDir)..\..\bin\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
