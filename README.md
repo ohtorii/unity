@@ -186,7 +186,8 @@ hidemaru-editor-script-directory
 https://github.com/ohtorii/unity/releases
 
 ### 注意
-masterブランチを取得しても多分動作しないです。<br>
+masterブランチを取得しても多分動作しないです。
+
 ブランチを作らずに気楽に開発してます。（仕事じゃないしね😉）
 
 ### バージョン番号のルール
