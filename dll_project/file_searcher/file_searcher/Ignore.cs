@@ -44,8 +44,7 @@ namespace file_searcher
 			".ilk",
 			".codeanalysis",
 			".codeanalysisast",
-			"tags",
-			"ctags",
+			"tags","ctags","GPATH","GRTAGS","GTAGS",
 		};
 	}
 }
