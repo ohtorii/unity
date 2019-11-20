@@ -37,6 +37,19 @@ static bool StrStrNoCase(const std::wstring &str1, const std::wstring &str2) {
 }
 
 static bool MatchAll(const std::wstring &line, const std::vector<std::wstring>& tokens) {
+#if 1
+	//大文字と小文字を区別せず検索する。
+	std::wstring lower;	
+	for (auto&word : tokens) {
+		lower.resize(word.size());
+		std::transform(word.cbegin(), word.cend(), lower.begin(), towlower);
+		if (!StrStrNoCase(line, lower)) {
+			return false;
+		}
+	}
+	return true;
+#else
+	//Smart case
 	for (auto&word : tokens) {
 		if (ExistUpper(word)) {
 			//英大文字（A-Z）あり
@@ -53,6 +66,7 @@ static bool MatchAll(const std::wstring &line, const std::vector<std::wstring>& 
 		}
 	}
 	return true;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
