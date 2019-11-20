@@ -14,6 +14,11 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 # スクリーンショット（準備中）
 
+## file_mru
+
+ファイル履歴からファイルを見付けて開く。
+![file_mru](help/images/file_mru.gif "file_mru")
+
 
 # マクロの思想
 
