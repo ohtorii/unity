@@ -1,4 +1,4 @@
-﻿/* Unite-Vimを秀丸エディタへ移植中（まだ動かない）
+﻿/* Unityマクロ　メイン処理
 
 usage:
 	unity.mac root_dir sources options
@@ -61,7 +61,10 @@ $g_space = "\r\n\t 　";
 #g_result_quit			=3;
 #g_result_faile 		=-1;
 
-//オプション
+//マーク
+$g_color_mark="gather";
+
+//動作オプション
 #g_option_auto_preview=false;
 $g_option_auto_preview_context_candidate="";
 
@@ -109,7 +112,6 @@ main:
 		$$callback_macro_filename	=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_MacroFilename");
 		$$callback_label			=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_LabelName");
 		$$callback_args				=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_Args");
-
 	}
 
 	//カーソル位置を元に戻す
@@ -292,7 +294,7 @@ RefineSearchMain:
 		##ctrl 	=iskeydown(0x11);
 		##q		=iskeydown(0x51);
 
-		if(0){
+		if(0){/*デバッグ*/
 			if($$keycode!="0"){
 				debuginfo(sprintf("$$keycode=%s / ctrl=%d",$$keycode,##ctrl));
 			}
@@ -318,6 +320,7 @@ RefineSearchMain:
 		else if($$keycode=="16")				{call CursorUp;}				//ctrl-p
 		else if($$keycode=="14")				{call CursorDown;}				//ctrl-n
 		else if(##ctrl && ($$keycode=="32"))	{call Mark;call CursorDown;}	//ctrl-space
+		else if(##ctrl && ($$keycode=="1"))		{call MarkAll;}					//ctrl-a
 		else if($$keycode == "29")				{call CursorUp;}				//↑
 		else if($$keycode == "31")				{call CursorDown;}				//↓
 		else if(#g_keyprss_page_up)				{call PageUp;}					//PageUp
@@ -587,21 +590,46 @@ PageDown:
 	call CursorMoveCommon 0;
 	return ;
 
+MarkAll:
+	//全行をマークする
+	disabledraw;
+	##old_column=column;
+	##old_lineno=lineno;
+
+	##line=1;
+	##count=linecount2;
+	while(##line <= ##count){
+		moveto2 ##old_column,##line;
+		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,true);
+		selectline 0;
+		colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
+		escape;
+
+		##line = ##line + 1;
+	}
+
+	//カーソル位置を元に戻す
+	moveto2 ##old_column,##old_lineno;
+
+	enabledraw;
+	return;
+
+
 Mark:
 	//カーソル行に色を塗る
 	disabledraw;
-	$$marker=getcolormarker(0x0001,"gather");
+	$$marker=getcolormarker(0x0001,$g_color_mark);
 	if($$marker=="000000FF"){
 		//マーク削除
 		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,false);
 		selectline 0;
-		deletecolormarker "gather";
+		deletecolormarker $g_color_mark;
 		escape;
 	}else{
 		//マークする
 		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,true);
 		selectline 0;
-		colormarker 0x000000ff,-1,-1,0,0x00,"gather";
+		colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
 		escape;
 	}
 
@@ -634,7 +662,7 @@ Filter:
 		if(0 < ##selected_lineno){
 			movetolineno 1, ##selected_lineno;
 			selectline 0;
-			colormarker 0x000000ff,-1,-1,0,0x00,"gather";
+			colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
 			escape;
 		}
 		##i = ##i + 1;
