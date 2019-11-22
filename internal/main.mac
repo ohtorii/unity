@@ -408,6 +408,11 @@ Enter:
 		$$source_filename=$$source_filename+".mac";
 		call NewCandidate, $$source_filename, $$arg;
 		return ##return;
+	}else{
+		//候補の再取得
+		call GatherRegetCandidates;
+		$$source_arg="";	//todo: ソースの引数を実装する。
+		call TryRegetCandidates $$source_arg;
 	}
 	return #g_result_continue;
 
