@@ -61,8 +61,8 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 |--|--|--|
 |← or Ctrl-b|カーソル左||
 |→ or Ctrl-f|カーソル右||
-|Home or Ctrl-a|先頭へ||
-|End or Ctrl-e|最後へ||
+|Home|先頭へ||
+|End|最後へ||
 
 
 ### テキスト編集
@@ -86,6 +86,7 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 |PageUp|１ページ前へ移動||
 |PageDown|１ページ後ろへ移動||
 |Ctrl-space|候補をマークする|複数の候補を選択するとき利用します|
+|Ctrl-a|候補を全て選択する||
 |Enter|ディフォルトアクションを実行する||
 |Esc|一つ前のバッファに戻る||
 
