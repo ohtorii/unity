@@ -33,10 +33,10 @@ $g_reget_sourcenames[0]="";
 #g_reget_sourcenames_count=0;
 
 //DLL
-#g_hmjre_dll 	= 0;
+#g_hmjre_dll		=0;
 #g_dll_ohtorii_tools=0;
-#g_dll_hm_process=0;
-#g_dll_output_panel=0;
+#g_dll_hm_process	=0;
+#g_dll_output_panel =0;
 
 
 /*****************************************************************************
@@ -60,6 +60,12 @@ $g_space = "\r\n\t 　";
 #g_result_continue		=2;
 #g_result_quit			=3;
 #g_result_faile 		=-1;
+
+//現在の候補モード
+#g_candidate_mode_text		=0;
+#g_candidate_mode_action	=1;
+
+
 
 //マーク
 $g_color_mark="gather";
@@ -206,7 +212,7 @@ Start:
 	}
 	call ShowPerformanceCounter "ソースの読み込み";
 
-	call RefineSearch "", "";
+	call RefineSearch "", "", #g_candidate_mode_text;
 	return ##return;
 
 
@@ -214,12 +220,14 @@ Start:
 RefineSearch:
 	/*
 	引数	$$1		ソースのファイル名
-		$$2		引数
+			$$2		引数
+			##3		候補モード(#g_candidate_mode_*)
 
 	return	#g_result_*;
 	*/
 	$$source_filename	= $$1;
 	$$source_args		= $$2;
+	##candidate_mode	= ##3;
 
 	//
 	//ソースから候補を生成する
@@ -237,7 +245,7 @@ RefineSearch:
 	}
 
 	//絞り込み検索を行う
-	call RefineSearchMain $$source_filename;
+	call RefineSearchMain ##candidate_mode;
 	##ret=##return;
 	return ##ret;
 
@@ -256,8 +264,10 @@ PopRefineSearch:
 
 RefineSearchMain:
 	/*
+	引数	##1		候補モード
 	return	#g_result_*;
 	*/
+	##candidate_mode=##1;
 	$$keybord_buffer="";
 
 	execmacro $g_command_line_path+"\\parse_result.mac" , "cursor"		, $$keybord_buffer;
@@ -270,15 +280,15 @@ RefineSearchMain:
 	//事前に実行してDLL側のデータを作る。
 	call Filter $$key_buffer;
 
-	$$prev_pattern="999";
-	##candidates_update_interval=20;
-	##candidates_update_prev_tickcount=0;
+	$$prev_pattern						="999";
+	##candidates_update_interval		=20;
+	##candidates_update_prev_tickcount	=0;
 
-	##hm_process_update_interval=100;
-	##hm_process_update_prev_tickcount=0;
+	##hm_process_update_interval		=100;
+	##hm_process_update_prev_tickcount	=0;
 
-	##auto_update_interval=200;
-	##auto_update_prev_tickcount=0;
+	##auto_update_interval				=200;
+	##auto_update_prev_tickcount		=0;
 
 	while(true){
 		execmacro $g_command_line_path+"\\input-keys.mac", $$key_buffer, $$cursor_pos;
@@ -304,7 +314,7 @@ RefineSearchMain:
 			##old_column=column;
 			##old_lineno=lineno;
 
-			call Enter ;
+			call Enter ##candidate_mode;
 			if(##return==#g_result_continue){
 				call Continue $$key_buffer;
 
@@ -334,7 +344,7 @@ RefineSearchMain:
 			##old_lineno=lineno;
 
 			##current_context=dllfuncw(#g_dll_ohtorii_tools,"GetCurrentContext");
-			call NewCandidate currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context);
+			call NewCandidate currentmacrodirectory+"\\generate_action_candidates.mac",str(##current_context),#g_candidate_mode_action;
 			if(##return==#g_result_continue){
 				if(! ##return){
 					return #g_result_faile;
@@ -383,6 +393,8 @@ Enter:
 
 	return	#g_result_*
 	*/
+	##candidate_mode=##1;
+
 	$$args[0]	=str(#g_dll_ohtorii_tools);
 	$$args[1]	=str(#g_dll_hm_process) ;
 	$$args[30]	="";
@@ -402,17 +414,22 @@ Enter:
 
 	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusEnableIsStart");
 	if(##is_start){
+		/*memo　候補の再取得について。
+		NewCandidate　中で候補の再取得が行われるため、このif文中では何もしない。
+		*/
 		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetIsStartSourceName");
 		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetIsStartArg");
 		$$source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
 		$$source_filename=$$source_filename+".mac";
-		call NewCandidate, $$source_filename, $$arg;
+		call NewCandidate, $$source_filename, $$arg, ##candidate_mode;
 		return ##return;
 	}else{
-		//候補の再取得
-		call GatherRegetCandidates;
-		$$source_arg="";	//todo: ソースの引数を実装する。
-		call TryRegetCandidates $$source_arg;
+		if(##candidate_mode==#g_candidate_mode_text){
+			//ディフォルトアクションの実行後
+			call GatherRegetCandidates;
+			$$source_arg="";	//todo 後で実装
+			call TryRegetCandidates $$source_arg;
+		}
 	}
 	return #g_result_continue;
 
@@ -426,6 +443,11 @@ Continue:
 
 NewCandidate:
 	/*新規の候補選択
+
+	（引数）	$$1		ソースのファイル名
+				$$2		ソースの引数
+				##3		候補モード
+
 	return	#g_result_quit
 			#g_result_faile
 			#g_result_continue
@@ -433,6 +455,7 @@ NewCandidate:
 	debuginfo "Enter NewCandidate";
 	$$source_filename	=$$1;
 	$$source_arg		=$$2;
+	##candidate_mode	=##3;
 
 	debuginfo "  $$source_filename="+$$source_filename;
 	debuginfo "  $$source_arg="+$$source_arg;
@@ -444,7 +467,7 @@ NewCandidate:
 		return #g_result_continue;
 	}
 
-	call RefineSearch $$source_filename	,$$source_arg;
+	call RefineSearch $$source_filename	,$$source_arg,##candidate_mode;
 	##search_result	=##return;
 	##is_quit		=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetIsQuit");
 	call GatherRegetCandidates;
@@ -455,7 +478,10 @@ NewCandidate:
 		return #g_result_faile;
 	}
 
-	call TryRegetCandidates $$source_arg;
+	if(##candidate_mode==#g_candidate_mode_action){
+		//アクション実行後の状態なので候補の更新を試す。
+		call TryRegetCandidates $$source_arg;
+	}
 	if(##search_result==#g_result_cancel){
 		//キャンセル
 		debuginfo "   cancel.";
