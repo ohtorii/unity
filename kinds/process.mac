@@ -36,7 +36,7 @@ sigkill:
 		if(##process_id==0){
 			//DLL側でエラー発生
 		}else if(##user_process_id < ##process_id){
-				$$cmd = sprintf("cmd.exe /c taskkill /PID %d", ##process_id);
+				$$cmd = sprintf("cmd.exe /c taskkill /f /PID %d", ##process_id);
 				runex $$cmd
 						, 1 			//sync	  0:async 1:sync
 						, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
