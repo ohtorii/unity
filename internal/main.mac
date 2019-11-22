@@ -265,7 +265,7 @@ RefineSearchMain:
 	execmacro $g_command_line_path+"\\parse_result.mac" , "keybuffer"	, $$keybord_buffer;
 	$$key_buffer=getresultex(-1);
 
-	deletecolormarkerall "gather";
+	deletecolormarkerall $g_color_mark;
 
 	//事前に実行してDLL側のデータを作る。
 	call Filter $$key_buffer;
@@ -602,7 +602,7 @@ MarkAll:
 		moveto2 ##old_column,##line;
 		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,true);
 		selectline 0;
-		colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
+		call ColorMarker;
 		escape;
 
 		##line = ##line + 1;
@@ -629,7 +629,7 @@ Mark:
 		//マークする
 		##ret=dllfunc(#g_dll_ohtorii_tools,"RefineSearchChangeMarked",lineno,true);
 		selectline 0;
-		colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
+		call ColorMarker;
 		escape;
 	}
 
@@ -662,7 +662,7 @@ Filter:
 		if(0 < ##selected_lineno){
 			movetolineno 1, ##selected_lineno;
 			selectline 0;
-			colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
+			call ColorMarker;
 			escape;
 		}
 		##i = ##i + 1;
@@ -684,6 +684,11 @@ Filter:
 	refreshtabstop;
 	enabledraw;
 	return result;
+
+
+ColorMarker:
+	colormarker 0x000000ff,-1,-1,0,0x00,$g_color_mark;
+	return ;
 
 
 HilightWorld:
