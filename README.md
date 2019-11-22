@@ -16,8 +16,15 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 ## file_mru
 
-ファイル履歴からファイルを見付けて開く。
-![file_mru](help/images/file_mru.gif "file_mru")
+### ファイル履歴からファイルを見付けて開く
+![file_mru](help/images/file_mru_open.gif "file_mru")
+
+### ファイル履歴の削除
+![file_mru](help/images/file_mru_remove.gif "file_mru")
+
+### プロセスのkill
+
+![process](help/images/process_kill.gif "process")
 
 
 # マクロの思想
