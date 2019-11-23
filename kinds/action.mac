@@ -27,11 +27,26 @@ do:
 	/////////////////////////////////////////////////////////////////////////
 	//アクションを取得する
 	/////////////////////////////////////////////////////////////////////////
-	##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetFirstSelectionCandidateIndex");
+	/*##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetFirstSelectionCandidateIndex");
 	if(##candidate_index==-1){
 		debuginfo "  do -> false @ 0";
 		return "0";
+	}*/
+	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
+	##i=0;
+	while(##i < ##count){
+		##candidate_index=dllfuncw(#g_dll_ohtorii_tools,"RefineSearchGetSelectionCandidateIndex",##i);
+		call call_action ##candidate_index;
+		if($$return=="0"){
+			return "0";
+		}
+		##i = ##i + 1;
 	}
+	return "1";
+
+
+call_action:
+	##candidate_index=##1;
 	$$source_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetSourceName",	##candidate_index);
 	$$action_name	=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetText",			##candidate_index);
 	$$user_data_kind=dllfuncstrw(#g_dll_ohtorii_tools,"CandidatesGetUserDataString",##candidate_index,"__kind__","");
@@ -84,19 +99,3 @@ pre_action:
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"StatusUpdate",$$default_kind, $$default_action,##previous_context);
 	return ##ret;
 
-
-exec_action:
-	debuginfo "kinds/action.mac exec_action";
-	$$kind_filename	=$$1;
-	$$action_name	=$$2;
-
-	debuginfo "  $$kind_filename="+$$kind_filename;
-	debuginfo "  $$action_name="+ $$action_name;
-
-	$$args[0]="do_action";
-	$$args[1]=$$action_name;
-	$$args[29]=str(#g_dll_hm_process);
-	$$args[30]=str(#g_dll_ohtorii_tools);
-	execmacro $$kind_filename, $$args, 31;
-	$$action_result = getresultex(-1);
-	return $$action_result;
