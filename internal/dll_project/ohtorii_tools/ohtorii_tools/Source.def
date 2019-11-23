@@ -47,6 +47,7 @@ EXPORTS
 	RefineSearchConvertHidemaruLinenNoToCandidateIndex
 	RefineSearchSetHidemaruLineno
 	RefineSearchGetFirstSelectionCandidateIndex
+	RefineSearchGetSelectionCandidateIndex
 	RefineSearchMoveHidemaruCursorLineNo
 	
 	
