@@ -14,17 +14,20 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 # スクリーンショット（準備中）
 
-## file_mru
-
-### ファイル履歴からファイルを見付けて開く
+## ファイル履歴(file_mru)からファイルを見付けて開く
 ![file_mru](help/images/file_mru_open.gif "file_mru")
 
-### ファイル履歴の削除
+## ファイル履歴(file_mru)の削除
 ![file_mru](help/images/file_mru_remove.gif "file_mru")
 
-### プロセスのkill
+## プロセスのkill
 
 ![process](help/images/process_kill.gif "process")
+
+## auto preview
+
+previewアクションを自動的に呼び出します。
+![autopreview](help/images/file_autopreview.gif "autopreview")
 
 
 # マクロの思想
