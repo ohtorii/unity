@@ -21,15 +21,26 @@ preview:
 	//ウインドウを切り替える
 	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
 	if(##hidemaru_handle!=##not_found){
+		call GetSleepTime;
+		##sleep_time=##return;
+
 		setactivehidemaru ##hidemaru_handle;
-
 		//少し待つ
-		sleep 1500;
-
+		sleep ##sleep_time;
 		//元のウインドウに切り替える
 		setactivehidemaru ##current_hidemaru;
 	}
 	return "1";
+
+
+GetSleepTime:
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	$$ini_filename=$$root_macro_directory+"\\config.ini";
+	##milli_sec=getininumw($$ini_filename,"action", "sleep");
+	if(##milli_sec < 0){
+		##milli_sec=0;
+	}
+	return ##milli_sec;
 
 
 //#region jump
