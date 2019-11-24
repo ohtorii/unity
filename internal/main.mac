@@ -177,6 +177,7 @@ Start:
 	}
 	call ShowPerformanceCounter "LoadDLL";
 
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"LogEnable",false);
 	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusInitialize",#g_target_hidemaru,directory2,$g_root_macro_directory);
 
 

@@ -1,8 +1,20 @@
 ﻿#include"stdafx.h"
 
 
+static bool sg_enable_log = false;
+
+
+void DebugLogEnable(bool enable) {
+	sg_enable_log = enable;
+}
+
+
 void DebugLog(const WCHAR *fmt, ...)
 {
+	if (!sg_enable_log) {
+		return;
+	}
+
 	va_list		ap;
 	int			len = 0;
 	std::vector<wchar_t>	buffer;
@@ -22,6 +34,10 @@ void DebugLog(const WCHAR *fmt, ...)
 
 void DebugLog(const char *fmt, ...)
 {
+	if (!sg_enable_log) {
+		return;
+	}
+
 	va_list		ap;
 	int			len = 0;
 	std::vector<char>	buffer;
@@ -39,6 +55,10 @@ void DebugLog(const char *fmt, ...)
 }
 
 void DebugLogLastError(DWORD errorcode) {
+	if (!sg_enable_log) {
+		return;
+	}
+
 	LPVOID lpMsgBuf = 0;
 	FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER  //      テキストのメモリ割り当てを要求する

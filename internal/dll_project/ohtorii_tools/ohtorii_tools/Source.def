@@ -135,3 +135,5 @@ EXPORTS
 	FileRegistAfterDeleteFile
 	WriteToFile
     DllDetachFunc_After_Hm866
+
+	LogEnable
