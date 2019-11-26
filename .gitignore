@@ -31,5 +31,5 @@ _vim_unite_
 Release
 Debug
 obj
-
+cov-int
 internal/dll_project/file_searcher/file_searcher/bin/
