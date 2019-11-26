@@ -49,8 +49,9 @@ preview:
 		return "1";
 	}
 
+	##search_hidemaru_handle = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetSearchHidemaruHandle");
 	##target_hidemaru_handle = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
-	if(tabgroup!=tabgroup[##target_hidemaru_handle]){
+	if(tabgroup[##search_hidemaru_handle] != tabgroup[##target_hidemaru_handle]){
 		//異なるタブグループ
 		return ;
 	}
