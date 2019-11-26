@@ -121,6 +121,8 @@ EXPORTS
 	StaticStatusGetIsQuit
 	StaticStatusSetTargetHidemaruHandle
 	StaticStatusGetTargetHidemaruHandle
+	StaticStatusSetSearchHidemaruHandle
+	StaticStatusGetSearchHidemaruHandle
 	StaticStatusSetCurrentWorkingDirectory
 	StaticStatusGetCurrentWorkingDirectory
 	StaticStatusSetRootMacroDirectory
