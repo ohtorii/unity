@@ -178,7 +178,7 @@ Start:
 	call ShowPerformanceCounter "LoadDLL";
 
 	##ret = dllfuncw(#g_dll_ohtorii_tools,"LogEnable",false);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusInitialize",#g_target_hidemaru,directory2,$g_root_macro_directory);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusInitialize",#g_target_hidemaru,#g_new_hidemaru,directory2,$g_root_macro_directory);
 
 
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"KindsLoadAll",$g_root_macro_directory+"\\kinds\\");
@@ -339,7 +339,8 @@ RefineSearchMain:
 		else if(##ctrl && #g_keyprss_home)		{call GoFileTop;}				//ctrl-home
 		else if(##ctrl && #g_keyprss_end)		{call GoFileEnd;}				//ctrl-end
 		else if(($$keycode=="3") || (##ctrl&&##q))	{return #g_result_quit;}	//ctrl-c / ctrl-q
-		else if($$keycode=="9"){												//tab
+		else if($$keycode=="23")				{call SeparateWindow;}			//ctrl-w
+		else if($$keycode=="9"){												//tab / ctrl-i
 			/*	アクションを選択する */
 			##old_column=column;
 			##old_lineno=lineno;
@@ -622,6 +623,16 @@ PageDown:
 	call CursorMoveCommon 0;
 	return ;
 
+SeparateWindow:
+	if(! tabmode){
+		return ;
+	}
+	if(tabtotal <= 1){
+		return ;
+	}
+	settabgroup hidemaruhandle(0),-1;
+	return ;
+
 MarkAll:
 	//全行をマークする
 	disabledraw;
@@ -811,11 +822,6 @@ NewFile:
 	if(result==0){
 		#g_open_newfile=false;
 		return false;
-	}
-	if(0){
-		//独立したウインドウで起動する
-		//主にhilightソース向け
-		settabgroup hidemaruhandle(0),-1;
 	}
 
 	#g_open_newfile=true;
