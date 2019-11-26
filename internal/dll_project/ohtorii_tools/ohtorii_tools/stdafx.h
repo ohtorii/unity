@@ -70,4 +70,4 @@
 #include"recurring_task.h"
 #include"hidemaru_functions.h"
 #include"auto_preview.h"
-
+#include"callback.h"

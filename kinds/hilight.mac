@@ -32,7 +32,7 @@ preview:
 	if($$value==""){
 		//マクロ終了後に適用したハイライト設定を戻すためにコールバックを登録する。
 		$$args=currentconfigset+"\t"+str(configstate)+"\t"+str(hidemaruhandle(0));
-		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"restore_configset",$$args);
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendCallBack_ProcessFinish",currentmacrofilename,"restore_configset",$$args);
 		//コールバックを二重登録しないようにフラグを設定しておく。
 		setstaticvariable $g_static_variable, "restore",0;
 	}
@@ -56,7 +56,6 @@ preview:
 		return ;
 	}
 
-	//ハイライト設定を目視でしっかり確認するために、
 	call GetSleepTime;
 	##milli_sec=##return;
 	sleep ##milli_sec;

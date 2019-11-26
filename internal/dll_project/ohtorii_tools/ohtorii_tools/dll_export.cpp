@@ -139,20 +139,24 @@ extern "C" INT_PTR StartCandidate(WCHAR*source_name, WCHAR*arg) {
 }
 
 //コールバック
-extern "C" INT_PTR SetCallBack_ProcessFinish(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
-	return Unity::Instance().lock()->QueryStaticStatus().SetCallBack(macro_filename, label_name, args);
+extern "C" INT_PTR AppendCallBack_ProcessFinish(WCHAR*macro_filename, WCHAR*label_name, WCHAR* args) {
+	return Unity::Instance().lock()->QueryStaticStatus().m_process_finish_callbackes.Append(macro_filename, label_name, args);
 }
 
-extern"C" WCHAR* GetCallBack_ProcessFinish_MacroFilename() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_macro_filename.c_str());
+extern "C" INT_PTR GetCallBack_ProcessFinish_Size() {
+	return Unity::Instance().lock()->QueryStaticStatus().m_process_finish_callbackes.Size();
 }
 
-extern"C" WCHAR* GetCallBack_ProcessFinish_LabelName() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_label_name.c_str());
+extern"C" WCHAR* GetCallBack_ProcessFinish_MacroFilename(INT_PTR index) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_process_finish_callbackes.GetMacroFileName(index));
 }
 
-extern"C" WCHAR* GetCallBack_ProcessFinish_Args() {
-	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_callback.m_args.c_str());
+extern"C" WCHAR* GetCallBack_ProcessFinish_LabelName(INT_PTR index) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_process_finish_callbackes.GetLabelName(index));
+}
+
+extern"C" WCHAR* GetCallBack_ProcessFinish_Args(INT_PTR index) {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QueryStaticStatus().m_process_finish_callbackes.GetArgs(index));
 }
 
 

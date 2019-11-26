@@ -96,11 +96,14 @@
     <ClInclude Include="interface_sugar.h">
       <Filter>interface</Filter>
     </ClInclude>
-    <ClInclude Include="hidemaru_functions.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\external\cereal\include\cereal\cereal.hpp">
       <Filter>3rd-party</Filter>
+    </ClInclude>
+    <ClInclude Include="hidemaru_functions.h">
+      <Filter>interface</Filter>
+    </ClInclude>
+    <ClInclude Include="callback.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="interface_sugar.cpp">
       <Filter>interface</Filter>
+    </ClCompile>
+    <ClCompile Include="callback.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

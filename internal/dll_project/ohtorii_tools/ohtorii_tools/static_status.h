@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include<string>
+#include"callback.h"
+
 
 class Unity;
 
@@ -13,7 +15,7 @@ public:
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_is_start,
 				m_is_quit,
-				m_callback,
+				m_process_finish_callbackes,
 				m_target_hidemaruhandle,
 				m_search_hidemaru_handle,
 				m_current_working_directory,
@@ -55,29 +57,9 @@ public:
 	/*再取得する候補のソース名をクリアする
 	*/
 	void ClearSourceNamesForReacquisitionCandidates();
-
-
-	class CallBack{
-	public:
-		template<class Archive> void serialize(Archive & archive) {
-			archive(m_macro_filename, m_label_name, m_args);
-		};
-
-		void Clear() {
-			m_macro_filename.clear();
-			m_label_name.clear();
-			m_args.clear();
-		};
-		std::wstring	m_macro_filename;
-		std::wstring	m_label_name;
-		std::wstring	m_args;
-	};
-	bool SetCallBack(const WCHAR*macro_filename, const WCHAR* label_name, const WCHAR* args);
-
-
 public:
 	bool			m_is_quit;	
-	CallBack		m_callback;
+	CallBackContainer	m_process_finish_callbackes;
 	INT_PTR			m_target_hidemaruhandle;
 	INT_PTR			m_search_hidemaru_handle;
 	std::wstring	m_current_working_directory;

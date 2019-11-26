@@ -50,7 +50,7 @@ GetSleepTime:
 jump:
 	##first_item_index	= 0;
 	##hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionWindowHandle",##first_item_index);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_jump",str(##hidemaru_handle));
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendCallBack_ProcessFinish",currentmacrofilename,"callback_jump",str(##hidemaru_handle));
 	return str(##ret);
 
 
@@ -69,7 +69,7 @@ callback_jump:
 //////////////////////////////////////////////////////////////////////////////
 only:
 	call make_callback_args;
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_only",$$return);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendCallBack_ProcessFinish",currentmacrofilename,"callback_only",$$return);
 	return str(##ret);
 
 callback_only:
@@ -250,7 +250,7 @@ contain_alive_window:
 //#region close
 close:
 	call make_callback_args;
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_close",$$return);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendCallBack_ProcessFinish",currentmacrofilename,"callback_close",$$return);
 	return str(##ret);
 
 

@@ -86,7 +86,7 @@ $g_option_auto_preview_context_candidate="";
 $g_old_searchbuffer = searchbuffer;
 #g_old_searchoption = searchoption;
 #g_target_hidemaru  = hidemaruhandle(0);
-
+//disableerrormsg;
 debuginfo 1;
 disablebreak;
 disablehistory
@@ -114,10 +114,18 @@ main:
 	call Start $$1;
 	##ret = ##return;
 
+	##callback_size=0;
 	if(#g_dll_ohtorii_tools){
-		$$callback_macro_filename	=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_MacroFilename");
-		$$callback_label			=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_LabelName");
-		$$callback_args				=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_Args");
+		##callback_size=dllfuncw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_Size");
+		##i=0;
+		while(##i<##callback_size){
+			$$callback_macro_filename[##i]	=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_MacroFilename",##i);
+			$$callback_label[##i]			=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_LabelName",##i);
+			$$callback_args[##i]			=dllfuncstrw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_Args",##i);
+
+			##i = ##i + 1;
+		}
+
 	}
 
 	//カーソル位置を元に戻す
@@ -129,10 +137,11 @@ main:
 	call FreeDll;
 	call CloseFileIfOpen;
 
-	if($$callback_macro_filename!=""){
-		execmacro $$callback_macro_filename, $$callback_label, $$callback_args;
+	##i=0;
+	while(##i<##callback_size){
+		execmacro $$callback_macro_filename[##i], $$callback_label[##i], $$callback_args[##i];
+		##i = ##i + 1;
 	}
-
 	return ##ret;
 
 ParseOptions:

@@ -86,7 +86,7 @@ const StaticStatus::IsStart&	StaticStatus::GetIsStart()const {
 };
 
 void StaticStatus::Initialize(INT_PTR target_hidemaru, INT_PTR search_hideamru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
-	m_callback.Clear();
+	m_process_finish_callbackes.Clear();
 	m_target_hidemaruhandle = target_hidemaru;
 	m_search_hidemaru_handle = search_hideamru_handle;
 	m_current_working_directory.assign(working_directory);
@@ -135,27 +135,5 @@ const WCHAR* StaticStatus::GetSourceNameForReacquisitionCandidates(INT_PTR index
 
 void StaticStatus::ClearSourceNamesForReacquisitionCandidates() {
 	m_reget_candidate_source_names.clear();
-}
-
-bool StaticStatus::SetCallBack(const WCHAR*macro_filename, const WCHAR* label_name, const WCHAR* args) {
-	try {
-		m_callback.m_macro_filename.assign(macro_filename);
-		m_callback.m_label_name.assign(label_name);
-		m_callback.m_args.assign(args);
-		return true;
-	}
-	catch (std::exception) {
-		//pass
-	}
-
-	//メンバ変数を中途半端に構築しないためにクリアしておく
-	try {
-		m_callback.Clear();
-	}
-	catch (std::exception) {
-		//これ以上やれることはないので無視してメソッドから返る
-	}
-
-	return false;
 }
 

@@ -45,7 +45,7 @@ open:
 	}
 
 	if(##new_hidemaru_handle){
-		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCallBack_ProcessFinish",currentmacrofilename,"callback_open",str(##new_hidemaru_handle));
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendCallBack_ProcessFinish",currentmacrofilename,"callback_open",str(##new_hidemaru_handle));
 	}
 	return str(##ret);
 

@@ -34,7 +34,8 @@ EXPORTS
 
 	
 	StartCandidate
-	SetCallBack_ProcessFinish
+	AppendCallBack_ProcessFinish
+	GetCallBack_ProcessFinish_Size
 	GetCallBack_ProcessFinish_MacroFilename
 	GetCallBack_ProcessFinish_LabelName
 	GetCallBack_ProcessFinish_Args
