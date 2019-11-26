@@ -74,7 +74,7 @@ bool StaticStatus::IsStart::Enable()const {
 StaticStatus::StaticStatus() {
 	m_is_quit = false;
 	m_target_hidemaruhandle = UNITY_HIDEMARU_NULL_HANDLE;
-
+	m_search_hidemaru_handle= UNITY_HIDEMARU_NULL_HANDLE;
 }
 
 StaticStatus::IsStart&	StaticStatus::GetIsStart() {
@@ -85,9 +85,10 @@ const StaticStatus::IsStart&	StaticStatus::GetIsStart()const {
 	return m_is_start;
 };
 
-void StaticStatus::Initialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
+void StaticStatus::Initialize(INT_PTR target_hidemaru, INT_PTR search_hideamru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
 	m_callback.Clear();
 	m_target_hidemaruhandle = target_hidemaru;
+	m_search_hidemaru_handle = search_hideamru_handle;
 	m_current_working_directory.assign(working_directory);
 	m_root_macro_directory.assign(root_macro_directory);
 	m_is_quit = true;
