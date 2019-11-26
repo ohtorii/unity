@@ -15,6 +15,7 @@ public:
 				m_is_quit,
 				m_callback,
 				m_target_hidemaruhandle,
+				m_search_hidemaru_handle,
 				m_current_working_directory,
 				m_root_macro_directory
 		);
@@ -42,7 +43,7 @@ public:
 	IsStart&GetIsStart();
 	const IsStart&GetIsStart() const;
 
-	void Initialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory);
+	void Initialize(INT_PTR target_hidemaru, INT_PTR search_hidemaru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory);
 	void UpdateStatus(INT_PTR kind_index, INT_PTR action_index,INT_PTR context_index);
 	/*再取得する候補のソース名の個数を得る
 	*/
@@ -78,6 +79,7 @@ public:
 	bool			m_is_quit;	
 	CallBack		m_callback;
 	INT_PTR			m_target_hidemaruhandle;
+	INT_PTR			m_search_hidemaru_handle;
 	std::wstring	m_current_working_directory;
 	std::wstring	m_root_macro_directory;
 
