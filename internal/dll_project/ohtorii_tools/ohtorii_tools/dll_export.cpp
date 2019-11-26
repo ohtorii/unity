@@ -443,8 +443,8 @@ extern "C" WCHAR* InheritanceFindActionKind(const WCHAR* action_name) {
 /////////////////////////////////////////////////////////////////////////////
 //StaticStatus
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR StaticStatusInitialize(INT_PTR target_hidemaru, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
-	Unity::Instance().lock()->QueryStaticStatus().Initialize(target_hidemaru, working_directory, root_macro_directory);
+extern "C" INT_PTR StaticStatusInitialize(INT_PTR target_hidemaru, INT_PTR search_hidemaru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
+	Unity::Instance().lock()->QueryStaticStatus().Initialize(target_hidemaru, search_hidemaru_handle, working_directory, root_macro_directory);
 	return true;
 }
 
@@ -484,6 +484,15 @@ extern"C" INT_PTR StaticStatusSetTargetHidemaruHandle(INT_PTR hidemaru_handle) {
 
 extern"C" INT_PTR StaticStatusGetTargetHidemaruHandle() {
 	return Unity::Instance().lock()->QueryStaticStatus().m_target_hidemaruhandle;
+}
+
+extern"C" INT_PTR StaticStatusSetSearchHidemaruHandle(INT_PTR hidemaru_handle) {
+	Unity::Instance().lock()->QueryStaticStatus().m_search_hidemaru_handle = hidemaru_handle;
+	return true;
+}
+
+extern"C" INT_PTR StaticStatusGetSearchHidemaruHandle() {
+	return Unity::Instance().lock()->QueryStaticStatus().m_search_hidemaru_handle;
 }
 
 extern"C" INT_PTR StaticStatusSetCurrentWorkingDirectory(WCHAR* current_working_directory) {
