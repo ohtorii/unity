@@ -83,7 +83,6 @@ previewアクションを自動的に呼び出します。
 |Ctrl-t|Transpose||
 |Ctrl-k|KillLine||
 |Ctrl-u|LineDiscard||
-|Ctrl-w|WordRubout||
 |Backspace or Ctrl-h|Backspace||
 
 
@@ -105,6 +104,7 @@ previewアクションを自動的に呼び出します。
 
 |キー|説明|備考|
 |--|--|--|
+|Ctrl-w|タブを分離する|タブモード時のみ有効。auto-previewと組み合わせてい利用する。|
 |Ctrl-c or Ctrl-q|マクロを終了する||
 
 # マクロの導入方法
