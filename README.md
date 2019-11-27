@@ -3,6 +3,20 @@
 ![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+- [Unity](#unity)
+- [はじめに](#はじめに)
+- [スクリーンショット（準備中）](#スクリーンショット準備中)
+- [マクロの思想](#マクロの思想)
+- [画面の名称](#画面の名称)
+- [操作方法](#操作方法)
+- [マクロの導入方法](#マクロの導入方法)
+- [いろいろな方法でUnityマクロを呼び出す](#いろいろな方法でunityマクロを呼び出す)
+- [動作環境](#動作環境)
+- [ダウンロード](#ダウンロード)
+- [その他](#その他)
+- [謝辞](#謝辞)
+- [連絡先](#連絡先)
+
 # はじめに
 
 作成途中なのでまだ動かないです。
@@ -14,10 +28,17 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 # スクリーンショット（準備中）
 
+
+## 文字列の挿入
+
+![文字列の挿入](help/images/insert.gif "文字列の挿入")
+
 ## ファイル履歴(file_mru)からファイルを見付けて開く
+
 ![file_mru](help/images/file_mru_open.gif "file_mru")
 
 ## ファイル履歴(file_mru)の削除
+
 ![file_mru](help/images/file_mru_remove.gif "file_mru")
 
 ## プロセスのkill
@@ -32,15 +53,31 @@ previewアクションを自動的に呼び出します。
 
 # マクロの思想
 
-後で書く
+ユーザーは関心対象（オブジェクト）を選択してから操作（アクション）を行う画面デザインです。
 
-端的に書くと「名詞→動詞」の構文です。
+![オブジェクトベースUI](help/images/ooui.png "オブジェクトベースUI")
+
+対象物（オブジェクト）を選んでから操作（アクション）を始める。そんな、***普通の操作***をテキストエディタで実装しました。
+
+端的に表現すると「名詞→動詞」の順です。
+
+## ユーザーの利点
+
+- オブジェクト・アクションを増やしても操作方法が変わらない。
+- 特定の操作手順に縛られない。
 
 
 ## source（ソース）とは
 
+候補の、
+
+ユーザーの関心対象（オブジェクト）
+
 ## kind（カインド）とは
 
+actionの集合です。
+
+後で図を書く
 
 # 画面の名称
 
@@ -104,15 +141,16 @@ previewアクションを自動的に呼び出します。
 
 |キー|説明|備考|
 |--|--|--|
-|Ctrl-w|タブを分離する|タブモード時のみ有効。auto-previewと組み合わせてい利用する。|
+|Ctrl-w|タブを分離する|タブモード時のみ有効。auto-previewと組み合わせると便利|
 |Ctrl-c or Ctrl-q|マクロを終了する||
 
 # マクロの導入方法
 
 まずは、動作確認を行った安定バージョンをダウンロードして下さい。
+
 https://github.com/ohtorii/unity/releases
 
-masterブランチを取得しても多分動作しないです。（動作確認を行っていないため）
+masterブランチは動作確認を行っていないため動作しないです。（仕事じゃないので気楽に開発してます☺）
 
 ## ディレクトリ構成
 
@@ -180,7 +218,6 @@ hidemaru-editor-script-directory
 # 動作環境
 
 - 秀丸エディタ ver xxx 以降
-- 田楽DLL ver 3.22 以降
 
 ## 動作確認を行った環境
 
@@ -188,7 +225,6 @@ hidemaru-editor-script-directory
 
 - Windows 10 64bit 
 - 秀丸エディタ 64bit ver xxx
-- 田楽DLL 64bit ver 3.22
 
 ## 備考
 
@@ -241,13 +277,21 @@ unite.vimを秀丸化して移植しています、そのためオリジナル(V
 
 [vim_to_hidemaru.md](help/vim_to_hidemaru.md)
 
+## 参考資料
+
+- http://emacs.rubikitch.com/sd1503-helm/
+- https://gist.github.com/Shougo/7fc95389ab6fddac7f78deb6ce42e82a
+
 
 # 謝辞
 
+## 思想とソースコードをかなり参考にさせてもらいました😘😘😘
 - [unite.vim](https://github.com/Shougo/unite.vim)
 - [anything.el](http://emacs.rubikitch.com/anything/)
 
-思想とソースコードをかなり参考にさせてもらいました😘😘😘
+## 作者に感謝
+- [田楽DLL 32bit](http://www.ceres.dti.ne.jp/~sugiura/hidemaru/macros/dgserver/#download64)
+- [田楽DLL 64bit](http://htom.in.coocan.jp/macro/macro_dll.html#label-5)
 
 # 連絡先
 
