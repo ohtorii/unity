@@ -184,7 +184,7 @@ void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_ref
 	}
 }
 
-void Inheritance::MakeResolveActions(std::vector<std::wstring> &common_kinds)
+void Inheritance::MakeResolveActions(const std::vector<std::wstring> &common_kinds)
 {
 	/*memo
 	m_resolve_actionsを生成する

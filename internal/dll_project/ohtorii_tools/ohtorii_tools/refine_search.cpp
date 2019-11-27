@@ -14,7 +14,7 @@ static WCHAR	gs_empty[] = { 0 };
 //	static function
 ///////////////////////////////////////////////////////////////////////////////
 static bool ExistUpper(const std::wstring&word) {
-	if (word.end() != std::find_if(word.cbegin(), word.cend(), [](auto&c) {return iswupper(c); })) {
+	if (word.cend() != std::find_if(word.cbegin(), word.cend(), [](auto&c) {return iswupper(c); })) {
 		return true;
 	}
 	return false;

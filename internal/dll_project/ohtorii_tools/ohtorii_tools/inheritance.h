@@ -108,7 +108,7 @@ private:
 	//memo: 並び順が重要なのでstd::vector<>を利用
 	void FindCommonKind(std::vector<std::wstring> &out_common_kinds);	
 	void FindCommonKindRecursive(std::vector<ReferenceCounter>	&out_reference_counter, const std::wstring&kind_name);
-	void MakeResolveActions(std::vector<std::wstring> &common_kinds);
+	void MakeResolveActions(const std::vector<std::wstring> &common_kinds);
 	/**アクションの候補一覧*/
 	std::vector<ResolveAction>	m_resolve_actions;
 
