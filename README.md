@@ -45,34 +45,78 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 ![process](help/images/process_kill.gif "process")
 
-## auto preview
+## auto preview オプション
 
-previewアクションを自動的に呼び出します。
+***previewアクション**を自動的に呼び出します。
 ![autopreview](help/images/file_autopreview.gif "autopreview")
 
 
 # マクロのデザイン
 
-関心対象（オブジェクト）を選択してから操作（アクション）を行うデザインです。
-
+関心対象（オブジェクト）を選択してから操作（アクション）を行うデザインをテキストエディタ上で行います。
 ![オブジェクトベースUI](help/images/ooui.png "オブジェクトベースUI")
-
-GUIの操作と同じ考え方です。
 
 ## 処理の流れ
 
-図を表示する
+図を用意する
+
 
 ## source（ソース）とは
 
-候補の源です。
+候補(candidates)を集めてくる秀丸マクロのこと。
+
+標準のソース一覧
+
+- directory
+- directroy_mru
+- directroy_recursive
+- file
+- file_mru
+- file_recursive
+- emoji
+- process
+- window
+- などなど
+
+もちろんユーザー作成のソースも自由に追加できます。
 
 
 ## kind（カインド）とは
 
-actionの集合です。
+候補（candidates）の型に対応した操作(action)をまとめた秀丸マクロです。
 
-後で図を書く
+標準のカインド一覧
+
+- common
+- file
+- file_base
+- cdable
+- process
+- window
+- などなど
+
+もちろんユーザー作成のカインドも自由に追加できます。
+
+kindは複数のactionを持っています、例えばcommonカインドを例に挙げると、
+
+	(例)
+	commonカインド
+		nopアクション
+		yancアクション
+		echoアクション
+		insertアクション
+		  :
+		  :
+
+
+## action(アクション)とは
+
+選択した候補に対して行う操作のことです。
+
+いくつかのフラグを持っています。
+- 複数選択する
+- 操作後すぐ終了する
+- 操作後に新たなソースを生成する
 
 # 画面の名称
 
