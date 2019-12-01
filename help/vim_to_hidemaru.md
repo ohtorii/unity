@@ -166,6 +166,9 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |vsplitswitch	|Open the file in vertical split window or jump to existing window/tabpage.|||
 
 ## process
+
+|機能|説明|補足|秀丸の実装状況|
+|:---|:---|:---|:---|
 |sigkill	|send the KILL signal to processes|taskkillコマンドを利用|✅|
 |sigterm	|send the TERM signal to processes|||
 |sigint		|send the INT signal to processes|||
