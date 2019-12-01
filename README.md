@@ -56,9 +56,10 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 関心対象（オブジェクト）を選択してから操作（アクション）を行うデザインをテキストエディタ上で行います。
 ![オブジェクトベースUI](help/images/ooui.png "オブジェクトベースUI")
 
+
 ## 処理の流れ
 
-図を用意する
+![処理の流れ](help/images/oogui_summary.png "処理の流れ")
 
 
 ## source（ソース）とは
