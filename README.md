@@ -302,6 +302,31 @@ masterブランチを取得しても多分動作しないです。
 
 # カスタマイズ
 
+## config.ini
+
+マクロの各種設定です。
+
+ご自身の環境に応じて編集してご利用ください。
+
+	;秀丸ファイラーClassicへのパス
+	[hidemaru_filer_classic]
+	path_x64="C:\Program Files\HmFilerClassic\HmFilerClassic.exe"
+	path_x86="C:\Program Files (x86)\HmFilerClassic\HmFilerClassic.exe"
+
+	;引数の詳細は「秀丸ファイラーClassic　ヘルプ　→　起動時のオプション」を参照してください。
+	arguments="/t /select,"
+
+	;ディフォルトの動作に任せる場合
+	;arguments=""
+
+
+	;アクション固有の設定
+	[action]
+	;アクション実行後に待機する時間(ミリ秒)
+	;ウインドウ、ハイライトのプレビューなどから参照。
+	sleep=1500
+
+
 ## ソースとカインド
 
 ソースとカインドを作成する方法はドキュメントを準備中です。
