@@ -101,13 +101,7 @@ void AsyncFileReader::LoadFileImage(std::vector<uint8_t>&out_fileimage) {
 	size_t	readed_byte = 0;
 	
 	{
-		FILE*fp = nullptr;
-		
-		if (_wfopen_s(&fp, m_filename.c_str(), _T("rbS")) == 0) {
-			//success
-		}else{
-			return;
-		}
+		FILE*fp = _wfsopen(m_filename.c_str(), _T("rbS"), _SH_DENYNO);
 		if (fp == nullptr) {
 			return;
 		}
