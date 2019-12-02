@@ -236,7 +236,7 @@ hidemaru-editor-script-directory
 ソース(file_mruとかprocessとか)を選んでEnterキーを押下すると絞り込み検索が始まります😙
 
 
-# いろいろな方法でUnityマクロを呼び出すには
+## いろいろな方法でUnityマクロを呼び出す
 
 以下の表からご自身の都合に合うマクロをショートカットキーに割り当ててご利用ください。
 
@@ -257,8 +257,6 @@ hidemaru-editor-script-directory
 |unity_source_hilight.mac				|hilightソースを指定して起動|×|×|
 |unity_source_process.mac				|processソースを指定して起動|×|×|
 |unity_source_window.mac				|windowソースを指定して起動|×|×|
-
-## 備考
 
 それぞれ数行のマクロで理解しやすいと思います、上級ヒデマラーの皆様におかれましてはカスタマイズしてお使いください。
 
