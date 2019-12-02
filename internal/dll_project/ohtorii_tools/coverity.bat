@@ -1,4 +1,8 @@
 @echo off
+REM 
+REM Coverity検査に必要なファイルを生成する
+REM 
+
 setlocal
 
 set COV_BIN=C:\cov-analysis-win64-2019.03\bin
