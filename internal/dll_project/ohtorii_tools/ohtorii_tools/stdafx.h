@@ -51,7 +51,7 @@
 #include<chrono>
 #include<tchar.h>
 
-#include"parallel.h"
+#include"parallel_container.h"
 #include"log.h"
 #include"unicode_helper.h"
 #include"define.h"

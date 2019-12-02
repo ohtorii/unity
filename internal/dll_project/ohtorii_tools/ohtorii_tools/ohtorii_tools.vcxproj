@@ -203,7 +203,7 @@
     <ClInclude Include="inheritance.h" />
     <ClInclude Include="kinds.h" />
     <ClInclude Include="log.h" />
-    <ClInclude Include="parallel.h" />
+    <ClInclude Include="parallel_container.h" />
     <ClInclude Include="recurring_task.h" />
     <ClInclude Include="refine_search.h" />
     <ClInclude Include="sources.h" />

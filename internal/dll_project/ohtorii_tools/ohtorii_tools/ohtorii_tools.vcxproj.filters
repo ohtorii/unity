@@ -60,9 +60,6 @@
     <ClInclude Include="user_data.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="parallel.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="static_status.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -103,6 +100,9 @@
       <Filter>interface</Filter>
     </ClInclude>
     <ClInclude Include="callback.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="parallel_container.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

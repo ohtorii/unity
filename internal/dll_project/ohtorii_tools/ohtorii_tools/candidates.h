@@ -2,7 +2,7 @@
 #include<string>
 #include<vector>
 #include<unordered_map>
-#include"parallel.h"
+#include"parallel_container.h"
 
 
 ///候補
