@@ -2,20 +2,21 @@
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Coverity](https://img.shields.io/coverity/scan/19629.svg)](https://scan.coverity.com/projects/ohtorii-unity)
 
 - [Unity](#unity)
 - [はじめに](#はじめに)
 - [スクリーンショット（準備中）](#スクリーンショット準備中)
-- [マクロの思想](#マクロの思想)
+- [マクロのデザイン](#マクロのデザイン)
 - [画面の名称](#画面の名称)
 - [操作方法](#操作方法)
 - [マクロの導入方法](#マクロの導入方法)
-- [いろいろな方法でUnityマクロを呼び出す](#いろいろな方法でunityマクロを呼び出す)
 - [動作環境](#動作環境)
 - [ダウンロード](#ダウンロード)
 - [その他](#その他)
 - [謝辞](#謝辞)
 - [連絡先](#連絡先)
+- [寄付](#寄付)
 
 # はじめに
 
@@ -265,6 +266,8 @@ hidemaru-editor-script-directory
 
 - 秀丸エディタ ver xxx 以降
 
+秀丸マクロの***新命令***を利用しているため***必ず新しいバージョン***をお使いください。
+
 ## 動作確認を行った環境
 
 ご参考までに。
@@ -272,9 +275,6 @@ hidemaru-editor-script-directory
 - Windows 10 64bit 
 - 秀丸エディタ 64bit ver xxx
 
-## 備考
-
-秀丸マクロの新命令を利用しているため***必ず***最新バージョンをお使いください。
 
 
 # ダウンロード
