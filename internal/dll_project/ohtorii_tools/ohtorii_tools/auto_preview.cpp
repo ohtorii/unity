@@ -30,7 +30,10 @@ void AsyncFileReader::Sequence(){
 		return;
 	}
 
-#if 0
+#if 0 
+	/*秀丸エディタの機能を利用する版
+	memo:ファイル先頭から数行を読み込めないためコメントアウト中
+	*/
 	HGLOBAL unicode_string_handle	= NULL;
 	UINT	unicode_count	= 0;
 	
