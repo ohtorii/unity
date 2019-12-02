@@ -45,8 +45,6 @@ bool ASyncFile::OpenFile() {
 		//ファイルはすでに開かれている
 		return true;
 	}
-	//(memo) _SH_DENYNO=排他制御なしでファイルを開く
-	//todo _wfopen_s関数へ移行する
 	m_file = _wfsopen(m_filename.c_str(), _T("rS, ccs=UTF-8"), _SH_DENYNO);
 	if ( m_file != nullptr) {
 		return true;
