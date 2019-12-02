@@ -27,7 +27,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |file_rec/async		|file_rec の非同期処理版|Unityマクロは非同期処理が基本なのでfile_recursiveへ統合した。|✅|
 |find				|外部コマンド "find" の結果を出力|||
 |function			|Vim の組み込み関数と unite.vim、neocomplcache で定義されている関数の一覧|||
-|grep				|外部コマンド "grep" の結果を出力|||
+|grep				|外部コマンド "grep" の結果を出力|ファイルから文字列を見付けるだけの単純なgrepは用意しない。秀丸エディタの高機能なgrepを利用する方法を模索中|❎|
 |history/yank		|ヤンクされたワードの一覧|||
 |unite-colorscheme	|カラースキームの適用|ソース名をhilightへ変更して実装|✅|
 |jump				|:jump の結果の出力|||
@@ -111,8 +111,8 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |bookmark	|ファイルをブックマークに追加する|||
 |mkdir		|ディレクトリ作成(directory_newと同じ感じ？)|||
 |diff		|対象ファイルと、もうひとつのdiffを表示|||
-|grep		|ファイルに対してgrep検索|||
-|grep_directory	|ディレクトリに対してgrep検索|||
+|grep		|ファイルに対してgrep検索|ファイルから文字列を見付けるだけの単純なgrepは用意しない。秀丸エディタの高機能なgrepを利用する方法を模索中|❎|
+|grep_directory	|ディレクトリに対してgrep検索|ファイルから文字列を見付けるだけの単純なgrepは用意しない。秀丸エディタの高機能なgrepを利用する方法を模索中|❎|
 
 
 ## file_base
@@ -128,7 +128,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |wunix||||
 |diff||||
 |dirdiff||||
-|grep||||
+|grep|||❎|
 |vimgrep||||
 |find||||
 |argadd||||
