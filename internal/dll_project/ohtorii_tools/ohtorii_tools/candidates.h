@@ -9,6 +9,7 @@
 struct Candidate {
 	Candidate();
 	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description=_T(""));
+	Candidate(const WCHAR*source_name, const WCHAR*prefix, const WCHAR*text, const WCHAR*postfix, const WCHAR*description = _T(""));
 
 	/**候補のユーザーデータを設定する（文字列版）
 	同一キーがある場合は上書きします。
@@ -31,7 +32,9 @@ struct Candidate {
 		archive(
 			m_source_name ,
 			m_action,
+			m_prefix,
 			m_text,
+			m_postfix,
 			m_description,
 			m_child,
 			m_user_data_string, 
@@ -90,8 +93,12 @@ struct Candidate {
 	Action				m_action;
 	///ソース名
 	std::wstring			m_source_name;	
+	///候補のテキスト（prefix）
+	std::wstring			m_prefix;
 	///候補のテキスト
 	std::wstring			m_text;	
+	///候補のテキスト（postfix）
+	std::wstring			m_postfix;
 	///説明
 	std::wstring			m_description;
 	///子候補
@@ -124,6 +131,12 @@ public:
 	return 候補へのインデックス
 	*/
 	INT_PTR AppendCandidate(const WCHAR*source_name, const WCHAR*candidate, const WCHAR*description=_T(""));
+
+	/**候補を追加する(prefix/postfix指定)
+	return 候補へのインデックス
+	*/
+	INT_PTR AppendCandidateFix(const WCHAR*source_name, const WCHAR*pretfix, const WCHAR*candidate, const WCHAR*postfix, const WCHAR*description = _T(""));
+
 
 	/**アクションのdirectory名を設定する
 	return bool	true	成功

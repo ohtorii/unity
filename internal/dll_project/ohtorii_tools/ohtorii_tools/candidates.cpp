@@ -23,6 +23,21 @@ Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*desc
 	m_selected = false;
 }
 
+Candidate::Candidate(const WCHAR*source_name, const WCHAR*prefix, const WCHAR*text, const WCHAR*postfix, const WCHAR*description):
+	m_source_name(source_name),
+	m_prefix(prefix),
+	m_text(text),
+	m_postfix(postfix),
+	m_description(description)
+{
+	//memo: Trim
+	m_text.erase(std::remove(m_text.begin(), m_text.end(), _T('\n')), m_text.end());
+
+	m_header = false;
+	m_selectable = true;
+	m_selected = false;
+}
+
 bool Candidate::SetUserData(const WCHAR* key, const WCHAR*data) {
 	return m_user_data_string.emplace(key, data).second;
 }
@@ -75,6 +90,17 @@ INT_PTR Candidates::AppendCandidate(const WCHAR*source_name, const WCHAR*candida
 	{
 		m_candidates.emplace_back(source_name, candidate, description);
 		result=m_candidates.size() - 1;
+	}
+	return result;
+}
+
+INT_PTR Candidates::AppendCandidateFix(const WCHAR*source_name, const WCHAR*prefix, const WCHAR*candidate, const WCHAR*postfix, const WCHAR*description)
+{
+	INT_PTR result = 0;
+	ContainerType::scoped_lock locker(m_candidates);
+	{
+		m_candidates.emplace_back(source_name, prefix, candidate, postfix, description);
+		result = m_candidates.size() - 1;
 	}
 	return result;
 }

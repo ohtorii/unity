@@ -99,7 +99,7 @@ public:
 					continue;
 				}
 
-				if (MatchAll(candidate.m_text, tokens) || MatchAll(candidate.m_description, tokens)) {
+				if (MatchAll(candidate.m_prefix+candidate.m_text+ candidate.m_prefix, tokens) || MatchAll(candidate.m_description, tokens)) {
 					if (header_candidate_index != UNITY_NOT_FOUND_INDEX) {
 						//ヘッダー部を挿入する
 						const auto& header_candidate = candidates.at(header_candidate_index);
@@ -132,7 +132,9 @@ private:
 		//
 		//候補と詳細のテキストを追加する
 		//
-		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(), candidate.m_text.end());
+		hidemaru_text.insert(hidemaru_text.end(), candidate.m_prefix.begin(),	candidate.m_prefix.end());
+		hidemaru_text.insert(hidemaru_text.end(), candidate.m_text.begin(),		candidate.m_text.end());
+		hidemaru_text.insert(hidemaru_text.end(), candidate.m_postfix.begin(),	candidate.m_postfix.end());
 		if (!candidate.m_description.empty()) {
 			hidemaru_text.push_back(_T('\t'));
 			//hidemaru_text.push_back(_T('\t'));

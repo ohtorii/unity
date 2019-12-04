@@ -18,6 +18,7 @@ public:
 	bool ClearCurrentSourceName();
 	bool AppendCandidateHeader(const WCHAR*header, const WCHAR*description);
 	bool AppendCandidate(const WCHAR*candidate, const WCHAR*description);
+	bool AppendCandidateFix(const WCHAR*prefix, const WCHAR*candidate, const WCHAR*postfix, const WCHAR*description);
 	bool AppendCandidateAsASyncFile(const WCHAR* filename);
 	bool AppendCandidateAsString(const WCHAR* string);
 
