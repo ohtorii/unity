@@ -32,12 +32,18 @@ gather_candidates:
 			bar.txt			<- 選択対象
 			hoge.txt		<- 選択対象
 	*/
-	call gater_tab_mode;
+	if(tabmode){
+		call gater_tab_mode;
+	}else{
+		call gater_window_mode;
+	}
 	return $$return;
 
 
 gater_tab_mode:
 	//タブモードの場合
+	$$prefix ="\t";
+	$$postfix="";
 	##i = 0;
 	while( ##i < tabgrouptotal ) {
 		##success = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateHeader", sprintf("タブグループ%d", ##i), "");
@@ -52,7 +58,10 @@ gater_tab_mode:
 			call make_text ##hidemaru_handle;
 			$$text=$$return;
 
-			##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateFix", "\t", $$text, "", "");
+			call make_descrption, ##hidemaru_handle;
+			$$description=$$return;
+
+			##candidate_index	= dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateFix", $$prefix, $$text, $$postfix, $$description);
 			if(##candidate_index==-1){
 				return "0";
 			}
@@ -68,6 +77,30 @@ gater_tab_mode:
 	return "1";
 
 
+gater_window_mode:
+		##i=0;
+	while(##i < hidemarucount){
+		##handle=hidemaruhandle(##i);
+
+		call make_text ##handle;
+		$$text=$$return;
+
+		call make_descrption, ##handle;
+		$$description=$$return;
+
+		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$text, $$description);
+		if(##candidate_index==-1){
+			return "0";
+		}
+		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateActionWindowHandle",##handle);
+		if(! ##ret){
+			return "0";
+		}
+
+		##i = ##i + 1;
+	}
+	return "1";
+
 
 
 make_text:
@@ -80,3 +113,13 @@ make_text:
 		$$name=$$name+"  *";
 	}
 	return $$name;
+
+make_descrption:
+	##handle=##1;
+	$$description=basename2[##handle];
+	if(#g_show_handle){
+		$$description=$$description+"\t"+str(##handle);
+	}else{
+		//pass
+	}
+	return $$description;
