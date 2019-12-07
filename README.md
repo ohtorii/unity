@@ -48,8 +48,14 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 
 ## auto preview オプション
 
-***previewアクション**を自動的に呼び出します。
-![autopreview](help/images/file_autopreview.gif "autopreview")
+ONにすると***previewアクション***を自動的に呼び出します。
+
+### ファイルの場合
+![autopreview file](help/images/file_autopreview.gif "autopreview file")
+
+### ハイライトの場合
+
+![autopreview hilight](help/images/hilight_autopreview.gif "autopreview hilight")
 
 
 # マクロのデザイン
@@ -122,6 +128,7 @@ Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的
 - ユーザーが編集中のテキストを変更するかどうか
 - 操作後すぐに終了するか
 - 操作後に新たな候補を生成するか
+- ...etc
 
 マクロの内部処理と密に連携しているためユーザー定義のフラグは追加できません。
 
