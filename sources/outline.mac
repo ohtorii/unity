@@ -1,0 +1,82 @@
+﻿/* Outline
+*/
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//グローバル変数
+/////////////////////////////////////////////////////////////////////////////
+#g_outline_count=0;
+#g_outline_line[0]=0;
+$g_outline_text[0]="";
+
+$g_target_hidemaru_filename="";
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//メイン処理
+/////////////////////////////////////////////////////////////////////////////
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg=getarg(1);
+call $label, $arg;
+endmacro $$return;
+
+
+gather_candidates:
+	##old_hidemaru=hidemaruhandle(0);
+	##target_hidemaru=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+
+	setactivehidemaru ##target_hidemaru;
+	disabledraw;
+	##xOrg=x;
+	##yOrg=y;
+	call gather_candidates_main;
+	moveto ##xOrg,##yOrg;
+	$$ret=$$return;
+	enabledraw;
+	setactivehidemaru ##old_hidemaru;
+
+	##i=0;
+	while(##i<#g_outline_count){
+		##candidate_index=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $g_outline_text[##i], str(#g_outline_line[##i]));
+		if(##candidate_index==-1){
+			return "0";
+		}
+		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $g_target_hidemaru_filename);
+		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionLine", #g_outline_line[##i]);
+
+		##i = ##i + 1;
+	}
+	return $$ret;
+
+
+gather_candidates_main:
+	#g_outline_count=0;
+
+	gofiletop;
+
+	//はじめのアウトライン項目をできる限り選択する。
+	//memo;秀丸エディタでは先頭のアウトライン項目を選択できないため苦肉の策です。
+	nextoutlineitem;
+	if(!result){
+		return "1";
+	}
+	prevoutlineitem;
+	if(!result){
+		return "1";
+	}
+
+	while(1){
+		$g_outline_text[#g_outline_count]=gettitle(4);
+		#g_outline_line[#g_outline_count]=lineno;
+		#g_outline_count = #g_outline_count + 1;
+		nextoutlineitem;
+		if(!result){
+			break ;
+		}
+	}
+
+	$g_target_hidemaru_filename=filename2;
+	return "1";
