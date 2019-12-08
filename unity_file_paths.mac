@@ -1,0 +1,7 @@
+﻿/* ファイルパスに関するソース（全部入り）
+
+*/
+$sources="file\tdirectory_mru\tfile_mru";
+$options="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options;
+endmacro getresultex(-1);
