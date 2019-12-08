@@ -1,5 +1,7 @@
 ﻿/* windowソース
 
 */
-execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"window","";
+$sources="window";
+$options="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options;
 endmacro getresultex(-1);

@@ -1,5 +1,7 @@
 ﻿/* directoryソース
 
 */
-execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,"directory","";
+$sources="directory";
+$options="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options;
 endmacro getresultex(-1);
