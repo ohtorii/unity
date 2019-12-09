@@ -248,11 +248,12 @@ hidemaru-editor-script-directory
 
 以下の表からご自身の都合に合うマクロをショートカットキーに割り当ててご利用ください。
 
-汎用型マクロと特化型マクロの二通りを用意しました。
+汎用型マクロと特化型マクロの二通りを用意しました、それぞれ数行のマクロで理解しやすいと思います。上級ヒデマラーの皆様におかれましてはカスタマイズしてお使いください。
 
 |ファイル名|説明|ソースの複数選択|オプション選択|
 |--|--|--|--|
 |unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能。全機能を利用可能|○|○|
+|unity_file_paths.mac					|ファイルパスに関するソース（file,directroy_mru,file_mru）を指定して起動|○|×|
 |unity_menu.mac							|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|
 |unity_menu_manual.mac					|利用頻度の高いソースをメニュー化する例|×|×|
 |unity_source_directory.mac				|directroyソースを指定して起動|×|×|
@@ -263,10 +264,10 @@ hidemaru-editor-script-directory
 |unity_source_file_mru.mac				|file_mruソースを指定して起動|×|×|
 |unity_source_file_recursive.mac		|file_recursiveソースを指定して起動|×|×|
 |unity_source_hilight.mac				|hilightソースを指定して起動|×|×|
+|unity_source_outline.mac				|outlineソースを指定して起動|×|×|
 |unity_source_process.mac				|processソースを指定して起動|×|×|
+|unity_source_tab.mac					|tabソースを指定して起動|×|×|
 |unity_source_window.mac				|windowソースを指定して起動|×|×|
-
-それぞれ数行のマクロで理解しやすいと思います、上級ヒデマラーの皆様におかれましてはカスタマイズしてお使いください。
 
 
 ## 動作環境のカスタマイズ(config.ini)
@@ -339,31 +340,9 @@ masterブランチを取得しても多分動作しないです。
 
 # その他
 
-## マクロ名について
+その他、細々とした情報はこちらを参照してください。
 
-なぜ、マクロ名をUniteではなくUnityにしたのか？
-
-unite.vimは***コマンド***なのでunite(動詞)の方が自然ですが、秀丸エディタでは***マクロ名***なので名詞にしました。
-
-ゲームエンジンのUnityと同名ですが、それを言い出すとVim-UniteはUnityの大規模イベント（Unite）と同名なので…まあいっか😙とそっと蓋を閉じました😙
-
-|英単語|品詞|説明|
-|:--:|:--:|:--:|
-|unite|動詞|vim|
-|unity|名詞|秀丸エディタ|
-
-## unite.vimとunityマクロの機能対応
-
-unite.vimを秀丸化して移植しています、そのためオリジナル(VIM)の動作と異なる部分があります。
-
-詳細は以下のリンク先を参照してください。（主にVimmer方向け説明です）
-
-[vim_to_hidemaru.md](help/vim_to_hidemaru.md)
-
-## 参考資料
-
-- http://emacs.rubikitch.com/sd1503-helm/
-- https://gist.github.com/Shougo/7fc95389ab6fddac7f78deb6ce42e82a
+[other.md](help/other.md "other")
 
 
 # 謝辞
