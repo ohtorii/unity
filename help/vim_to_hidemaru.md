@@ -1,8 +1,12 @@
 ﻿# unite.vimとの差分
 
-## はじめに
+# このドキュメントの対象者
 
-Vimと秀丸エディタはそれぞれ思想が異なるテキストエディタなので、unite.vimを素直に秀丸エディタへ移植することはできませんでした。
+unite.vimのソースとカインドを作成した方向けのドキュメントです。
+
+# はじめに
+
+Vimと秀丸エディタはそれぞれ思想が異なるテキストエディタなので、unite.vimを秀丸エディタへ素直に移植できません。
 そこで、unite.vimのソースとカインドを秀丸エディタへどう移植したのか一覧を作りました。
 
 
@@ -51,7 +55,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 ## 秀丸エディタ独自のソース
 |機能|説明|秀丸の実装状況|
 |:---|:---|:---|
-|outline			|アウトラインの一覧||
+|outline			|アウトラインの一覧|✅|
 |project			|プロジェクトのファイル一覧||
 |output_panel		|アウトプット枠||
 
@@ -95,8 +99,8 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |ex					|候補のフルパスをコマンドラインに挿入||❎|
 |insert				|候補のファイル名を挿入||✅|
 |insert_directory	|候補のディレクトリ名を挿入||✅|
-|🆕overwrite		|候補のファイル名を上書き挿入|新規追加||
-|🆕overwrite_directory|候補のディレクトリ名を上書き挿入|新規追加||
+|🆕overwrite		|候補のファイル名を上書き挿入|新規追加|✅|
+|🆕overwrite_directory|候補のディレクトリ名を上書き挿入|新規追加|✅|
 |preview			|候補をプレビューする|アウトプット枠で表示する|✅|
 |yank				|候補をクリップボードにコピー||✅|
 |yank_escape		|候補をクリップボードにコピー(エスケープ<C言語文字列>を行う)||✅|
@@ -214,7 +218,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |action__line|行番号|SetCandidateActionLine/GetSelectionActionLine関数を利用する|✅|
 |action__col_pattern||||
 |action__command|コマンド|SetCandidateActionCommand/GetSelectionActionCommand関数を利用する|✅|
-|action__command_args||コマンドの引数とは異なる利用方法をされているようなので無視した。|❎|
+|action__command_args||コマンド引数とは異なる利用方法なので無視した。|❎|
 |action__histadd||秀丸エディタにはコマンド履歴が無いため未実装|❎|
 |action__complete_info||||
 |action__complete_info_lazy||||
