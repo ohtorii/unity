@@ -1,0 +1,7 @@
+﻿/* tabソース
+
+*/
+$sources="tab";
+$options="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options;
+endmacro getresultex(-1);
