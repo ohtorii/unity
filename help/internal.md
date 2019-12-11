@@ -26,12 +26,6 @@
 
 ディフォルトで呼び出すカインド
 
-## candidates_from_original_hidemaru
-
-マクロ起動した秀丸エディタから候補を取得する時に true を指定する。
-
-デフォルト値=false
-
 
 # kindについて
 
