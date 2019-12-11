@@ -1,0 +1,72 @@
+﻿/* line
+*/
+
+/////////////////////////////////////////////////////////////////////////////
+//メイン処理
+/////////////////////////////////////////////////////////////////////////////
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg=getarg(1);
+call $label, $arg;
+endmacro $$return;
+
+
+gather_candidates:
+	//
+	//候補をグローバル変数へ格納する
+	//
+	{
+		##old_hidemaru=hidemaruhandle(0);
+		##target_hidemaru=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+
+		setactivehidemaru ##target_hidemaru;
+		disabledraw;
+		##xOrg=x;
+		##yOrg=y;
+
+		call gather_candidates_main;
+		##ret=##return;
+
+		moveto ##xOrg,##yOrg;
+		enabledraw;
+		setactivehidemaru ##old_hidemaru;
+	}
+	if(##ret==false){
+		return "0";
+	}
+
+	//
+	//候補をDLL側へ格納する
+	//
+	{
+		##i=0;
+		while(##i<#g_line_count){
+			##candidate_index=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $g_line_text[##i], "");
+			if(##candidate_index==-1){
+				return "0";
+			}
+			##i = ##i + 1;
+		}
+	}
+	return str(##ret);
+
+
+gather_candidates_main:
+	gofiletop;
+
+	#g_line_count=0;
+	$g_line_text[0]="";
+	while(1){
+		##prev_lineno=lineno;
+		selectline ;
+
+		$g_line_text[#g_line_count]=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
+		#g_line_count = #g_line_count + 1;
+
+		down;
+		if(##prev_lineno==lineno){
+			break;
+		}
+	}
+	escape;
+	return true;
