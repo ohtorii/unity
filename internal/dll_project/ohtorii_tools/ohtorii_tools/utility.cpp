@@ -53,3 +53,14 @@ std::wstring TrimString(const std::wstring& src, const WCHAR*trimCharacterList)
 		}
 	}
 }
+
+
+bool StringToBool(const WCHAR* str) {
+	if (_wcsicmp(str, _T("false")) == 0) {
+		return false;
+	}
+	if (_wcsicmp(str, _T("0")) == 0) {
+		return false;
+	}
+	return true;
+}

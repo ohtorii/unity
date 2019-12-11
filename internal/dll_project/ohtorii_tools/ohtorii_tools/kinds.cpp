@@ -17,17 +17,6 @@ static bool ContainsAction(const WCHAR*str) {
 	return std::equal(gs_prefix, gs_prefix + gs_prefix_size, str);
 }
 
-static bool StringToBool(const WCHAR* str) {
-	if (_wcsicmp(str, _T("false")) == 0) {
-		return false;
-	}
-	if (_wcsicmp(str, _T("0")) == 0) {
-		return false;
-	}
-	return true;
-}
-
-
 //[action.*]セクションのパース	
 static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* filename) {
 	WCHAR buf[2 * 1024];
