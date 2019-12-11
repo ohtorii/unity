@@ -32,7 +32,9 @@ gather_candidates:
 	disabledraw;
 	##xOrg=x;
 	##yOrg=y;
+
 	call gather_candidates_main;
+
 	moveto ##xOrg,##yOrg;
 	$$ret=$$return;
 	enabledraw;
