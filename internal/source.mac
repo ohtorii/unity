@@ -71,16 +71,8 @@ main:
 		call GatherCandidatesFromASyncFile $$source_filename, $$arg;
 		##ret = ##return;
 	}else if($$candidate_type=="function"){
-		$$args[0]="gather_candidates";
-		$$args[1]=$$arg;
-		$$args[29]=str(#g_dll_hm_process);
-		$$args[30]=str(#g_dll_ohtorii_tools);
-		execmacro $$source_filename, $$args, 31;
-		if(getresultex(-1)=="0"){
-			##ret=false;
-		}else{
-			##ret=true;
-		}
+		call GatherCandidatesFromFunction $$source_filename, $$arg;
+		##ret = ##return;
 	}else{
 		//未知の型名
 		message sprintf("$$candidate_type が未知の型名だよ。\n"+
@@ -94,29 +86,9 @@ main:
 	return ##ret;
 
 
-LoadSourceIfNotExist:
-	$$source_filename=$$1;
-	##exist	= dllfuncw(#g_dll_ohtorii_tools, "SourcesExistFileName", $$source_filename);
-	if(##exist){
-		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools, "SourcesFileNameToSourceName", $$source_filename);
-		return $$source_name;
-	}
-	$$args[0]="get_property";
-	$$args[29]=str(#g_dll_hm_process);
-	$$args[30]=str(#g_dll_ohtorii_tools);
-	execmacro $$source_filename, $$args, 31;
-	$$ini=getresultex(-1);
-	if($$ini==""){
-		return "";
-	}
-	$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
-
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceName",$$source_filename,$$source_name);
-	if(!##ret){
-		return false;
-	}
-	return $$source_name;
-
+//////////////////////////////////////////////////////////////////////////////
+//	候補の取得
+//////////////////////////////////////////////////////////////////////////////
 GatherCandidatesFromString:
 	$$source_filename=$$1;
 	$$arg=$$2;
@@ -145,12 +117,6 @@ GatherCandidatesFromFile:
 	if($$filelist_name==""){
 		return false;
 	}
-
-	/* todo
-
-	C++側で処理させる。
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsFile", $$filelist_name);
-	*/
 
 	//
 	//$g_file_image変数へファイル内容を読み込む
@@ -193,6 +159,48 @@ GatherCandidatesFromASyncFile:
 
 	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsASyncFile", $$filelist_name);
 	return ##success;
+
+
+GatherCandidatesFromFunction:
+	$$source_filename	=$$1;
+	$$arg				=$$2;
+
+	$$args[0]	="gather_candidates";
+	$$args[1]	=$$arg;
+	$$args[29]	=str(#g_dll_hm_process);
+	$$args[30]	=str(#g_dll_ohtorii_tools);
+	execmacro $$source_filename, $$args, 31;
+	if(getresultex(-1)=="0"){
+		return false;
+	}
+	return true;
+
+
+//////////////////////////////////////////////////////////////////////////////
+// ユーティリティ
+//////////////////////////////////////////////////////////////////////////////
+LoadSourceIfNotExist:
+	$$source_filename=$$1;
+	##exist	= dllfuncw(#g_dll_ohtorii_tools, "SourcesExistFileName", $$source_filename);
+	if(##exist){
+		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools, "SourcesFileNameToSourceName", $$source_filename);
+		return $$source_name;
+	}
+	$$args[0]="get_property";
+	$$args[29]=str(#g_dll_hm_process);
+	$$args[30]=str(#g_dll_ohtorii_tools);
+	execmacro $$source_filename, $$args, 31;
+	$$ini=getresultex(-1);
+	if($$ini==""){
+		return "";
+	}
+	$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceName",$$source_filename,$$source_name);
+	if(!##ret){
+		return false;
+	}
+	return $$source_name;
 
 
 LoadFileImage:
