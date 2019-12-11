@@ -18,6 +18,20 @@
 |file|候補をファイルから作成する|同期|
 |async_file|候補をファイルから作成する|非同期|
 
+## description
+
+説明を一行で記述する。
+
+## default_kind
+
+ディフォルトで呼び出すカインド
+
+## candidates_from_original_hidemaru
+
+マクロ起動した秀丸エディタから候補を取得する時に true を指定する。
+
+デフォルト値=false
+
 
 # kindについて
 
