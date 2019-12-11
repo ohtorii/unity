@@ -25,33 +25,47 @@ endmacro $$return;
 
 
 gather_candidates:
-	##old_hidemaru=hidemaruhandle(0);
-	##target_hidemaru=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+	//
+	//候補をグローバル変数へ格納する
+	//
+	{
+		##old_hidemaru		=hidemaruhandle(0);
+		##target_hidemaru	=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
 
-	setactivehidemaru ##target_hidemaru;
-	disabledraw;
-	##xOrg=x;
-	##yOrg=y;
+		setactivehidemaru ##target_hidemaru;
+		disabledraw;
+		##xOrg=x;
+		##yOrg=y;
 
-	call gather_candidates_main;
+		call gather_candidates_main;
+		##ret=##return;
 
-	moveto ##xOrg,##yOrg;
-	$$ret=$$return;
-	enabledraw;
-	setactivehidemaru ##old_hidemaru;
-
-	##i=0;
-	while(##i<#g_outline_count){
-		##candidate_index=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $g_outline_text[##i], str(#g_outline_line[##i]));
-		if(##candidate_index==-1){
-			return "0";
-		}
-		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $g_target_hidemaru_filename);
-		##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionLine", #g_outline_line[##i]);
-
-		##i = ##i + 1;
+		moveto ##xOrg,##yOrg;
+		enabledraw;
+		setactivehidemaru ##old_hidemaru;
 	}
-	return $$ret;
+	if(##ret==false){
+		return "0";
+	}
+
+	//
+	//候補をDLL側へ追加する
+	//
+	{
+		##i=0;
+		while(##i<#g_outline_count){
+			##candidate_index=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $g_outline_text[##i], str(#g_outline_line[##i]));
+			if(##candidate_index==-1){
+				return "0";
+			}
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $g_target_hidemaru_filename);
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionLine", #g_outline_line[##i]);
+
+			##i = ##i + 1;
+		}
+	}
+	return str(##ret);
+
 
 
 gather_candidates_main:
@@ -63,11 +77,11 @@ gather_candidates_main:
 	//memo;秀丸エディタでは先頭のアウトライン項目を選択できないため苦肉の策です。
 	nextoutlineitem;
 	if(!result){
-		return "1";
+		return true;
 	}
 	prevoutlineitem;
 	if(!result){
-		return "1";
+		return true;
 	}
 
 	while(1){
@@ -81,4 +95,4 @@ gather_candidates_main:
 	}
 
 	$g_target_hidemaru_filename=filename2;
-	return "1";
+	return true;
