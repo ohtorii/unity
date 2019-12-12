@@ -221,6 +221,18 @@ hidemaru-editor-script-directory
     └─sources
 ```
 
+## 依存DLLのインストール
+
+本マクロを動かすには以下のDLLが必要です、それぞれダウンロードして導入してください。
+
+- [田楽DLL 32bit](http://www.ceres.dti.ne.jp/~sugiura/hidemaru/macros/dgserver/#download64)
+- [田楽DLL 64bit](http://htom.in.coocan.jp/macro/macro_dll.html#label-5)
+
+32bitと64bit版があります、適切なDLLを導入してください。
+
+***田楽DLL***とはGUI表示などを行うDLLです。
+
+
 ## ショートカットキー
 
 `unity_dialog.mac` をショートカットキーに割り当てて下さい。
