@@ -63,7 +63,12 @@ gather_candidates_main:
 		$g_line_text[#g_line_count]=gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
 		#g_line_count = #g_line_count + 1;
 
-		down;
+		/* 次の論理行頭へ移動する。
+		(memo)行が折り返している状態を考慮。
+		*/
+		golineend2;
+		right;
+
 		if(##prev_lineno==lineno){
 			break;
 		}
