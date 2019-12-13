@@ -1,19 +1,4 @@
-﻿/*
+﻿/*田楽DLLをロードする
 */
-call LoadDll;
-endmacro str(##return);
-
-
-LoadDll:
-	if(platform&0x00080000){
-		$$postfix="x64";
-	}else{
-		$$postfix="x86";
-	}
-	$$dll=sprintf("%s\\3rd_party\\dengaku_%s\\DengakuDLL.dll", currentmacrodirectory,$$postfix);
-	##dll = loaddll($$dll);
-	if (##dll==0) {
-		message "DLLのロードに失敗しました。\n" + $$dll;
-		return 0;
-	}
-	return ##dll;
+execmacro currentmacrodirectory+"\\load_dll.mac", "DengakuDLL.dll";
+endmacro getresultex(-1);

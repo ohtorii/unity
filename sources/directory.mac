@@ -21,7 +21,7 @@ endmacro $$return;
 */
 gather_candidates:
 	$$root_dir=$$1;
-	execmacro $g_root_macro_directory+"\\internal\\load_dll.mac", "DengakuDLL.dll";
+	execmacro $g_root_macro_directory+"\\internal\\load_dengaku_dll.mac";
 	#g_dll_dengaku=val(getresultex(-1));
 	if(#g_dll_dengaku==0){
 		return "0";
