@@ -4,6 +4,25 @@
 /////////////////////////////////////////////////////////////////////////////
 //Candidate
 /////////////////////////////////////////////////////////////////////////////
+static void ReplaceAll(std::wstring &inout, const std::wstring&to, const std::wstring&from) {
+	const auto	from_size	= from.size();
+	const auto	to_size		= to.size();
+	auto		pos			= inout.find(from);
+	while (pos != std::wstring::npos) {
+		inout.replace(pos, from_size, to);
+		pos = inout.find(from, pos + to_size);
+	}
+}
+
+static void NormalizeText(std::wstring&inout){
+	//Trim
+	inout.erase(std::remove(inout.begin(), inout.end(), _T('\n')), inout.end());
+	inout.erase(std::remove(inout.begin(), inout.end(), _T('\r')), inout.end());
+
+	//"    " <- "\t"
+	ReplaceAll(inout,_T("    "), _T("\t"));
+}
+
 Candidate::Candidate() {
 	m_header = false;
 	m_selectable = true;
@@ -15,9 +34,7 @@ Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*desc
 	m_text(text),
 	m_description(description)
 {
-	//memo: Trim
-	m_text.erase(std::remove(m_text.begin(), m_text.end(), _T('\n')), m_text.end());
-
+	NormalizeText(m_text);
 	m_header=false;
 	m_selectable=true;
 	m_selected = false;
@@ -30,9 +47,7 @@ Candidate::Candidate(const WCHAR*source_name, const WCHAR*prefix, const WCHAR*te
 	m_postfix(postfix),
 	m_description(description)
 {
-	//memo: Trim
-	m_text.erase(std::remove(m_text.begin(), m_text.end(), _T('\n')), m_text.end());
-
+	NormalizeText(m_text);
 	m_header = false;
 	m_selectable = true;
 	m_selected = false;
