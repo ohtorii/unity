@@ -77,7 +77,7 @@ gater_tab_mode:
 		while( ##j < tabtotal[##grouptop] ) {
 			##handle = gettabhandle( true, ##i, ##j );
 
-			call make_text ##handle;
+			call make_text_tab_mode ##handle;
 			$$text=$$return;
 
 			call make_descrption, ##handle;
@@ -100,7 +100,7 @@ gater_window_mode:
 	while(##i < hidemarucount){
 		##handle=hidemaruhandle(##i);
 
-		call make_text ##handle;
+		call make_text_window_mode ##handle;
 		$$text=$$return;
 
 		call make_descrption, ##handle;
@@ -120,23 +120,25 @@ gater_window_mode:
 	return "1";
 
 
-make_text:
+make_text_tab_mode:
 	##handle=##1;
-	$$name = filename2[##handle];
-	if($$name==""){
-		$$name=filetype[##handle];
-	}
-	if(updated[##handle]){
-		$$name=$$name+"  *";
-	}
-	return $$name;
+	return gettitle(3,##handle);
+
+make_text_window_mode:
+	##handle=##1;
+	return gettitle(0,##handle);
+
 
 make_descrption:
-	##handle=##1;
-	$$description=basename2[##handle];
-	if(#g_show_handle){
-		$$description=$$description+"\t"+str(##handle);
+	if(true){
+		return "";
 	}else{
-		//pass
+		##handle=##1;
+		$$description=basename2[##handle];
+		if(#g_show_handle){
+			$$description=$$description+"\t"+str(##handle);
+		}else{
+			//pass
+		}
+		return $$description;
 	}
-	return $$description;
