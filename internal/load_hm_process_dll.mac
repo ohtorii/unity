@@ -5,7 +5,13 @@ endmacro str(##return);
 
 
 LoadDll:
-	$$dll=currentmacrodirectory + "\\3rd_party\\hm_process\\hm_process.dll";
+	if(platform & 0x00080000){
+		$$postfix="x64";
+	}else{
+		$$postfix="x86";
+	}
+
+	$$dll=currentmacrodirectory + "\\3rd_party\\hm_process\\hm_process_" + $$postfix +  ".dll";
 	##dll = loaddll($$dll);
 	if (##dll==0) {
 		message "dllのロードに失敗しました。\n"+$$dll;
