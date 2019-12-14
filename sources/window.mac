@@ -13,6 +13,10 @@
 /////////////////////////////////////////////////////////////////////////////
 //メイン処理
 /////////////////////////////////////////////////////////////////////////////
+
+//検索を実行している秀丸エディタのハンドル
+#g_search_hidemaru_handle=0;
+
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
 $arg=getarg(1);
@@ -44,6 +48,7 @@ gather_candidates:
 
 
 	*/
+	#g_search_hidemaru_handle=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetSearchHidemaruHandle");
 	if(tabmode){
 		call gater_tab_mode;
 	}else{
@@ -77,15 +82,18 @@ gater_tab_mode:
 		while( ##j < tabtotal[##grouptop] ) {
 			##handle = gettabhandle( true, ##i, ##j );
 
-			call make_text_tab_mode ##handle;
-			$$text=$$return;
+			//(memo)検索を実行している秀丸エディタは候補から外す。
+			if(##handle != #g_search_hidemaru_handle){
+				call make_text_tab_mode ##handle;
+				$$text=$$return;
 
-			call make_descrption, ##handle;
-			$$description=$$return;
+				call make_descrption, ##handle;
+				$$description=$$return;
 
-			##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "AppendChildCandidate", $$text, $$description);
-			if(##candidate_child_index==-1){
-				return "0";
+				##candidate_child_index = dllfuncw(#g_dll_ohtorii_tools, "AppendChildCandidate", $$text, $$description);
+				if(##candidate_child_index==-1){
+					return "0";
+				}
 			}
 
 		   	##j = ##j + 1;
@@ -100,19 +108,22 @@ gater_window_mode:
 	while(##i < hidemarucount){
 		##handle=hidemaruhandle(##i);
 
-		call make_text_window_mode ##handle;
-		$$text=$$return;
+		//(memo)検索を実行している秀丸エディタは候補から外す。
+		if(##handle != #g_search_hidemaru_handle){
+			call make_text_window_mode ##handle;
+			$$text=$$return;
 
-		call make_descrption, ##handle;
-		$$description=$$return;
+			call make_descrption, ##handle;
+			$$description=$$return;
 
-		##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$text, $$description);
-		if(##candidate_index==-1){
-			return "0";
-		}
-		##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateActionWindowHandle",##handle);
-		if(! ##ret){
-			return "0";
+			##candidate_index = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$text, $$description);
+			if(##candidate_index==-1){
+				return "0";
+			}
+			##ret = dllfuncw(#g_dll_ohtorii_tools,"SetCandidateActionWindowHandle",##handle);
+			if(! ##ret){
+				return "0";
+			}
 		}
 
 		##i = ##i + 1;
