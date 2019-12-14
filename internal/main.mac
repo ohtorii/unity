@@ -75,9 +75,9 @@ $g_color_mark="gather";
 $g_option_auto_preview_context_candidate="";
 
 /*キー入力の間隔(単位＝ミリ秒)
-(memo)定数は環境毎に調整する必要があるかも。
+(memo) 数値はiniファイルで設定する。
 */
-#keyinput_interval = 80;
+#keyinput_interval = 0;
 
 /*****************************************************************************
 	メイン処理
@@ -111,6 +111,7 @@ main:
 	##old_lineno=lineno;
 
 	call ParseOptions $$2;
+	call LoadIni;
 	call Start $$1;
 	##ret = ##return;
 
@@ -155,6 +156,16 @@ ParseOptions:
 		##i = ##i + 1;
 	}
 	return;
+
+
+LoadIni:
+	$$ini_filename=$g_root_macro_directory+"\\config.ini";
+	#keyinput_interval = getininumw($$ini_filename, "unity", "keyinput_interval");
+	if(#keyinput_interval <= 0){
+		#keyinput_interval=80;
+	}
+	return ;
+
 
 /*
 return	アクションが最後まで実行されたかどうか(bool)
