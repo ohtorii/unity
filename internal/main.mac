@@ -82,9 +82,17 @@ $g_option_auto_preview_context_candidate="";
 /*****************************************************************************
 	メイン処理
 *****************************************************************************/
+//
+//動作環境を固定化する。
+//
+setcompatiblemode
+	0x00000002 |	/* 折りたたみを無視してなるべく維持 */
+	0x00000008 |	/* 部分編集を無視してなるべく維持 */
+	0x00000030 |	/* 同じファイルを２つ開くことを禁止する（ジャンプする） */
+	0x00000200 |	/*検索での表示　→　範囲選択*/
+	0x00002000 |	/*貼り付け後のカーソル位置　→　最後に移動 */
+	0x00020000 ;	/*マクロ終了後に検索条件をマクロ実行前と同じに戻します。（V8.20以降） */
 
-$g_old_searchbuffer = searchbuffer;
-#g_old_searchoption = searchoption;
 #g_target_hidemaru  = hidemaruhandle(0);
 //disableerrormsg;
 debuginfo 1;
@@ -103,18 +111,25 @@ disablehistory
 //disableinvert;カーソルキーが表示されなくなるためコメントアウトした。
 
 call main getarg(1), getarg(2);
-setsearch $g_old_searchbuffer, #g_old_searchoption;
 endmacro;
 
 main:
+	call ShowPerformanceCounter "main";
 	##old_column=column;
 	##old_lineno=lineno;
 
 	call ParseOptions $$2;
-	call LoadIni;
+	call ShowPerformanceCounter "ParseOptions";
+
+	call LoadConfigIni;
+	call ShowPerformanceCounter "LoadConfigIni";
+
 	call Start $$1;
 	##ret = ##return;
 
+	//
+	//マクロ終了時に呼び出すコールバックを集める
+	//
 	##callback_size=0;
 	if(#g_dll_ohtorii_tools){
 		##callback_size=dllfuncw(#g_dll_ohtorii_tools,"GetCallBack_ProcessFinish_Size");
@@ -138,6 +153,7 @@ main:
 	call FreeDll;
 	call CloseFileIfOpen;
 
+	//マクロ終了時に呼び出すコールバックを実際に呼ぶ
 	##i=0;
 	while(##i<##callback_size){
 		execmacro $$callback_macro_filename[##i], $$callback_label[##i], $$callback_args[##i];
@@ -158,7 +174,7 @@ ParseOptions:
 	return;
 
 
-LoadIni:
+LoadConfigIni:
 	$$ini_filename=$g_root_macro_directory+"\\config.ini";
 	#keyinput_interval = getininumw($$ini_filename, "unity", "keyinput_interval");
 	if(#keyinput_interval <= 0){
@@ -859,8 +875,9 @@ NewFile:
 	config "xGuideLine:0x00";
 	config "xOrikaeshiLine:0";
 
-	//カーソル行の下線やカーソル位置の縦線の描画を有効にします。（V8.90β6以降）
-	setcompatiblemode(compatiblemode|0x02000000);
+	setcompatiblemode(compatiblemode|
+						0x02000000		/*カーソル行の下線やカーソル位置の縦線の描画を有効にします。（V8.90β6以降）*/
+					);
 
 	return true;
 
