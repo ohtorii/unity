@@ -24,7 +24,8 @@ ForeachJoin:
 	begingroupundo;
 
 	##old = compatiblemode;
-	setcompatiblemode ##old | 0x00100000;
+	setcompatiblemode ##old 		|
+					  0x00100000	;	/*各種の文を複数選択に対応した動作にします。（V8.40以降） */
 
 	##old_column=column;
 	##old_lineno=lineno;
