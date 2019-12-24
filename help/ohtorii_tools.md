@@ -4,10 +4,33 @@
 
 ohtorii_tools.dllはUnityマクロの中心となるDLLです。
 
-このDLLを保守する目的で全体を俯瞰するドキュメントを用意しました、詳細はソースコードを参照してください。
+このDLLを保守する目的で全体を俯瞰するドキュメントを用意しました。
 
 
-# ファイル構成
+# フォルダ構成
+
+	ohtorii_tools
+	├─ohtorii_tools.sln  //VisualStudioのソリューションファイル
+	├─ohtorii_tools      //ソースコード
+	└─external           //外部ライブラリ
+	   ├─cereal
+	   └─libguess
+
+# ビルド手順
+
+ohtorii_tools.sln をVisualStudioで開いてビルドするだけです。
+
+x86/x64 版の設定があります、それぞれビルドしてください。
+
+## ビルド環境
+
+Visual Studio 2017
+
+
+# レイヤー構成
+
+![代替テキスト](images/dll_layer.png "画像タイトル")
+
 
 ## DLLインターフェース
 
@@ -15,7 +38,7 @@ ohtorii_tools.dllはUnityマクロの中心となるDLLです。
 |--|--|--|
 |Source.def|DLLからエクスポートする関数定義||
 |dll_export.cpp|DLLインターフェースの実装||
-|interface_sugar.*|秀丸マクロ側の記述を簡易にする目的|「苦いインターフェースを糖衣で包み利用しやすくする」という意味です。|
+|interface_sugar.*|秀丸マクロ側の記述を簡易にする機能|難しいインターフェースを糖衣(Suger)で包み利用しやすくする|
 
 
 ## メイン処理
@@ -35,7 +58,7 @@ ohtorii_tools.dllはUnityマクロの中心となるDLLです。
 |--|--|--|
 |recurring_task.*|定期処理||
 |callback.*|コールバック処理||
-|async_files.*|テキストファイルを非同期で読み込み候補を追加します||
+|async_files.*|テキストファイルを非同期で読み込み候補へ追加します||
 |auto_preview.*|テキストファイルのauto-previewを行います。||
 
 
@@ -55,22 +78,34 @@ ohtorii_tools.dllはUnityマクロの中心となるDLLです。
 |file.*|ファイル処理||
 |log.*|ログ出力||
 
+# 実装の詳細
 
-# シリアライズ(cereal)について
+## シリアライズについて
 
-秀丸エディタはマルチプロセスで動作しています、そのため、プロセスをまたいでデータをやりとりする目的でシリアライズのライブラリ(cereal)を利用しています。
-このライブラリは生ポインタを扱えないためstd::shared_ptrを利用しています。
+秀丸エディタはマルチプロセスで動作しています、そのため、プロセスをまたいでデータをやりとりする目的でシリアライズのライブラリ([cereal](https://uscilab.github.io/cereal/index.html))を利用しています。
 
-## ライブラリのフォルダ位置
-external\cereal
+このライブラリは生ポインタをシリアライズできません、生ポインタの代わりにstd::shared_ptrを利用することでポインタをシリアライズできます。
+このような事情があるため本DLLでは所々でstd::shared_ptrを利用しています。
 
-# 本ライブラリの呼び出し方
+絞り込み検索の時にシリアライズを行っています、そのため絞り込み検索に必要な情報だけをシリアライズしています。
+
+詳細は以下のシリアライズを行うメソッドを参照してください。
+
+- Unity::serialize
+- Unity::SerializeStaticContext
+- Unity::DeSerializeToStaticContext
+- Unity::SerializeStaticStatusContext
+- Unity::DeSerializeToStaticStatusContext
+
+
+## 機能の呼び出し方
 
 あらゆる機能はUnity::Instance()を介して呼び出します。
 
-以下のパターンです。
+（呼び出し方の例）
 
-	Unity::Instance().lock()->Query???()
+	Unity::Instance().lock()->QueryXXX()
+	//XXXには機能名が入ります。(Kinds,Sources,StaticStatus...)
 
 具体例は dll_export.cpp を参照してください。
 
@@ -91,6 +126,22 @@ ohtorii_tools.dllで利用している固有名詞について説明します。
 - コンテキスト毎の状態
 - ユーザーデータ
 
-秀丸エディタ側でTABキーを押下するとコンテキストが切り替わり、ESCキーを押下すると直前のコンテキストへ戻ります。
+秀丸エディタ側でTABキーを押下すると次のコンテキストへ切り替わり、ESCキーを押下すると直前のコンテキストへ戻ります。
 
 
+# その他
+
+file_baseカインドのpreviewアクションをauto_previewオプションと組み合わせたときに、ファイル先頭の数行をアウトプット枠に表示しています。
+GUIをフリーズ状態にしないためファイルを非同期で読み込む必要があります、しかし、秀丸マクロでは実現できないため本DLL中でファイルの非同期読みとアウトプット枠への表示を行っています
+。
+
+このDLLはカインドに依存しない処理だけ行うべきです。
+
+秀丸マクロは秀丸エディタの操作に特化しており扱いやすい反面、高級言語（C++,C#,Pythonなど）で当たり前の機能（構造体、非同期処理など）がありません。
+
+秀丸マクロの弱みを補うため本DLL中でカインド固有の処理を記述しました。
+
+
+# 最後に
+
+後で書く
