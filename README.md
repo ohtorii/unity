@@ -352,9 +352,9 @@ masterブランチを取得しても多分動作しないです。
 
 # その他
 
-細々とした情報はこちらを参照してください。
+ここに書き切れない情報を以下ドキュメントにまとめました。
 
-[other.md](help/other.md "other")
+[help/README.md](help/README.md "README")
 
 
 # 謝辞
