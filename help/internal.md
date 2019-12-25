@@ -221,5 +221,14 @@ jump: ラベルの処理を参照してください。
 コールバックの種類毎に制限があります。
 
 ### Unityマクロ終了直前
+
 以下のDLLは解放済みなので呼ぶことは出来ません。
+
 - ohtorii_tools
+
+
+# 連絡先
+
+- <https://ohtorii.hatenadiary.jp>
+- <https://twitter.com/ohtorii>
+- <https://github.com/ohtorii>
