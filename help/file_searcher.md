@@ -20,7 +20,7 @@ Unityマクロから利用するファイル検索プログラムです。
 
 	>file_searcher.exe -mode file --path . --pattern * -o d:\temp\file.txt 
 
-### 出力ファイルの内容
+### 出力ファイルの内容（例）
 
 	App.config	@action_filename	c:\project\file_searcher\App.config
 	Application.cs	@action_filename	c:\project\file_searcher\Application.cs
@@ -35,7 +35,7 @@ Unityマクロから利用するファイル検索プログラムです。
 
 	>file_searcher.exe  -mode directory --path . --pattern * -o d:\temp\dir.txt 
 
-### 出力ファイルの内容
+### 出力ファイルの内容（例）
 
 	c:\project\file_searcher\bin\	@action_directory	c:\project\file_searcher\bin\
 	c:\project\file_searcher\obj\	@action_directory	c:\project\file_searcher\obj\
