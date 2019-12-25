@@ -1,5 +1,14 @@
 ﻿# ohtorii_tools.dll について
 
+- [はじめに](#はじめに)
+- [フォルダ構成](#フォルダ構成)
+- [ビルド手順](#ビルド手順)
+- [レイヤー構成](#レイヤー構成)
+- [実装の詳細](#実装の詳細)
+- [固有名詞について](#固有名詞について)
+- [その他](#その他)
+- [最後に](#最後に)
+
 # はじめに
 
 ohtorii_tools.dllはUnityマクロの中心となるDLLです。
@@ -18,7 +27,7 @@ ohtorii_tools.dllはUnityマクロの中心となるDLLです。
 
 # ビルド手順
 
-ohtorii_tools.sln をVisualStudioで開いてビルドするだけです。
+ohtorii_tools.sln をVisualStudioで開いてビルドしてください。
 
 x86/x64 版の設定があります、それぞれビルドしてください。
 
@@ -142,6 +151,8 @@ GUIをフリーズ状態にしないためファイルを非同期で読み込�
 秀丸マクロの弱みを補うため本DLL中でカインド固有の処理を記述しました。
 
 
-# 最後に
+# 連絡先
 
-後で書く
+- <https://ohtorii.hatenadiary.jp>
+- <https://twitter.com/ohtorii>
+- <https://github.com/ohtorii>
