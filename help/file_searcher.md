@@ -54,10 +54,6 @@ Unityマクロから利用するファイル検索プログラムです。
 
 	>file_searcher.exe --delay 500 -mode file --path . --pattern * -o d:\temp\file.txt 
 
-### 書式
-
-***--delay ミリ秒***
-
 
 ## コマンドライン詳細
 
@@ -84,17 +80,25 @@ Unityマクロから利用するファイル検索プログラムです。
 
 # 出力ファイルのフォーマット
 
-詳細は以下ドキュメントを参照してください。
+ファイルフォーマットの詳細は以下ドキュメントを参照してください。
 
 [internal.md](internal.md)
+
 
 # ビルド手順
 
 file_searcher.sln をVisualStudioで開いてビルドしてください。
 
+
+# プログラムの情報
+
 ## ビルド環境
 
 Visual Studio 2017
+
+## 開発言語
+
+C#
 
 ## フォルダ構成
 
@@ -105,12 +109,10 @@ Visual Studio 2017
 	    └─CommandLineParser.2.6.0         //外部ライブラリ
 
 
-
-# 外部ライブラリについて
+## 外部ライブラリ
 
 コマンドライン引数を解析するために[CommandLineParser](https://www.nuget.org/packages/CommandLineParser/)
 を利用しています。
-
 
 
 # 連絡先
