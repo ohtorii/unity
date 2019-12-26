@@ -135,7 +135,7 @@ const WCHAR* Sources::SourceNameToFileName(const WCHAR*source_name)const {
 	static std::wstring	result;
 
 	for(const auto& var :m_file_name_to_source_name){
-		if (var.second == source_name) {
+		if (var.second.compare(source_name)==0) {
 			return var.first.c_str();
 		}
 	}
@@ -156,7 +156,7 @@ bool Sources::Exist(const WCHAR*source_name)const {
 }
 
 bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {	
-	WCHAR buf[16 * 1024];
+	WCHAR buf[8 * 1000];
 	
 	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
 	dst.m_name.assign(buf);	
