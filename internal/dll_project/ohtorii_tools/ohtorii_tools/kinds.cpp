@@ -372,7 +372,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 }
 
 bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){		
-	WCHAR buf[16 * 1024];
+	WCHAR buf[8 * 1000];
 	
 	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
 	dst.m_name.assign(buf);	
