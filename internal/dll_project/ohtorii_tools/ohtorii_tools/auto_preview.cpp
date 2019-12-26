@@ -229,7 +229,7 @@ const std::wstring& AsyncFileReader::GetHidemaruScript()const {
 /////////////////////////////////////////////////////////////////////////////
 AutoPreview::AutoPreview(const WCHAR* filename) :
 	m_finished(false),
-	m_mode(FILE_OPEN),
+	m_mode(AutoPreview::Mode::FILE_OPEN),
 	m_file_reader(filename,80*50)	//80文字ｘ50行
 {
 }
