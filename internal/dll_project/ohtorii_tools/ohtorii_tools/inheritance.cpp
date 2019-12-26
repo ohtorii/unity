@@ -59,7 +59,7 @@ size_t Inheritance::GetActionCount()const {
 
 const WCHAR*	Inheritance::GetKindName(size_t action_index)const {
 	try{
-		m_resolve_actions.at(action_index).m_kind_name.c_str();
+		return m_resolve_actions.at(action_index).m_kind_name.c_str();
 	}
 	catch (std::exception) {
 		//pass
@@ -69,7 +69,7 @@ const WCHAR*	Inheritance::GetKindName(size_t action_index)const {
 
 size_t			Inheritance::GetActionIndex(size_t action_index)const {
 	try {
-		m_resolve_actions.at(action_index).m_action_index;
+		return m_resolve_actions.at(action_index).m_action_index;
 	}
 	catch (std::exception) {
 		//pass
@@ -79,7 +79,7 @@ size_t			Inheritance::GetActionIndex(size_t action_index)const {
 
 const WCHAR*	Inheritance::GetActionName(size_t action_index)const {
 	try {
-		m_resolve_actions.at(action_index).m_action_name.c_str();
+		return m_resolve_actions.at(action_index).m_action_name.c_str();
 	}
 	catch (std::exception) {
 		//pass
