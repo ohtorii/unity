@@ -21,7 +21,7 @@ ASyncFile::ASyncFile() {
 	m_instance=nullptr;
 	m_request_exit=false;
 	m_check_bom=false;
-	m_status = INITIALIZED;
+	m_status = ASyncFile::StaticStatus::INITIALIZED;
 }
 
 ASyncFile::ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filename) :
