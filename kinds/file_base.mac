@@ -77,14 +77,17 @@ open:
 		while(##i < ##count){
 			$$text = $$filenames[##i];
 			if($$text!=""){
-				if(existfile($$text)){
-					if((existfile($$text,1)&0x00000010) == 0){
-						//パスが存在している、かつ、ファイルである
-						openfile $$text;
-						if(result){
-							##new_hidemaru_handle = hidemaruhandle(0);
-						}
+				call check_file_exists $$text;
+				if(##return){
+					openfile $$text;
+					if(result){
+						##new_hidemaru_handle = hidemaruhandle(0);
 					}
+				}else{
+					$$macro_root_dir=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+					$$macro_path=$$macro_root_dir+"\\internal\\show_message.mac";
+					$$message="ファイルを見付けることが出来ませんでした。\nもしかしたら既に削除されているのかもしれません。\n\n（ファイル名）\n" + $$text;
+					execmacro $$macro_path, "error", $$message;
 				}
 			}
 
@@ -98,6 +101,18 @@ open:
 		return str(##ret);
 	}
 	return "1";
+
+
+check_file_exists:
+	$$filename=$$1;
+	if(existfile($$filename)){
+		if((existfile($$filename,1)&0x00000010) == 0){
+			//パスが存在している、かつ、ファイルである
+			return true;
+		}
+	}
+	return false;
+
 
 callback_open:
 	##handle=val($$1);

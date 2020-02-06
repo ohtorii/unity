@@ -1,0 +1,46 @@
+﻿/*メッセージの表示を行う
+
+（引数）
+args[0]	メッセージの種類
+args[1]	メッセージ文字列
+
+
+＊メッセージの種類
+	"information"
+	"warning"
+	"error"
+*/
+
+call main;
+endmacro;
+
+
+main:
+	call kind_to_icon_flag getarg(0);
+	##icon_flag=##return;
+
+	call kind_to_title getarg(0);
+	$$title=$$return;
+
+	message getarg(1),$$title,##icon_flag;
+	return;
+
+
+kind_to_icon_flag:
+	if($$1=="information"){
+		return 0x40;
+	}
+	if($$1=="warning"){
+		return 0x30;
+	}
+	return 0x10;
+
+
+kind_to_title:
+	if($$1=="information"){
+		return "情報";
+	}
+	if($$1=="warning"){
+		return "警告";
+	}
+	return "error";

@@ -27,20 +27,23 @@ open:
 	##i=0;
 	while(##i < ##count){
 		$$filename=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##i);
-		if(existfile($$filename)){
-			if((existfile($$filename,1)&0x00000010) == 0){
-				//パスが存在している、かつ、ファイルである
-				##column=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionColumn",##i);
-				##line  =dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionLine",##i);
+		call check_file_exists $$filename;
+		if(##return){
+			##column=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionColumn",##i);
+			##line  =dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionLine",##i);
 
+			openfile $$filename;
+			moveto2 ##column,##line;
+			##new_hidemaru_handle=hidemaruhandle(0);
 
-				openfile $$filename;
-				moveto2 ##column,##line;
-				##new_hidemaru_handle=hidemaruhandle(0);
-
-				setactivehidemaru ##current_hidemaru_handle;
-			}
+			setactivehidemaru ##current_hidemaru_handle;
+		}else{
+			$$macro_root_dir=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+			$$macro_path=$$macro_root_dir+"\\internal\\show_message.mac";
+			$$message="ファイルを見付けることが出来ませんでした。\nもしかしたら既に削除されているのかもしれません。\n\n（ファイル名）\n" + $$text;
+			execmacro $$macro_path, "error", $$message;
 		}
+
 		##i = ##i + 1;
 	}
 
@@ -48,6 +51,17 @@ open:
 		##ret = dllfuncw(#g_dll_ohtorii_tools,"AppendCallBack_ProcessFinish",currentmacrofilename,"callback_open",str(##new_hidemaru_handle));
 	}
 	return str(##ret);
+
+
+check_file_exists:
+	$$filename=$$1;
+	if(existfile($$filename)){
+		if((existfile($$filename,1)&0x00000010) == 0){
+			//パスが存在している、かつ、ファイルである
+			return true;
+		}
+	}
+	return false;
 
 
 callback_open:
