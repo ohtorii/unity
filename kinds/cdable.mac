@@ -58,16 +58,22 @@ command_prompt:
 
 explorer:
 	##first_item_index	= 0;
-	call GetPathName ##first_item_index;
-	$$text=$$return;
-	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
-	$$parent_folder=getresultex(-1);
-	runex "explorer " + "\""+$$parent_folder+"\""
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
+	if($$text==""){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##first_item_index);
+		if($$text==""){
+			return "0";
+		}
+		$$args = "\""+ $$text + "\"";
+	}else{
+		$$args = "/select,\"" + $$text + "\"";
+	}
+	runex "explorer " + $$args
 			, 0 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
 			, 0, "" 		//stdout  0:none 1:auto 2:file 3:add file  4:new 5:insert 6:replace
 			, 0, "" 		//stderr  0:none 1:=out 2:file 3:add file  4:new 5:insert 6:replace
-			, 0,"" 		//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
+			, 0,""			//folder  0:none 1:current 2:specify 3:(reserve) 4:exe's folder
 			, 1 			//show	  0:auto 1:show 2:hide
 			, 1 			//nodraw  0:draw 1:no draw
 			, 0 			//unicode 0:ansi 2:unicode
