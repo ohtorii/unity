@@ -39,10 +39,18 @@ do_action:
 
 command_prompt:
 	##first_item_index	= 0;
-	call GetPathName ##first_item_index;
-	$$text=$$return;
-	execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
-	$$parent_folder=getresultex(-1);
+	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
+	if($$text==""){
+		$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionDirectoryName",##first_item_index);
+		if($$text==""){
+			return "0";
+		}
+		$$parent_folder=$$text;
+	}else{
+		execmacro $g_root_macro_directory+"\\internal\\util_get_parent_folder_name.mac",$$text;
+		$$parent_folder=getresultex(-1);
+	}
+
 	runex "cmd"
 			, 0 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
@@ -92,12 +100,17 @@ hidemaru_filer:
 
 	##first_item_index	= 0;
 	call GetPathName ##first_item_index;
-	$$folder=$$return;
-	if($$folder==""){
+	$$text=$$return;
+	if($$text==""){
+		return "0";
+	}
+	execmacro $g_root_macro_directory+"\\internal\\util_get_abs_path_name.mac",$$text;
+	$$abs_folder=getresultex(-1);
+	if($$abs_folder==""){
 		return "0";
 	}
 
-	$$command = sprintf(R"("%s" %s%s)",$$exe,$$arguments,$$folder);
+	$$command = sprintf(R"("%s" %s%s)",$$exe,$$arguments,$$abs_folder);
 	runex $$command
 			, 0 			//sync	  0:async 1:sync
 			, 0, "" 		//stdin   0:none 1:auto 2:file 3:(reserve) 4:all 5:select
@@ -111,7 +124,7 @@ hidemaru_filer:
 	return "1";
 
 
-file:
+/*file:
 	##first_item_index	= 0;
 	$$text=dllfuncstrw(#g_dll_ohtorii_tools,"GetSelectionActionFileName",##first_item_index);
 	if($$text==""){
@@ -127,6 +140,7 @@ file:
 		return "1";
 	}
 	return "0";
+*/
 
 
 narrow:

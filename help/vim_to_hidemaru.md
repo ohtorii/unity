@@ -71,7 +71,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |project_cd		||||
 |tabnew_cd		|カレントディレクトリを移動し、新しいタブを開く|||
 |tabnew_lcd		||||
-|file			|Open this directory by file source.||✅|
+|file			|Open this directory by file source.|廃止した。代わりにnarrowを利用します|❎|
 |narrow			|Narrow down candidates by the directory name.||✅|
 |vimshell		|対象をカレントディレクトリとしてvimshellを起動する|アクション名をcommand_promptへ変更。コマンドプロンプトを開くようにした。|✅|
 |tabvimshell	||||
