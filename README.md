@@ -1,34 +1,38 @@
-# Unity
+# Unityマクロ
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Coverity](https://img.shields.io/coverity/scan/19629.svg)](https://scan.coverity.com/projects/ohtorii-unity)
 
-- [Unity](#unity)
+- [Unityマクロ](#unityマクロ)
 - [はじめに](#はじめに)
-- [スクリーンショット（準備中）](#スクリーンショット準備中)
-- [マクロのデザイン](#マクロのデザイン)
-- [画面の名称](#画面の名称)
+- [スクリーンショット](#スクリーンショット)
+- [Unityマクロのインターフェース](#unityマクロのインターフェース)
+- [Unityマクロ用語](#unityマクロ用語)
 - [操作方法](#操作方法)
 - [マクロの導入方法](#マクロの導入方法)
 - [動作環境](#動作環境)
 - [ダウンロード](#ダウンロード)
+- [ソースとカインドを作成する](#ソースとカインドを作成する)
 - [その他](#その他)
 - [謝辞](#謝辞)
 - [連絡先](#連絡先)
 - [寄付](#寄付)
 
+
+
+
 # はじめに
 
-作成途中なのでまだ動かないです。
+Unityマクロとは秀丸エディタ用の統合ユーザーインターフェースです。
 
+最初に検索パターンを入力することで一致する対象（ファイル名、ウインドウ名など）を絞り込み、選択した対象を操作（開く、挿入するなど）するインターフェースを提供します。
 
-[unite.vim](https://github.com/Shougo/unite.vim)の秀丸エディタ版。
+## プロフェッショナル向け説明
 
-Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的存在。
+[unite.vim](https://github.com/Shougo/unite.vim)の秀丸エディタ版です、Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的存在です。
 
-# スクリーンショット（準備中）
-
+# スクリーンショット
 
 ## 文字列の挿入
 
@@ -57,28 +61,13 @@ ONにすると***previewアクション***を自動的に呼び出します。
 
 ![autopreview hilight](help/images/hilight_autopreview.gif "autopreview hilight")
 
+# Unityマクロのインターフェース
 
-# マクロのデザイン
+![インターフェース](help/images/oogui_summary.png "インターフェース")
 
-GUIで何気なく行っている操作、
+# Unityマクロ用語
 
-***関心対象（オブジェクト）を選択してから操作（アクション）を行う***
-
-![オブジェクトベースUI](help/images/ooui.png "オブジェクトベースUI")
-
-こんな何気なく行っている操作をテキストエディタで実現します。
-
-
-
-## 処理の流れ
-
-![処理の流れ](help/images/oogui_summary.png "処理の流れ")
-
-### テクニカルアーティスト(TA)さん向け情報
-
-ちなみに「対象を選択→TABキー押下→アクションの絞り込み選択」の流れは[Houdini](https://www.sidefx.com/products/houdini/)と同じ操作です。
-
-## source（ソース）とは
+## source（ソース）
 
 候補(candidates)を集めてくる秀丸マクロのこと。
 
@@ -98,7 +87,7 @@ GUIで何気なく行っている操作、
 もちろんユーザー作成のソースも自由に追加できます。
 
 
-## kind（カインド）とは
+## kind（カインド）
 
 候補（candidates）の型に対応した操作(action)をまとめた秀丸マクロです。
 
@@ -127,7 +116,7 @@ GUIで何気なく行っている操作、
 		など
 
 
-## action(アクション)とは
+## action(アクション)
 
 選択した候補に対して行う操作のことです。
 
@@ -142,7 +131,7 @@ GUIで何気なく行っている操作、
 マクロの内部処理と密に連携しているためユーザー定義のフラグは追加できません。
 
 
-# 画面の名称
+## 画面の名称
 
 二つの画面（バッファ）があります。
 
@@ -151,11 +140,11 @@ GUIで何気なく行っている操作、
 
 ![インターフェース](help/images/interface.png "インターフェース")
 
-## 検索バッファ
+### 検索バッファ
 
 検索の候補を入力します。
 
-## 候補バッファ
+### 候補バッファ
 
 絞り込み検索した結果をリアルタイムで表示し、操作対象の候補（赤文字の行）を選択します。
 
@@ -317,16 +306,16 @@ hidemaru-editor-script-directory
 
 # 動作環境
 
-- 秀丸エディタ ver xxx 以降
+- 秀丸エディタ ver 8.91 以降
 
-秀丸マクロの***新命令***を利用しているため***必ず新しいバージョン***をお使いください。
+秀丸マクロの***新命令***を利用しているため***必ず上記バージョン以降***をお使いください。
 
 ## 動作確認を行った環境
 
 ご参考までに。
 
 - Windows 10 64bit 
-- 秀丸エディタ 64bit ver xxx
+- 秀丸エディタ 64bit ver 8.91
 - 田楽DLL 64bit ver Ver.3.22.1
 
 
