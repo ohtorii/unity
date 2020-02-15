@@ -13,6 +13,12 @@ usage:
 				（例）"-auto-preview\t-foo-option"
 
 */
+if(version<891){
+	message
+	"秀丸エディタのバージョンが古いためマクロを実行できません。\n"	+
+	"本マクロのドキュメントに記載されたバージョン以降の秀丸エディタをお使いください。";
+	endmacro "0";
+}
 
 #g_tick_prev=tickcount;
 
@@ -111,7 +117,8 @@ disablehistory
 //disableinvert;カーソルキーが表示されなくなるためコメントアウトした。
 
 call main getarg(1), getarg(2);
-endmacro;
+endmacro str(##return);
+
 
 main:
 	call ShowPerformanceCounter "main";
