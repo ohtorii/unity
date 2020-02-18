@@ -4,11 +4,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Coverity](https://img.shields.io/coverity/scan/19629.svg)](https://scan.coverity.com/projects/ohtorii-unity)
 
-- [Unityマクロ](#unityマクロ)
 - [はじめに](#はじめに)
 - [スクリーンショット](#スクリーンショット)
 - [Unityマクロのインターフェース](#unityマクロのインターフェース)
 - [Unityマクロ用語](#unityマクロ用語)
+- [source（ソース）一覧](#sourceソース一覧)
 - [操作方法](#操作方法)
 - [マクロの導入方法](#マクロの導入方法)
 - [動作環境](#動作環境)
@@ -22,15 +22,17 @@
 
 
 
+
 # はじめに
 
 Unityマクロとは秀丸エディタ用の統合ユーザーインターフェースです。
 
 最初に検索パターンを入力することで一致する対象（ファイル名、ウインドウ名など）を絞り込み、選択した対象を操作（開く、挿入するなど）するインターフェースを提供します。
 
-## プロフェッショナル向け説明
+## ヒデマラー向け説明
 
 [unite.vim](https://github.com/Shougo/unite.vim)の秀丸エディタ版です、Emacsでいうところの[anything.el](http://emacs.rubikitch.com/anything/)的存在です。
+
 
 # スクリーンショット
 
@@ -38,7 +40,7 @@ Unityマクロとは秀丸エディタ用の統合ユーザーインターフェ
 
 ![文字列の挿入](help/images/insert.gif "文字列の挿入")
 
-## ファイル履歴(file_mru)からファイルを見付けて開く
+## ファイル履歴(file_mru)を検索して
 
 ![file_mru](help/images/file_mru_open.gif "file_mru")
 
@@ -52,14 +54,22 @@ Unityマクロとは秀丸エディタ用の統合ユーザーインターフェ
 
 ## auto preview オプション
 
-ONにすると***previewアクション***を自動的に呼び出します。
+auto preview オプションをONにすると***previewアクション***を自動的に呼び出します。
 
 ### ファイルの場合
+
 ![autopreview file](help/images/file_autopreview.gif "autopreview file")
 
-### ハイライトの場合
+#### 備考
+ファイルの先頭行をアウトプット枠に表示します。
+
+### ハイライト（強調表示）の場合
 
 ![autopreview hilight](help/images/hilight_autopreview.gif "autopreview hilight")
+
+#### 備考
+秀丸エディタのハイライト（強調表示）を変更すると、ウインドウフォーカスが切り替わり使い勝手が悪いです。
+その使いにくさを回避するため事前に手作業でウインドウを分離しました。
 
 # Unityマクロのインターフェース
 
@@ -123,12 +133,10 @@ ONにすると***previewアクション***を自動的に呼び出します。
 アクションは幾つかのフラグを持っています。
 
 - 複数の候補を選択可能か
-- ユーザーが編集中のテキストを変更するかどうか
+- ユーザーが編集中のテキストを変更するか
 - 操作後すぐに終了するか
 - 操作後に新たな候補を生成するか
-- ...etc
-
-マクロの内部処理と密に連携しているためユーザー定義のフラグは追加できません。
+- ...など
 
 
 ## 画面の名称
@@ -142,11 +150,35 @@ ONにすると***previewアクション***を自動的に呼び出します。
 
 ### 検索バッファ
 
-検索の候補を入力します。
+検索の候補を空白区切りで入力します、候補は大文字小文字の区別をせずAND検索します。
 
 ### 候補バッファ
 
-絞り込み検索した結果をリアルタイムで表示し、操作対象の候補（赤文字の行）を選択します。
+絞り込み検索した結果をリアルタイムで表示します。
+
+さらに、アクションの対象とする候補を複数選択することができます（赤文字の行）。
+
+
+# source（ソース）一覧
+
+標準のソース一覧です。
+
+|ソース名|説明|その他|
+|--|--|--|
+|directory|カレントディレクトリの一覧||
+|directory_mru|ディレクトリ履歴||
+|directory_recursive|カレントディレクトリ以下のディレクトリ一覧（再帰）|候補を非同期で取得するため、ファイル数が多くてもそれなりに動きます|
+|emoji|絵文字（Full Emoji List, v13.0）|http://unicode.org/emoji/charts/full-emoji-list.html|
+|file|カレントディレクトリのファイル一覧||
+|file_mru|ファイル履歴||
+|file_recursive|カレントディレクトリ以下のファイル一覧（再帰）|候補を非同期で取得するため、ファイル数が多くてもそれなりに動きます|
+|hilight|強調表示||
+|lines|編集中テキストの一行||
+|outline|アウトライン枠の内容||
+|process|プロセス一覧||
+|tab|タブ一覧||
+|window|ウインドウ一覧||
+
 
 # 操作方法
 
@@ -226,7 +258,9 @@ hidemaru-editor-script-directory
 - [田楽DLL 32bit](http://www.ceres.dti.ne.jp/~sugiura/hidemaru/macros/dgserver/#download64)
 - [田楽DLL 64bit](http://htom.in.coocan.jp/macro/macro_dll.html#label-5)
 
-32bitと64bit版があります、適切なDLLを導入してください。
+32bitと64bit版があります、適切なDLLを導入してください。導入方法はそれぞれのドキュメントを参照しください。
+
+### 補足
 
 ***田楽DLL***とはGUI表示などを行うDLLです。
 
@@ -264,20 +298,20 @@ hidemaru-editor-script-directory
 |--|--|--|--|
 |unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能。全機能を利用可能|○|○|
 |unity_file_paths.mac					|ファイルパスに関するソース（file,directroy_mru,file_mru）を指定して起動|○|×|
-|unity_menu.mac							|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|
+|unity_menu.mac 							|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|
 |unity_menu_manual.mac					|利用頻度の高いソースをメニュー化する例|×|×|
-|unity_source_directory.mac				|directroyソースを指定して起動|×|×|
-|unity_source_directory_mru.mac			|directroy_mruソースを指定して起動|×|×|
-|unity_source_directory_recursive.mac	|directroy_recursiveソースを指定して起動|×|×|
-|unity_source_emoji.mac					|emojiソースを指定して起動|×|×|
+|unity_source_directory.mac 				|directroyソースを指定して起動|×|×|
+|unity_source_directory_mru.mac 			|directroy_mruソースを指定して起動|×|×|
+|unity_source_directory_recursive.mac		|directroy_recursiveソースを指定して起動|×|×|
+|unity_source_emoji.mac 					|emojiソースを指定して起動|×|×|
 |unity_source_file.mac					|fileソースを指定して起動|×|×|
 |unity_source_file_mru.mac				|file_mruソースを指定して起動|×|×|
-|unity_source_file_recursive.mac		|file_recursiveソースを指定して起動|×|×|
-|unity_source_hilight.mac				|hilightソースを指定して起動|×|×|
-|unity_source_outline.mac				|outlineソースを指定して起動|×|×|
-|unity_source_process.mac				|processソースを指定して起動|×|×|
+|unity_source_file_recursive.mac			|file_recursiveソースを指定して起動|×|×|
+|unity_source_hilight.mac					|hilightソースを指定して起動|×|×|
+|unity_source_outline.mac					|outlineソースを指定して起動|×|×|
+|unity_source_process.mac					|processソースを指定して起動|×|×|
 |unity_source_tab.mac					|tabソースを指定して起動|×|×|
-|unity_source_window.mac				|windowソースを指定して起動|×|×|
+|unity_source_window.mac					|windowソースを指定して起動|×|×|
 
 
 ## 動作環境のカスタマイズ(config.ini)
@@ -302,7 +336,7 @@ hidemaru-editor-script-directory
 	;ウインドウ、ハイライトのプレビューなどから参照。
 	sleep=1500
 
-
+通常はディフォルトのままで良いです、もし不都合あれば編集してください。
 
 # 動作環境
 
@@ -337,13 +371,13 @@ masterブランチを取得しても多分動作しないです。
 バージョン番号は version 1.2.3 のように表記され、それぞれ major.minor.revision を表します。
 
 |番号|説明|
-|:--:|:--:|
+|--|--|
 |major|互換性が失われる大きな変更を表します|
 |minor|機能追加のように互換性のある更新を表します|
 |revision|バグ修正のように機能そのものに変化が無い軽微な更新を表します|
 
 
-# ソースとカインドを作成する
+# ソースとカインドを作成する方法
 
 ドキュメントを準備中です。
 
