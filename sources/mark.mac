@@ -1,0 +1,115 @@
+﻿/* Mark
+*/
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//グローバル変数
+/////////////////////////////////////////////////////////////////////////////
+#g_outline_count=0;
+#g_outline_line[0]=0;
+$g_outline_text[0]="";
+
+$g_target_hidemaru_filename="";
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//メイン処理
+/////////////////////////////////////////////////////////////////////////////
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg=getarg(1);
+call $label, $arg;
+endmacro $$return;
+
+
+gather_candidates:
+	//
+	//候補をグローバル変数へ格納する
+	//
+	{
+		##old_hidemaru		=hidemaruhandle(0);
+		##target_hidemaru	=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusGetTargetHidemaruHandle");
+
+		setactivehidemaru ##target_hidemaru;
+		disabledraw;
+		##xOrg=x;
+		##yOrg=y;
+
+		call gather_candidates_main;
+		##ret=##return;
+
+		moveto ##xOrg,##yOrg;
+		enabledraw;
+		setactivehidemaru ##old_hidemaru;
+	}
+	if(##ret==false){
+		return "0";
+	}
+
+	//
+	//候補をDLL側へ追加する
+	//
+	{
+		##i=0;
+		while(##i<#g_outline_count){
+			##candidate_index=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $g_outline_text[##i], str(#g_outline_line[##i]));
+			if(##candidate_index==-1){
+				return "0";
+			}
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $g_target_hidemaru_filename);
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionLine", #g_outline_line[##i]);
+
+			##i = ##i + 1;
+		}
+	}
+	return str(##ret);
+
+
+
+gather_candidates_main:
+	#g_outline_count=0;
+	gofiletop;
+	if(marked){
+		call AppendLineText;
+	}
+	while(1){
+	  	nextmark;
+	  	if(!result){
+	  	  	break;
+	  	}
+		call AppendLineText;
+	}
+	$g_target_hidemaru_filename=filename2;
+	return true;
+
+
+AppendLineText:
+	selectline;
+	//memo: 文字列終端の改行文字を削除するためTrimする。
+	call TrimString gettext2(seltopcolumn,seltoplineno,selendcolumn,selendlineno);
+	$g_outline_text[#g_outline_count]=$$return;
+	#g_outline_line[#g_outline_count]=lineno;
+
+	#g_outline_count = #g_outline_count + 1;
+	return ;
+
+
+TrimString:
+	if($$2==""){
+		$$space=$g_space;
+	}else{
+		$$space=$$2;
+	}
+	while(1){
+	  ##word=strlen($$1);
+	  //文字列の先頭に空白文字がある場合、空白文字を削除
+	  if(strstr($$space,leftstr($$1,2))!=-1)$$1=rightstr($$1,##word-2);
+	  else if(strstr($$space,rightstr($$1,2))!=-1)$$1=leftstr($$1,##word-2);
+	  //ここまで全角文字の対処
+	  else if(strstr($$space,leftstr($$1,1))!=-1)$$1=rightstr($$1,##word-1);
+	  else if(strstr($$space,rightstr($$1,1))!=-1)$$1=leftstr($$1,##word-1);
+	  else break;
+	}
+	return $$1;
