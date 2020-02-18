@@ -174,6 +174,7 @@ auto preview オプションをONにすると***previewアクション***を自�
 |file_recursive|カレントディレクトリ以下のファイル一覧（再帰）|候補を非同期で取得するため、ファイル数が多くてもそれなりに動きます|
 |hilight|強調表示||
 |lines|編集中テキストの一行||
+|mark|マーク一覧||
 |outline|アウトライン枠の内容||
 |process|プロセス一覧||
 |tab|タブ一覧||
@@ -348,10 +349,17 @@ hidemaru-editor-script-directory
 
 ご参考までに。
 
+### 64 bit  環境
+
 - Windows 10 64bit 
 - 秀丸エディタ 64bit ver 8.91
 - 田楽DLL 64bit ver Ver.3.22.1
 
+### 32 bit  環境
+
+- Windows 10 64bit 
+- 秀丸エディタ 32bit ver 8.91
+- 田楽DLL 32bit ver Ver.3.22.1
 
 # ダウンロード
 
