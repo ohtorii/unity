@@ -40,7 +40,7 @@ Unityマクロとは秀丸エディタ用の統合ユーザーインターフェ
 
 ![文字列の挿入](help/images/insert.gif "文字列の挿入")
 
-## ファイル履歴(file_mru)を検索して
+## ファイル履歴(file_mru)を検索してファイルを開く
 
 ![file_mru](help/images/file_mru_open.gif "file_mru")
 
