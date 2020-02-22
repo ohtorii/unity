@@ -68,7 +68,7 @@ exit /b %RESULT%
 	)
 
 	REM å„énññ
-	REM rmdir /S /Q "%ROOT_DIR%"
+	rmdir /S /Q "%ROOT_DIR%"
 
 	exit /b %errorlevel%
 
