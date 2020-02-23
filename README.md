@@ -412,6 +412,11 @@ masterブランチを取得しても多分動作しないです。
 - [unite.vim](https://github.com/Shougo/unite.vim)
 - [anything.el](http://emacs.rubikitch.com/anything/)
 
+## 参考書籍
+
+- [Vimテクニックバイブル](https://gihyo.jp/dp/ebook/2012/978-4-7741-5131-1)
+- [Emacsテクニックバイブル](https://gihyo.jp/dp/ebook/2012/978-4-7741-5132-8)
+
 ## 作者に感謝
 - [田楽DLL 32bit](http://www.ceres.dti.ne.jp/~sugiura/hidemaru/macros/dgserver/#download64)
 - [田楽DLL 64bit](http://htom.in.coocan.jp/macro/macro_dll.html#label-5)
