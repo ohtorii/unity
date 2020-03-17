@@ -4,6 +4,8 @@
 /////////////////////////////////////////////////////////////////////////////
 //メイン処理
 /////////////////////////////////////////////////////////////////////////////
+$g_target_hidemaru_filename="";
+
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
 $arg=getarg(1);
@@ -45,6 +47,10 @@ gather_candidates:
 			if(##candidate_index==-1){
 				return "0";
 			}
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionFileName", $g_target_hidemaru_filename);
+			//memo: +1して秀丸エディタの行番号にする。
+			##success=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionLine", ##i + 1);
+
 			##i = ##i + 1;
 		}
 	}
@@ -74,4 +80,6 @@ gather_candidates_main:
 		}
 	}
 	escape;
+
+	$g_target_hidemaru_filename=filename2;
 	return true;
