@@ -52,6 +52,10 @@ gather_candidates:
 	//
 	//候補をDLL側へ追加する
 	//
+	##success = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateHeader", "アウトライン", "行番号");
+	if(!##success){
+		return "0";
+	}
 	{
 		##i=0;
 		while(##i<#g_outline_count){
@@ -91,8 +95,8 @@ gather_candidates_main:
 		if(##n <= #g_outline_count){
             break;
         }
-		$g_outline_text[#g_outline_count]=getoutlineitem(#g_outline_count,0);
-		#g_outline_line[#g_outline_count]=val(getoutlineitem(#g_outline_count,1));
+		$g_outline_text[#g_outline_count]  =getoutlineitem(#g_outline_count,0);
+		#g_outline_line[#g_outline_count]  =val(getoutlineitem(#g_outline_count,1));
 		#g_outline_indent[#g_outline_count]=val(getoutlineitem(#g_outline_count,2));
 
 		#g_outline_count = #g_outline_count + 1;
