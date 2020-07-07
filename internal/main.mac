@@ -99,6 +99,11 @@ setcompatiblemode
 	0x00002000 |	/*貼り付け後のカーソル位置　→　最後に移動 */
 	0x00020000 ;	/*マクロ終了後に検索条件をマクロ実行前と同じに戻します。（V8.20以降） */
 
+if(893<=version){
+	##old = compatiblemode;
+	setcompatiblemode ##old | 0x04000000;	//　execmacroのコンパイル内容をメモリ上にキャッシュして再利用します。（V8.92β12以降）
+}
+
 #g_target_hidemaru  = hidemaruhandle(0);
 //disableerrormsg;
 debuginfo 1;
