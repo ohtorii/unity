@@ -44,6 +44,14 @@ gather_candidates_main:
 		$$pattern=$$root_dir+"\\*.*";
 	}
 
+	//カレントディレクトリを分かりやすくするために、候補ヘッダにカレントディレクトリを設定する。
+	call GetAbsolutePathName $$root_dir;
+	$$abs_root_dir=$$return;
+	##r = dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateHeader", "["+$$abs_root_dir+"]", "");
+	if(!##r){
+		return "0";
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	//ディレクトリを登録する
 	//////////////////////////////////////////////////////////////////////////
@@ -61,3 +69,10 @@ gather_candidates_main:
 		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$dir);
 	}
 	return "1";
+
+
+GetAbsolutePathName:
+	##fso=createobject("Scripting.FileSystemObject");
+	$$abs_filename = member(##fso,"GetAbsolutePathName",$$1);
+	releaseobject ##fso;
+	return $$abs_filename;
