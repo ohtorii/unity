@@ -27,7 +27,6 @@
 //	グローバル変数
 ////////////////////////////////////////////////////////////////////////////
 #g_dll_ohtorii_tools=0;
-#g_dll_dengaku		=0;
 #g_dll_output_panel	=0;
 
 
@@ -209,27 +208,29 @@ EscapeC:
 	//
 	//C言語のエスケープ文字
 	//
-	if(#g_dll_dengaku==0){
-		execmacro $g_root_macro_directory+"\\internal\\load_dengaku_dll.mac";
-		#g_dll_dengaku=val(getresultex(-1));
-		if(#g_dll_dengaku==0){
-			return "";
-		}
-	}
-	$$r=$$1;
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\\",	"\\\\", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\"",	"\\\"", -1);
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x00", "\\0", -1);//x00
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x07", "\\a", -1);//x07
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x08", "\\b", -1);//x08
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\t",   "\\t", -1);//x09
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\n",   "\\n", -1);//x0a
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x0b", "\\v", -1);//x0b
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\x0c", "\\f", -1);//x0c
-	$$r = dllfuncstr(#g_dll_dengaku,"GSUB", $$r, "\r",   "\\r", -1);//x0d
+	$$text=$$1;
 
-	freedll #g_dll_dengaku;
-	#g_dll_dengaku=0;
+	/* Debug
+	$$text=$$text+"\"\x07\x08\x0b\x0c\t\n\r";
+	*/
 
-	return $$r;
+	##hmjre_dll=loaddll("HmJre.dll");
+	##dummy = dllfunc(##hmjre_dll,"SetUnicodeIndexAutoConvert", 1);
+	##dummy = dllfunc(##hmjre_dll,"NotifyEncode", encode);
 
+	//\ -> \\
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\\)", $$text,0,R"(\\\\)",2);
+	//" -> \"
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(")", $$text,0, R"(\\")",2);
+	/*$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", "\x00", $$text,0, R"(\\0)", 2);//x00
+	debuginfo "@3 $$text="+$$text;*/
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\x07)", $$text,0, R"(\\a)", 2);//x07
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\x08)", $$text,0, R"(\\b)", 2);//x08
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\t)",   $$text,0, R"(\\t)", 2);//x09
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\n)",   $$text,0, R"(\\n)", 2);//x0a
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\x0b)", $$text,0, R"(\\v)", 2);//x0b
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\x0c)", $$text,0, R"(\\f)", 2);//x0c
+	$$text = dllfuncstr(##hmjre_dll,"ReplaceRegular", R"(\r)",   $$text,0, R"(\\r)", 2);//x0d
+	freedll ##hmjre_dll;
+
+	return $$text;
