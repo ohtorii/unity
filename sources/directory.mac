@@ -1,6 +1,5 @@
 ﻿/*ディレクトリ
 */
-#g_dll_dengaku=0;
 #g_dll_ohtorii_tools=val(getarg(30));
 $label=getarg(0);
 $arg1=getarg(1);
@@ -21,18 +20,8 @@ endmacro $$return;
 */
 gather_candidates:
 	$$root_dir=$$1;
-	execmacro $g_root_macro_directory+"\\internal\\load_dengaku_dll.mac";
-	#g_dll_dengaku=val(getresultex(-1));
-	if(#g_dll_dengaku==0){
-		return "0";
-	}
-
 	call gather_candidates_main,$$root_dir;
 	$$ret=$$return;
-
-	freedll(#g_dll_dengaku);
-	#g_dll_dengaku=0;
-
 	return $$ret;
 
 
@@ -55,19 +44,23 @@ gather_candidates_main:
 	//////////////////////////////////////////////////////////////////////////
 	//ディレクトリを登録する
 	//////////////////////////////////////////////////////////////////////////
-	##r = dllfunc(#g_dll_dengaku,"ENUMDIR",$$pattern);
-	while (1) {
-		$$dir = dllfuncstr(#g_dll_dengaku,"FINDNEXT");
-		if ($$dir == "") {
+	$$dir="..\\";
+	##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir,"");
+	##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$dir);
+
+	##objFSO 		=createobject("Scripting.FileSystemObject");
+	##objFolder		=member( ##objFSO, "GetFolder", $$abs_root_dir );
+	##objCollection	=getpropobj(##objFolder,"subfolders");
+	while(1){
+		##objItem = getcollection( ##objCollection );
+		if(##objItem==0){
 			break;
 		}
-		if($$dir == "."){
-			continue;
-		}
-		$$dir=$$dir+"\\";
+		$$dir=getpropstr(##objItem,"Name")+"\\";
 		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$dir,"");
 		##r=dllfuncw(#g_dll_ohtorii_tools, "SetCandidateActionDirectoryName", $$dir);
 	}
+	releaseobject ##objFSO;
 	return "1";
 
 
