@@ -1,0 +1,8 @@
+﻿/* ファイルのソースへ引数を与える
+
+*/
+$sources="file";
+$options="";
+$argument="c:/";//ルートディレクトリを引数で渡す
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options,$argument;
+endmacro getresultex(-1);
