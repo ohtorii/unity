@@ -295,24 +295,25 @@ hidemaru-editor-script-directory
 
 汎用型マクロと特化型マクロの二通りを用意しました、それぞれ数行のマクロで理解しやすいと思います。上級ヒデマラーの皆様におかれましてはカスタマイズしてお使いください。
 
-|ファイル名|説明|ソースの複数選択|オプション選択|
-|--|--|--|--|
-|unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能。全機能を利用可能|○|○|
-|unity_file_paths.mac					|ファイルパスに関するソース（file,directroy_mru,file_mru）を指定して起動|○|×|
-|unity_menu.mac 							|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|
-|unity_menu_manual.mac					|利用頻度の高いソースをメニュー化する例|×|×|
-|unity_source_directory.mac 				|directroyソースを指定して起動|×|×|
-|unity_source_directory_mru.mac 			|directroy_mruソースを指定して起動|×|×|
-|unity_source_directory_recursive.mac		|directroy_recursiveソースを指定して起動|×|×|
-|unity_source_emoji.mac 					|emojiソースを指定して起動|×|×|
-|unity_source_file.mac					|fileソースを指定して起動|×|×|
-|unity_source_file_mru.mac				|file_mruソースを指定して起動|×|×|
-|unity_source_file_recursive.mac			|file_recursiveソースを指定して起動|×|×|
-|unity_source_hilight.mac					|hilightソースを指定して起動|×|×|
-|unity_source_outline.mac					|outlineソースを指定して起動|×|×|
-|unity_source_process.mac					|processソースを指定して起動|×|×|
-|unity_source_tab.mac					|tabソースを指定して起動|×|×|
-|unity_source_window.mac					|windowソースを指定して起動|×|×|
+|ファイル名|説明|ソースの複数選択|オプション指定|ソースの引数指定|
+|--|--|--|--|--|
+|unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能|○|○|×|
+|unity_file_argument.mac				|fileソースへ引数を渡す|×|×|○|
+|unity_file_paths.mac					|ファイルパスに関するソース（file,directroy_mru,file_mru）を指定して起動|○|×|×|
+|unity_menu.mac 						|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|×|
+|unity_menu_manual.mac					|利用頻度の高いソースをメニュー化する例|×|×|×|
+|unity_source_directory.mac 			|directroyソースを指定して起動|×|×|×|
+|unity_source_directory_mru.mac 		|directroy_mruソースを指定して起動|×|×|×|
+|unity_source_directory_recursive.mac	|directroy_recursiveソースを指定して起動|×|×|×|
+|unity_source_emoji.mac 				|emojiソースを指定して起動|×|×|×|
+|unity_source_file.mac					|fileソースを指定して起動|×|×|×|
+|unity_source_file_mru.mac				|file_mruソースを指定して起動|×|×|×|
+|unity_source_file_recursive.mac		|file_recursiveソースを指定して起動|×|×|×|
+|unity_source_hilight.mac				|hilightソースを指定して起動|×|×|×|
+|unity_source_outline.mac				|outlineソースを指定して起動|×|×|×|
+|unity_source_process.mac				|processソースを指定して起動|×|×|×|
+|unity_source_tab.mac					|tabソースを指定して起動|×|×|×|
+|unity_source_window.mac				|windowソースを指定して起動|×|×|×|
 
 
 ## 動作環境のカスタマイズ(config.ini)
@@ -396,7 +397,7 @@ masterブランチを取得しても多分動作しないです。
 
 # ソースとカインドを作成する方法
 
-ドキュメントを準備中です。
+[ドキュメントを準備中です。](./help/extension.md)
 
 
 # その他
