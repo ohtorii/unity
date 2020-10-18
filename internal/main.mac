@@ -7,11 +7,39 @@ usage:
 	root_dir	unityマクロのルートディレクトリ
 
 	sources 	タブ区切りのソース名
-				（例）"file_mru\tprocess"
+				（書式）ソース名1\tソース名2...
+				（例）  "file_mru\tprocess\ttab"
 
 	options		タブ区切りのオプション
-				（例）"-auto-preview\t-foo-option"
+				（書式）オプション1\tオプション2\t...
+				（例）  "-auto-preview\t-foo-option"
 
+	sources_args ソース毎の引数
+				（書式）ソース1の引数1\tソース1の引数2...\nソース2の引数1\t...
+						引数で空白文字を簡単に扱えるようにタブ区切りとした。
+
+				（例  その1）
+					ソースに与える引数
+					- file_mru arg1 arg2
+
+					source_argsに与える文字列。
+					"arg1\targ2"
+
+				（例  その2）
+					ソースに与える引数
+					- tab arg1
+
+					source_argsに与える文字列。
+					"\n\narg1"
+
+				（例　その3）
+					ソースに与える引数
+					- file_mru arg1 arg2
+					- process
+					- tab arg3
+
+					source_argsに与える文字列。
+					"arg1\targ2\n\narg3"
 */
 if(version<891){
 	message
@@ -106,7 +134,7 @@ if(893<=version){
 
 #g_target_hidemaru  = hidemaruhandle(0);
 //disableerrormsg;
-debuginfo 1;
+debuginfo 0;
 disablebreak;
 disablehistory
 				//0x0001 /*ファイルヒストリ*/
@@ -121,7 +149,7 @@ disablehistory
 
 //disableinvert;カーソルキーが表示されなくなるためコメントアウトした。
 
-call main getarg(1), getarg(2);
+call main getarg(1), getarg(2), getarg(3);
 endmacro str(##return);
 
 
@@ -130,13 +158,13 @@ main:
 	##old_column=column;
 	##old_lineno=lineno;
 
-	call ParseOptions $$2;
+	call ParseOptions $$2/*options*/;
 	call ShowPerformanceCounter "ParseOptions";
 
 	call LoadConfigIni;
 	call ShowPerformanceCounter "LoadConfigIni";
 
-	call Start $$1;
+	call Start $$1/*sources*/, $$3/*sources_args*/;
 	##ret = ##return;
 
 	//
@@ -211,6 +239,7 @@ Start:
 	if($$source_list==""){
 		return false;
 	}
+	$$sources_args=$$2;
 	call ShowPerformanceCounter "Start";
 
 	call NewFile;
@@ -242,15 +271,19 @@ Start:
 	call ShowPerformanceCounter "LoadSourceAll";
 
 	{//ソースを読み込む
-		##num_source= split($$sources,$$source_list, "\t");
-		##i			= 0;
-		while(##i<##num_source){
+		##num_source     =split($$sources,    $$source_list, "\t");
+		##num_source_args=split($$source_args,$$sources_args,"\n");
+		##i = 0;
+		while(##i < ##num_source){
 			$$source_filename=$g_root_macro_directory+"\\sources\\"+$$sources[##i]+".mac";
 
 			$$args[0]	=str(#g_dll_ohtorii_tools);
 			$$args[1]	=str(#g_dll_hm_process) ;
 			$$args[2]	=$$source_filename;
-			$$args[3]	="";
+
+			/*メモ：##iが配列の範囲外の場合は空白文字になるため、明示的な##iの範囲確認は省略した*/
+			$$args[3]	=$$source_args[##i];
+
 			$$args[30]	="";
 			execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
 			if(getresultex(-1) != "1"){
