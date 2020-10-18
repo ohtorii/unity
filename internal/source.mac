@@ -4,8 +4,9 @@
 		[1]		hm_process_dll_handle		dllへのハンドル
 		[2] 	input_source_filename		ソースファイル名
 		[3] 	gather_arg					gather_candidates へ渡す引数
+											（例）"args1 arg2 ..."
 		...
-		[31]	mode						""		候補の取得
+		[30]	mode						""		候補の取得
 											"reget"	候補の再取得
 
 
