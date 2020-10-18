@@ -168,6 +168,19 @@ overwrite_directory:
 
 
 //
+//insert_file
+//
+insert_file:
+	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	execmacro 	$$root_macro_directory+"\\internal\\util_foreach.mac",
+				str(#g_dll_ohtorii_tools),
+				str(#g_dll_hm_process),
+				currentmacrofilename,
+				"insert_file_proc",
+				"GetSelectionActionFileName";
+	return getresultex(-1);
+
+//
 //preview
 //
 preview:
@@ -207,5 +220,18 @@ insert_directory_proc:
 		//ディレクトリ区切りなし
 		insert($$2);
 	}
+	return ;
+
+
+insert_file_proc:
+	if((existfile($$1,1)&0x00000010) == 0x00000010){
+		//ディレクトリの場合
+		return ;
+	}
+	if(! existfile($$1)){
+		//存在しない
+		return ;
+	}
+	insertfile $$1, noaddhist;
 	return ;
 
