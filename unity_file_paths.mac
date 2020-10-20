@@ -3,5 +3,6 @@
 */
 $sources="file\tdirectory_mru\tfile_mru";
 $options="";
-execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options;
+$argument="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options,$argument;
 endmacro getresultex(-1);
