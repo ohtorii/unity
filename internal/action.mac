@@ -63,6 +63,25 @@ main:
 		$$kind	=dllfuncstrw(#g_dll_ohtorii_tools,"InheritanceFindActionKind",$g_do_action_name);
 		if($$kind==""){
 			debuginfo "  [Failed]internal/action.mac return 0. $$kind==\"\"";
+
+			/*
+			このブロックに入る条件、
+			(1)default_action指定を間違えた
+			(2)auto_preview=onの時にアクション一覧でpreviewが見つからない
+
+
+			(1)の時は、エラーメッセージを表示した方が良い。
+			(2)の時は、何もしない方が良い。
+
+			(2)を優先してコメントアウトした。
+
+			message sprintf(@"[Error] アクションが見つかりません。
+アクション名=%s
+ソース名    =%s"
+, $g_do_action_name
+, $$source_name
+);*/
+
 			return "0";
 		}
 		$$action=$g_do_action_name;

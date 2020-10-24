@@ -7,7 +7,7 @@
 
 # 返値
 	ソース名1\tソース名2\t...ソース名N\nオプション1\tオプション2\t...オプションN
-	(例) "file_mru\twindow\n-auto-preview\t-foo-option"
+	(例) "file_mru\twindow\nauto-preview=on\t-foo-option"
 
 */
 
@@ -204,7 +204,7 @@ GetSelectSources:
 	$$options="";
 	$$state = dllfuncstr(#g_dengaku_dll, "GETCTRLSTATE",$g_auto_preview_checkctrl_name);
 	if($$state=="1"){
-		$$options="-auto-preview";
+		$$options="auto-preview=on";
 	}
 	if($$options==""){
 		return $$select_sources;

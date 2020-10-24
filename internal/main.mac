@@ -12,7 +12,7 @@ usage:
 
 	options		タブ区切りのオプション
 				（書式）オプション1\tオプション2\t...
-				（例）  "-auto-preview\t-foo-option"
+				（例）  "-auto-preview\t-default_action=insert_file"
 
 	sources_args ソース毎の引数
 				（書式）ソース1の引数1\tソース1の引数2...\nソース2の引数1\t...
@@ -106,6 +106,7 @@ $g_color_mark="gather";
 
 //動作オプション
 #g_option_auto_preview=false;
+$g_option_default_action="";
 $g_option_auto_preview_context_candidate="";
 
 /*キー入力の間隔(単位＝ミリ秒)
@@ -159,6 +160,9 @@ main:
 	##old_lineno=lineno;
 
 	call ParseOptions $$2/*options*/;
+	if(! ##return){
+		return false;
+	}
 	call ShowPerformanceCounter "ParseOptions";
 
 	call LoadConfigIni;
@@ -201,17 +205,61 @@ main:
 	}
 	return ##ret;
 
+
+/*オプションをディフォルト値で初期化
+*/
+InitializeOptions:
+	#g_option_auto_preview=false;
+	$g_option_default_action="";
+	return ;
+
+
 ParseOptions:
-	#g_option_auto_preview=false;//ディフォルト値で初期化
-	##num=split($$options,$$1,"\t");
-	##i=0;
-	while(##i<##num){
-		if($$options[##i]=="-auto-preview"){
-			#g_option_auto_preview=true;
-		}
-		##i = ##i + 1;
+	execmacro currentmacrodirectory+"\\create_temp_file.mac";
+	$$ini_filename=getresultex(-1);
+	if($$ini_filename==""){
+		return false;
 	}
-	return;
+	$$section="options";
+	call WriteToFileUnicode $$ini_filename, "["+$$section+"]\n"+$$1;
+	if(! ##return){
+		return false;
+	}
+
+	$$auto_preview	=getinistrw($$ini_filename,$$section,"auto-preview");
+	$$default_action=getinistrw($$ini_filename,$$section,"default-action");
+
+	call InitializeOptions;
+	call StringToBool $$auto_preview;
+	#g_option_auto_preview 		= ##return;
+	$g_option_default_action 	= $$default_action;
+
+	deletefile $$ini_filename;
+	return true;
+
+
+StringToBool:
+	$$s = tolower($$1);
+	if($$s=="on"){
+		return true;
+	}
+	if($$s=="true"){
+		return true;
+	}
+	if($$s=="1"){
+		return true;
+	}
+
+	if($$s=="off"){
+		return false;
+	}
+	if($$s=="false"){
+		return false;
+	}
+	if($$s=="0"){
+		return false;
+	}
+	return false;
 
 
 LoadConfigIni:
@@ -480,7 +528,7 @@ Enter:
 
 	$$args[0]	=str(#g_dll_ohtorii_tools);
 	$$args[1]	=str(#g_dll_hm_process) ;
-	$$args[30]	="";
+	$$args[30]	=$g_option_default_action;
 	execmacro currentmacrodirectory+"\\action.mac", $$args, 31;
 	if(getresultex(-1) != "1"){
 		return #g_result_faile;		//失敗
@@ -896,7 +944,6 @@ TrimString:
 	}
 	return $$1;
 
-
 //#region 秀丸の編集画面
 NewFile:
 	newfile;
@@ -937,6 +984,25 @@ CloseFileIfOpen:
 		#g_open_newfile=false;
 	}
 	return true;
+
+
+/*文字列をファイルへ書き込む
+$$1	ファイル名
+$$2	ファイルへ書き込む文字列
+*/
+WriteToFileUnicode:
+    ##objFso = createobject("Scripting.FileSystemObject");
+    ##objFile = member(##objFso,"OpenTextFile"
+    				,$$1	//ファイル名
+			        , 2     //ForWriting
+			        , 1     //Create=True
+			        , -1    //Unicode
+			        );
+    member ##objFile,"WriteLine",$$2;
+    member ##objFile,"Close";
+    releaseobject ##objFile;
+    releaseobject ##objFso;
+    return true;
 
 
 //#region DLL
