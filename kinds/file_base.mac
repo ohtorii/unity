@@ -171,7 +171,19 @@ overwrite_directory:
 //insert_file
 //
 insert_file:
-	$$root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	$$root_macro_directory=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+	if(dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount") == 1){
+		#first_item=0;
+		if(dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionSourceName", #first_item) == "directory"){
+			//ディレクトリを一つ選択した場合はディレクトリ移動する
+			//ディレクトリ移動の処理は、internal\\action.mac　に任せる。
+			$$args[0]	=str(#g_dll_ohtorii_tools);
+			$$args[1]	=str(#g_dll_hm_process) ;
+			$$args[30]	="";
+			execmacro $$root_macro_directory+"\\internal\\action.mac", $$args, 31;
+			return getresultex(-1);
+		}
+	}
 	execmacro 	$$root_macro_directory+"\\internal\\util_foreach.mac",
 				str(#g_dll_ohtorii_tools),
 				str(#g_dll_hm_process),
