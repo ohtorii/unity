@@ -29,9 +29,6 @@ endmacro $$return;
 */
 gather_candidates:
 	$$root_dir=$$1;
-	debuginfo 1;
-	debuginfo "$$root_dir="+$$root_dir;
-	debuginfo 0;
 	call gather_candidates_main,$$root_dir;
 	$$ret=$$return;
 	return $$ret;
