@@ -300,6 +300,7 @@ hidemaru-editor-script-directory
 |unity_dialog.mac						|ダイアログから複数ソースとオプションを指定可能|○|○|×|
 |unity_file_argument.mac				|fileソースへ引数を渡す|×|×|○|
 |unity_file_paths.mac					|ファイルパスに関するソース（file,directroy_mru,file_mru）を指定して起動|○|×|×|
+|unity_file_snipetts.mac.mac			|default-actionを指定するスニペットのサンプル|×|○|○|
 |unity_menu.mac 						|メニューからソースを一つ選択して呼び出す。ソースを一つ選択することに特化|×|×|×|
 |unity_menu_manual.mac					|利用頻度の高いソースをメニュー化する例|×|×|×|
 |unity_source_directory.mac 			|directroyソースを指定して起動|×|×|×|
