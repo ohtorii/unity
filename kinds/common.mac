@@ -73,7 +73,8 @@ nop:
 	return "1";
 
 echo:
-	//debug用途
+	/* 候補の詳細をアウトプット枠へ表示する(debug用途)
+	*/
 	##output_dll=loaddll("HmOutputPane.dll");
 	if(!result){
 		return "0";
@@ -83,29 +84,44 @@ echo:
 	##h=dllfunc(##output_dll,"GetWindowHandle",hidemaruhandle(0));
 	##ret=sendmessage(##h,0x111/*WM_COMMAND*/,1009,0);//1009=クリア
 
-	//文字列を表示する
+    $$format = R"([%d/%d] {"text":"%s", "source_name":"%s", "action_directory_name":"%s", "action_file_name":"%s", "action_command":"%s", "action_window_handle":%d, "action_line":%d, "action_column":%d, "description":"%s"})" + "\r\n";
+
+	//選択された候補数(##count)を取得する
 	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
-	##i=0;
-	while(##i<##count){
-		$$source_name			=dllfuncstrw(#g_dll_ohtorii_tools,	"GetSelectionSourceName", ##i);
-		$$text					=dllfuncstrw(#g_dll_ohtorii_tools,	"GetSelectionText",		##i);
-		$$action_directory_name =dllfuncstrw(#g_dll_ohtorii_tools,	"GetSelectionActionDirectoryName",##i);
-		$$action_file_name		=dllfuncstrw(#g_dll_ohtorii_tools,	"GetSelectionActionFileName",##i);
-		$$action_command		=dllfuncstrw(#g_dll_ohtorii_tools,	"GetSelectionActionCommand",##i);
-		##window_handle			=dllfuncw(#g_dll_ohtorii_tools,		"GetSelectionActionWindowHandle",##i);
 
-		##line			=dllfuncw(#g_dll_ohtorii_tools,		"GetSelectionActionLine",##i);
-		##column		=dllfuncw(#g_dll_ohtorii_tools,		"GetSelectionActionColumn",##i);
-		$$description	=dllfuncstrw(#g_dll_ohtorii_tools,	"GetSelectionDescription",##i);
+	##i    =0;
+	while(##i < ##count){
+        //候補の情報を取得する
+        $$source_name           =dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionSourceName"         , ##i);
+        $$text                  =dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionText"               , ##i);
+        $$action_directory_name =dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionActionDirectoryName", ##i);
+        $$action_file_name      =dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionActionFileName"     , ##i);
+        $$action_command        =dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionActionCommand"      , ##i);
+        ##window_handle         =dllfuncw(   #g_dll_ohtorii_tools, "GetSelectionActionWindowHandle" , ##i);
+        ##line                  =dllfuncw(   #g_dll_ohtorii_tools, "GetSelectionActionLine"         , ##i);
+        ##column                =dllfuncw(   #g_dll_ohtorii_tools, "GetSelectionActionColumn"       , ##i);
+        $$description           =dllfuncstrw(#g_dll_ohtorii_tools, "GetSelectionDescription"        , ##i);
 
+        //候補の情報を文字列($$info)にする
+        $$info=sprintf($$format
+                , ##i + 1
+                , ##count
+                , $$text
+                , $$source_name
+                , $$action_directory_name
+                , $$action_file_name
+                , $$action_command
+                , ##window_handle
+                , ##line
+                , ##column
+                , $$description);
+        //アウトプット枠へ$$infoを表示する
+        ##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$info);
 
-		$$info=sprintf(R"([%d/%d] {"text":"%s", "source_name":"%s", "action_directory_name":"%s", "action_file_name":"%s", "action_command":"%s", "action_window_handle":%d, "action_line":%d, "action_column":%d, "description":"%s"})"+"\r\n", ##i+1,##count, $$text, $$source_name,  $$action_directory_name,$$action_file_name,$$action_command,##window_handle,##line, ##column, $$description);
-		##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),$$info);
-		//##ret=dllfunc(##output_dll,"Output",hidemaruhandle(0),sprintf("[%d/%d] (%s) <%s> <%s> %s %s\n",##i+1,##count,$$source_name,$$action_directory_name,$$action_file_name,$$text,$$description));
-		##i = ##i + 1;
-	}
-	freedll ##output_dll;
-	return "1";
+        ##i = ##i + 1;
+    }
+    freedll ##output_dll;
+    return "1";
 
 /*ex:
 	return  "1";*/
