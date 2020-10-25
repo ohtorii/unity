@@ -1,5 +1,12 @@
 ﻿# unite.vimとの差分
 
+- [このドキュメントの対象者](#このドキュメントの対象者)
+- [はじめに](#はじめに)
+- [ソース一覧](#ソース一覧)
+- [カインド一覧](#カインド一覧)
+- [アクション引数](#アクション引数)
+- [オプション](#オプション)
+
 # このドキュメントの対象者
 
 unite.vimのソースとカインドを作成した方向けのドキュメントです。
@@ -248,7 +255,7 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 
 # オプション
 
-|オプション|説明|補足|秀丸の実装状況|
+|オプション|説明|秀丸の実装状況|補足|
 |--|--|--|--|
 |-no-quit||||
 |-no-empty||||
@@ -266,14 +273,14 @@ Vimと秀丸エディタはそれぞれ思想が異なるテキストエディ�
 |-candidate-icon={icon-text}||||
 |-marked-icon={icon-text}||||
 |-no-hide-icon||||
-|-default-action={default-action}||||
+|-default-action={default-action}||✅||
 |-start-insert||||
 |-keep-focus||||
 |-winwidth={window-width}||||
 |-winheight={window-height}||||
 |-immediately||||
 |-force-immediately||||
-|-auto-preview|||✅|
+|-auto-preview||✅||
 |-auto-highlight|||||
 |-complete||||
 |-col={column-number}||||
