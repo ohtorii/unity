@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Coverity](https://img.shields.io/coverity/scan/19629.svg)](https://scan.coverity.com/projects/ohtorii-unity)
 
+- [Unityマクロ](#unityマクロ)
 - [はじめに](#はじめに)
 - [スクリーンショット](#スクリーンショット)
 - [Unityマクロのインターフェース](#unityマクロのインターフェース)
@@ -13,11 +14,12 @@
 - [マクロの導入方法](#マクロの導入方法)
 - [動作環境](#動作環境)
 - [ダウンロード](#ダウンロード)
-- [ソースとカインドを作成する](#ソースとカインドを作成する)
+- [ソースとカインドを作成する方法](#ソースとカインドを作成する方法)
 - [その他](#その他)
 - [謝辞](#謝辞)
 - [連絡先](#連絡先)
 - [寄付](#寄付)
+
 
 
 
@@ -398,7 +400,9 @@ masterブランチを取得しても多分動作しないです。
 
 # ソースとカインドを作成する方法
 
-[ドキュメントを準備中です。](./help/extension.md)
+このドキュメントを参照してください。
+
+[help/extension.md](./help/extension.md)
 
 
 # その他
