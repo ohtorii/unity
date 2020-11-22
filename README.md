@@ -1,4 +1,4 @@
-# Unityマクロ
+﻿# Unityマクロ
 
 ![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -19,10 +19,6 @@
 - [謝辞](#謝辞)
 - [連絡先](#連絡先)
 - [寄付](#寄付)
-
-
-
-
 
 
 # はじめに
