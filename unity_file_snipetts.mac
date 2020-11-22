@@ -2,7 +2,7 @@
 
 【備考】
 Unityマクロでオプション指定すると、スニペットのような使い方も出来ますよ～という一例です。
-世の中には大変優れたスニペットアプリがありますので、そちらをご利用ください。
+実際には、世の中に大変優れたスニペットアプリがありますので、そちらをご利用ください。
 */
 call main;
 endmacro ;
@@ -17,8 +17,7 @@ main:
 
 	//スニペットのあるディレクトリを引数指定します。
 	//ファイルパスはご自身の環境に応じて書き換えてご利用ください。
-	//（注意）環境変数は展開してください。
-	call expand @"%HOMEDRIVE%%HOMEPATH%\MySnippets\foo\bar　←　ファイルパスは各自の間今日毎に設定してください";
+	call expand @"%HOMEDRIVE%%HOMEPATH%\MySnippets\foo\bar　←　ファイルパスは各自の環境毎に設定してください";
 	$$argument=$$return;
 	execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$$sources,$$options,$$argument;
 	return getresultex(-1);
