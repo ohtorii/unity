@@ -23,6 +23,9 @@ open:
 	##current_hidemaru_handle=hidemaruhandle(0);
 	##new_hidemaru_handle=0;
 
+    $$macro_root_dir=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+    $$macro_path=$$macro_root_dir+"\\internal\\show_message.mac";
+
 	##count=dllfuncw(#g_dll_ohtorii_tools,"GetSelectionCount");
 	##i=0;
 	while(##i < ##count){
@@ -38,8 +41,6 @@ open:
 
 			setactivehidemaru ##current_hidemaru_handle;
 		}else{
-			$$macro_root_dir=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
-			$$macro_path=$$macro_root_dir+"\\internal\\show_message.mac";
 			$$message="ファイルを見付けることが出来ませんでした。\nもしかしたら既に削除されているのかもしれません。\n\n（ファイル名）\n" + $$text;
 			execmacro $$macro_path, "error", $$message;
 		}
