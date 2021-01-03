@@ -69,6 +69,10 @@ void ASyncFile::Exec(){
 		}
 		m_file_read_start_clock = std::chrono::system_clock::now();
 		m_status=GET_LINE;
+		/* 
+		//Pass
+		break;
+		*/
 
 	case GET_LINE:
 		if (fgetws(line, _countof(line), m_file) != nullptr) {
@@ -99,11 +103,19 @@ void ASyncFile::Exec(){
 		
 		//少し待っても行を読み込めないためファイル生成が終了したとみなす。
 		m_status=FILE_CLOSE;
+		/*
+		//Pass
+		break;
+		*/
 
 	case FILE_CLOSE:
 		fclose(m_file);
 		m_file = nullptr;
 		m_status = FINISH;
+		/*
+		//Pass
+		break;
+		*/
 
 	default:
 		//pass

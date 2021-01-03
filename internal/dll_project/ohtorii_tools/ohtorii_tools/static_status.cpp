@@ -14,7 +14,9 @@ static void GatherSourceNames(std::vector<std::wstring>&out, const RefineSearch&
 		for (INT_PTR selection_index = 0; selection_index < selections; ++selection_index) {
 			auto candidate_index = search.GetSelectionCandidateIndex(selection_index);
 			auto source_name = candidates.GetSourceName(candidate_index);
-			source_names.insert(source_name);
+			if(source_name!=nullptr){
+    			source_names.insert(source_name);
+			}
 		}
 	}
 	out.resize(source_names.size());
