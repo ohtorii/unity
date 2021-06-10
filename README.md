@@ -1,6 +1,6 @@
 ﻿# Unityマクロ
 
-![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
+![Maintenance](https://img.shields.io/maintenance/yes/2025.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Coverity](https://img.shields.io/coverity/scan/19629.svg)](https://scan.coverity.com/projects/ohtorii-unity)
 
