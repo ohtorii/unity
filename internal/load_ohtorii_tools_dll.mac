@@ -12,7 +12,7 @@ LoadDll:
 		##dll_ohtorii_tools = loaddll(currentmacrodirectory + "\\bin\\ohtorii_tools_x86.dll");
 	}
 	if (##dll_ohtorii_tools==0) {
-		message "dll\\ohtorii_tools.dllのロードに失敗しました";
+		message "bin\\ohtorii_tools.dllのロードに失敗しました";
 		return 0;
 	}
 	return ##dll_ohtorii_tools;
