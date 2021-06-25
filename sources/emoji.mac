@@ -1,7 +1,10 @@
 ﻿/*絵文字のリスト
 
 リストは以下URLから作りました。
-http://unicode.org/emoji/charts/full-emoji-list.html
+
+    Emoji List, v13.1
+    https://unicode.org/emoji/charts/emoji-list.html
+
 */
 
 #g_dll_ohtorii_tools=val(getarg(30));
@@ -34,6 +37,7 @@ return
 ☺	@description	smiling face	U+263A
 😚	@description	kissing face with closed eyes	U+1F61A
 😙	@description	kissing face with smiling eyes	U+1F619
+🥲	@description	smiling face with tear	U+1F972
 😋	@description	face savoring food	U+1F60B
 😛	@description	face with tongue	U+1F61B
 😜	@description	winking face with tongue	U+1F61C
@@ -49,10 +53,12 @@ return
 😐	@description	neutral face	U+1F610
 😑	@description	expressionless face	U+1F611
 😶	@description	face without mouth	U+1F636
+😶‍🌫️	@description	face in clouds	U+1F636 U+200D U+1F32B U+FE0F
 😏	@description	smirking face	U+1F60F
 😒	@description	unamused face	U+1F612
 🙄	@description	face with rolling eyes	U+1F644
 😬	@description	grimacing face	U+1F62C
+😮‍💨	@description	face exhaling	U+1F62E U+200D U+1F4A8
 🤥	@description	lying face	U+1F925
 😌	@description	relieved face	U+1F60C
 😔	@description	pensive face	U+1F614
@@ -68,10 +74,12 @@ return
 🥵	@description	hot face	U+1F975
 🥶	@description	cold face	U+1F976
 🥴	@description	woozy face	U+1F974
-😵	@description	dizzy face	U+1F635
+😵	@description	knocked-out face	U+1F635
+😵‍💫	@description	face with spiral eyes	U+1F635 U+200D U+1F4AB
 🤯	@description	exploding head	U+1F92F
 🤠	@description	cowboy hat face	U+1F920
 🥳	@description	partying face	U+1F973
+🥸	@description	disguised face	U+1F978
 😎	@description	smiling face with sunglasses	U+1F60E
 🤓	@description	nerd face	U+1F913
 🧐	@description	face with monocle	U+1F9D0
@@ -139,6 +147,8 @@ return
 💟	@description	heart decoration	U+1F49F
 ❣	@description	heart exclamation	U+2763
 💔	@description	broken heart	U+1F494
+❤️‍🔥	@description	heart on fire	U+2764 U+FE0F U+200D U+1F525
+❤️‍🩹	@description	mending heart	U+2764 U+FE0F U+200D U+1FA79
 ❤	@description	red heart	U+2764
 🧡	@description	orange heart	U+1F9E1
 💛	@description	yellow heart	U+1F49B
@@ -168,6 +178,7 @@ return
 ✋	@description	raised hand	U+270B
 🖖	@description	vulcan salute	U+1F596
 👌	@description	OK hand	U+1F44C
+🤌	@description	pinched fingers	U+1F90C
 🤏	@description	pinching hand	U+1F90F
 ✌	@description	victory hand	U+270C
 🤞	@description	crossed fingers	U+1F91E
@@ -204,6 +215,8 @@ return
 🦻	@description	ear with hearing aid	U+1F9BB
 👃	@description	nose	U+1F443
 🧠	@description	brain	U+1F9E0
+🫀	@description	anatomical heart	U+1FAC0
+🫁	@description	lungs	U+1FAC1
 🦷	@description	tooth	U+1F9B7
 🦴	@description	bone	U+1F9B4
 👀	@description	eyes	U+1F440
@@ -217,20 +230,22 @@ return
 🧑	@description	person	U+1F9D1
 👱	@description	person: blond hair	U+1F471
 👨	@description	man	U+1F468
-🧔	@description	man: beard	U+1F9D4
+🧔	@description	person: beard	U+1F9D4
+🧔‍♂️	@description	man: beard	U+1F9D4 U+200D U+2642 U+FE0F
+🧔‍♀️	@description	woman: beard	U+1F9D4 U+200D U+2640 U+FE0F
 👨‍🦰	@description	man: red hair	U+1F468 U+200D U+1F9B0
 👨‍🦱	@description	man: curly hair	U+1F468 U+200D U+1F9B1
 👨‍🦳	@description	man: white hair	U+1F468 U+200D U+1F9B3
 👨‍🦲	@description	man: bald	U+1F468 U+200D U+1F9B2
 👩	@description	woman	U+1F469
 👩‍🦰	@description	woman: red hair	U+1F469 U+200D U+1F9B0
-🧑‍🦰	@description	⊛ person: red hair	U+1F9D1 U+200D U+1F9B0
+🧑‍🦰	@description	person: red hair	U+1F9D1 U+200D U+1F9B0
 👩‍🦱	@description	woman: curly hair	U+1F469 U+200D U+1F9B1
-🧑‍🦱	@description	⊛ person: curly hair	U+1F9D1 U+200D U+1F9B1
+🧑‍🦱	@description	person: curly hair	U+1F9D1 U+200D U+1F9B1
 👩‍🦳	@description	woman: white hair	U+1F469 U+200D U+1F9B3
-🧑‍🦳	@description	⊛ person: white hair	U+1F9D1 U+200D U+1F9B3
+🧑‍🦳	@description	person: white hair	U+1F9D1 U+200D U+1F9B3
 👩‍🦲	@description	woman: bald	U+1F469 U+200D U+1F9B2
-🧑‍🦲	@description	⊛ person: bald	U+1F9D1 U+200D U+1F9B2
+🧑‍🦲	@description	person: bald	U+1F9D1 U+200D U+1F9B2
 👱‍♀️	@description	woman: blond hair	U+1F471 U+200D U+2640 U+FE0F
 👱‍♂️	@description	man: blond hair	U+1F471 U+200D U+2642 U+FE0F
 🧓	@description	older person	U+1F9D3
@@ -266,52 +281,49 @@ return
 🤷	@description	person shrugging	U+1F937
 🤷‍♂️	@description	man shrugging	U+1F937 U+200D U+2642 U+FE0F
 🤷‍♀️	@description	woman shrugging	U+1F937 U+200D U+2640 U+FE0F
-🧑‍⚕️	@description	⊛ health worker	U+1F9D1 U+200D U+2695 U+FE0F
+🧑‍⚕️	@description	health worker	U+1F9D1 U+200D U+2695 U+FE0F
 👨‍⚕️	@description	man health worker	U+1F468 U+200D U+2695 U+FE0F
 👩‍⚕️	@description	woman health worker	U+1F469 U+200D U+2695 U+FE0F
-🧑‍🎓	@description	⊛ student	U+1F9D1 U+200D U+1F393
+🧑‍🎓	@description	student	U+1F9D1 U+200D U+1F393
 👨‍🎓	@description	man student	U+1F468 U+200D U+1F393
 👩‍🎓	@description	woman student	U+1F469 U+200D U+1F393
-🧑‍🏫	@description	⊛ teacher	U+1F9D1 U+200D U+1F3EB
+🧑‍🏫	@description	teacher	U+1F9D1 U+200D U+1F3EB
 👨‍🏫	@description	man teacher	U+1F468 U+200D U+1F3EB
 👩‍🏫	@description	woman teacher	U+1F469 U+200D U+1F3EB
-🧑‍⚖️	@description	⊛ judge	U+1F9D1 U+200D U+2696 U+FE0F
+🧑‍⚖️	@description	judge	U+1F9D1 U+200D U+2696 U+FE0F
 👨‍⚖️	@description	man judge	U+1F468 U+200D U+2696 U+FE0F
 👩‍⚖️	@description	woman judge	U+1F469 U+200D U+2696 U+FE0F
-🧑‍🌾	@description	⊛ farmer	U+1F9D1 U+200D U+1F33E
+🧑‍🌾	@description	farmer	U+1F9D1 U+200D U+1F33E
 👨‍🌾	@description	man farmer	U+1F468 U+200D U+1F33E
 👩‍🌾	@description	woman farmer	U+1F469 U+200D U+1F33E
-🧑‍🍳	@description	⊛ cook	U+1F9D1 U+200D U+1F373
+🧑‍🍳	@description	cook	U+1F9D1 U+200D U+1F373
 👨‍🍳	@description	man cook	U+1F468 U+200D U+1F373
 👩‍🍳	@description	woman cook	U+1F469 U+200D U+1F373
-🧑‍🔧	@description	⊛ mechanic	U+1F9D1 U+200D U+1F527
+🧑‍🔧	@description	mechanic	U+1F9D1 U+200D U+1F527
 👨‍🔧	@description	man mechanic	U+1F468 U+200D U+1F527
 👩‍🔧	@description	woman mechanic	U+1F469 U+200D U+1F527
-🧑‍🏭	@description	⊛ factory worker	U+1F9D1 U+200D U+1F3ED
+🧑‍🏭	@description	factory worker	U+1F9D1 U+200D U+1F3ED
 👨‍🏭	@description	man factory worker	U+1F468 U+200D U+1F3ED
 👩‍🏭	@description	woman factory worker	U+1F469 U+200D U+1F3ED
-🧑‍💼	@description	⊛ office worker	U+1F9D1 U+200D U+1F4BC
+🧑‍💼	@description	office worker	U+1F9D1 U+200D U+1F4BC
 👨‍💼	@description	man office worker	U+1F468 U+200D U+1F4BC
 👩‍💼	@description	woman office worker	U+1F469 U+200D U+1F4BC
-🧑‍🔬	@description	⊛ scientist	U+1F9D1 U+200D U+1F52C
+🧑‍🔬	@description	scientist	U+1F9D1 U+200D U+1F52C
 👨‍🔬	@description	man scientist	U+1F468 U+200D U+1F52C
 👩‍🔬	@description	woman scientist	U+1F469 U+200D U+1F52C
-🧑‍💻	@description	⊛ technologist	U+1F9D1 U+200D U+1F4BB
-👨‍💻	@description	man technologist	U+1F468 U+200D U+1F4BB
-👩‍💻	@description	woman technologist	U+1F469 U+200D U+1F4BB
-🧑‍🎤	@description	⊛ singer	U+1F9D1 U+200D U+1F3A4
+🧑‍🎤	@description	singer	U+1F9D1 U+200D U+1F3A4
 👨‍🎤	@description	man singer	U+1F468 U+200D U+1F3A4
 👩‍🎤	@description	woman singer	U+1F469 U+200D U+1F3A4
-🧑‍🎨	@description	⊛ artist	U+1F9D1 U+200D U+1F3A8
+🧑‍🎨	@description	artist	U+1F9D1 U+200D U+1F3A8
 👨‍🎨	@description	man artist	U+1F468 U+200D U+1F3A8
 👩‍🎨	@description	woman artist	U+1F469 U+200D U+1F3A8
-🧑‍✈️	@description	⊛ pilot	U+1F9D1 U+200D U+2708 U+FE0F
+🧑‍✈️	@description	pilot	U+1F9D1 U+200D U+2708 U+FE0F
 👨‍✈️	@description	man pilot	U+1F468 U+200D U+2708 U+FE0F
 👩‍✈️	@description	woman pilot	U+1F469 U+200D U+2708 U+FE0F
-🧑‍🚀	@description	⊛ astronaut	U+1F9D1 U+200D U+1F680
+🧑‍🚀	@description	astronaut	U+1F9D1 U+200D U+1F680
 👨‍🚀	@description	man astronaut	U+1F468 U+200D U+1F680
 👩‍🚀	@description	woman astronaut	U+1F469 U+200D U+1F680
-🧑‍🚒	@description	⊛ firefighter	U+1F9D1 U+200D U+1F692
+🧑‍🚒	@description	firefighter	U+1F9D1 U+200D U+1F692
 👨‍🚒	@description	man firefighter	U+1F468 U+200D U+1F692
 👩‍🚒	@description	woman firefighter	U+1F469 U+200D U+1F692
 👮	@description	police officer	U+1F46E
@@ -323,6 +335,7 @@ return
 💂	@description	guard	U+1F482
 💂‍♂️	@description	man guard	U+1F482 U+200D U+2642 U+FE0F
 💂‍♀️	@description	woman guard	U+1F482 U+200D U+2640 U+FE0F
+🥷	@description	ninja	U+1F977
 👷	@description	construction worker	U+1F477
 👷‍♂️	@description	man construction worker	U+1F477 U+200D U+2642 U+FE0F
 👷‍♀️	@description	woman construction worker	U+1F477 U+200D U+2640 U+FE0F
@@ -331,15 +344,23 @@ return
 👳	@description	person wearing turban	U+1F473
 👳‍♂️	@description	man wearing turban	U+1F473 U+200D U+2642 U+FE0F
 👳‍♀️	@description	woman wearing turban	U+1F473 U+200D U+2640 U+FE0F
-👲	@description	man with skullcap	U+1F472
+👲	@description	person with skullcap	U+1F472
 🧕	@description	woman with headscarf	U+1F9D5
-🤵	@description	man in tuxedo	U+1F935
-👰	@description	bride with veil	U+1F470
+🤵	@description	person in tuxedo	U+1F935
+🤵‍♂️	@description	man in tuxedo	U+1F935 U+200D U+2642 U+FE0F
+🤵‍♀️	@description	woman in tuxedo	U+1F935 U+200D U+2640 U+FE0F
+👰	@description	person with veil	U+1F470
+👰‍♂️	@description	man with veil	U+1F470 U+200D U+2642 U+FE0F
+👰‍♀️	@description	woman with veil	U+1F470 U+200D U+2640 U+FE0F
 🤰	@description	pregnant woman	U+1F930
 🤱	@description	breast-feeding	U+1F931
+👩‍🍼	@description	woman feeding baby	U+1F469 U+200D U+1F37C
+👨‍🍼	@description	man feeding baby	U+1F468 U+200D U+1F37C
+🧑‍🍼	@description	person feeding baby	U+1F9D1 U+200D U+1F37C
 👼	@description	baby angel	U+1F47C
 🎅	@description	Santa Claus	U+1F385
 🤶	@description	Mrs. Claus	U+1F936
+🧑‍🎄	@description	mx claus	U+1F9D1 U+200D U+1F384
 🦸	@description	superhero	U+1F9B8
 🦸‍♂️	@description	man superhero	U+1F9B8 U+200D U+2642 U+FE0F
 🦸‍♀️	@description	woman superhero	U+1F9B8 U+200D U+2640 U+FE0F
@@ -382,13 +403,13 @@ return
 🧎	@description	person kneeling	U+1F9CE
 🧎‍♂️	@description	man kneeling	U+1F9CE U+200D U+2642 U+FE0F
 🧎‍♀️	@description	woman kneeling	U+1F9CE U+200D U+2640 U+FE0F
-🧑‍🦯	@description	⊛ person with probing cane	U+1F9D1 U+200D U+1F9AF
-👨‍🦯	@description	man with probing cane	U+1F468 U+200D U+1F9AF
-👩‍🦯	@description	woman with probing cane	U+1F469 U+200D U+1F9AF
-🧑‍🦼	@description	⊛ person in motorized wheelchair	U+1F9D1 U+200D U+1F9BC
+🧑‍🦯	@description	person with white cane	U+1F9D1 U+200D U+1F9AF
+👨‍🦯	@description	man with white cane	U+1F468 U+200D U+1F9AF
+👩‍🦯	@description	woman with white cane	U+1F469 U+200D U+1F9AF
+🧑‍🦼	@description	person in motorized wheelchair	U+1F9D1 U+200D U+1F9BC
 👨‍🦼	@description	man in motorized wheelchair	U+1F468 U+200D U+1F9BC
 👩‍🦼	@description	woman in motorized wheelchair	U+1F469 U+200D U+1F9BC
-🧑‍🦽	@description	⊛ person in manual wheelchair	U+1F9D1 U+200D U+1F9BD
+🧑‍🦽	@description	person in manual wheelchair	U+1F9D1 U+200D U+1F9BD
 👨‍🦽	@description	man in manual wheelchair	U+1F468 U+200D U+1F9BD
 👩‍🦽	@description	woman in manual wheelchair	U+1F469 U+200D U+1F9BD
 🏃	@description	person running	U+1F3C3
@@ -396,7 +417,7 @@ return
 🏃‍♀️	@description	woman running	U+1F3C3 U+200D U+2640 U+FE0F
 💃	@description	woman dancing	U+1F483
 🕺	@description	man dancing	U+1F57A
-🕴	@description	man in suit levitating	U+1F574
+🕴	@description	person in suit levitating	U+1F574
 👯	@description	people with bunny ears	U+1F46F
 👯‍♂️	@description	men with bunny ears	U+1F46F U+200D U+2642 U+FE0F
 👯‍♀️	@description	women with bunny ears	U+1F46F U+200D U+2640 U+FE0F
@@ -495,6 +516,7 @@ return
 🗣	@description	speaking head	U+1F5E3
 👤	@description	bust in silhouette	U+1F464
 👥	@description	busts in silhouette	U+1F465
+🫂	@description	people hugging	U+1FAC2
 👣	@description	footprints	U+1F463
 🦰	@description	red hair	U+1F9B0
 🦱	@description	curly hair	U+1F9B1
@@ -514,6 +536,7 @@ return
 🦝	@description	raccoon	U+1F99D
 🐱	@description	cat face	U+1F431
 🐈	@description	cat	U+1F408
+🐈‍⬛	@description	black cat	U+1F408 U+200D U+2B1B
 🦁	@description	lion	U+1F981
 🐯	@description	tiger face	U+1F42F
 🐅	@description	tiger	U+1F405
@@ -523,6 +546,7 @@ return
 🦄	@description	unicorn	U+1F984
 🦓	@description	zebra	U+1F993
 🦌	@description	deer	U+1F98C
+🦬	@description	bison	U+1F9AC
 🐮	@description	cow face	U+1F42E
 🐂	@description	ox	U+1F402
 🐃	@description	water buffalo	U+1F403
@@ -539,6 +563,7 @@ return
 🦙	@description	llama	U+1F999
 🦒	@description	giraffe	U+1F992
 🐘	@description	elephant	U+1F418
+🦣	@description	mammoth	U+1F9A3
 🦏	@description	rhinoceros	U+1F98F
 🦛	@description	hippopotamus	U+1F99B
 🐭	@description	mouse face	U+1F42D
@@ -548,9 +573,11 @@ return
 🐰	@description	rabbit face	U+1F430
 🐇	@description	rabbit	U+1F407
 🐿	@description	chipmunk	U+1F43F
+🦫	@description	beaver	U+1F9AB
 🦔	@description	hedgehog	U+1F994
 🦇	@description	bat	U+1F987
 🐻	@description	bear	U+1F43B
+🐻‍❄️	@description	polar bear	U+1F43B U+200D U+2744 U+FE0F
 🐨	@description	koala	U+1F428
 🐼	@description	panda	U+1F43C
 🦥	@description	sloth	U+1F9A5
@@ -572,6 +599,8 @@ return
 🦆	@description	duck	U+1F986
 🦢	@description	swan	U+1F9A2
 🦉	@description	owl	U+1F989
+🦤	@description	dodo	U+1F9A4
+🪶	@description	feather	U+1FAB6
 🦩	@description	flamingo	U+1F9A9
 🦚	@description	peacock	U+1F99A
 🦜	@description	parrot	U+1F99C
@@ -587,6 +616,7 @@ return
 🐳	@description	spouting whale	U+1F433
 🐋	@description	whale	U+1F40B
 🐬	@description	dolphin	U+1F42C
+🦭	@description	seal	U+1F9AD
 🐟	@description	fish	U+1F41F
 🐠	@description	tropical fish	U+1F420
 🐡	@description	blowfish	U+1F421
@@ -598,12 +628,16 @@ return
 🐛	@description	bug	U+1F41B
 🐜	@description	ant	U+1F41C
 🐝	@description	honeybee	U+1F41D
+🪲	@description	beetle	U+1FAB2
 🐞	@description	lady beetle	U+1F41E
 🦗	@description	cricket	U+1F997
+🪳	@description	cockroach	U+1FAB3
 🕷	@description	spider	U+1F577
 🕸	@description	spider web	U+1F578
 🦂	@description	scorpion	U+1F982
 🦟	@description	mosquito	U+1F99F
+🪰	@description	fly	U+1FAB0
+🪱	@description	worm	U+1FAB1
 🦠	@description	microbe	U+1F9A0
 💐	@description	bouquet	U+1F490
 🌸	@description	cherry blossom	U+1F338
@@ -616,6 +650,7 @@ return
 🌼	@description	blossom	U+1F33C
 🌷	@description	tulip	U+1F337
 🌱	@description	seedling	U+1F331
+🪴	@description	potted plant	U+1FAB4
 🌲	@description	evergreen tree	U+1F332
 🌳	@description	deciduous tree	U+1F333
 🌴	@description	palm tree	U+1F334
@@ -641,8 +676,10 @@ return
 🍑	@description	peach	U+1F351
 🍒	@description	cherries	U+1F352
 🍓	@description	strawberry	U+1F353
+🫐	@description	blueberries	U+1FAD0
 🥝	@description	kiwi fruit	U+1F95D
 🍅	@description	tomato	U+1F345
+🫒	@description	olive	U+1FAD2
 🥥	@description	coconut	U+1F965
 🥑	@description	avocado	U+1F951
 🍆	@description	eggplant	U+1F346
@@ -650,6 +687,7 @@ return
 🥕	@description	carrot	U+1F955
 🌽	@description	ear of corn	U+1F33D
 🌶	@description	hot pepper	U+1F336
+🫑	@description	bell pepper	U+1FAD1
 🥒	@description	cucumber	U+1F952
 🥬	@description	leafy green	U+1F96C
 🥦	@description	broccoli	U+1F966
@@ -661,6 +699,7 @@ return
 🍞	@description	bread	U+1F35E
 🥐	@description	croissant	U+1F950
 🥖	@description	baguette bread	U+1F956
+🫓	@description	flatbread	U+1FAD3
 🥨	@description	pretzel	U+1F968
 🥯	@description	bagel	U+1F96F
 🥞	@description	pancakes	U+1F95E
@@ -677,12 +716,14 @@ return
 🥪	@description	sandwich	U+1F96A
 🌮	@description	taco	U+1F32E
 🌯	@description	burrito	U+1F32F
+🫔	@description	tamale	U+1FAD4
 🥙	@description	stuffed flatbread	U+1F959
 🧆	@description	falafel	U+1F9C6
 🥚	@description	egg	U+1F95A
 🍳	@description	cooking	U+1F373
 🥘	@description	shallow pan of food	U+1F958
 🍲	@description	pot of food	U+1F372
+🫕	@description	fondue	U+1FAD5
 🥣	@description	bowl with spoon	U+1F963
 🥗	@description	green salad	U+1F957
 🍿	@description	popcorn	U+1F37F
@@ -728,6 +769,7 @@ return
 🍼	@description	baby bottle	U+1F37C
 🥛	@description	glass of milk	U+1F95B
 ☕	@description	hot beverage	U+2615
+🫖	@description	teapot	U+1FAD6
 🍵	@description	teacup without handle	U+1F375
 🍶	@description	sake	U+1F376
 🍾	@description	bottle with popping cork	U+1F37E
@@ -739,6 +781,7 @@ return
 🥂	@description	clinking glasses	U+1F942
 🥃	@description	tumbler glass	U+1F943
 🥤	@description	cup with straw	U+1F964
+🧋	@description	bubble tea	U+1F9CB
 🧃	@description	beverage box	U+1F9C3
 🧉	@description	mate	U+1F9C9
 🧊	@description	ice	U+1F9CA
@@ -768,6 +811,9 @@ return
 🏛	@description	classical building	U+1F3DB
 🏗	@description	building construction	U+1F3D7
 🧱	@description	brick	U+1F9F1
+🪨	@description	rock	U+1FAA8
+🪵	@description	wood	U+1FAB5
+🛖	@description	hut	U+1F6D6
 🏘	@description	houses	U+1F3D8
 🏚	@description	derelict house	U+1F3DA
 🏠	@description	house	U+1F3E0
@@ -835,6 +881,7 @@ return
 🚗	@description	automobile	U+1F697
 🚘	@description	oncoming automobile	U+1F698
 🚙	@description	sport utility vehicle	U+1F699
+🛻	@description	pickup truck	U+1F6FB
 🚚	@description	delivery truck	U+1F69A
 🚛	@description	articulated lorry	U+1F69B
 🚜	@description	tractor	U+1F69C
@@ -847,6 +894,7 @@ return
 🚲	@description	bicycle	U+1F6B2
 🛴	@description	kick scooter	U+1F6F4
 🛹	@description	skateboard	U+1F6F9
+🛼	@description	roller skate	U+1F6FC
 🚏	@description	bus stop	U+1F68F
 🛣	@description	motorway	U+1F6E3
 🛤	@description	railway track	U+1F6E4
@@ -1012,11 +1060,12 @@ return
 🎿	@description	skis	U+1F3BF
 🛷	@description	sled	U+1F6F7
 🥌	@description	curling stone	U+1F94C
-🎯	@description	direct hit	U+1F3AF
+🎯	@description	bullseye	U+1F3AF
 🪀	@description	yo-yo	U+1FA80
 🪁	@description	kite	U+1FA81
 🎱	@description	pool 8 ball	U+1F3B1
 🔮	@description	crystal ball	U+1F52E
+🪄	@description	magic wand	U+1FA84
 🧿	@description	nazar amulet	U+1F9FF
 🎮	@description	video game	U+1F3AE
 🕹	@description	joystick	U+1F579
@@ -1024,6 +1073,8 @@ return
 🎲	@description	game die	U+1F3B2
 🧩	@description	puzzle piece	U+1F9E9
 🧸	@description	teddy bear	U+1F9F8
+🪅	@description	piñata	U+1FA85
+🪆	@description	nesting dolls	U+1FA86
 ♠	@description	spade suit	U+2660
 ♥	@description	heart suit	U+2665
 ♦	@description	diamond suit	U+2666
@@ -1036,7 +1087,9 @@ return
 🖼	@description	framed picture	U+1F5BC
 🎨	@description	artist palette	U+1F3A8
 🧵	@description	thread	U+1F9F5
+🪡	@description	sewing needle	U+1FAA1
 🧶	@description	yarn	U+1F9F6
+🪢	@description	knot	U+1FAA2
 👓	@description	glasses	U+1F453
 🕶	@description	sunglasses	U+1F576
 🥽	@description	goggles	U+1F97D
@@ -1062,6 +1115,7 @@ return
 👝	@description	clutch bag	U+1F45D
 🛍	@description	shopping bags	U+1F6CD
 🎒	@description	backpack	U+1F392
+🩴	@description	thong sandal	U+1FA74
 👞	@description	man’s shoe	U+1F45E
 👟	@description	running shoe	U+1F45F
 🥾	@description	hiking boot	U+1F97E
@@ -1075,6 +1129,7 @@ return
 🎩	@description	top hat	U+1F3A9
 🎓	@description	graduation cap	U+1F393
 🧢	@description	billed cap	U+1F9E2
+🪖	@description	military helmet	U+1FA96
 ⛑	@description	rescue worker’s helmet	U+26D1
 📿	@description	prayer beads	U+1F4FF
 💄	@description	lipstick	U+1F484
@@ -1099,12 +1154,14 @@ return
 🎧	@description	headphone	U+1F3A7
 📻	@description	radio	U+1F4FB
 🎷	@description	saxophone	U+1F3B7
+🪗	@description	accordion	U+1FA97
 🎸	@description	guitar	U+1F3B8
 🎹	@description	musical keyboard	U+1F3B9
 🎺	@description	trumpet	U+1F3BA
 🎻	@description	violin	U+1F3BB
 🪕	@description	banjo	U+1FA95
 🥁	@description	drum	U+1F941
+🪘	@description	long drum	U+1FA98
 📱	@description	mobile phone	U+1F4F1
 📲	@description	mobile phone with arrow	U+1F4F2
 ☎	@description	telephone	U+260E
@@ -1158,6 +1215,7 @@ return
 🔖	@description	bookmark	U+1F516
 🏷	@description	label	U+1F3F7
 💰	@description	money bag	U+1F4B0
+🪙	@description	coin	U+1FA99
 💴	@description	yen banknote	U+1F4B4
 💵	@description	dollar banknote	U+1F4B5
 💶	@description	euro banknote	U+1F4B6
@@ -1166,8 +1224,6 @@ return
 💳	@description	credit card	U+1F4B3
 🧾	@description	receipt	U+1F9FE
 💹	@description	chart increasing with yen	U+1F4B9
-💱	@description	currency exchange	U+1F4B1
-💲	@description	heavy dollar sign	U+1F4B2
 ✉	@description	envelope	U+2709
 📧	@description	e-mail	U+1F4E7
 📨	@description	incoming envelope	U+1F4E8
@@ -1224,19 +1280,24 @@ return
 🛠	@description	hammer and wrench	U+1F6E0
 🗡	@description	dagger	U+1F5E1
 ⚔	@description	crossed swords	U+2694
-🔫	@description	pistol	U+1F52B
+🔫	@description	water pistol	U+1F52B
+🪃	@description	boomerang	U+1FA83
 🏹	@description	bow and arrow	U+1F3F9
 🛡	@description	shield	U+1F6E1
+🪚	@description	carpentry saw	U+1FA9A
 🔧	@description	wrench	U+1F527
+🪛	@description	screwdriver	U+1FA9B
 🔩	@description	nut and bolt	U+1F529
 ⚙	@description	gear	U+2699
 🗜	@description	clamp	U+1F5DC
 ⚖	@description	balance scale	U+2696
-🦯	@description	probing cane	U+1F9AF
+🦯	@description	white cane	U+1F9AF
 🔗	@description	link	U+1F517
 ⛓	@description	chains	U+26D3
+🪝	@description	hook	U+1FA9D
 🧰	@description	toolbox	U+1F9F0
 🧲	@description	magnet	U+1F9F2
+🪜	@description	ladder	U+1FA9C
 ⚗	@description	alembic	U+2697
 🧪	@description	test tube	U+1F9EA
 🧫	@description	petri dish	U+1F9EB
@@ -1250,26 +1311,35 @@ return
 🩹	@description	adhesive bandage	U+1FA79
 🩺	@description	stethoscope	U+1FA7A
 🚪	@description	door	U+1F6AA
+🛗	@description	elevator	U+1F6D7
+🪞	@description	mirror	U+1FA9E
+🪟	@description	window	U+1FA9F
 🛏	@description	bed	U+1F6CF
 🛋	@description	couch and lamp	U+1F6CB
 🪑	@description	chair	U+1FA91
 🚽	@description	toilet	U+1F6BD
+🪠	@description	plunger	U+1FAA0
 🚿	@description	shower	U+1F6BF
 🛁	@description	bathtub	U+1F6C1
+🪤	@description	mouse trap	U+1FAA4
 🪒	@description	razor	U+1FA92
 🧴	@description	lotion bottle	U+1F9F4
 🧷	@description	safety pin	U+1F9F7
 🧹	@description	broom	U+1F9F9
 🧺	@description	basket	U+1F9FA
 🧻	@description	roll of paper	U+1F9FB
+🪣	@description	bucket	U+1FAA3
 🧼	@description	soap	U+1F9FC
+🪥	@description	toothbrush	U+1FAA5
 🧽	@description	sponge	U+1F9FD
 🧯	@description	fire extinguisher	U+1F9EF
 🛒	@description	shopping cart	U+1F6D2
 🚬	@description	cigarette	U+1F6AC
 ⚰	@description	coffin	U+26B0
+🪦	@description	headstone	U+1FAA6
 ⚱	@description	funeral urn	U+26B1
 🗿	@description	moai	U+1F5FF
+🪧	@description	placard	U+1FAA7
 🏧	@description	ATM sign	U+1F3E7
 🚮	@description	litter in bin sign	U+1F6AE
 🚰	@description	potable water	U+1F6B0
@@ -1368,8 +1438,22 @@ return
 📴	@description	mobile phone off	U+1F4F4
 ♀	@description	female sign	U+2640
 ♂	@description	male sign	U+2642
-⚕	@description	medical symbol	U+2695
+⚧	@description	transgender symbol	U+26A7
+✖	@description	multiply	U+2716
+➕	@description	plus	U+2795
+➖	@description	minus	U+2796
+➗	@description	divide	U+2797
 ♾	@description	infinity	U+267E
+‼	@description	double exclamation mark	U+203C
+⁉	@description	exclamation question mark	U+2049
+❓	@description	red question mark	U+2753
+❔	@description	white question mark	U+2754
+❕	@description	white exclamation mark	U+2755
+❗	@description	red exclamation mark	U+2757
+〰	@description	wavy dash	U+3030
+💱	@description	currency exchange	U+1F4B1
+💲	@description	heavy dollar sign	U+1F4B2
+⚕	@description	medical symbol	U+2695
 ♻	@description	recycling symbol	U+267B
 ⚜	@description	fleur-de-lis	U+269C
 🔱	@description	trident emblem	U+1F531
@@ -1379,25 +1463,14 @@ return
 ✅	@description	check mark button	U+2705
 ☑	@description	check box with check	U+2611
 ✔	@description	check mark	U+2714
-✖	@description	multiplication sign	U+2716
 ❌	@description	cross mark	U+274C
 ❎	@description	cross mark button	U+274E
-➕	@description	plus sign	U+2795
-➖	@description	minus sign	U+2796
-➗	@description	division sign	U+2797
 ➰	@description	curly loop	U+27B0
 ➿	@description	double curly loop	U+27BF
 〽	@description	part alternation mark	U+303D
 ✳	@description	eight-spoked asterisk	U+2733
 ✴	@description	eight-pointed star	U+2734
 ❇	@description	sparkle	U+2747
-‼	@description	double exclamation mark	U+203C
-⁉	@description	exclamation question mark	U+2049
-❓	@description	question mark	U+2753
-❔	@description	white question mark	U+2754
-❕	@description	white exclamation mark	U+2755
-❗	@description	exclamation mark	U+2757
-〰	@description	wavy dash	U+3030
 ©	@description	copyright	U+00A9
 ®	@description	registered	U+00AE
 ™	@description	trade mark	U+2122
@@ -1493,4 +1566,268 @@ return
 🏴	@description	black flag	U+1F3F4
 🏳	@description	white flag	U+1F3F3
 🏳️‍🌈	@description	rainbow flag	U+1F3F3 U+FE0F U+200D U+1F308
-🏴‍☠️	@description	pirate flag	U+1F3F4 U+200D U+2620 U+FE0F";
+🏳️‍⚧️	@description	transgender flag	U+1F3F3 U+FE0F U+200D U+26A7 U+FE0F
+🏴‍☠️	@description	pirate flag	U+1F3F4 U+200D U+2620 U+FE0F
+🇦🇨	@description	flag: Ascension Island	U+1F1E6 U+1F1E8
+🇦🇩	@description	flag: Andorra	U+1F1E6 U+1F1E9
+🇦🇪	@description	flag: United Arab Emirates	U+1F1E6 U+1F1EA
+🇦🇫	@description	flag: Afghanistan	U+1F1E6 U+1F1EB
+🇦🇬	@description	flag: Antigua & Barbuda	U+1F1E6 U+1F1EC
+🇦🇮	@description	flag: Anguilla	U+1F1E6 U+1F1EE
+🇦🇱	@description	flag: Albania	U+1F1E6 U+1F1F1
+🇦🇲	@description	flag: Armenia	U+1F1E6 U+1F1F2
+🇦🇴	@description	flag: Angola	U+1F1E6 U+1F1F4
+🇦🇶	@description	flag: Antarctica	U+1F1E6 U+1F1F6
+🇦🇷	@description	flag: Argentina	U+1F1E6 U+1F1F7
+🇦🇸	@description	flag: American Samoa	U+1F1E6 U+1F1F8
+🇦🇹	@description	flag: Austria	U+1F1E6 U+1F1F9
+🇦🇺	@description	flag: Australia	U+1F1E6 U+1F1FA
+🇦🇼	@description	flag: Aruba	U+1F1E6 U+1F1FC
+🇦🇽	@description	flag: Åland Islands	U+1F1E6 U+1F1FD
+🇦🇿	@description	flag: Azerbaijan	U+1F1E6 U+1F1FF
+🇧🇦	@description	flag: Bosnia & Herzegovina	U+1F1E7 U+1F1E6
+🇧🇧	@description	flag: Barbados	U+1F1E7 U+1F1E7
+🇧🇩	@description	flag: Bangladesh	U+1F1E7 U+1F1E9
+🇧🇪	@description	flag: Belgium	U+1F1E7 U+1F1EA
+🇧🇫	@description	flag: Burkina Faso	U+1F1E7 U+1F1EB
+🇧🇬	@description	flag: Bulgaria	U+1F1E7 U+1F1EC
+🇧🇭	@description	flag: Bahrain	U+1F1E7 U+1F1ED
+🇧🇮	@description	flag: Burundi	U+1F1E7 U+1F1EE
+🇧🇯	@description	flag: Benin	U+1F1E7 U+1F1EF
+🇧🇱	@description	flag: St. Barthélemy	U+1F1E7 U+1F1F1
+🇧🇲	@description	flag: Bermuda	U+1F1E7 U+1F1F2
+🇧🇳	@description	flag: Brunei	U+1F1E7 U+1F1F3
+🇧🇴	@description	flag: Bolivia	U+1F1E7 U+1F1F4
+🇧🇶	@description	flag: Caribbean Netherlands	U+1F1E7 U+1F1F6
+🇧🇷	@description	flag: Brazil	U+1F1E7 U+1F1F7
+🇧🇸	@description	flag: Bahamas	U+1F1E7 U+1F1F8
+🇧🇹	@description	flag: Bhutan	U+1F1E7 U+1F1F9
+🇧🇻	@description	flag: Bouvet Island	U+1F1E7 U+1F1FB
+🇧🇼	@description	flag: Botswana	U+1F1E7 U+1F1FC
+🇧🇾	@description	flag: Belarus	U+1F1E7 U+1F1FE
+🇧🇿	@description	flag: Belize	U+1F1E7 U+1F1FF
+🇨🇦	@description	flag: Canada	U+1F1E8 U+1F1E6
+🇨🇨	@description	flag: Cocos (Keeling) Islands	U+1F1E8 U+1F1E8
+🇨🇩	@description	flag: Congo - Kinshasa	U+1F1E8 U+1F1E9
+🇨🇫	@description	flag: Central African Republic	U+1F1E8 U+1F1EB
+🇨🇬	@description	flag: Congo - Brazzaville	U+1F1E8 U+1F1EC
+🇨🇭	@description	flag: Switzerland	U+1F1E8 U+1F1ED
+🇨🇮	@description	flag: Côte d’Ivoire	U+1F1E8 U+1F1EE
+🇨🇰	@description	flag: Cook Islands	U+1F1E8 U+1F1F0
+🇨🇱	@description	flag: Chile	U+1F1E8 U+1F1F1
+🇨🇲	@description	flag: Cameroon	U+1F1E8 U+1F1F2
+🇨🇳	@description	flag: China	U+1F1E8 U+1F1F3
+🇨🇴	@description	flag: Colombia	U+1F1E8 U+1F1F4
+🇨🇵	@description	flag: Clipperton Island	U+1F1E8 U+1F1F5
+🇨🇷	@description	flag: Costa Rica	U+1F1E8 U+1F1F7
+🇨🇺	@description	flag: Cuba	U+1F1E8 U+1F1FA
+🇨🇻	@description	flag: Cape Verde	U+1F1E8 U+1F1FB
+🇨🇼	@description	flag: Curaçao	U+1F1E8 U+1F1FC
+🇨🇽	@description	flag: Christmas Island	U+1F1E8 U+1F1FD
+🇨🇾	@description	flag: Cyprus	U+1F1E8 U+1F1FE
+🇨🇿	@description	flag: Czechia	U+1F1E8 U+1F1FF
+🇩🇪	@description	flag: Germany	U+1F1E9 U+1F1EA
+🇩🇬	@description	flag: Diego Garcia	U+1F1E9 U+1F1EC
+🇩🇯	@description	flag: Djibouti	U+1F1E9 U+1F1EF
+🇩🇰	@description	flag: Denmark	U+1F1E9 U+1F1F0
+🇩🇲	@description	flag: Dominica	U+1F1E9 U+1F1F2
+🇩🇴	@description	flag: Dominican Republic	U+1F1E9 U+1F1F4
+🇩🇿	@description	flag: Algeria	U+1F1E9 U+1F1FF
+🇪🇦	@description	flag: Ceuta & Melilla	U+1F1EA U+1F1E6
+🇪🇨	@description	flag: Ecuador	U+1F1EA U+1F1E8
+🇪🇪	@description	flag: Estonia	U+1F1EA U+1F1EA
+🇪🇬	@description	flag: Egypt	U+1F1EA U+1F1EC
+🇪🇭	@description	flag: Western Sahara	U+1F1EA U+1F1ED
+🇪🇷	@description	flag: Eritrea	U+1F1EA U+1F1F7
+🇪🇸	@description	flag: Spain	U+1F1EA U+1F1F8
+🇪🇹	@description	flag: Ethiopia	U+1F1EA U+1F1F9
+🇪🇺	@description	flag: European Union	U+1F1EA U+1F1FA
+🇫🇮	@description	flag: Finland	U+1F1EB U+1F1EE
+🇫🇯	@description	flag: Fiji	U+1F1EB U+1F1EF
+🇫🇰	@description	flag: Falkland Islands	U+1F1EB U+1F1F0
+🇫🇲	@description	flag: Micronesia	U+1F1EB U+1F1F2
+🇫🇴	@description	flag: Faroe Islands	U+1F1EB U+1F1F4
+🇫🇷	@description	flag: France	U+1F1EB U+1F1F7
+🇬🇦	@description	flag: Gabon	U+1F1EC U+1F1E6
+🇬🇧	@description	flag: United Kingdom	U+1F1EC U+1F1E7
+🇬🇩	@description	flag: Grenada	U+1F1EC U+1F1E9
+🇬🇪	@description	flag: Georgia	U+1F1EC U+1F1EA
+🇬🇫	@description	flag: French Guiana	U+1F1EC U+1F1EB
+🇬🇬	@description	flag: Guernsey	U+1F1EC U+1F1EC
+🇬🇭	@description	flag: Ghana	U+1F1EC U+1F1ED
+🇬🇮	@description	flag: Gibraltar	U+1F1EC U+1F1EE
+🇬🇱	@description	flag: Greenland	U+1F1EC U+1F1F1
+🇬🇲	@description	flag: Gambia	U+1F1EC U+1F1F2
+🇬🇳	@description	flag: Guinea	U+1F1EC U+1F1F3
+🇬🇵	@description	flag: Guadeloupe	U+1F1EC U+1F1F5
+🇬🇶	@description	flag: Equatorial Guinea	U+1F1EC U+1F1F6
+🇬🇷	@description	flag: Greece	U+1F1EC U+1F1F7
+🇬🇸	@description	flag: South Georgia & South Sandwich Islands	U+1F1EC U+1F1F8
+🇬🇹	@description	flag: Guatemala	U+1F1EC U+1F1F9
+🇬🇺	@description	flag: Guam	U+1F1EC U+1F1FA
+🇬🇼	@description	flag: Guinea-Bissau	U+1F1EC U+1F1FC
+🇬🇾	@description	flag: Guyana	U+1F1EC U+1F1FE
+🇭🇰	@description	flag: Hong Kong SAR China	U+1F1ED U+1F1F0
+🇭🇲	@description	flag: Heard & McDonald Islands	U+1F1ED U+1F1F2
+🇭🇳	@description	flag: Honduras	U+1F1ED U+1F1F3
+🇭🇷	@description	flag: Croatia	U+1F1ED U+1F1F7
+🇭🇹	@description	flag: Haiti	U+1F1ED U+1F1F9
+🇭🇺	@description	flag: Hungary	U+1F1ED U+1F1FA
+🇮🇨	@description	flag: Canary Islands	U+1F1EE U+1F1E8
+🇮🇩	@description	flag: Indonesia	U+1F1EE U+1F1E9
+🇮🇪	@description	flag: Ireland	U+1F1EE U+1F1EA
+🇮🇱	@description	flag: Israel	U+1F1EE U+1F1F1
+🇮🇲	@description	flag: Isle of Man	U+1F1EE U+1F1F2
+🇮🇳	@description	flag: India	U+1F1EE U+1F1F3
+🇮🇴	@description	flag: British Indian Ocean Territory	U+1F1EE U+1F1F4
+🇮🇶	@description	flag: Iraq	U+1F1EE U+1F1F6
+🇮🇷	@description	flag: Iran	U+1F1EE U+1F1F7
+🇮🇸	@description	flag: Iceland	U+1F1EE U+1F1F8
+🇮🇹	@description	flag: Italy	U+1F1EE U+1F1F9
+🇯🇪	@description	flag: Jersey	U+1F1EF U+1F1EA
+🇯🇲	@description	flag: Jamaica	U+1F1EF U+1F1F2
+🇯🇴	@description	flag: Jordan	U+1F1EF U+1F1F4
+🇯🇵	@description	flag: Japan	U+1F1EF U+1F1F5
+🇰🇪	@description	flag: Kenya	U+1F1F0 U+1F1EA
+🇰🇬	@description	flag: Kyrgyzstan	U+1F1F0 U+1F1EC
+🇰🇭	@description	flag: Cambodia	U+1F1F0 U+1F1ED
+🇰🇮	@description	flag: Kiribati	U+1F1F0 U+1F1EE
+🇰🇲	@description	flag: Comoros	U+1F1F0 U+1F1F2
+🇰🇳	@description	flag: St. Kitts & Nevis	U+1F1F0 U+1F1F3
+🇰🇵	@description	flag: North Korea	U+1F1F0 U+1F1F5
+🇰🇷	@description	flag: South Korea	U+1F1F0 U+1F1F7
+🇰🇼	@description	flag: Kuwait	U+1F1F0 U+1F1FC
+🇰🇾	@description	flag: Cayman Islands	U+1F1F0 U+1F1FE
+🇰🇿	@description	flag: Kazakhstan	U+1F1F0 U+1F1FF
+🇱🇦	@description	flag: Laos	U+1F1F1 U+1F1E6
+🇱🇧	@description	flag: Lebanon	U+1F1F1 U+1F1E7
+🇱🇨	@description	flag: St. Lucia	U+1F1F1 U+1F1E8
+🇱🇮	@description	flag: Liechtenstein	U+1F1F1 U+1F1EE
+🇱🇰	@description	flag: Sri Lanka	U+1F1F1 U+1F1F0
+🇱🇷	@description	flag: Liberia	U+1F1F1 U+1F1F7
+🇱🇸	@description	flag: Lesotho	U+1F1F1 U+1F1F8
+🇱🇹	@description	flag: Lithuania	U+1F1F1 U+1F1F9
+🇱🇺	@description	flag: Luxembourg	U+1F1F1 U+1F1FA
+🇱🇻	@description	flag: Latvia	U+1F1F1 U+1F1FB
+🇱🇾	@description	flag: Libya	U+1F1F1 U+1F1FE
+🇲🇦	@description	flag: Morocco	U+1F1F2 U+1F1E6
+🇲🇨	@description	flag: Monaco	U+1F1F2 U+1F1E8
+🇲🇩	@description	flag: Moldova	U+1F1F2 U+1F1E9
+🇲🇪	@description	flag: Montenegro	U+1F1F2 U+1F1EA
+🇲🇫	@description	flag: St. Martin	U+1F1F2 U+1F1EB
+🇲🇬	@description	flag: Madagascar	U+1F1F2 U+1F1EC
+🇲🇭	@description	flag: Marshall Islands	U+1F1F2 U+1F1ED
+🇲🇰	@description	flag: North Macedonia	U+1F1F2 U+1F1F0
+🇲🇱	@description	flag: Mali	U+1F1F2 U+1F1F1
+🇲🇲	@description	flag: Myanmar (Burma)	U+1F1F2 U+1F1F2
+🇲🇳	@description	flag: Mongolia	U+1F1F2 U+1F1F3
+🇲🇴	@description	flag: Macao SAR China	U+1F1F2 U+1F1F4
+🇲🇵	@description	flag: Northern Mariana Islands	U+1F1F2 U+1F1F5
+🇲🇶	@description	flag: Martinique	U+1F1F2 U+1F1F6
+🇲🇷	@description	flag: Mauritania	U+1F1F2 U+1F1F7
+🇲🇸	@description	flag: Montserrat	U+1F1F2 U+1F1F8
+🇲🇹	@description	flag: Malta	U+1F1F2 U+1F1F9
+🇲🇺	@description	flag: Mauritius	U+1F1F2 U+1F1FA
+🇲🇻	@description	flag: Maldives	U+1F1F2 U+1F1FB
+🇲🇼	@description	flag: Malawi	U+1F1F2 U+1F1FC
+🇲🇽	@description	flag: Mexico	U+1F1F2 U+1F1FD
+🇲🇾	@description	flag: Malaysia	U+1F1F2 U+1F1FE
+🇲🇿	@description	flag: Mozambique	U+1F1F2 U+1F1FF
+🇳🇦	@description	flag: Namibia	U+1F1F3 U+1F1E6
+🇳🇨	@description	flag: New Caledonia	U+1F1F3 U+1F1E8
+🇳🇪	@description	flag: Niger	U+1F1F3 U+1F1EA
+🇳🇫	@description	flag: Norfolk Island	U+1F1F3 U+1F1EB
+🇳🇬	@description	flag: Nigeria	U+1F1F3 U+1F1EC
+🇳🇮	@description	flag: Nicaragua	U+1F1F3 U+1F1EE
+🇳🇱	@description	flag: Netherlands	U+1F1F3 U+1F1F1
+🇳🇴	@description	flag: Norway	U+1F1F3 U+1F1F4
+🇳🇵	@description	flag: Nepal	U+1F1F3 U+1F1F5
+🇳🇷	@description	flag: Nauru	U+1F1F3 U+1F1F7
+🇳🇺	@description	flag: Niue	U+1F1F3 U+1F1FA
+🇳🇿	@description	flag: New Zealand	U+1F1F3 U+1F1FF
+🇴🇲	@description	flag: Oman	U+1F1F4 U+1F1F2
+🇵🇦	@description	flag: Panama	U+1F1F5 U+1F1E6
+🇵🇪	@description	flag: Peru	U+1F1F5 U+1F1EA
+🇵🇫	@description	flag: French Polynesia	U+1F1F5 U+1F1EB
+🇵🇬	@description	flag: Papua New Guinea	U+1F1F5 U+1F1EC
+🇵🇭	@description	flag: Philippines	U+1F1F5 U+1F1ED
+🇵🇰	@description	flag: Pakistan	U+1F1F5 U+1F1F0
+🇵🇱	@description	flag: Poland	U+1F1F5 U+1F1F1
+🇵🇲	@description	flag: St. Pierre & Miquelon	U+1F1F5 U+1F1F2
+🇵🇳	@description	flag: Pitcairn Islands	U+1F1F5 U+1F1F3
+🇵🇷	@description	flag: Puerto Rico	U+1F1F5 U+1F1F7
+🇵🇸	@description	flag: Palestinian Territories	U+1F1F5 U+1F1F8
+🇵🇹	@description	flag: Portugal	U+1F1F5 U+1F1F9
+🇵🇼	@description	flag: Palau	U+1F1F5 U+1F1FC
+🇵🇾	@description	flag: Paraguay	U+1F1F5 U+1F1FE
+🇶🇦	@description	flag: Qatar	U+1F1F6 U+1F1E6
+🇷🇪	@description	flag: Réunion	U+1F1F7 U+1F1EA
+🇷🇴	@description	flag: Romania	U+1F1F7 U+1F1F4
+🇷🇸	@description	flag: Serbia	U+1F1F7 U+1F1F8
+🇷🇺	@description	flag: Russia	U+1F1F7 U+1F1FA
+🇷🇼	@description	flag: Rwanda	U+1F1F7 U+1F1FC
+🇸🇦	@description	flag: Saudi Arabia	U+1F1F8 U+1F1E6
+🇸🇧	@description	flag: Solomon Islands	U+1F1F8 U+1F1E7
+🇸🇨	@description	flag: Seychelles	U+1F1F8 U+1F1E8
+🇸🇩	@description	flag: Sudan	U+1F1F8 U+1F1E9
+🇸🇪	@description	flag: Sweden	U+1F1F8 U+1F1EA
+🇸🇬	@description	flag: Singapore	U+1F1F8 U+1F1EC
+🇸🇭	@description	flag: St. Helena	U+1F1F8 U+1F1ED
+🇸🇮	@description	flag: Slovenia	U+1F1F8 U+1F1EE
+🇸🇯	@description	flag: Svalbard & Jan Mayen	U+1F1F8 U+1F1EF
+🇸🇰	@description	flag: Slovakia	U+1F1F8 U+1F1F0
+🇸🇱	@description	flag: Sierra Leone	U+1F1F8 U+1F1F1
+🇸🇲	@description	flag: San Marino	U+1F1F8 U+1F1F2
+🇸🇳	@description	flag: Senegal	U+1F1F8 U+1F1F3
+🇸🇴	@description	flag: Somalia	U+1F1F8 U+1F1F4
+🇸🇷	@description	flag: Suriname	U+1F1F8 U+1F1F7
+🇸🇸	@description	flag: South Sudan	U+1F1F8 U+1F1F8
+🇸🇹	@description	flag: São Tomé & Príncipe	U+1F1F8 U+1F1F9
+🇸🇻	@description	flag: El Salvador	U+1F1F8 U+1F1FB
+🇸🇽	@description	flag: Sint Maarten	U+1F1F8 U+1F1FD
+🇸🇾	@description	flag: Syria	U+1F1F8 U+1F1FE
+🇸🇿	@description	flag: Eswatini	U+1F1F8 U+1F1FF
+🇹🇦	@description	flag: Tristan da Cunha	U+1F1F9 U+1F1E6
+🇹🇨	@description	flag: Turks & Caicos Islands	U+1F1F9 U+1F1E8
+🇹🇩	@description	flag: Chad	U+1F1F9 U+1F1E9
+🇹🇫	@description	flag: French Southern Territories	U+1F1F9 U+1F1EB
+🇹🇬	@description	flag: Togo	U+1F1F9 U+1F1EC
+🇹🇭	@description	flag: Thailand	U+1F1F9 U+1F1ED
+🇹🇯	@description	flag: Tajikistan	U+1F1F9 U+1F1EF
+🇹🇰	@description	flag: Tokelau	U+1F1F9 U+1F1F0
+🇹🇱	@description	flag: Timor-Leste	U+1F1F9 U+1F1F1
+🇹🇲	@description	flag: Turkmenistan	U+1F1F9 U+1F1F2
+🇹🇳	@description	flag: Tunisia	U+1F1F9 U+1F1F3
+🇹🇴	@description	flag: Tonga	U+1F1F9 U+1F1F4
+🇹🇷	@description	flag: Turkey	U+1F1F9 U+1F1F7
+🇹🇹	@description	flag: Trinidad & Tobago	U+1F1F9 U+1F1F9
+🇹🇻	@description	flag: Tuvalu	U+1F1F9 U+1F1FB
+🇹🇼	@description	flag: Taiwan	U+1F1F9 U+1F1FC
+🇹🇿	@description	flag: Tanzania	U+1F1F9 U+1F1FF
+🇺🇦	@description	flag: Ukraine	U+1F1FA U+1F1E6
+🇺🇬	@description	flag: Uganda	U+1F1FA U+1F1EC
+🇺🇲	@description	flag: U.S. Outlying Islands	U+1F1FA U+1F1F2
+🇺🇳	@description	flag: United Nations	U+1F1FA U+1F1F3
+🇺🇸	@description	flag: United States	U+1F1FA U+1F1F8
+🇺🇾	@description	flag: Uruguay	U+1F1FA U+1F1FE
+🇺🇿	@description	flag: Uzbekistan	U+1F1FA U+1F1FF
+🇻🇦	@description	flag: Vatican City	U+1F1FB U+1F1E6
+🇻🇨	@description	flag: St. Vincent & Grenadines	U+1F1FB U+1F1E8
+🇻🇪	@description	flag: Venezuela	U+1F1FB U+1F1EA
+🇻🇬	@description	flag: British Virgin Islands	U+1F1FB U+1F1EC
+🇻🇮	@description	flag: U.S. Virgin Islands	U+1F1FB U+1F1EE
+🇻🇳	@description	flag: Vietnam	U+1F1FB U+1F1F3
+🇻🇺	@description	flag: Vanuatu	U+1F1FB U+1F1FA
+🇼🇫	@description	flag: Wallis & Futuna	U+1F1FC U+1F1EB
+🇼🇸	@description	flag: Samoa	U+1F1FC U+1F1F8
+🇽🇰	@description	flag: Kosovo	U+1F1FD U+1F1F0
+🇾🇪	@description	flag: Yemen	U+1F1FE U+1F1EA
+🇾🇹	@description	flag: Mayotte	U+1F1FE U+1F1F9
+🇿🇦	@description	flag: South Africa	U+1F1FF U+1F1E6
+🇿🇲	@description	flag: Zambia	U+1F1FF U+1F1F2
+🇿🇼	@description	flag: Zimbabwe	U+1F1FF U+1F1FC
+🏴󠁧󠁢󠁥󠁮󠁧󠁿	@description	flag: England	U+1F3F4 U+E0067 U+E0062 U+E0065 U+E006E U+E0067 U+E007F
+🏴󠁧󠁢󠁳󠁣󠁴󠁿	@description	flag: Scotland	U+1F3F4 U+E0067 U+E0062 U+E0073 U+E0063 U+E0074 U+E007F
+🏴󠁧󠁢󠁷󠁬󠁳󠁿	@description	flag: Wales	U+1F3F4 U+E0067 U+E0062 U+E0077 U+E006C U+E0073 U+E007F";
+
+
