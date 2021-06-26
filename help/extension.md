@@ -75,6 +75,7 @@ emoji.mac
 			😅	@description	grinning face with sweat	U+1F605
 			🤣	@description	rolling on the floor laughing	U+1F923";
 
+@descriptionは[internal.md -> 候補のフォーマットについて](./internal.md#候補のフォーマットについて)を参照してください。
 
 ### 関数
 
