@@ -10,7 +10,7 @@ usage:
 				（書式）ソース名1\tソース名2...
 				（例）  file_mru\tprocess\ttab
 
-    options     タブ区切りのオプション
+    options     タブ区切りの動作オプション
                 （書式）オプション1\tオプション2\t...
                 （例）  -auto-preview\t-default_action=insert_file
 
