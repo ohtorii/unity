@@ -10,9 +10,10 @@ usage:
 				（書式）ソース名1\tソース名2...
 				（例）  file_mru\tprocess\ttab
 
-    options     タブ区切りの動作オプション
-                （書式）オプション1\tオプション2\t...
-                （例）  -auto-preview\t-default_action=insert_file
+    options     動作オプション
+                （書式）オプション1\nオプション2\n...
+                （例）  @"auto-preview=on
+	                     default-action=insert_file"
 
     sources_args ソース毎の引数
                 （書式）ソース1の引数1\tソース1の引数2...\nソース2の引数1\t...
