@@ -18,8 +18,8 @@ main:
 	//スニペットのあるディレクトリを引数指定します。
 	//ファイルパスはご自身の環境に応じて書き換えてご利用ください。
 	call expand @"%HOMEDRIVE%%HOMEPATH%\MySnippets\foo\bar　←　ファイルパスは各自の環境毎に設定してください";
-	$$argument=$$return;
-	execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$$sources,$$options,$$argument;
+	$$sources_args=$$return;
+	execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$$sources,$$options,$$sources_args;
 	return getresultex(-1);
 
 
