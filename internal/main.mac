@@ -1,7 +1,7 @@
 ﻿/* Unityマクロ　メイン処理
 
 usage:
-	main.mac root_dir sources options
+	main.mac root_dir sources options sources_args
 
 引数:
 	root_dir	unityマクロのルートディレクトリ
