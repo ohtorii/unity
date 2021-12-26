@@ -1,45 +1,33 @@
 ﻿/* Unityマクロ　メイン処理
 
 usage:
-	unity.mac root_dir sources options
+	main.mac root_dir sources options
 
 引数:
 	root_dir	unityマクロのルートディレクトリ
 
 	sources 	タブ区切りのソース名
 				（書式）ソース名1\tソース名2...
-				（例）  "file_mru\tprocess\ttab"
+				（例）  file_mru\tprocess\ttab
 
-	options		タブ区切りのオプション
-				（書式）オプション1\tオプション2\t...
-				（例）  "-auto-preview\t-default_action=insert_file"
+    options     タブ区切りのオプション
+                （書式）オプション1\tオプション2\t...
+                （例）  -auto-preview\t-default_action=insert_file
 
-	sources_args ソース毎の引数
-				（書式）ソース1の引数1\tソース1の引数2...\nソース2の引数1\t...
-						引数で空白文字を簡単に扱えるようにタブ区切りとした。
+    sources_args ソース毎の引数
+                （書式）ソース1の引数1\tソース1の引数2...\nソース2の引数1\t...
 
-				（例  その1）
-					ソースに与える引数
-					- file_mru arg1 arg2
+                （例  その1）
+                    sources        : file_mru
+                    file_mruの引数 : arg1 arg2
+                    sources_args   : arg1\targ2
 
-					source_argsに与える文字列。
-					"arg1\targ2"
+                （例  その2）
+                    sources        : tab window
+                    tabの引数      : arg1 arg2
+                    windowの引数   : arg3
+                    sources_args   : arg1\targ2\narg3
 
-				（例  その2）
-					ソースに与える引数
-					- tab arg1
-
-					source_argsに与える文字列。
-					"\n\narg1"
-
-				（例　その3）
-					ソースに与える引数
-					- file_mru arg1 arg2
-					- process
-					- tab arg3
-
-					source_argsに与える文字列。
-					"arg1\targ2\n\narg3"
 */
 if(version<891){
 	message
