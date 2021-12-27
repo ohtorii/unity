@@ -3,6 +3,7 @@
 */
 $sources="file\tdirectory_mru\tfile_mru";
 $options="";
+//$options="auto-preview=on";
 $sources_args="";
 execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options,$sources_args;
 endmacro getresultex(-1);
