@@ -957,6 +957,7 @@ NewFile:
 	config "xOrikaeshiLine:0";
 
 	setcompatiblemode(compatiblemode|
+	                    0x00020000  |	/*マクロ終了後に検索条件をマクロ実行前と同じに戻します。（V8.20以降） */
 						0x02000000		/*カーソル行の下線やカーソル位置の縦線の描画を有効にします。（V8.90β6以降）*/
 					);
 
