@@ -211,7 +211,7 @@ LoadFileImage:
 	*/
 	##current_hidemaru=hidemaruhandle(0);
 	openfile "/h /n " + $$1;
-	if(! result){
+	if(getresultex(25)){
 		return false;
 	}
 	##new_hidemaru=hidemaruhandle(0);

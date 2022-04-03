@@ -82,9 +82,10 @@ open:
 				call check_file_exists $$text;
 				if(##return){
 					openfile $$text;
-					if(result){
+					if(getresultex(25)==false){
+                        //openfileに成功
 						##new_hidemaru_handle = hidemaruhandle(0);
-					}
+                	}
 				}else{
 					$$message="ファイルを見付けることが出来ませんでした。\nもしかしたら既に削除されているのかもしれません。\n\n（ファイル名）\n" + $$text;
 					execmacro $$macro_path, "error", $$message;

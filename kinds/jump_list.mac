@@ -36,8 +36,11 @@ open:
 			##line  =dllfuncw(#g_dll_ohtorii_tools,"GetSelectionActionLine",##i);
 
 			openfile $$filename;
-			moveto2 ##column,##line;
-			##new_hidemaru_handle=hidemaruhandle(0);
+			if(getresultex(25)==false){
+                //openfileに成功
+			    moveto2 ##column,##line;
+			    ##new_hidemaru_handle=hidemaruhandle(0);
+			}
 
 			setactivehidemaru ##current_hidemaru_handle;
 		}else{
