@@ -23,42 +23,15 @@ jobs:
 
 
     steps:
-      - name: Check cmd
-        shell: cmd
-        run: echo cmd ok
-      
-      - name: Check pwsh
-        shell: pwsh
-        run: echo pwsh ok
-        
-      - name: Check bash
-        shell: bash
-        run: echo bash ok
-          
       #- name: Repository checkout
       #  uses: actions/checkout@v2
     
       - name: Download coverity scan build tool
         shell: cmd
         run: |
-          echo token1=%COVERITY_SCAN_TOKEN%
-          echo token2=$COVERITY_SCAN_TOKEN
-          echo MY_NAME=$MY_NAME
-          echo MY_NAME=%MY_NAME%
+          echo wget -q https://scan.coverity.com/download/cxx/linux64 \
+            --post-data "token=%COVERITY_SCAN_TOKEN%&project=ohtorii/unity" \
+            -O cov-analysis-win64.tar.gz
+          mkdir cov-analysis-win64
+          tar xzf cov-analysis-win64.tar.gz --strip 1 -C cov-analysis-win64
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-        
-      - name: Run a one-line script2
-        run: echo "Hello, world!"
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-
-      - name: SET
-        shell: cmd
-        run: set
