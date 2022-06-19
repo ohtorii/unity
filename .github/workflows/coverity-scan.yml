@@ -39,6 +39,7 @@ jobs:
       #  uses: actions/checkout@v2
     
       - name: Download coverity scan build tool
+        shell: cmd
         run: |
           echo token1=%COVERITY_SCAN_TOKEN%
           echo token2=$COVERITY_SCAN_TOKEN
@@ -59,4 +60,5 @@ jobs:
           echo test, and deploy your project.
 
       - name: SET
+        shell: cmd
         run: set
