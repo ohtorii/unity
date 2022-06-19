@@ -29,9 +29,9 @@ jobs:
       - name: Download coverity scan build tool
         shell: cmd
         run: |
-          echo wget -q https://scan.coverity.com/download/cxx/linux64 \
-            --post-data "token=%COVERITY_SCAN_TOKEN%&project=ohtorii/unity" \
-            -O cov-analysis-win64.tar.gz
+          wget -q https://scan.coverity.com/download/cxx/win64 \
+          --post-data "token=%COVERITY_SCAN_TOKEN%&project=ohtorii/unity" \
+          -O cov-analysis-win64.tar.gz
           mkdir cov-analysis-win64
           tar xzf cov-analysis-win64.tar.gz --strip 1 -C cov-analysis-win64
 
