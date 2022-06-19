@@ -25,14 +25,8 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v2
     
-      - name: Before_install
-        run: |
-          ver
-          hostname
-          whoami
-          
       - name: Download coverity scan build tool
-        run: echo "token=%COVERITY_SCAN_TOKEN%&project=gansm%2Ffinalcut"
+        run: echo "token=$COVERITY_SCAN_TOKEN&project=gansm%2Ffinalcut"
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
