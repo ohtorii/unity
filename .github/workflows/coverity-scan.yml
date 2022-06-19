@@ -23,6 +23,18 @@ jobs:
 
 
     steps:
+      - name: Check cmd
+        shell: cmd
+        run: echo cmd ok
+      
+      - name: Check pwsh
+        shell: pwsh
+        run: echo pwsh ok
+        
+      - name: Check bash
+        shell: bash
+        run: echo bash ok
+          
       #- name: Repository checkout
       #  uses: actions/checkout@v2
     
@@ -30,7 +42,8 @@ jobs:
         run: |
           echo token1=%COVERITY_SCAN_TOKEN%
           echo token2=$COVERITY_SCAN_TOKEN
-          echo $MY_NAME
+          echo MY_NAME=$MY_NAME
+          echo MY_NAME=%MY_NAME%
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
