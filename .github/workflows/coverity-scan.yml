@@ -39,8 +39,8 @@ jobs:
       - name: Build with cov-build
         shell: cmd
         run: |
-          cov-analysis-win64\cov-build.exe --dir cov-int msbuild internal\dll_project\ohtorii_tools\ohtorii_tools.sln /t:clean;rebuild /p:Configuration=Release;Platform=x64;PostBuildEventUseInBuild=false
-      
+          cov-analysis-win64\bin\cov-build.exe --dir cov-int msbuild internal\dll_project\ohtorii_tools\ohtorii_tools.sln /t:clean;rebuild /p:Configuration=Release;Platform=x64;PostBuildEventUseInBuild=false
+
       - name: Submit the result to Coverity Scan
         shell: cmd
         run: |
