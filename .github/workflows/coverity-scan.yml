@@ -14,7 +14,7 @@ jobs:
 
     env:
       COVERITY_SCAN_BRANCH_PATTERN:     "${{ github.ref}}"
-      COVERITY_SCAN_NOTIFICATION_EMAIL: "example@example.com"
+      COVERITY_SCAN_NOTIFICATION_EMAIL: "${{ secrets.COVERITY_SCAN_EMAIL }}"
       COVERITY_SCAN_PROJECT_NAME:       "${{ github.repository }}"
       # Set in repo settings -> secrets -> repository secrets
       COVERITY_SCAN_TOKEN:              "${{ secrets.COVERITY_SCAN_TOKEN }}"
@@ -26,10 +26,33 @@ jobs:
       #- name: Repository checkout
       #  uses: actions/checkout@v2
     
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[15.0,16.0)'
+
       - name: Download coverity scan build tool
         shell: cmd
         run: |
           C:\msys64\usr\bin\wget.exe -q https://scan.coverity.com/download/cxx/win64 --post-data "token=%COVERITY_SCAN_TOKEN%&project=ohtorii/unity" -O cov-analysis-win64.tar.gz
           mkdir cov-analysis-win64
           tar xzf cov-analysis-win64.tar.gz --strip 1 -C cov-analysis-win64
+          
+      - name: Build with cov-build
+        shell: cmd
+        run: |
+          set PATH=%~dp0cov-analysis-win64;%PATH%
+          cov-build --dir cov-int msbuild %~dp0internal\dll_project\ohtorii_tools\ohtorii_tools.sln /t:clean;rebuild /p:Configuration=Release;Platform=x64;PostBuildEventUseInBuild=false
+      
+      - name: Submit the result to Coverity Scan
+        shell: cmd
+        run: |
+          tar czvf ohtorii_tools.tgz cov-int
+          curl \
+          --form token=$COVERITY_SCAN_TOKEN \
+          --form email=$COVERITY_SCAN_NOTIFICATION_EMAIL \
+          --form file=@ohtorii_tools.tgz \
+          --form version="main" \
+          --form description="Build submitted via github action" \
+          https://scan.coverity.com/builds?project=ohtorii%2Funity
 
