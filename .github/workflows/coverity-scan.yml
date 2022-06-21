@@ -35,7 +35,11 @@ jobs:
           C:\msys64\usr\bin\wget.exe -q https://scan.coverity.com/download/cxx/win64 --post-data "token=%COVERITY_SCAN_TOKEN%&project=ohtorii/unity" -O cov-analysis-win64.tar.gz
           mkdir cov-analysis-win64
           tar xzf cov-analysis-win64.tar.gz --strip 1 -C cov-analysis-win64
-          
+      
+      - name: cov-configure
+        shell: cmd
+        run: cov-analysis-win64\bin\cov-configure --msvc
+        
       - name: Build with cov-build
         shell: cmd
         run: |
