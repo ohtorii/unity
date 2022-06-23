@@ -4,16 +4,36 @@
 #define WAITING_SECOND		8
 #define SLEEP_MILLISECOND	20
 
-
-static size_t SkipUTF16Bom(const WCHAR str) {
-	if (str == 0xFEFF) {
-		return sizeof(WCHAR);
+namespace {
+	size_t SkipUTF16Bom(const WCHAR str) {
+		if (str == 0xFEFF) {
+			return sizeof(WCHAR);
+		}
+		if (str == 0xFFFE) {
+			return sizeof(WCHAR);
+		}
+		return 0;
 	}
-	if (str == 0xFFFE) {
-		return sizeof(WCHAR);
+	/// <summary>
+	/// UTF8のコードとして正しいかどうか検査する。
+	/// Coverity: 4.257. TAINTED_SCALAR への対応
+	/// </summary>
+	/// <param name="utf8"></param>
+	/// <returns></returns>
+	bool CheckUTF8Code(const std::wstring&utf8) {
+		const char* first = reinterpret_cast<const char*>(utf8.c_str());
+		const char* last = first + utf8.size()*sizeof(std::wstring::value_type);
+		for (; first != last; ++first) {
+			const char c = *first;
+			//簡易的に検査（制御コード、BOM）
+			//0x20=Space
+			if ((c < 0x20) || (c == 0xFF) || (c == 0xFE) || (c == 0xEF) || (c == 0xBB) || (c == 0xBF)) {
+				return false;
+			}
+		}
+		return true;
 	}
-	return 0;
-}
+}; //namespace
 
 
 ASyncFile::ASyncFile() {
@@ -60,8 +80,6 @@ void ASyncFile::operator()() {
 }
 
 void ASyncFile::Exec(){
-	TCHAR	line[4096];
-
 	switch (m_status) {
 	case FILE_OPEN:
 		if (! OpenFile()) {
@@ -69,23 +87,26 @@ void ASyncFile::Exec(){
 		}
 		m_file_read_start_clock = std::chrono::system_clock::now();
 		m_status=GET_LINE;
-		/* 
+		/*
 		//Pass
 		break;
 		*/
 
 	case GET_LINE:
+	{
+		TCHAR	line[4096];
 		if (fgetws(line, _countof(line), m_file) != nullptr) {
 			size_t skip_byte = 0;
 			if (m_check_bom) {
 				skip_byte = SkipUTF16Bom(line[0]);
 				m_check_bom = false;
 			}
-			auto*top = reinterpret_cast<WCHAR*>(reinterpret_cast<char*>(&line[0]) + skip_byte);
+			auto* top = reinterpret_cast<WCHAR*>(reinterpret_cast<char*>(&line[0]) + skip_byte);
 			DoLine(top);
 			m_file_read_start_clock = std::chrono::system_clock::now();
 			return;
 		}
+	}
 
 		//
 		//読み込む行が見つからない場合
@@ -100,7 +121,7 @@ void ASyncFile::Exec(){
 				return;
 			}
 		}
-		
+
 		//少し待っても行を読み込めないためファイル生成が終了したとみなす。
 		m_status=FILE_CLOSE;
 		/*
@@ -133,6 +154,9 @@ void ASyncFile::DoLine(WCHAR*line) {
 	}
 
 	std::wstring							candidate_text(TrimString(tokens.at(0), _T("\n\r")));
+	if (! CheckUTF8Code(candidate_text)) {
+		return;
+	}
 	Candidates::ContainerType&				candidates = m_instance->QueryCandidates().GetCandidates();
 	Candidates::ContainerType::scoped_lock	locker(candidates);
 	{
@@ -195,7 +219,7 @@ void ASyncFiles::Destroy() {
 INT_PTR ASyncFiles::AppendCandidate(const WCHAR* source_name, const WCHAR* filename) {
 	try {
 		m_threads.emplace_back(Thread(m_instance,source_name,filename));
-		
+
 		auto&dst = m_threads.back();
 		std::thread t(std::ref(dst.m_file));
 		dst.m_thread.swap(t);
@@ -209,5 +233,5 @@ INT_PTR ASyncFiles::AppendCandidate(const WCHAR* source_name, const WCHAR* filen
 void ASyncFiles::Exec() {
 	//不要になったスレッドを破棄する
 	m_threads.remove_if([](Thread&item) {return !item.m_thread.joinable(); });
-	
+
 }
