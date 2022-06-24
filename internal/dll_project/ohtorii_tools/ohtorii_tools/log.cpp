@@ -68,6 +68,6 @@ void DebugLogLastError(DWORD errorcode) {
 		(LPTSTR)&lpMsgBuf,                          //      メッセージテキストが保存されるバッファへのポインタ
 		0,
 		NULL);
-	DebugLog(_T("%s"), lpMsgBuf);
+	DebugLog(_T("%ls"), lpMsgBuf);
 	LocalFree(lpMsgBuf);
 }

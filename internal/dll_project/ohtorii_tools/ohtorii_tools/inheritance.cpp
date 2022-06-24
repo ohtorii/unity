@@ -28,7 +28,7 @@ bool Inheritance::GenerateResolveActions() {
 		_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("==== common_kinds ==== (num=%zd)"), num);
 		DebugLog(buf);
 		for (size_t i = 0; i < num ; ++i) {
-			_snwprintf_s(buf, _countof(buf),_TRUNCATE, _T("  [%zd/%zd]%s"), i+1,num,common_kinds.at(i).c_str());
+			_snwprintf_s(buf, _countof(buf),_TRUNCATE, _T("  [%zd/%zd]%ls"), i+1,num,common_kinds.at(i).c_str());
 			DebugLog(buf);
 		}
 	}
@@ -45,7 +45,7 @@ bool Inheritance::GenerateResolveActions() {
 		DebugLog(buf);
 		for (size_t i = 0; i < num; ++i) {
 			const auto & action = m_resolve_actions.at(i);
-			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  [%zd/%zd]%s.%s(%zd)"), i + 1, num, action.m_kind_name.c_str(), action.m_action_name.c_str(), action.m_action_index);
+			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  [%zd/%zd]%ls.%ls(%zd)"), i + 1, num, action.m_kind_name.c_str(), action.m_action_name.c_str(), action.m_action_index);
 			DebugLog(buf);
 		}
 	}
@@ -143,7 +143,7 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 		_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("==== reference_count ==== (num=%zd)"), reference_counter.size());
 		DebugLog(buf);
 		for (const auto&item : reference_counter) {
-			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  %s=%zd"), item.m_kind_name.c_str(), item.m_counter);
+			_snwprintf_s(buf, _countof(buf), _TRUNCATE, _T("  %ls=%zd"), item.m_kind_name.c_str(), item.m_counter);
 			DebugLog(buf);
 		}
 	}
@@ -157,8 +157,8 @@ void Inheritance:: FindCommonKind(std::vector<std::wstring> &out_common_kinds) {
 }
 
 void Inheritance::FindCommonKindRecursive(std::vector<ReferenceCounter> &out_reference_counter, const std::wstring&kind_name) {
-	DebugLog(_T("%s"), _T("Inheritance::FindCommonKindRecursive"));
-	DebugLog(_T("kind_name=%s"), kind_name.c_str());
+	DebugLog(_T("%ls"), _T("Inheritance::FindCommonKindRecursive"));
+	DebugLog(_T("kind_name=%ls"), kind_name.c_str());
 
 	if (kind_name.empty()) {
 		DebugLog(_T("  return@1"));

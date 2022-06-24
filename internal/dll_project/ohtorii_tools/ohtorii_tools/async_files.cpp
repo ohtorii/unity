@@ -14,25 +14,6 @@ namespace {
 		}
 		return 0;
 	}
-	/// <summary>
-	/// UTF8のコードとして正しいかどうか検査する。
-	/// Coverity: 4.257. TAINTED_SCALAR への対応
-	/// </summary>
-	/// <param name="utf8"></param>
-	/// <returns></returns>
-	bool CheckUTF8Code(const std::wstring&utf8) {
-		const char* first = reinterpret_cast<const char*>(utf8.c_str());
-		const char* last = first + utf8.size()*sizeof(std::wstring::value_type);
-		for (; first != last; ++first) {
-			const char c = *first;
-			//簡易的に検査（制御コード、BOM）
-			//0x20=Space
-			if ((c < 0x20) || (c == 0xFF) || (c == 0xFE) || (c == 0xEF) || (c == 0xBB) || (c == 0xBF)) {
-				return false;
-			}
-		}
-		return true;
-	}
 }; //namespace
 
 
@@ -153,14 +134,15 @@ void ASyncFile::DoLine(WCHAR*line) {
 		return;
 	}
 
-	std::wstring							candidate_text(TrimString(tokens.at(0), _T("\n\r")));
-	if (! CheckUTF8Code(candidate_text)) {
+	wchar_t sanitized_candidate_text[4096];
+	if (swprintf(sanitized_candidate_text, _countof(sanitized_candidate_text), L"%ls", TrimString(tokens.at(0), _T("\n\r")).c_str()) <= 0) {
 		return;
 	}
+
 	Candidates::ContainerType&				candidates = m_instance->QueryCandidates().GetCandidates();
 	Candidates::ContainerType::scoped_lock	locker(candidates);
 	{
-		candidates.emplace_back(m_source_name.c_str(), candidate_text.c_str());
+		candidates.emplace_back(m_source_name.c_str(), sanitized_candidate_text);
 
 		if (3 <= num) {
 			const auto	&action_name= tokens.at(1);

@@ -18,7 +18,7 @@ void File::DeleteFile_::DeleteFile() {
 	if (m_deleting) {
 		return;
 	}
-	DebugLog(_T("DeleteFile -> %s"), m_filename.c_str());
+	DebugLog(_T("DeleteFile -> %ls"), m_filename.c_str());
 	m_deleting = true;
 	if (::DeleteFile(m_filename.c_str()) == 0) {
 		DebugLog(_T("  -> Fail."));
@@ -29,11 +29,11 @@ void File::DeleteFile_::DeleteFile() {
 	}
 }
 
-void File::DeleteFile_::DeleteFileAsThread() { 
+void File::DeleteFile_::DeleteFileAsThread() {
 	if (m_deleting) {
 		return;
 	}
-	DebugLog(_T("DeleteFile -> %s"), m_filename.c_str());
+	DebugLog(_T("DeleteFile -> %ls"), m_filename.c_str());
 	m_deleting = true;
 	m_thread= std::thread(::DeleteFile, m_filename.c_str());
 }
@@ -53,7 +53,7 @@ void File::DeleteFile_::Join() {
 //File
 /////////////////////////////////////////////////////////////////////////////
 File::File(){
-	
+
 }
 
 File::~File(){
@@ -124,7 +124,7 @@ bool File::EnumeFiles(EnumeFileResultContainer&out, const WCHAR*directory, const
 	std::wstring	file_pattern;
 	file_pattern.append(directory);
 	file_pattern.append(extension);
-	
+
 	WIN32_FIND_DATA win32fd;
 	memset(&win32fd,0,sizeof(win32fd));
 

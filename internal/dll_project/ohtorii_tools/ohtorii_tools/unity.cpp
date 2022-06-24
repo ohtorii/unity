@@ -79,7 +79,7 @@ bool Unity::SerializeStaticContext(const WCHAR*out_filename) {
 		if (!os) {
 			return false;
 		}
-		
+
 		{
 			cereal::BinaryOutputArchive archive(os);
 			archive(
@@ -107,11 +107,11 @@ bool Unity::DeSerializeToStaticContext(const WCHAR*input_filename) {
 		{
 			cereal::BinaryInputArchive	archive(is);
 			archive(
-				Unity::m_instances, 
-				Unity::m_current_instance_index, 
+				Unity::m_instances,
+				Unity::m_current_instance_index,
 				Unity::m_sources,
-				Unity::m_kinds, 
-				Unity::m_static_status, 
+				Unity::m_kinds,
+				Unity::m_static_status,
 				InterfaceSugar::m_instance);
 		}
 		is.close();
@@ -248,7 +248,7 @@ bool Unity::ClearChangedCandidatesAndReturnPrevStatus() {
 
 
 bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR context_index) {
-	DebugLog(_T("Unity::StatusUpdate. kind_name=%s, action_name=%s"), kind_name, action_name);
+	DebugLog(_T("Unity::StatusUpdate. kind_name=%ls, action_name=%ls"), kind_name, action_name);
 
 	auto kind_index = m_kinds.FindKindIndex(kind_name);
 	if (kind_index == UNITY_NOT_FOUND_INDEX) {
@@ -265,8 +265,8 @@ bool Unity::StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR
 	return true;
 }
 
-Unity::Unity() : 
-	m_refine_search(this), 
+Unity::Unity() :
+	m_refine_search(this),
 	m_inheritance(this),
 	m_async_files(this)
 {

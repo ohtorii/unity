@@ -206,7 +206,7 @@ bool Sources::LoadSourceAll(const WCHAR* root_dir) {
 
 	DebugLog(_T("Sources::LoadSourceAll"));
 	for (const auto&item:m_file_name_to_source_name) {
-		DebugLog(_T("    %s -> %s"), item.first.c_str(), item.second.c_str());
+		DebugLog(_T("    %ls -> %ls"), item.first.c_str(), item.second.c_str());
 	}
 	return true;
 }

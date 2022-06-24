@@ -167,7 +167,7 @@ WCHAR* Kinds::Create(const WCHAR* kind_ini) {
 	}
 			
 	m_kinds.emplace_back(dst);
-	DebugLog(_T("  return=%s"), m_kinds.back().m_name.c_str());
+	DebugLog(_T("  return=%ls"), m_kinds.back().m_name.c_str());
 	return const_cast<WCHAR*>(m_kinds.back().m_name.c_str());
 }
 
@@ -354,7 +354,7 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 		auto& candidates = Unity::Instance().lock()->QueryCandidates();
 		//現在のインスタンスへ候補を追加する
 		for (const auto&item : inheritance.GetResolveActions()) {
-			DebugLog(_T("  item.m_kind_name.c_str()=%s"),item.m_kind_name.c_str());
+			DebugLog(_T("  item.m_kind_name.c_str()=%ls"),item.m_kind_name.c_str());
 			auto* kind = instance.lock()->QueryKinds().FindKind(item.m_kind_name.c_str());
 			if (kind == nullptr) {
 				continue;
@@ -399,7 +399,7 @@ bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){
 			//debug
 			DebugLog(_T("  ==== Inheritance ===="));
 			for (const auto&item : dst.m_base_kind) {
-				DebugLog(_T("  %s"), item.c_str());
+				DebugLog(_T("  %ls"), item.c_str());
 			}
 		}
 	}
@@ -440,11 +440,11 @@ void Kinds::Dump()const {
 	size_t kind_index = 0;
 	for(auto &kind : m_kinds)
 	{
-		DebugLog(_T("  [%d]%s"), kind_index, kind.m_name.c_str());
+		DebugLog(_T("  [%d]%ls"), kind_index, kind.m_name.c_str());
 		DebugLog(_T("    m_actions.size()=%d"), kind.m_actions.size());
 		size_t action_index = 0;
 		for (auto&action : kind.m_actions) {
-			DebugLog(_T("    [%d]%s"), action_index, action.m_name.c_str());
+			DebugLog(_T("    [%d]%ls"), action_index, action.m_name.c_str());
 			DebugLog(_T("       is_edit=%d"),action.m_is_edit);
 			DebugLog(_T("       is_quit=%d"), action.m_is_quit);
 			DebugLog(_T("       is_is_multi_selectable=%d"), action.m_is_multi_selectable);
