@@ -58,8 +58,34 @@
             Gets or sets the <see cref="T:System.Type"/> that contains the resources for <see cref="P:CommandLine.BaseAttribute.HelpText"/>.
             </summary>
         </member>
+        <member name="P:CommandLine.Core.OptionSpecification.FlagCounter">
+            <summary>
+            Whether this is an int option that counts how many times a flag was set rather than taking a value on the command line
+            </summary>
+        </member>
         <member name="F:CommandLine.Core.Specification.conversionType">
             This information is denormalized to decouple Specification from PropertyInfo.
+        </member>
+        <member name="P:CommandLine.Core.Value.ExplicitlyAssigned">
+            <summary>
+            Whether this value came from a long option with "=" separating the name from the value
+            </summary>
+        </member>
+        <member name="P:CommandLine.Core.Value.FromSeparator">
+            <summary>
+            Whether this value came from a sequence specified with a separator (e.g., "--files a.txt,b.txt,c.txt")
+            </summary>
+        </member>
+        <member name="P:CommandLine.Core.Value.Forced">
+            <summary>
+            Whether this value came from args after the -- separator (when EnableDashDash = true)
+            </summary>
+        </member>
+        <member name="M:CommandLine.Core.Tokenizer.Normalize(System.Collections.Generic.IEnumerable{CommandLine.Core.Token},System.Func{System.String,System.Boolean})">
+            <summary>
+            Normalizes the given <paramref name="tokens"/>.
+            </summary>
+            <returns>The given <paramref name="tokens"/> minus all names, and their value if one was present, that are not found using <paramref name="nameLookup"/>.</returns>
         </member>
         <member name="T:CommandLine.ErrorType">
             <summary>
@@ -139,6 +165,21 @@
         <member name="F:CommandLine.ErrorType.InvalidAttributeConfigurationError">
             <summary>
             Value of <see cref="T:CommandLine.InvalidAttributeConfigurationError"/> type.
+            </summary>
+        </member>
+        <member name="F:CommandLine.ErrorType.MissingGroupOptionError">
+            <summary>
+            Value of <see cref="T:CommandLine.MissingGroupOptionError"/> type.
+            </summary>
+        </member>
+        <member name="F:CommandLine.ErrorType.GroupOptionAmbiguityError">
+            <summary>
+            Value of <see cref="T:CommandLine.GroupOptionAmbiguityError"/> type.
+            </summary>
+        </member>
+        <member name="F:CommandLine.ErrorType.MultipleDefaultVerbsError">
+            <summary>
+            Value of <see cref="T:CommandLine.MultipleDefaultVerbsError"/> type.
             </summary>
         </member>
         <member name="T:CommandLine.Error">
@@ -370,6 +411,11 @@
             Models an error generated when an invalid token is detected.
             </summary>
         </member>
+        <member name="T:CommandLine.MultipleDefaultVerbsError">
+            <summary>
+            Models an error generated when multiple default verbs are defined.
+            </summary>
+        </member>
         <member name="M:CommandLine.HelpTextExtensions.IsHelp(System.Collections.Generic.IEnumerable{CommandLine.Error})">
             <summary>
              return true when errors contain HelpXXXError
@@ -411,6 +457,26 @@
             Attributes that replace the existing assembly attributes or null,
             to clear any testing attributes.
             </param>
+        </member>
+        <member name="M:CommandLine.Infrastructure.StringBuilderExtensions.SafeStartsWith(System.Text.StringBuilder,System.String)">
+            <summary>
+            Indicates whether the string value of a <see cref="T:System.Text.StringBuilder"/>
+            starts with the input <see cref="T:System.String"/> parameter. Returns false if either 
+            the StringBuilder or input string is null or empty.
+            </summary>
+            <param name="builder">The <see cref="T:System.Text.StringBuilder"/> to test.</param>
+            <param name="s">The <see cref="T:System.String"/> to look for.</param>
+            <returns></returns>
+        </member>
+        <member name="M:CommandLine.Infrastructure.StringBuilderExtensions.SafeEndsWith(System.Text.StringBuilder,System.String)">
+            <summary>
+            Indicates whether the string value of a <see cref="T:System.Text.StringBuilder"/>
+            ends with the input <see cref="T:System.String"/> parameter. Returns false if either 
+            the StringBuilder or input string is null or empty.
+            </summary>
+            <param name="builder">The <see cref="T:System.Text.StringBuilder"/> to test.</param>
+            <param name="s">The <see cref="T:System.String"/> to look for.</param>
+            <returns></returns>
         </member>
         <member name="T:CommandLine.NameInfo">
             <summary>
@@ -508,10 +574,21 @@
             Gets or sets the option's mutually exclusive set name.
             </summary>
         </member>
+        <member name="P:CommandLine.OptionAttribute.FlagCounter">
+            <summary>
+            If true, this is an int option that counts how many times a flag was set (e.g. "-v -v -v" or "-vvv" would return 3).
+            The property must be of type int (signed 32-bit integer).
+            </summary>
+        </member>
         <member name="P:CommandLine.OptionAttribute.Separator">
             <summary>
             When applying attribute to <see cref="T:System.Collections.Generic.IEnumerable`1"/> target properties,
             it allows you to split an argument and consume its content as a sequence.
+            </summary>
+        </member>
+        <member name="P:CommandLine.OptionAttribute.Group">
+            <summary>
+            Gets or sets the option group name. When one or more options are grouped, at least one of them should have value. Required rules are ignored.
             </summary>
         </member>
         <member name="T:CommandLine.Parser">
@@ -952,16 +1029,21 @@
             Parser result type discriminator, defined as <see cref="T:CommandLine.ParserResultType"/> enumeration.
             </summary>
         </member>
+        <member name="P:CommandLine.ParserResult`1.Value">
+            <summary>
+            Gets the instance with parsed values. If one or more errors occures, <see langword="default"/> is returned.
+            </summary>
+        </member>
+        <member name="P:CommandLine.ParserResult`1.Errors">
+            <summary>
+            Gets the sequence of parsing errors. If there are no errors, then an empty IEnumerable is returned.
+            </summary>
+        </member>
         <member name="T:CommandLine.Parsed`1">
             <summary>
             It contains an instance of type <typeparamref name="T"/> with parsed values.
             </summary>
             <typeparam name="T">The type with attributes that define the syntax of parsing rules.</typeparam>
-        </member>
-        <member name="P:CommandLine.Parsed`1.Value">
-            <summary>
-            Gets the instance with parsed values.
-            </summary>
         </member>
         <member name="M:CommandLine.Parsed`1.Equals(System.Object)">
             <summary>
@@ -988,11 +1070,6 @@
             It contains a sequence of <see cref="T:CommandLine.Error"/>.
             </summary>
             <typeparam name="T">The type with attributes that define the syntax of parsing rules.</typeparam>
-        </member>
-        <member name="P:CommandLine.NotParsed`1.Errors">
-            <summary>
-            Gets the sequence of parsing errors.
-            </summary>
         </member>
         <member name="M:CommandLine.NotParsed`1.Equals(System.Object)">
             <summary>
@@ -1547,11 +1624,29 @@
             <summary>
             Gets or sets a value indicating whether enable double dash '--' syntax,
             that forces parsing of all subsequent tokens as values.
+            If GetoptMode is true, this defaults to true, but can be turned off by explicitly specifying EnableDashDash = false.
             </summary>
         </member>
         <member name="P:CommandLine.ParserSettings.MaximumDisplayWidth">
             <summary>
             Gets or sets the maximum width of the display.  This determines word wrap when displaying the text.
+            </summary>
+        </member>
+        <member name="P:CommandLine.ParserSettings.AllowMultiInstance">
+            <summary>
+            Gets or sets a value indicating whether options are allowed to be specified multiple times.
+            If GetoptMode is true, this defaults to true, but can be turned off by explicitly specifying AllowMultiInstance = false.
+            </summary>
+        </member>
+        <member name="P:CommandLine.ParserSettings.GetoptMode">
+            <summary>
+            Whether strict getopt-like processing is applied to option values; if true, AllowMultiInstance and EnableDashDash will default to true as well.
+            </summary>
+        </member>
+        <member name="P:CommandLine.ParserSettings.PosixlyCorrect">
+            <summary>
+            Whether getopt-like processing should follow the POSIX rules (the equivalent of using the "+" prefix in the C getopt() call).
+            If not explicitly set, will default to false unless the POSIXLY_CORRECT environment variable is set, in which case it will default to true.
             </summary>
         </member>
         <member name="M:CommandLine.ParserSettings.Dispose">
@@ -1976,6 +2071,11 @@
             Gets or sets a value indicating whether to add an additional line after the description of the specification.
             </summary>
         </member>
+        <member name="P:CommandLine.Text.HelpText.AddNewLineBetweenHelpSections">
+            <summary>
+            Gets or sets a value indicating whether to add newlines between help sections.
+            </summary>
+        </member>
         <member name="P:CommandLine.Text.HelpText.AddEnumValuesToHelpText">
             <summary>
             Gets or sets a value indicating whether to add the values of an enum after the description of the specification.
@@ -2008,15 +2108,28 @@
             <param name='onExample'>A delegate used to customize <see cref="T:CommandLine.Text.Example"/> model used to render text block of usage examples.</param>
             <param name="verbsIndex">If true the output style is consistent with verb commands (no dashes), otherwise it outputs options.</param>
             <param name="maxDisplayWidth">The maximum width of the display.</param>
-            <param name="comparison">a comparison lambda to order options in help text</param>
             <remarks>The parameter <paramref name="verbsIndex"/> is not ontly a metter of formatting, it controls whether to handle verbs or options.</remarks>
         </member>
         <member name="M:CommandLine.Text.HelpText.AutoBuild``1(CommandLine.ParserResult{``0},System.Int32)">
             <summary>
-            Creates a new instance of the <see cref="T:CommandLine.Text.HelpText"/> class,
+            Creates a default instance of the <see cref="T:CommandLine.Text.HelpText"/> class,
             automatically handling verbs or options scenario.
             </summary>
             <param name='parserResult'>The <see cref="T:CommandLine.ParserResult`1"/> containing the instance that collected command line arguments parsed with <see cref="T:CommandLine.Parser"/> class.</param>
+            <param name="maxDisplayWidth">The maximum width of the display.</param>
+            <returns>
+            An instance of <see cref="T:CommandLine.Text.HelpText"/> class.
+            </returns>
+            <remarks>This feature is meant to be invoked automatically by the parser, setting the HelpWriter property
+            of <see cref="T:CommandLine.ParserSettings"/>.</remarks>
+        </member>
+        <member name="M:CommandLine.Text.HelpText.AutoBuild``1(CommandLine.ParserResult{``0},System.Func{CommandLine.Text.HelpText,CommandLine.Text.HelpText},System.Int32)">
+            <summary>
+            Creates a custom instance of the <see cref="T:CommandLine.Text.HelpText"/> class,
+            automatically handling verbs or options scenario.
+            </summary>
+            <param name='parserResult'>The <see cref="T:CommandLine.ParserResult`1"/> containing the instance that collected command line arguments parsed with <see cref="T:CommandLine.Parser"/> class.</param>
+             <param name='onError'>A delegate used to customize the text block of reporting parsing errors text block.</param>
             <param name="maxDisplayWidth">The maximum width of the display.</param>
             <returns>
             An instance of <see cref="T:CommandLine.Text.HelpText"/> class.
@@ -2277,6 +2390,11 @@
             Gets a delegate that returns the word 'required'.
             </summary>
         </member>
+        <member name="P:CommandLine.Text.SentenceBuilder.OptionGroupWord">
+            <summary>
+            Gets a delegate that returns the word 'group'.
+            </summary>
+        </member>
         <member name="P:CommandLine.Text.SentenceBuilder.ErrorsHeadingText">
             <summary>
             Gets a delegate that returns that errors block heading text.
@@ -2419,6 +2537,11 @@
             Gets or sets a value indicating whether unparsing process shall expose hidden options.
             </summary>
         </member>
+        <member name="P:CommandLine.UnParserSettings.SkipDefault">
+            <summary>
+            Gets or sets a value indicating whether unparsing process shall skip options with DefaultValue.
+            </summary>
+        </member>
         <member name="M:CommandLine.UnParserSettings.WithGroupSwitchesOnly">
             <summary>
             Factory method that creates an instance of <see cref="T:CommandLine.UnParserSettings"/> with GroupSwitches set to true.
@@ -2445,6 +2568,15 @@
             <param name="options">A parsed (or manually correctly constructed instance).</param>
             <returns>A string with command line arguments.</returns>
         </member>
+        <member name="M:CommandLine.UnParserExtensions.FormatCommandLineArgs``1(CommandLine.Parser,``0)">
+            <summary>
+            Format a command line argument string from a parsed instance in the form of string[]. 
+            </summary>
+            <typeparam name="T">Type of <paramref name="options"/>.</typeparam>
+            <param name="parser">Parser instance.</param>
+            <param name="options">A parsed (or manually correctly constructed instance).</param>
+            <returns>A string[] with command line arguments.</returns>
+        </member>
         <member name="M:CommandLine.UnParserExtensions.FormatCommandLine``1(CommandLine.Parser,``0,System.Action{CommandLine.UnParserSettings})">
             <summary>
             Format a command line argument string from a parsed instance. 
@@ -2455,6 +2587,25 @@
             <param name="configuration">The <see cref="T:System.Action`1"/> lambda used to configure
             aspects and behaviors of the unparsersing process.</param>
             <returns>A string with command line arguments.</returns>
+        </member>
+        <member name="M:CommandLine.UnParserExtensions.FormatCommandLineArgs``1(CommandLine.Parser,``0,System.Action{CommandLine.UnParserSettings})">
+            <summary>
+            Format a command line argument string[] from a parsed instance. 
+            </summary>
+            <typeparam name="T">Type of <paramref name="options"/>.</typeparam>
+            <param name="parser">Parser instance.</param>
+            <param name="options">A parsed (or manually correctly constructed instance).</param>
+            <param name="configuration">The <see cref="T:System.Action`1"/> lambda used to configure
+            aspects and behaviors of the unparsersing process.</param>
+            <returns>A string[] with command line arguments.</returns>
+        </member>
+        <member name="M:CommandLine.UnParserExtensions.SplitArgs(System.String,System.Boolean)">
+            <summary>
+            Returns a string array that contains the substrings in this instance that are delimited by space considering string between double quote.
+            </summary>
+            <param name="command">the commandline string</param>
+            <param name="keepQuote">don't remove the quote</param>
+            <returns>a string array that contains the substrings in this instance</returns>
         </member>
         <member name="T:CommandLine.ValueAttribute">
             <summary>
@@ -2481,12 +2632,14 @@
             Models a verb command specification.
             </summary>
         </member>
-        <member name="M:CommandLine.VerbAttribute.#ctor(System.String)">
+        <member name="M:CommandLine.VerbAttribute.#ctor(System.String,System.Boolean,System.String[])">
             <summary>
             Initializes a new instance of the <see cref="T:CommandLine.VerbAttribute"/> class.
             </summary>
             <param name="name">The long name of the verb command.</param>
-            <exception cref="T:System.ArgumentException">Thrown if <paramref name="name"/> is null, empty or whitespace.</exception>
+            <param name="isDefault">Whether the verb is the default verb.</param>
+            <param name="aliases">aliases for this verb. i.e. "move" and "mv"</param>
+            <exception cref="T:System.ArgumentException">Thrown if <paramref name="name"/> is null, empty or whitespace and <paramref name="isDefault"/> is false.</exception>
         </member>
         <member name="P:CommandLine.VerbAttribute.Name">
             <summary>
@@ -2506,6 +2659,16 @@
         <member name="P:CommandLine.VerbAttribute.ResourceType">
             <summary>
             Gets or sets the <see cref="T:System.Type"/> that contains the resources for <see cref="P:CommandLine.VerbAttribute.HelpText"/>.
+            </summary>
+        </member>
+        <member name="P:CommandLine.VerbAttribute.IsDefault">
+            <summary>
+            Gets whether this verb is the default verb.
+            </summary>
+        </member>
+        <member name="P:CommandLine.VerbAttribute.Aliases">
+            <summary>
+            Gets or sets the aliases
             </summary>
         </member>
         <member name="F:CSharpx.EitherType.Left">
@@ -2581,6 +2744,16 @@
             Builds a <see cref="T:CSharpx.Right`2"/> value in case <paramref name="value"/> by default.
             </summary>
         </member>
+        <member name="M:CSharpx.EnumerableExtensions.TryHead``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Safe function that returns Just(first element) or None.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.ToMaybe``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Turns an empty sequence to Nothing, otherwise Just(sequence).
+            </summary>
+        </member>
         <member name="M:CSharpx.EnumerableExtensions.Cartesian``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
             <summary>
             Returns the Cartesian product of two sequences by combining each element of the first set with each in the second
@@ -2650,7 +2823,6 @@
             <summary>
             Immediately executes the given action on each element in the source sequence.
             </summary>
-            <typeparam name="T">The type of the elements in the sequence</typeparam>
         </member>
         <member name="M:CSharpx.EnumerableExtensions.Pairwise``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,``1})">
             <summary>
@@ -2672,16 +2844,6 @@
             a given delimiter.
             </summary>
         </member>
-        <member name="M:CSharpx.EnumerableExtensions.TryHead``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Safe function that returns Just(first element) or None.
-            </summary>
-        </member>
-        <member name="M:CSharpx.EnumerableExtensions.ToMaybe``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Turns an empty sequence to Nothing, otherwise Just(sequence).
-            </summary>
-        </member>
         <member name="M:CSharpx.EnumerableExtensions.Tail``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Return everything except first element and throws exception if empty.
@@ -2692,7 +2854,7 @@
             Return everything except first element without throwing exception if empty.
             </summary>
         </member>
-        <member name="M:CSharpx.EnumerableExtensions.Memorize``1(System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:CSharpx.EnumerableExtensions.Memoize``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Captures current state of a sequence.
             </summary>
@@ -2700,6 +2862,27 @@
         <member name="M:CSharpx.EnumerableExtensions.Materialize``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Creates an immutable copy of a sequence.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Choice``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Selects a random element.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.Intersperse``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Takes an element and a sequence and `intersperses' that element between its elements.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.FlattenOnce``1(System.Collections.Generic.IEnumerable{System.Collections.Generic.IEnumerable{``0}})">
+            <summary>
+            Flattens a sequence by one level.
+            </summary>
+        </member>
+        <member name="M:CSharpx.EnumerableExtensions.FlattenOnce(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Reduces a sequence of strings to a sequence of parts, splitted by space,
+            of each original string.
             </summary>
         </member>
         <member name="T:CSharpx.MaybeType">
@@ -2826,7 +3009,7 @@
         </member>
         <member name="M:CSharpx.MaybeExtensions.Do``1(CSharpx.Maybe{``0},System.Action{``0})">
             <summary>
-            If contans a value executes an <see cref="T:System.Action`1"/> delegate over it.
+            If contains a value executes an <see cref="T:System.Action`1"/> delegate over it.
             </summary>
         </member>
         <member name="M:CSharpx.MaybeExtensions.Do``2(CSharpx.Maybe{System.Tuple{``0,``1}},System.Action{``0,``1})">
@@ -2862,6 +3045,11 @@
         <member name="M:CSharpx.MaybeExtensions.MapValueOrDefault``2(CSharpx.Maybe{``0},System.Func{``0,``1},``1)">
             <summary>
             If contains a values executes a mapping function over it, otherwise returns <paramref name="noneValue"/>.
+            </summary>
+        </member>
+        <member name="M:CSharpx.MaybeExtensions.MapValueOrDefault``2(CSharpx.Maybe{``0},System.Func{``0,``1},System.Func{``1})">
+            <summary>
+            If contains a values executes a mapping function over it, otherwise returns the value from <paramref name="noneValueFactory"/>.
             </summary>
         </member>
         <member name="M:CSharpx.MaybeExtensions.ToEnumerable``1(CSharpx.Maybe{``0})">
@@ -3052,6 +3240,16 @@
         <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SucceededWith``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
             <summary>
             Returns the result or fails if the result was an error.
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.SuccessMessages``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Returns messages in case of success, otherwise an empty sequence. 
+            </summary>
+        </member>
+        <member name="M:RailwaySharp.ErrorHandling.ResultExtensions.ToMaybe``2(RailwaySharp.ErrorHandling.Result{``0,``1})">
+            <summary>
+            Builds a Maybe type instance from a Result one.
             </summary>
         </member>
     </members>

@@ -1,7 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/p61dj8udxs2aocmo/branch/master?svg=true)](https://ci.appveyor.com/project/commandlineparser/commandline/branch/master)
 [![NuGet](https://img.shields.io/nuget/dt/commandlineparser.svg)](http://nuget.org/packages/commandlineparser)
-[![NuGet](https://img.shields.io/nuget/v/commandlineparser.svg)](http://nuget.org/packages/commandlineparser)
-[![NuGet](https://img.shields.io/nuget/vpre/commandlineparser.svg)](http://nuget.org/packages/commandlineparser)
+[![NuGet](https://img.shields.io/nuget/v/commandlineparser.svg)](https://www.nuget.org/packages/CommandLineParser/)
+[![NuGet](https://img.shields.io/nuget/vpre/commandlineparser.svg)](https://www.nuget.org/packages/CommandLineParser/)
 [![Join the Gitter chat!](https://badges.gitter.im/gsscoder/commandline.svg)](https://gitter.im/gsscoder/commandline?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Command Line Parser Library for CLR and NetStandard
@@ -14,22 +14,40 @@ The Command Line Parser Library offers CLR applications a clean and concise API 
 C:\Project> NuGet Install CommandLineParser
 ```
 
+# Nightly Build
+
+Nightly version of the CommandLineParser can be downloaded from github [Releases](https://github.com/commandlineparser/commandline/releases). 
+
+The Last new features and fixes, read [changelog](https://github.com/commandlineparser/commandline/blob/master/CHANGELOG.md)
+
+
 _NOTE: Mentioned F# Support is provided via ```CommandLineParser.FSharp``` package with FSharp dependencies._
 
 __This library provides _hassle free_ command line parsing with a constantly updated API since 2005.__
 
 # At a glance:
 
-- Compatible with __.NET Framework 4.0+__, __Mono 2.1+ Profile__, and __.NET Core__
+- Compatible with __.NET Framework 4.0+__, __Mono 2.1+ Profile__, __.NET Standard__ and __.NET Core__
 - Doesn't depend on other packages (No dependencies beyond standard base libraries)
-- One line parsing using default singleton: `CommandLine.Parser.Default.ParseArguments(...)`.
+- One line parsing using default singleton: `CommandLine.Parser.Default.ParseArguments(...)` and three overload methods.
 - Automatic or one line help screen generator: `HelpText.AutoBuild(...)`.
-- Supports `--help`, `--version`, `version` and `help [verb]` by default.
+- Supports `--help`, `--version`, `version` and `help [verb]` by default with customization.
 - Map to sequences (via `IEnumerable<T>` and similar) and scalar types, including Enums and `Nullable<T>`.
-- You can also map to every type with a constructor that accepts a string (like `System.Uri`).
+- You can also map to every type with a constructor that accepts a string (like `System.Uri`) for reference and value types.
+- Verbs can be array of types collected from Plugins or IoC container.
 - Define [verb commands](https://github.com/commandlineparser/commandline/wiki/Verbs) similar to `git commit -a`.
+- Support default verb.
+- Support Mutable and Immutable types.
+- Support HelpText localization.
+- Support ordering of options in HelpText.
+- Support [Mutually Exclusive Options](https://github.com/commandlineparser/commandline/wiki/Mutually-Exclusive-Options) and [Option groups](https://github.com/commandlineparser/commandline/wiki/Option-Groups).
+- Support named and value options.
+- Support Asynchronous programming with async and await.
 - Unparsing support: `CommandLine.Parser.Default.FormatCommandLine<T>(T options)`.
 - CommandLineParser.FSharp package is F#-friendly with support for `option<'a>`, see [demo](https://github.com/commandlineparser/commandline/blob/master/demo/fsharp-demo.fsx).  _NOTE: This is a separate NuGet package._
+- Include wiki documentation with lot of examples ready to run online.
+- Support Source Link and symbolic nuget package snupkg.
+- Tested in Windows, Linux Ubuntu 18.04 and Mac OS.
 - Most of features applies with a [CoC](http://en.wikipedia.org/wiki/Convention_over_configuration) philosophy.
 - C# demo: source [here](https://github.com/commandlineparser/commandline/tree/master/demo/ReadText.Demo).
 
@@ -48,7 +66,7 @@ You can utilize the parser library in several ways:
 
 C# Quick Start:
 
-```csharp
+```cs
 using System;
 using CommandLine;
 
@@ -83,9 +101,13 @@ namespace QuickStart
 }
 ```
 
-C# Examples:
+## C# Examples:
 
-```csharp
+<details>
+  <summary>Click to expand!</summary>
+
+```cs
+
 class Options
 {
   [Option('r', "read", Required = true, HelpText = "Input files to be processed.")]
@@ -109,14 +131,31 @@ class Options
 static void Main(string[] args)
 {
   CommandLine.Parser.Default.ParseArguments<Options>(args)
-    .WithParsed<Options>(opts => RunOptionsAndReturnExitCode(opts))
-    .WithNotParsed<Options>((errs) => HandleParseError(errs));
+    .WithParsed(RunOptions)
+    .WithNotParsed(HandleParseError);
 }
+static void RunOptions(Options opts)
+{
+  //handle options
+}
+static void HandleParseError(IEnumerable<Error> errs)
+{
+  //handle errors
+}
+
 ```
 
-F# Examples:
+</details>
+
+Demo to show IEnumerable  options and other usage:  [Online Demo](https://dotnetfiddle.net/wrcAxr)
+
+## F# Examples:
+
+<details>
+  <summary>Click to expand!</summary>
 
 ```fsharp
+
 type options = {
   [<Option('r', "read", Required = true, HelpText = "Input files.")>] files : seq<string>;
   [<Option(HelpText = "Prints all messages to standard output.")>] verbose : bool;
@@ -130,10 +169,15 @@ let main argv =
   | :? Parsed<options> as parsed -> run parsed.Value
   | :? NotParsed<options> as notParsed -> fail notParsed.Errors
 ```
+</details>
 
-VB.NET:
+## VB.NET Example:
 
-```VB.NET
+<details>
+  <summary>Click to expand!</summary>
+
+```vb
+
 Class Options
 	<CommandLine.Option('r', "read", Required := true,
 	HelpText:="Input files to be processed.")>
@@ -159,14 +203,19 @@ Sub Main(ByVal args As String())
         .WithNotParsed(Function(errs As IEnumerable(Of [Error])) 1)
 End Sub
 ```
+</details>
 
-### For verbs:
+## For verbs:
 
 1. Create separate option classes for each verb.  An options base class is supported.  
 2. Call ParseArguments with all the verb attribute decorated options classes.
 3. Use MapResult to direct program flow to the verb that was parsed.
 
-C# example:
+### C# example:
+
+
+<details>
+  <summary>Click to expand!</summary>
 
 ```csharp
 [Verb("add", HelpText = "Add file contents to the index.")]
@@ -191,10 +240,15 @@ int Main(string[] args) {
 	  errs => 1);
 }
 ```
+</details>
 
-VB.NET example:
+### VB.NET example:
 
-```VB.NET
+
+<details>
+  <summary>Click to expand!</summary>
+
+```vb
 <CommandLine.Verb("add", HelpText:="Add file contents to the index.")>
 Public Class AddOptions
     'Normal options here
@@ -218,10 +272,14 @@ Function Main(ByVal args As String()) As Integer
           )
 End Function
 ```
+</details>
 
-F# Example:
+### F# Example:
 
-```fsharp
+<details>
+  <summary>Click to expand!</summary>
+
+```fs
 open CommandLine
 
 [<Verb("add", HelpText = "Add file contents to the index.")>]
@@ -248,6 +306,11 @@ let main args =
 	| :? CloneOptions as opts -> RunCloneAndReturnExitCode opts
   | :? CommandLine.NotParsed<obj> -> 1
 ```
+</details>
+
+# Release History
+
+See the [changelog](CHANGELOG.md)
 
 # Contributors
 First off, _Thank you!_  All contributions are welcome.  
@@ -263,6 +326,7 @@ __And most importantly, please target the ```develop``` branch in your pull requ
 - Dan Nemec (@nemec)
 - Eric Newton (@ericnewton76)
 - Kevin Moore (@gimmemoore)
+- Moh-Hassan (@moh-hassan)
 - Steven Evans
 - Thomas Démoulins (@Thilas)
 
@@ -284,3 +348,4 @@ __And most importantly, please target the ```develop``` branch in your pull requ
   - GitHub: [ericnewton76](https://github.com/ericnewton76)
   - Blog: 
   - Twitter: [enorl76](http://twitter.com/enorl76)
+- Moh-Hassan 
