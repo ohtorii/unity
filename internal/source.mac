@@ -100,7 +100,8 @@ GatherCandidatesFromString:
 	$$args[30]=str(#g_dll_ohtorii_tools);
 	execmacro $$source_filename, $$args, 31;
 
-	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsString", getresultex(-1));
+    $$candidates = getresultex(-1);
+	##success=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidateAsString", $$candidates);
 	return ##success;
 
 
