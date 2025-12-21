@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>file_searcher</RootNamespace>
     <AssemblyName>file_searcher</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
