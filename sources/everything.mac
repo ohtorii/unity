@@ -1,0 +1,52 @@
+﻿/*ファイル
+
+引数	Everythingの検索文字列
+*/
+//$g_everythingExtPath=currentmacrodirectory + "\\macro\\bin\\everything\\es.exe";
+$g_everythingExtPath=R"(C:\Users\ikeuc\hidemaru\macro\bin\everything\es.exe)";
+
+#g_dll_hm_process=val(getarg(29));
+#g_dll_ohtorii_tools=val(getarg(30));
+
+$label=getarg(0);
+$arg1=getarg(1);
+$arg2=getarg(2);
+$arg3=getarg(3);
+$arg4=getarg(4);
+$arg5=getarg(5);
+
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+//$g_current_working_directory=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCurrentWorkingDirectory");
+
+
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
+endmacro $$return;
+
+
+gather_candidates:
+    if(!existfile($g_everythingExtPath)){
+        message "hoge";
+    }
+	$$serchString=$$1;
+	$$serchString=".c";
+
+	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", "everything", ".tsv";
+	$$temp_filename=getresultex(-1);
+	if($$temp_filename==""){
+		return "";
+	}
+	/*SpawnWithRedirectToFile関数中で削除されるため、FileRegistAfterDeleteFileへ登録する必要は無い
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
+	if(! ##ret){
+		return "";
+	}*/
+
+	$$args = sprintf(R"(-s -n 100 "%s")",$$serchString);
+	//message $$args;
+	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirectToFile",$g_everythingExtPath,$$args,true,true,$$temp_filename);
+	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
+	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
+	if(##ret==0){
+		return "";
+	}
+	return $$temp_filename;
