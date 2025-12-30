@@ -289,6 +289,11 @@ extern "C" WCHAR* SourcesGetCandidateType(WCHAR*souce_name) {
 	return const_cast<WCHAR*>(source->m_candidate_type.c_str());
 }
 
+extern "C" INT_PTR SourcesGetInteractive(WCHAR*souce_name) {
+	auto*source = Unity::Instance().lock()->QuerySources().FindSource(souce_name);	
+	return source->m_is_interactive;
+}
+
 extern "C" WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
 	auto*source = Unity::Instance().lock()->QuerySources().FindSource(souce_name);	
 	return const_cast<WCHAR*>(source->m_default_kind.c_str());

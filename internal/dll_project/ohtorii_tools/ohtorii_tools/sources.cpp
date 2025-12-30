@@ -13,8 +13,14 @@ static WCHAR	gs_empty[] = { 0 };
 Source::Source(){
 	
 }
-Source::Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&default_action, const std::wstring&candidate_type):
-	m_name(name),m_description(description),m_default_kind(default_kind), m_default_action(default_action),m_candidate_type(candidate_type)
+Source::Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&default_action, const std::wstring&candidate_type, bool is_interactive)
+	:
+	m_name(name),
+	m_description(description),
+	m_default_kind(default_kind), 
+	m_default_action(default_action),
+	m_candidate_type(candidate_type), 
+	m_is_interactive(is_interactive)
 {
 
 }
@@ -181,6 +187,16 @@ bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {
 
 	GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), buf, _countof(buf), ini_filename);
 	dst.m_candidate_type.assign(buf);
+	
+	GetPrivateProfileString(_T("property"), _T("is_interactive"), _T(""), buf, _countof(buf), ini_filename);
+	if (_wcsnicmp(buf, L"true", _countof(buf)) == 0) {
+		//明示的にtrueを指定した状態
+		dst.m_is_interactive = true;
+	}
+	else {
+		//明示的にfalseを指定、または、空白、誤字脱字の状態
+		dst.m_is_interactive = false;
+	}
 	
 	return true;
 }

@@ -21,7 +21,7 @@
 
 # sourceについて
 
-## candidate_type
+## candidate_type (string)
 
 候補を返す方法を指定する
 
@@ -32,14 +32,17 @@
 |file|候補をファイルから作成する|同期|
 |async_file|候補をファイルから作成する|非同期|
 
-## description
+## description (string)
 
 説明を一行で記述する。
 
-## default_kind
+## default_kind (string)
 
 ディフォルトで呼び出すカインド
 
+## is_interactive (bool)
+
+Sourceの候補取得が入力に依存するかどうか
 
 # kindについて
 

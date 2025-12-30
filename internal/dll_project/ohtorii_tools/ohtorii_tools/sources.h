@@ -7,7 +7,7 @@
 class Source{
 public:
 	Source();
-	Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&default_action, const std::wstring&candidate_type);
+	Source(const std::wstring&name, const std::wstring&description, const std::wstring&default_kind, const std::wstring&default_action, const std::wstring&candidate_type, bool is_interactive);
 	~Source();
 
 	template<class Archive> void serialize(Archive & archive) {
@@ -16,7 +16,8 @@ public:
 			m_description,
 			m_default_kind,
 			m_default_action,
-			m_candidate_type);
+			m_candidate_type,
+			m_is_interactive);
 	};
 
 //protected:
@@ -35,6 +36,7 @@ public:
 	/*const*/ std::wstring		m_default_action;
 	///候補の種類
 	/*const*/ std::wstring		m_candidate_type;
+	bool						m_is_interactive;
 };
 
 
