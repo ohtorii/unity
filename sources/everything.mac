@@ -3,8 +3,6 @@
 引数	Everythingの検索文字列
 */
 $g_everythingExtPath = macrodir + "\\bin\\everything\\es.exe";
-//$g_everythingExtPath=R"(C:\Users\ikeuc\hidemaru\macro\bin\everything\es.exe)";
-
 #g_dll_hm_process=val(getarg(29));
 #g_dll_ohtorii_tools=val(getarg(30));
 
@@ -16,8 +14,6 @@ $arg4=getarg(4);
 $arg5=getarg(5);
 
 $g_root_macro_directory=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
-//$g_current_working_directory=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetCurrentWorkingDirectory");
-
 
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;
@@ -25,7 +21,7 @@ endmacro $$return;
 
 gather_candidates:
     if(!existfile($g_everythingExtPath)){
-        message "Not found. " + $g_everythingExtPath;
+        return "";
     }
 	$$serchString=$$1;
 
@@ -43,7 +39,6 @@ gather_candidates:
 	$$args = sprintf(R"(-s -n 100 "%s")",$$serchString);
 	//$$args = sprintf(R"(-s "%s")",$$serchString);
 
-	//message $$args;
 	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirectToFile",$g_everythingExtPath,$$args,true,true,$$temp_filename);
 	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
 	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
