@@ -949,6 +949,10 @@ UpdateInteractiveSource:
     $$sep = "\t";
     $$ret = dllfuncstrw(#g_dll_ohtorii_tools, "GetInteractiveSourceNames", $$sep);
     ##n = split($$sources,$$ret,$$sep);
+    if(##n==1){
+        //区切りが見つからない状態
+        return;
+    }
 
     //is_inInteractive=tureのソースを候補から削除
     ##i = 0;
