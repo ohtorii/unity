@@ -4,12 +4,12 @@
 /////////////////////////////////////////////////////////////////////////////
 //Source制作者が利用する関数
 /////////////////////////////////////////////////////////////////////////////
-extern "C" INT_PTR SetCurrentSourceName(WCHAR* source_name) {
-	return InterfaceSugar::Instance().SetCurrenSourceName(source_name);
+extern "C" INT_PTR BeginSource(WCHAR* source_name) {
+	return InterfaceSugar::Instance().BeginSource(source_name);
 }
 
-extern "C" INT_PTR ClearCurrentSourceName() {
-	return InterfaceSugar::Instance().ClearCurrentSourceName();
+extern "C" INT_PTR EndSource() {
+	return InterfaceSugar::Instance().EndSource();
 }
 
 extern "C" INT_PTR AppendCandidateHeader(WCHAR*header, WCHAR*description) {
@@ -224,6 +224,16 @@ extern "C" INT_PTR AutoPreviewRegist(const WCHAR* filename) {
 	Unity::Instance().lock()->AutoPreviewRegist(filename);
 	return 1;
 }
+extern "C" WCHAR* GetInteractiveSourceNames(const WCHAR* separator){
+	return const_cast<WCHAR*>(Unity::Instance().lock()->GetInteractiveSourceNames(separator));
+}
+/*
+extern "C" INT_PTR GetSourceNameForCandidatesNum() {
+	return Unity::Instance().lock()->QueryCandidates().GetSourceNameForCandidatesNum();
+}
+extern "C" WCHAR* GetSourceNameForCandidates(INT_PTR index) {
+    return const_cast<WCHAR*>(Unity::Instance().lock()->QueryCandidates().GetSourceNameForCandidates(index));
+}*/
 
 /////////////////////////////////////////////////////////////////////////////
 //絞り込み検索

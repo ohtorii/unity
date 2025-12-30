@@ -215,11 +215,41 @@ public:
 	*/
 	bool ClearWithSourceName(const WCHAR*sourcename);
 
+	/// <summary>
+	/// 候補ソース名の個数を取得する
+	/// </summary>
+	/// <returns></returns>
+	const INT_PTR GetSourceNameForCandidatesNum()const;
+
+	/// <summary>
+	/// 候補ソース名を取得する
+	/// </summary>
+	/// <param name="index">インデックス</param>
+	/// <returns>候補のソース名（一時的なポインタを返します）</returns>
+	const WCHAR*  GetSourceNameForCandidatesFromIndex(INT_PTR index)const;
+
+	/// <summary>
+	/// 候補ソース名を取得する
+	/// </summary>
+	/// <returns></returns>
+	const std::unordered_set<std::wstring>& GetSourceNamesForCandidates() const;
+
+	/// <summary>
+	/// 候補ソース名を取得する
+	/// </summary>
+	/// <returns></returns>
+	std::unordered_set<std::wstring>& GetSourceNamesForCandidates();
+
 	template<class Archive> void serialize(Archive & archive) {
-		archive(m_candidates);
+		archive(m_candidates, m_source_names_for_candidates);
 	};
 
 private:
+	/// <summary>
+	/// 候補ソース名（重複無し）
+	/// </summary>
+	std::unordered_set<std::wstring> m_source_names_for_candidates;
+
 	/*SourceCandidate* AppendIfNotExist(const WCHAR* source_name);
 	SourceCandidate* Find(const WCHAR* source_name);
 	*/

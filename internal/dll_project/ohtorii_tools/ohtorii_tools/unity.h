@@ -40,6 +40,12 @@ public:
 	///候補に変更なし、かつ、直前の状態を返す
 	bool ClearChangedCandidatesAndReturnPrevStatus();
 
+	/// <summary>
+    /// is_interactive=tureのソース名をseparatordで連結して取得する
+	/// </summary>
+	/// <param name="separator">セーパレーター</param>
+	/// <returns>一時的なポインタを返します</returns>
+	const WCHAR* GetInteractiveSourceNames(const WCHAR* separator);
 
 	/*ファイルリストのファイル名を設定する
 	return	bool	true	成功
@@ -85,15 +91,28 @@ private:
 	static	std::array<std::shared_ptr<Unity>, UNITY_MAX_CONTEXT_NUM>	m_instances;
 	static	size_t					m_current_instance_index;
 	bool			m_changed_candidates;
-	
+    /// <summary>
+    /// is_interactive=tureのソース名をseparatordで連結した名前
+    /// </summary>
+    std::wstring	m_last_interactive_source_names;
+
 	File				m_file;
+	
+	/// <summary>
+	/// 候補
+	/// </summary>
 	Candidates			m_candidates;
+
+	/// <summary>
+	/// 絞り込み検索
+	/// </summary>
 	RefineSearch		m_refine_search;
+	
 	Inheritance			m_inheritance;	
 	UserData			m_user_data;
 	ASyncFiles			m_async_files;
 	ContextStatus		m_context_status;
-
+	
 	//
 	//staticな情報
 	//

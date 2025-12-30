@@ -280,3 +280,23 @@ Unity::~Unity(){
 bool Unity::AutoPreviewRegist(const WCHAR*filename) {
 	return m_recurring_task.Register<AutoPreview>(filename);
 }
+
+const WCHAR* Unity::GetInteractiveSourceNames(const WCHAR* separator) {
+	m_last_interactive_source_names.clear();
+	bool first = true;
+	for (const auto& source_name : m_candidates.GetSourceNamesForCandidates()) {
+		auto* source = m_sources.FindSource(source_name.c_str());
+		if (source == nullptr) {
+            continue;
+		}
+		if (! source->m_is_interactive) {
+			continue;
+		}
+		if (!first) {
+			m_last_interactive_source_names += separator;
+			first = false;
+		}
+		m_last_interactive_source_names += source_name;
+    }
+    return m_last_interactive_source_names.c_str();
+}

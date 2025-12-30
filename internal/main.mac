@@ -339,9 +339,9 @@ Start:
 RefineSearch:
 	/*
 	引数	$$1		ソースのファイル名
-			$$2		引数
+			$$2		ソースの引数
 			##3		候補モード(#g_candidate_mode_*)
-
+    引数（ソースのファイル名・ソースの引数）はアクションがソースを生成する場合に利用する
 	return	#g_result_*;
 	*/
 	$$source_filename	= $$1;
@@ -481,16 +481,28 @@ RefineSearchMain:
 			return ##return;
 		}else{
 			//候補の更新
+			##key_changed=false;
+			if($$prev_pattern == $$key_buffer){
+                ##key_changed=false;
+            }else{
+                ##key_changed=true;
+            }
+
 			##canged_candidates=dllfuncw(#g_dll_ohtorii_tools,"ClearChangedCandidatesAndReturnPrevStatus");
 			if((##canged_candidates) || (($$prev_pattern != $$key_buffer) && (##candidates_update_interval<(tickcount-##candidates_update_prev_tickcount)))){
 				##candidates_update_prev_tickcount=tickcount;
 				call Filter $$key_buffer;
 				$$prev_pattern=$$key_buffer;
+				##candidates_updated=true;
 			}
-			//プロセスの更新
+			//プロセスの定期更新
 			if(##hm_process_update_interval < (tickcount-##hm_process_update_prev_tickcount)){
 				##hm_process_update_prev_tickcount=tickcount;
 				call UpdateHmPocess;
+			}
+			if(##key_changed)
+			{//ソースの再取得
+                call UpdateInteractiveSource;
 			}
 		}
 
@@ -932,6 +944,40 @@ TrimString:
 	  else break;
 	}
 	return $$1;
+
+UpdateInteractiveSource:
+    $$sep = "\t";
+    $$ret = dllfuncstrw(#g_dll_ohtorii_tools, "GetInteractiveSourceNames", $$sep);
+    ##n = split($$sources,$$ret,$$sep);
+
+    //is_inInteractive=tureのソースを候補から削除
+    ##i = 0;
+    while(##i < ##n){
+        ##r = dllfuncw(#g_dll_ohtorii_tools,"CandidatesClearWithSourceName",$$sources[##i]);
+        //if(##r==... ) skip
+        ##i = ##i + 1;
+    }
+
+    //候補を再取得する
+    ##i = 0;
+    while(##i < ##n){
+        $$source_filename=$g_root_macro_directory+"\\sources\\"+$$sources[##i]+".mac";
+
+		$$args[0]	=str(#g_dll_ohtorii_tools);
+		$$args[1]	=str(#g_dll_hm_process) ;
+		$$args[2]	=$$source_filename;
+
+		/*メモ：##iが配列の範囲外の場合は空白文字になるため、明示的な##iの範囲確認は省略した*/
+		//Todo: $$args[3]	=$$source_args[##i];
+
+		$$args[30]	="";
+		execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
+		if(getresultex(-1) != "1"){
+			return 0;
+		}
+		##i = ##i + 1;
+    }
+    return 1;
 
 //#region 秀丸の編集画面
 NewFile:

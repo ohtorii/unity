@@ -13,9 +13,10 @@ InterfaceSugar::InterfaceSugar() {
 	m_current_candidate_index = UNITY_NOT_FOUND_INDEX;
 }
 
-bool InterfaceSugar::SetCurrenSourceName(const WCHAR*source_name) {
+bool InterfaceSugar::BeginSource(const WCHAR*source_name) {
 	try {
 		m_current_source_name.assign(source_name);
+        Unity::Instance().lock()->QueryCandidates().GetSourceNamesForCandidates().insert(m_current_source_name);
 		return true;
 	}catch (std::exception) {
 		//pass
@@ -23,7 +24,7 @@ bool InterfaceSugar::SetCurrenSourceName(const WCHAR*source_name) {
 	return false;
 }
 
-bool InterfaceSugar::ClearCurrentSourceName() {
+bool InterfaceSugar::EndSource() {
 	try {
 		m_current_source_name.clear();
 		return true;

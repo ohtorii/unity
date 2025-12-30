@@ -162,10 +162,11 @@ bool Sources::Exist(const WCHAR*source_name)const {
 }
 
 bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {	
-	WCHAR buf[8 * 1000];
+	std::vector<WCHAR> buf;
+	buf.resize(8 * 1000, 0);
 	
-	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_name.assign(buf);	
+	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf.data(), buf.size(), ini_filename);
+	dst.m_name.assign(buf.data());
 	if(dst.m_name.size()==0)
 	{
 		WCHAR fname[_MAX_FNAME];
@@ -176,20 +177,20 @@ bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {
 		dst.m_name.assign(fname);		
 	}
 
-	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_description.assign(buf);
+	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf.data(), buf.size(), ini_filename);
+	dst.m_description.assign(buf.data());
 
-	GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_default_kind.assign(buf);
+	GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), buf.data(), buf.size(), ini_filename);
+	dst.m_default_kind.assign(buf.data());
 
-	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_default_action.assign(buf);
+	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf.data(), buf.size(), ini_filename);
+	dst.m_default_action.assign(buf.data());
 
-	GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_candidate_type.assign(buf);
+	GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), buf.data(), buf.size(), ini_filename);
+	dst.m_candidate_type.assign(buf.data());
 	
-	GetPrivateProfileString(_T("property"), _T("is_interactive"), _T(""), buf, _countof(buf), ini_filename);
-	if (_wcsnicmp(buf, L"true", _countof(buf)) == 0) {
+	GetPrivateProfileString(_T("property"), _T("is_interactive"), _T(""), buf.data(), buf.size(), ini_filename);
+	if (_wcsnicmp(buf.data(), L"true",buf.size()) == 0) {
 		//明示的にtrueを指定した状態
 		dst.m_is_interactive = true;
 	}

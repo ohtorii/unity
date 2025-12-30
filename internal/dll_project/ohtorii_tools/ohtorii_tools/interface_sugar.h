@@ -14,8 +14,8 @@ public:
 	};
 
 	InterfaceSugar();
-	bool SetCurrenSourceName(const WCHAR*source_name);
-	bool ClearCurrentSourceName();
+	bool BeginSource(const WCHAR*source_name);
+	bool EndSource();
 	bool AppendCandidateHeader(const WCHAR*header, const WCHAR*description);
 	bool AppendCandidate(const WCHAR*candidate, const WCHAR*description);
 	bool AppendCandidateFix(const WCHAR*prefix, const WCHAR*candidate, const WCHAR*postfix, const WCHAR*description);

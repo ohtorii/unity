@@ -1,7 +1,7 @@
 LIBRARY
 EXPORTS
-	SetCurrentSourceName
-	ClearCurrentSourceName
+	BeginSource
+	EndSource
 	AppendCandidateHeader
 	AppendCandidate
 	AppendCandidateFix
@@ -17,7 +17,7 @@ EXPORTS
 	SetCandidateActionWindowHandle
 	SetCandidateUserDataString
 	SetCandidateUserDataNumeric
-
+	GetInteractiveSourceNames
 	
 	GetSelectionCount
 	GetSelectionText

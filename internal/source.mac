@@ -52,7 +52,7 @@ main:
 	/*候補を作る
 	*/
 	##ret		=false;
-	##success	= dllfuncw(#g_dll_ohtorii_tools, "SetCurrentSourceName", $$source_name);
+	##success	= dllfuncw(#g_dll_ohtorii_tools, "BeginSource", $$source_name);
 	if(!##success){
 		return false;
 	}
@@ -83,7 +83,7 @@ main:
 						"\n\n[todo]親切なメッセージにする", $$candidate_type,$$source_filename,$$source_name);
 		##ret=false;
 	}
-	##success = dllfuncw(#g_dll_ohtorii_tools, "ClearCurrentSourceName");
+	##success = dllfuncw(#g_dll_ohtorii_tools, "EndSource");
 	return ##ret;
 
 

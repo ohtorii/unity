@@ -431,6 +431,23 @@ bool Candidates::ClearWithSourceName(const WCHAR*sourcename) {
 	}
 	return false;
 }
+const INT_PTR Candidates::GetSourceNameForCandidatesNum() const{
+	return m_source_names_for_candidates.size();
+}
+const WCHAR* Candidates::GetSourceNameForCandidatesFromIndex(INT_PTR index)const {
+	if ((index<0) || (m_source_names_for_candidates.size() <= index)) {
+		return L"";
+	}
+	auto itr = m_source_names_for_candidates.begin();
+	std::advance(itr, index);
+    return itr->c_str();
+}
+const std::unordered_set<std::wstring>& Candidates::GetSourceNamesForCandidates() const {
+	return m_source_names_for_candidates;
+}
+std::unordered_set<std::wstring>& Candidates::GetSourceNamesForCandidates() {
+	return m_source_names_for_candidates;
+}
 
 /*
 SourceCandidate* Candidates::AppendIfNotExist(const WCHAR* source_name) {
