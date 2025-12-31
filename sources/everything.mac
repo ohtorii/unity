@@ -35,9 +35,13 @@ gather_candidates:
 	if(! ##ret){
 		return "";
 	}*/
-
-	$$args = sprintf(R"(-s -n 100 "%s")",$$serchString);
-	//$$args = sprintf(R"(-s "%s")",$$serchString);
+    if(1){
+        //候補数を制限する（数値の由来：1画面に100行表示できるとして、ｘ2しています）
+	    $$args = sprintf(R"(-s -n 200 "%s")",$$serchString);
+	}else{
+        //全候補を出力する（パフォーマンス検証に使用する想定です）
+	    $$args = sprintf(R"(-s "%s")",$$serchString);
+    }
 
 	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirectToFile",$g_everythingExtPath,$$args,true,true,$$temp_filename);
 	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
