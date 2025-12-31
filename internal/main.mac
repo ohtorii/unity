@@ -502,7 +502,7 @@ RefineSearchMain:
 			}
 			if(##key_changed)
 			{//ソースの再取得
-                call UpdateInteractiveSource;
+                call UpdateInteractiveSource $$key_buffer;
 			}
 		}
 
@@ -946,12 +946,20 @@ TrimString:
 	return $$1;
 
 UpdateInteractiveSource:
+    $$searchText = $$1;
     $$sep = "\t";
     $$ret = dllfuncstrw(#g_dll_ohtorii_tools, "GetInteractiveSourceNames", $$sep);
+    if($$ret==""){
+        return;
+    }
+    $$sources[0]="";
     ##n = split($$sources,$$ret,$$sep);
     if(##n==1){
-        //区切りが見つからない状態
-        return;
+        //文字列中に区切りが見つからない状態
+        $$sources[0]=$$ret;
+        ##n=1;
+    }else{
+        //pass
     }
 
     //is_inInteractive=tureのソースを候補から削除
@@ -970,9 +978,7 @@ UpdateInteractiveSource:
 		$$args[0]	=str(#g_dll_ohtorii_tools);
 		$$args[1]	=str(#g_dll_hm_process) ;
 		$$args[2]	=$$source_filename;
-
-		/*メモ：##iが配列の範囲外の場合は空白文字になるため、明示的な##iの範囲確認は省略した*/
-		//Todo: $$args[3]	=$$source_args[##i];
+		$$args[3]	=$$searchText;
 
 		$$args[30]	="";
 		execmacro currentmacrodirectory+"\\source.mac", $$args, 31;
