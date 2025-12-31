@@ -137,6 +137,7 @@ EXPORTS
 	AutoPreviewRegist
 
 	FileRegistAfterDeleteFile
+	FileUnRegistAfterDeleteFile
 	WriteToFile
     DllDetachFunc_After_Hm866
 

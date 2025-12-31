@@ -365,7 +365,7 @@ extern "C" WCHAR* CandidatesGetText(INT_PTR index) {
 }
 
 extern "C" INT_PTR CandidatesClearWithSourceName(const WCHAR*source_name) {
-	return Unity::Instance().lock()->QueryCandidates().ClearWithSourceName(source_name);
+	return Unity::Instance().lock()->CandidatesClearWithSourceName(source_name);
 }
 
 
@@ -561,6 +561,10 @@ extern "C" INT_PTR WriteToFile(const WCHAR* filename, const WCHAR* string) {
 
 extern "C" INT_PTR FileRegistAfterDeleteFile(const WCHAR* filename) {
 	return Unity::Instance().lock()->QueryFile().RegistAfterDelete(filename);
+}
+
+extern "C" INT_PTR FileUnRegistAfterDeleteFile(const WCHAR* filename) {
+	return Unity::Instance().lock()->QueryFile().UnRegistAfterDelete(filename);
 }
 
 extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {	

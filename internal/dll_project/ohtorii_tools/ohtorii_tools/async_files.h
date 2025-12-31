@@ -12,7 +12,7 @@ public:
 	ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filename);
 	void RequestExit();
 	void operator()();
-
+	const std::wstring& GetSourceName()const;
 private:
 	bool OpenFile();
 	void Exec();
@@ -35,7 +35,6 @@ private:
 	FILE*					m_file;
 	StaticStatus						m_status;
 	std::chrono::system_clock::time_point	m_file_read_start_clock;
-	//Candidates::ContainerType&	m_candidates;
 	Unity*					m_instance;
 	bool					m_request_exit;
 	bool					m_check_bom;
@@ -47,6 +46,7 @@ public:
 	ASyncFiles(Unity*instance);
 	INT_PTR AppendCandidate(const WCHAR* source_name, const WCHAR* filename);
 	void Exec();
+	bool DestrotFromSourceName(const WCHAR* source_name);
 	void Destroy();
 
 private:

@@ -39,7 +39,9 @@ ASyncFile::ASyncFile(Unity*instance, const WCHAR*source_name, const WCHAR*filena
 void ASyncFile::RequestExit() {
 	m_request_exit = true;
 }
-
+const std::wstring& ASyncFile::GetSourceName()const {
+	return m_source_name;
+}
 
 bool ASyncFile::OpenFile() {
 	if (m_file != nullptr) {
@@ -125,7 +127,7 @@ void ASyncFile::Exec(){
 	}
 }
 
-void ASyncFile::DoLine(WCHAR*line) {
+void ASyncFile::DoLine(WCHAR* line) {
 	std::vector<std::wstring> tokens;
 	Tokenize(tokens, line, _T("\t"));
 
@@ -134,33 +136,40 @@ void ASyncFile::DoLine(WCHAR*line) {
 		return;
 	}
 
-	wchar_t sanitized_candidate_text[4096];
-	if (swprintf(sanitized_candidate_text, _countof(sanitized_candidate_text), L"%ls", TrimString(tokens.at(0), _T("\n\r")).c_str()) <= 0) {
+	std::vector<wchar_t> sanitized_candidate_text;
+	sanitized_candidate_text.resize(1024, 0);
+	if (swprintf(sanitized_candidate_text.data(), sanitized_candidate_text.size(), L"%ls", TrimString(tokens.at(0), _T("\n\r")).c_str()) <= 0) {
 		return;
 	}
 
-	Candidates::ContainerType&				candidates = m_instance->QueryCandidates().GetCandidates();
-	Candidates::ContainerType::scoped_lock	locker(candidates);
-	{
-		candidates.emplace_back(m_source_name.c_str(), sanitized_candidate_text);
-
-		if (3 <= num) {
-			const auto	&action_name= tokens.at(1);
-			auto		action_text	= TrimString(tokens.at(2), _T("\n\r"));
-			auto		&candidate	= candidates.back();
-			auto		&action		= candidate.m_action;
-
-			if (action_name == _T("@action_directory")) {
-				action.m_directory_name.append(action_text);
-			}
-			else if (action_name == _T("@action_filename")) {
-				action.m_file_name.append(action_text);
-			}else if (action_name == _T("@description")) {
-				candidate.m_description.assign(action_text);
-			}else{
-				//pass
-			}
+	//Memo. Lock期間を最小にするため一時変数に対して処理する
+	Candidates::ContainerType::value_type candidate;
+    candidate.m_source_name = m_source_name;
+    candidate.m_text = sanitized_candidate_text.data();
+	if (3 <= num) {
+		const auto	&action_name= tokens.at(1);
+		auto		action_text	= TrimString(tokens.at(2), _T("\n\r"));
+		auto		&action		= candidate.m_action;
+		if (action_name == _T("@action_directory")) {
+			action.m_directory_name.append(action_text);
 		}
+		else if (action_name == _T("@action_filename")) {
+			action.m_file_name.append(action_text);
+		}else if (action_name == _T("@description")) {
+			candidate.m_description.assign(action_text);
+		}else{
+			//pass
+		}
+	}
+
+	if (m_request_exit) {
+		return;
+	}
+
+	Candidates::ContainerType& candidates = m_instance->QueryCandidates().GetCandidates();
+	{
+		Candidates::ContainerType::scoped_lock	locker(candidates);
+		candidates.emplace_back(candidate);
 	}
 	m_instance->ChangeCandidates();
 }
@@ -213,7 +222,23 @@ INT_PTR ASyncFiles::AppendCandidate(const WCHAR* source_name, const WCHAR* filen
 }
 
 void ASyncFiles::Exec() {
-	//不要になったスレッドを破棄する
-	m_threads.remove_if([](Thread&item) {return !item.m_thread.joinable(); });
+	//終了したスレッドをリストから削除する
+	m_threads.remove_if([](Thread&item) {
+		return !item.m_thread.joinable(); 
+	});
+}
 
+bool ASyncFiles::DestrotFromSourceName(const WCHAR* source_name) {
+	m_threads.remove_if([source_name](Thread& item) {
+		const bool isSource = wcscmp(item.m_file.GetSourceName().c_str(), source_name) == 0; 
+		if (isSource) {
+            item.m_file.RequestExit();
+			//スレッド中で候補を追加しているため、終了するまで待ってみる
+            item.m_thread.join();
+		}
+		else {
+			//pass
+		}
+		return isSource;
+	});
 }

@@ -28,7 +28,6 @@ Candidate::Candidate() {
 	m_selectable = true;
 	m_selected = false;
 }
-
 Candidate::Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description) :
 	m_source_name(source_name),
 	m_text(text),

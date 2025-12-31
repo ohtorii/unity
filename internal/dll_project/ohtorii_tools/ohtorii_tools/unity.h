@@ -41,26 +41,13 @@ public:
 	bool ClearChangedCandidatesAndReturnPrevStatus();
 
 	/// <summary>
-    /// is_interactive=tureのソース名をseparatordで連結して取得する
+    /// is_interactive=tureのソース名をseparatorで連結して取得する。
+	/// 秀丸マクロでは、返値の文字列をseparatorで分割して複数のソース名を取得します
 	/// </summary>
 	/// <param name="separator">セーパレーター</param>
 	/// <returns>一時的なポインタを返します</returns>
 	const WCHAR* GetInteractiveSourceNames(const WCHAR* separator);
 
-	/*ファイルリストのファイル名を設定する
-	return	bool	true	成功
-					false	失敗
-	*/
-	//INT_PTR SetCandidateList(WCHAR* source_filename,WCHAR*source_name,WCHAR*source_description);
-	
-	/*
-	search_words	スペース区切りの検索文字列
-					(Ex.) "c: programs .txt"
-	返値		マッチした文字列
-	*/
-	//WCHAR* Filter(WCHAR* search_words);
-	
-	//void AppendAfterDelete(const WCHAR*filename){}
 	bool StatusUpdate(const WCHAR*kind_name, const WCHAR*action_name, INT_PTR context_index);
 
 	Sources& 		QuerySources();
@@ -77,6 +64,12 @@ public:
 	HidemaruFunctions& QueryHidemaruFunctions();
 
 	bool AutoPreviewRegist(const WCHAR*filename);
+	/// <summary>
+	/// ソースの候補を削除します
+	/// </summary>
+	/// <param name="source_name"></param>
+	/// <returns></returns>
+	bool CandidatesClearWithSourceName(const WCHAR* source_name);
 
 	template<class Archive> void serialize(Archive & archive) {
 		archive(m_candidates,m_refine_search,m_user_data);

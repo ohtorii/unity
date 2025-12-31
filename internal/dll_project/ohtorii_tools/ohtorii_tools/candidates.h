@@ -8,6 +8,11 @@
 ///候補
 struct Candidate {
 	Candidate();
+	Candidate(const Candidate&rht)=default;
+	Candidate(Candidate&&rht) = default;
+    Candidate& operator=(const Candidate& rht) = default;
+    Candidate& operator=(Candidate&& rht) = default;
+
 	Candidate(const WCHAR*source_name, const WCHAR*text, const WCHAR*description=_T(""));
 	Candidate(const WCHAR*source_name, const WCHAR*prefix, const WCHAR*text, const WCHAR*postfix, const WCHAR*description = _T(""));
 
@@ -64,6 +69,10 @@ struct Candidate {
 			m_process_id= UNITY_INVALID_PROCESS_ID;
 			m_window_handle = UNITY_HIDEMARU_NULL_HANDLE;
 		};
+		Action(const Action&) = default;
+		Action(Action&&) noexcept = default;
+		Action& operator=(const Action&) = default;
+		Action& operator=(Action&&) noexcept = default;
 
 		template<class Archive> void serialize(Archive & archive) {
 			archive(
@@ -121,6 +130,9 @@ public:
 	typedef ParallelVector<Candidate>	ContainerType;
 
 	Candidates();
+    Candidates(const Candidates& rht) = delete;
+    Candidates(Candidates&& rht) = delete;
+    Candidates& operator=(const Candidates& rht) = delete;
 	
 	/**ヘッダーを追加する
 	return 候補へのインデックス

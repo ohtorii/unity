@@ -46,6 +46,7 @@ gather_candidates:
 	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
 	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
 	if(##ret==0){
+        ##ret=dllfuncw(#g_dll_hm_process,"Destroy",##handle);
 		return "";
 	}
 	return $$temp_filename;

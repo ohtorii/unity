@@ -173,15 +173,7 @@ void Unity::Destroy() {
 	}
 	m_kinds.Clear();
 	m_current_instance_index = 0;
-
-	//
-	//memo: ASyncFileでファイルを閉じた後で終了処理を行う。
-	//そうしないと、ASyncFileがファイルを開いているためファイルの削除が出来ない。
-	//
-	//今のところ削除するファイルは1個でパフォーマンスに大きな影響は無いため対策は行わないことにした。
-	//
-	File::StartDestroy();
-	File::JoinDestroy();
+	File::Destroy();
 }
 
 Sources& Unity::QuerySources(){
@@ -279,6 +271,12 @@ Unity::~Unity(){
 
 bool Unity::AutoPreviewRegist(const WCHAR*filename) {
 	return m_recurring_task.Register<AutoPreview>(filename);
+}
+
+bool Unity::CandidatesClearWithSourceName(const WCHAR* source_name) {
+	//初めに、候補を生成しているASyncFileskから削除する
+	QueryASyncFiles().DestrotFromSourceName(source_name);
+	QueryCandidates().ClearWithSourceName(source_name);
 }
 
 const WCHAR* Unity::GetInteractiveSourceNames(const WCHAR* separator) {

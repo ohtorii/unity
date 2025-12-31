@@ -14,27 +14,30 @@ $arg4=getarg(4);
 $arg5=getarg(5);
 
 $g_root_macro_directory=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+#g_variable_mode=2;
 
 call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
 endmacro $$return;
 
-
+/*候補を取得する
+ * everything.ini ->  is_interactive=true の設定なので、検索文字列が変わるたびに呼び出されます
+ */
 gather_candidates:
     if(!existfile($g_everythingExtPath)){
         return "";
     }
 	$$serchString=$$1;
 
+    call MakeUniqueName;
+	$$unique_str=$$return;
+    call DestroyPrevProcess $$unique_str;
+
 	execmacro $g_root_macro_directory+"\\internal\\create_temp_file.mac", "everything", ".tsv";
 	$$temp_filename=getresultex(-1);
 	if($$temp_filename==""){
 		return "";
 	}
-	/*SpawnWithRedirectToFile関数中で削除されるため、FileRegistAfterDeleteFileへ登録する必要は無い
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
-	if(! ##ret){
-		return "";
-	}*/
+
     if(1){
         //候補数を制限する（数値の由来：1画面に100行表示できるとして、ｘ2しています）
 	    $$args = sprintf(R"(-s -n 200 "%s")",$$serchString);
@@ -47,6 +50,35 @@ gather_candidates:
 	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
 	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
 	if(##ret==0){
+        ##ret=dllfuncw(#g_dll_hm_process,"Destroy",##handle);
+        deletefile $$temp_filename;
 		return "";
 	}
+	//create_temp_file.mac で生成した一時ファイルを削除するために登録する
+    ##ret=dllfuncw(#g_dll_ohtorii_tools,"FileRegistAfterDeleteFile",$$temp_filename);
+	if(! ##ret){
+		return "";
+	}
+
+	setstaticvariable $$unique_str, str(##handle), #g_variable_mode;
 	return $$temp_filename;
+
+MakeUniqueName:
+    ##unique_id = hidemaruhandle(0);
+	$$unique_str=str(##unique_id);
+	return $$unique_str + currentmacrofilename;
+
+//前回のプロセスをkillする
+DestroyPrevProcess:
+    $$unique_str = $$1;
+    $$prev_handle = getstaticvariable($$unique_str,#g_variable_mode);
+    if($$prev_handle == ""){
+        return;
+    }
+
+    $$prev_temp_filename = dllfuncstrw(#g_dll_hm_process,"GetRedirectFileName",val($$prev_handle));
+    ##ret=dllfuncw(#g_dll_hm_process,"Destroy",val($$prev_handle));
+    //一時ファイルをdeletefileで削除するため登録解除する
+    ##ret=dllfuncw(#g_dll_ohtorii_tools,"FileUnRegistAfterDeleteFile",$$prev_temp_filename);
+    deletefile $$prev_temp_filename;
+    return;

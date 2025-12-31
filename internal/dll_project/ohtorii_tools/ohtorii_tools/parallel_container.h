@@ -8,6 +8,9 @@ class ParallelVector : public std::vector<typename _TYPE>, public concurrency::c
 public:
 	typedef concurrency::critical_section::scoped_lock scoped_lock;
 
+    ParallelVector() {};
+	ParallelVector(const ParallelVector&) = delete;
+	ParallelVector& operator=(const ParallelVector& rht) = delete;
 private:
 		
 };

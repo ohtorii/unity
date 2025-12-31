@@ -29,26 +29,6 @@ void File::DeleteFile_::DeleteFile() {
 	}
 }
 
-void File::DeleteFile_::DeleteFileAsThread() {
-	if (m_deleting) {
-		return;
-	}
-	DebugLog(_T("DeleteFile -> %ls"), m_filename.c_str());
-	m_deleting = true;
-	m_thread= std::thread(::DeleteFile, m_filename.c_str());
-}
-
-void File::DeleteFile_::Join() {
-	if (!m_deleting) {
-		return;
-	}
-	if (! m_thread.joinable()) {
-		return;
-	}
-	m_thread.join();
-}
-
-
 /////////////////////////////////////////////////////////////////////////////
 //File
 /////////////////////////////////////////////////////////////////////////////
@@ -59,22 +39,31 @@ File::File(){
 File::~File(){
 }
 
-void File::StartDestroy() {
+void File::Destroy() {
 	for (auto&item:m_after_delete) {
 		item.DeleteFile();
 	}
 }
 
-void File::JoinDestroy() {
-	for (auto&item : m_after_delete) {
-		item.Join();
-	}
-	m_after_delete.clear();
-}
-
 bool File::RegistAfterDelete(const WCHAR*filename){
 	try {
 		m_after_delete.emplace_back(filename);
+		return true;
+	}
+	catch (std::exception) {
+		//pass
+	}
+	return false;
+}
+
+bool File::UnRegistAfterDelete(const WCHAR* filename) {
+	try {
+		auto itr = std::find_if(m_after_delete.begin(), m_after_delete.end(), [filename](File::DeleteFile_& x) {
+            return lstrcmpW(x.GetFileName().c_str(), filename) == 0;
+		});
+		if (itr != m_after_delete.end()) {
+			m_after_delete.erase(itr);
+        }
 		return true;
 	}
 	catch (std::exception) {

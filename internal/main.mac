@@ -1074,14 +1074,16 @@ LoadDll:
 
 
 FreeDll:
-	if(#g_dll_ohtorii_tools!=0){
-		freedll #g_dll_ohtorii_tools;
-		#g_dll_ohtorii_tools=0;
-	}
+    //リダイレクトでファイルへ書き込んでいる場合があるため最初に終了させます
 	if(#g_dll_hm_process!=0){
 		##ret = dllfuncw(#g_dll_hm_process,"Finish");
 		freedll #g_dll_hm_process;
 		#g_dll_hm_process=0;
+	}
+
+	if(#g_dll_ohtorii_tools!=0){
+		freedll #g_dll_ohtorii_tools;
+		#g_dll_ohtorii_tools=0;
 	}
 
 	if(#g_hmjre_dll!=0){
