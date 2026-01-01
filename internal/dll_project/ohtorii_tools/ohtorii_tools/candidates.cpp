@@ -434,7 +434,7 @@ const INT_PTR Candidates::GetSourceNameForCandidatesNum() const{
 	return m_source_names_for_candidates.size();
 }
 const WCHAR* Candidates::GetSourceNameForCandidatesFromIndex(INT_PTR index)const {
-	if ((index<0) || (m_source_names_for_candidates.size() <= index)) {
+	if ((index<0) || (static_cast<INT_PTR>(m_source_names_for_candidates.size()) <= index)) {
 		return L"";
 	}
 	auto itr = m_source_names_for_candidates.begin();

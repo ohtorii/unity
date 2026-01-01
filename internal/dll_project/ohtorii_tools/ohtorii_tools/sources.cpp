@@ -163,10 +163,12 @@ bool Sources::Exist(const WCHAR*source_name)const {
 
 bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {	
 	std::vector<WCHAR> buf;
-	buf.resize(8 * 1000, 0);
-	
-	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf.data(), buf.size(), ini_filename);
-	dst.m_name.assign(buf.data());
+	const DWORD size = 8 * 1000;
+	buf.resize(size, 0);
+	auto* data = buf.data();
+
+	GetPrivateProfileString(_T("property"), _T("name"), _T(""), data, size, ini_filename);
+	dst.m_name.assign(data);
 	if(dst.m_name.size()==0)
 	{
 		WCHAR fname[_MAX_FNAME];
@@ -177,20 +179,20 @@ bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {
 		dst.m_name.assign(fname);		
 	}
 
-	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf.data(), buf.size(), ini_filename);
+	GetPrivateProfileString(_T("property"), _T("description"), _T(""), data, size, ini_filename);
 	dst.m_description.assign(buf.data());
 
-	GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), buf.data(), buf.size(), ini_filename);
+	GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), data, size, ini_filename);
 	dst.m_default_kind.assign(buf.data());
 
-	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf.data(), buf.size(), ini_filename);
+	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), data, size, ini_filename);
 	dst.m_default_action.assign(buf.data());
 
-	GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), buf.data(), buf.size(), ini_filename);
+	GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), data, size, ini_filename);
 	dst.m_candidate_type.assign(buf.data());
 	
-	GetPrivateProfileString(_T("property"), _T("is_interactive"), _T(""), buf.data(), buf.size(), ini_filename);
-	if (_wcsnicmp(buf.data(), L"true",buf.size()) == 0) {
+	GetPrivateProfileString(_T("property"), _T("is_interactive"), _T(""), data, size, ini_filename);
+	if (_wcsnicmp(data, L"true", size) == 0) {
 		//明示的にtrueを指定した状態
 		dst.m_is_interactive = true;
 	}
