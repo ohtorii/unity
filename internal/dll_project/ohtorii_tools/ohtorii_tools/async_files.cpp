@@ -190,7 +190,9 @@ void ASyncFile::Destroy() {
 ASyncFiles::ASyncFiles(Unity* instance) {
 	m_instance = instance;
 }
-
+ASyncFiles::~ASyncFiles() {
+	Destroy();
+}
 void ASyncFiles::Destroy() {
 	if (m_instance == nullptr) {
 		return;
@@ -228,7 +230,7 @@ void ASyncFiles::Exec() {
 	});
 }
 
-bool ASyncFiles::DestrotFromSourceName(const WCHAR* source_name) {
+bool ASyncFiles::DestroyFromSourceName(const WCHAR* source_name) {
 	m_threads.remove_if([source_name](Thread& item) {
 		const bool isSource = wcscmp(item.m_file.GetSourceName().c_str(), source_name) == 0; 
 		if (isSource) {
@@ -241,4 +243,5 @@ bool ASyncFiles::DestrotFromSourceName(const WCHAR* source_name) {
 		}
 		return isSource;
 	});
+	return true;
 }

@@ -44,9 +44,13 @@ private:
 class ASyncFiles {
 public:
 	ASyncFiles(Unity*instance);
+    ASyncFiles(const ASyncFiles&) = delete;
+	ASyncFiles& operator=(const ASyncFiles&) = delete;
+	~ASyncFiles();
+
 	INT_PTR AppendCandidate(const WCHAR* source_name, const WCHAR* filename);
 	void Exec();
-	bool DestrotFromSourceName(const WCHAR* source_name);
+	bool DestroyFromSourceName(const WCHAR* source_name);
 	void Destroy();
 
 private:
