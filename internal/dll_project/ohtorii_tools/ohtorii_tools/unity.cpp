@@ -275,8 +275,9 @@ bool Unity::AutoPreviewRegist(const WCHAR*filename) {
 
 bool Unity::CandidatesClearWithSourceName(const WCHAR* source_name) {
 	//初めに、候補を生成しているASyncFileskから削除する
-	QueryASyncFiles().DestrotFromSourceName(source_name);
+	QueryASyncFiles().DestroyFromSourceName(source_name);
 	QueryCandidates().ClearWithSourceName(source_name);
+	return true;
 }
 
 const WCHAR* Unity::GetInteractiveSourceNames(const WCHAR* separator) {
