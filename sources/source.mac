@@ -1,0 +1,63 @@
+﻿/* source一覧
+
+引数	ルートフォルダ名
+		空白の場合はカレントディレクトリを使用する。
+*/
+
+#g_dll_ohtorii_tools=val(getarg(30));
+$label=getarg(0);
+$arg1=getarg(1);
+$arg2=getarg(2);
+$arg3=getarg(3);
+$arg4=getarg(4);
+$arg5=getarg(5);
+
+$g_root_macro_directory =dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetRootMacroDirectory");
+
+
+call $label, $arg1, $arg2, $arg3, $arg4, $arg5;
+endmacro $$return;
+
+gather_candidates:
+    $$root_dir=$$1;
+    if($$root_dir==""){
+	    //現在実行中のマクロ（このファイル）のディレクトリを調べる
+        $$root_dir=currentmacrodirectory;
+    }
+
+	##r	= dllfuncw(#g_dll_ohtorii_tools, "BeginSource", "source");
+	if(!##r){
+		return "0";
+	}
+	call AppendFolders $$root_dir;
+	##r	= dllfuncw(#g_dll_ohtorii_tools, "EndSource");
+	if(!##r){
+		return "0";
+	}
+
+	return "1";
+
+AppendFolders:
+	$$root_dir  = $$1;
+	##objFSO	= createobject("Scripting.FileSystemObject");
+	##objFolder = callmethod_returnobj(##objFSO,"GetFolder",$$root_dir);
+	##objFiles	= getpropobj(##objFolder,"Files");
+	while(1){
+		##objFile = getcollection(##objFiles);
+		if(##objFile==0){
+			break;
+		}
+		$$name=getpropstr(##objFile,"Name");
+		$$basename=member( ##objFSO, "GetBaseName", $$name );
+		$$ext=tolower(member( ##objFSO, "GetExtensionName", $$name ));
+		releaseobject ##objFile;
+		if($$ext!="mac"){
+			continue;
+		}
+		##r=dllfuncw(#g_dll_ohtorii_tools, "AppendCandidate", $$basename, "");
+	}
+	releaseobject ##objFiles;
+	releaseobject ##objFolder;
+	releaseobject ##objFSO;
+
+	return ;
