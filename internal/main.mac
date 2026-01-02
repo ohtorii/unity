@@ -301,12 +301,14 @@ Start:
 	}
 	call ShowPerformanceCounter "LoadKindAll";
 
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesLoadAll",$g_root_macro_directory+"\\sources\\");
+
+	##ret=dllfuncw(#g_dll_ohtorii_tools,"SetSourceRootPath",$g_root_macro_directory+"\\sources\\");
+	/*##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesLoadAll",$g_root_macro_directory+"\\sources\\");
 	if(! ##ret){
 		return false;
 	}
 	call ShowPerformanceCounter "LoadSourceAll";
-
+*/
 	{//ソースを読み込む
 		##num_source     =split($$sources,    $$source_list, "\t");
 		##num_source_args=split($$source_args,$$sources_args,"\n");
@@ -547,9 +549,14 @@ Enter:
 	##is_start=dllfuncw(#g_dll_ohtorii_tools,"StaticStatusEnableIsStart");
 	if(##is_start){
 		/*memo　候補の再取得について。
-		NewCandidate　中で候補の再取得が行われるため、このif文中では何もしない。
+		NewCandidateラベル中で候補の再取得を行います。
 		*/
 		$$source_name=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetIsStartSourceName");
+		##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceNameIfNotExist",$$source_name);
+        if(##ret==false){
+            return #g_result_faile;
+        }
+
 		$$arg=dllfuncstrw(#g_dll_ohtorii_tools,"StaticStatusGetIsStartArg");
 		$$source_filename=dllfuncstrw(#g_dll_ohtorii_tools,"SourcesSourceNameToFileName",$$source_name);
 		$$source_filename=$$source_filename+".mac";

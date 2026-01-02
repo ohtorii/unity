@@ -48,8 +48,18 @@ public:
 		archive(m_sources, m_file_name_to_source_name);
 	};
 
+    ///ソースのルートパスを設定する
+    void SetRootPath(const WCHAR* root_dir);
+	
+	///ソースのルートパスを取得する
+	/// \で終端している
+	const std::wstring& GetRootPath() const;
+	
+	///指定ディレクトリから全ソースを読み込む
 	bool LoadSourceAll(const WCHAR* root_dir);
-	WCHAR* Create(const WCHAR* source_ini);
+    
+	///INIイメージからソースを作成する
+	std::wstring Create(const WCHAR*source_name,const WCHAR* ini_image);
 
 	///ソースを見付ける
 	Source* FindSource(const WCHAR*source_name);
@@ -69,10 +79,11 @@ private:
 	//Sources(const Sources&);
 	//Sources &operator=(const Sources&);
 
+    std::wstring m_root_path;
 	///ソースの情報(Ex. m_sources["file_mru"].name="file_mru")
 	std::unordered_map<std::wstring, Source> 	m_sources;
 	
-	/**ファオル名からソース名を取得するテーブル
+	/**ファイル名からソース名を取得するテーブル
 	
 	（マップの内容）
 	"c:\sources\file_mru" : "file_mru",
@@ -80,7 +91,7 @@ private:
 	*/
 	std::unordered_map<std::wstring, std::wstring> 	m_file_name_to_source_name;
 	
-	static bool IniToSource(Source&dst, const WCHAR*ini_filename);
+	static bool IniToSource(Source&dst, const WCHAR* source_name, const WCHAR*ini_filename);
 	static bool MakeSourcePathName(std::wstring&out, const WCHAR*file_name);
 	bool Exist(const WCHAR*source_name)const;
 };

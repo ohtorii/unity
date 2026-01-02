@@ -65,14 +65,19 @@ EXPORTS
 	HasChangedCandidates
 	ClearChangedCandidatesAndReturnPrevStatus
 
+	SetSourceRootPath
+	GetSourceRootPath
 	SourcesLoadAll
-    SourcesCreate
     SourcesGetDefaultKind
 	SourcesGetCandidateType
 	SourcesAppendFileNameAndSourceName
 	SourcesExistFileName;
 	SourcesFileNameToSourceName
 	SourcesSourceNameToFileName
+	SourcesCreateFromIniImage
+	SourcesCreateFromIniFile
+	SourcesAppendFileNameAndSourceNameIfNotExist
+
 
 	CandidatesGetSourceName
 	CandidatesGetText
@@ -139,6 +144,10 @@ EXPORTS
 	FileRegistAfterDeleteFile
 	FileUnRegistAfterDeleteFile
 	WriteToFile
+
+	PathSplit
+	PathBaseName
+
     DllDetachFunc_After_Hm866
 
 	LogEnable

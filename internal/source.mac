@@ -188,20 +188,44 @@ LoadSourceIfNotExist:
 		$$source_name = dllfuncstrw(#g_dll_ohtorii_tools, "SourcesFileNameToSourceName", $$source_filename);
 		return $$source_name;
 	}
-	$$args[0]="get_property";
-	$$args[29]=str(#g_dll_hm_process);
-	$$args[30]=str(#g_dll_ohtorii_tools);
-	execmacro $$source_filename, $$args, 31;
-	$$ini=getresultex(-1);
-	if($$ini==""){
-		return "";
+	debuginfo "LoadSourceIfNotExist: "+$$source_filename;
+	//
+	//get_propertyラベルを優先する
+	//
+	{
+    	##old = seterrormode(5,0);
+    	$$args[0]="get_property";
+    	$$args[29]=str(#g_dll_hm_process);
+    	$$args[30]=str(#g_dll_ohtorii_tools);
+    	execmacro $$source_filename, $$args, 31;
+    	$$ini=getresultex(-1);
+    	//Todo: 元に戻す、ただし、現在はなぜか秀丸エディタでエラーが発生する
+    	//seterrormode(5,##old);
+    	if($$ini != ""){
+        	$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreateFromIniImage",$$source_filename,$$ini);
+        	return $$source_name;
+    	}
 	}
-	$$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreate",$$ini);
 
-	##ret=dllfuncw(#g_dll_ohtorii_tools,"SourcesAppendFileNameAndSourceName",$$source_filename,$$source_name);
-	if(!##ret){
-		return false;
-	}
+	//
+	//source_filenameと対応する.iniファイルから作る
+	//  hoge.mac -> hoge.ini
+	//
+	$$sep="\t";
+	$$paths = dllfuncstrw(#g_dll_ohtorii_tools,"PathSplit",$$source_filename,$$sep);
+	debuginfo "$$paths="+$$paths;
+	if($$paths==""){
+        return "";
+    }
+	//$$result
+	//  [0] drive
+	//  [1] directory
+	//  [2] basename
+	//  [3] extension
+	##n=split($$result,$$paths,$$sep);
+    $$ini_filename = $$result[0] + $$result[1] + $$result[2] + ".ini";
+    debuginfo "$$ini_filename="+$$ini_filename;
+    $$source_name = dllfuncstrw(#g_dll_ohtorii_tools,"SourcesCreateFromIniFile",$$source_filename,$$ini_filename);
 	return $$source_name;
 
 

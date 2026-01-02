@@ -109,6 +109,28 @@ bool File::WriteToFile(const WCHAR* filename, const WCHAR* string) {
 	return true;
 }
 
+bool File::ReadFile(std::wstring& outFileimage, const WCHAR* filename) {
+	FILE* fp = nullptr;
+	errno_t  error = _wfopen_s(&fp, filename, L"rb, ccs=UNICODE");
+	if (error != 0) {
+		return false;
+	}
+	if (fp == 0) {
+		return false;
+	}
+	std::vector<WCHAR>	buf;
+	buf.resize(1024);
+	while(true){
+		size_t	ret = fread(buf.data(), sizeof(WCHAR), buf.size(), fp);
+		if (ret == 0) {
+			break;
+		}
+		outFileimage.append(buf.data(), ret);
+    }
+	fclose(fp);
+	return true;
+}
+
 bool File::EnumeFiles(EnumeFileResultContainer&out, const WCHAR*directory, const WCHAR* extension) {
 	std::wstring	file_pattern;
 	file_pattern.append(directory);

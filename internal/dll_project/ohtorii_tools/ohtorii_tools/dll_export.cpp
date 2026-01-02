@@ -1,6 +1,20 @@
 ﻿#include "stdafx.h"
 
 
+struct PathPointers {
+	void Destroy() {
+		m_path_split.clear();
+		m_basename.clear();
+		m_source_created.clear();
+	};
+	std::wstring m_path_split;
+	std::wstring m_basename;
+	std::wstring m_source_created;
+};
+static PathPointers gs_path_pointers;
+
+
+
 /////////////////////////////////////////////////////////////////////////////
 //Source制作者が利用する関数
 /////////////////////////////////////////////////////////////////////////////
@@ -290,8 +304,52 @@ extern "C" INT_PTR SourcesLoadAll(const WCHAR* directory) {
 	return Unity::Instance().lock()->QuerySources().LoadSourceAll(directory);
 }
 
+extern "C" INT_PTR SetSourceRootPath(const WCHAR* root_path) {
+	Unity::Instance().lock()->QuerySources().SetRootPath(root_path);
+	return true;
+}
+
+extern "C" WCHAR* GetSourceRootPath() {
+	return const_cast<WCHAR*>(Unity::Instance().lock()->QuerySources().GetRootPath().c_str());
+}
+/*
 extern "C" WCHAR* SourcesCreate(WCHAR* source_ini){
-	return Unity::Instance().lock()->QuerySources().Create(source_ini);
+	gs_path_pointers.m_source_created.assign(Unity::Instance().lock()->QuerySources().Create(source_ini));
+    return const_cast<WCHAR*>(gs_path_pointers.m_source_created.c_str());
+}*/
+
+extern "C" WCHAR* SourcesCreateFromIniImage(const WCHAR* source_filename, const WCHAR* ini_image){
+	auto& source = Unity::Instance().lock()->QuerySources();
+
+	WCHAR fname[_MAX_FNAME];
+	errno_t err = _wsplitpath_s(
+		source_filename,
+		nullptr, 0,
+		nullptr, 0,
+		fname, _countof(fname),
+		nullptr, 0
+	);
+	if (err != 0) {
+		return const_cast<WCHAR*>(L"");
+	}
+	auto source_name = source.Create(fname,ini_image);
+	if (source_name.compare(L"") == 0) {
+		return const_cast<WCHAR*>(L"");
+	}
+	if (source.AppendFileNameAndSourceName(source_filename, source_name.c_str())==false) {
+		return const_cast < WCHAR*>(L"");
+	}
+    gs_path_pointers.m_source_created.assign(source_name);
+    return const_cast<WCHAR*>(gs_path_pointers.m_source_created.c_str());
+}
+
+extern "C" WCHAR* SourcesCreateFromIniFile(const WCHAR* source_filename, const WCHAR* ini_filename){
+	auto&& unity = Unity::Instance().lock();
+	std::wstring ini_image;
+	if (unity->QueryFile().ReadFile(ini_image, ini_filename) == false) {
+        return const_cast<WCHAR*>(L"");
+	}
+	return SourcesCreateFromIniImage(source_filename, ini_image.c_str());
 }
 
 extern "C" WCHAR* SourcesGetCandidateType(WCHAR*souce_name) {
@@ -311,6 +369,31 @@ extern "C" WCHAR* SourcesGetDefaultKind(WCHAR*souce_name) {
 
 extern "C" INT_PTR SourcesAppendFileNameAndSourceName(const WCHAR*file_name, const WCHAR*source_name){
 	return Unity::Instance().lock()->QuerySources().AppendFileNameAndSourceName(file_name, source_name);
+}
+extern "C" INT_PTR SourcesAppendFileNameAndSourceNameIfNotExist(const WCHAR*source_name){
+	auto& sources = Unity::Instance().lock()->QuerySources();
+	if (sources.FindSource(source_name) == nullptr) {
+		//ソースが存在しない場合は追加する
+
+		std::wstring source_filenme;
+		source_filenme.append(sources.GetRootPath());
+        source_filenme.append(source_name);
+
+		std::wstring ini_filenme;
+		ini_filenme.append(sources.GetRootPath());
+		ini_filenme.append(source_name);
+        ini_filenme.append(L".ini");
+		auto result = SourcesCreateFromIniFile(source_filenme.c_str(), ini_filenme.c_str());
+		if (wcscmp(result, L"") == 0) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	else {
+		return true;
+	}
 }
 
 extern "C" INT_PTR SourcesExistFileName(const WCHAR*file_name) {
@@ -447,7 +530,30 @@ extern "C" INT_PTR	KindsIsRegetCandidates(INT_PTR kind_index, INT_PTR action_ind
 //Inheritance
 /////////////////////////////////////////////////////////////////////////////
 extern "C" INT_PTR InheriatnceGenerateDefaultAction(const WCHAR*source_name) {
-	return Unity::Instance().lock()->QueryInheritance().GenerateDefaultAction(source_name);
+	auto&& unity = Unity::Instance().lock();
+	auto& sources = unity->QuerySources();
+	auto* source = sources.FindSource(source_name);
+	if (source==nullptr) {
+        //ソースが存在しない場合は追加する
+		std::wstring ini_filename;
+		ini_filename.assign(sources.GetRootPath());
+        ini_filename.append(source_name);
+        ini_filename.append(L".ini");
+
+		std::wstring source_filename;
+		source_filename.assign(sources.GetRootPath());
+		source_filename.append(source_name);
+		//source_filename.append(L".mac");
+        auto result = SourcesCreateFromIniFile(source_filename.c_str(), ini_filename.c_str());
+		if (wcscmp(result, L"")==0) {
+			return false;
+		}
+		else {
+			//pass
+		}
+	}
+
+	return unity->QueryInheritance().GenerateDefaultAction(source_name);
 }
 
 extern "C" WCHAR*	InheriatnceGetDefaultActionKind() {
@@ -559,6 +665,50 @@ extern "C" INT_PTR WriteToFile(const WCHAR* filename, const WCHAR* string) {
 	return Unity::Instance().lock()->QueryFile().WriteToFile(filename, string);
 }
 
+extern "C" WCHAR* PathSplit(const WCHAR* path, const WCHAR*separator) {
+	WCHAR drive[_MAX_DRIVE];
+	WCHAR dir[_MAX_DIR];
+	WCHAR fname[_MAX_FNAME];
+	WCHAR ext[_MAX_EXT];
+
+	errno_t err = _wsplitpath_s(
+		path,
+		drive, _countof(drive),
+		dir, _countof(dir),
+		fname, _countof(fname),
+        ext, _countof(ext)
+	);
+	if (err!=0) {
+        return const_cast<WCHAR*>(L"");
+	}
+    std::wstring result;
+    result.append(drive);
+    result.append(separator);
+	result.append(dir);
+	result.append(separator);
+	result.append(fname);
+	result.append(separator);
+	result.append(ext);
+    gs_path_pointers.m_path_split.swap(result);
+    return const_cast<WCHAR*>(gs_path_pointers.m_path_split.c_str());
+}
+
+extern "C" WCHAR* PathBaseName(const WCHAR* path) {
+	WCHAR fname[_MAX_FNAME];
+	errno_t err = _wsplitpath_s(
+		path,
+		nullptr, 0,
+		nullptr, 0,
+		fname, _countof(fname),
+		nullptr, 0
+	);
+	if (err != 0) {
+		return const_cast<WCHAR*>(L"");
+	}
+	gs_path_pointers.m_basename.assign(fname);
+    return const_cast<WCHAR*>(gs_path_pointers.m_basename.c_str());
+}
+
 extern "C" INT_PTR FileRegistAfterDeleteFile(const WCHAR* filename) {
 	return Unity::Instance().lock()->QueryFile().RegistAfterDelete(filename);
 }
@@ -570,6 +720,7 @@ extern "C" INT_PTR FileUnRegistAfterDeleteFile(const WCHAR* filename) {
 extern "C" INT_PTR DllDetachFunc_After_Hm866( INT_PTR n  ) {	
 	DebugLog(_T("DllDetachFunc_After_Hm866 (%d)"), n); 
 	Unity::Destroy();
+    gs_path_pointers.Destroy();
 	return 0;
 }
 

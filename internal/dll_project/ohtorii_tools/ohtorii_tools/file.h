@@ -13,6 +13,7 @@ public:
 	bool UnRegistAfterDelete(const WCHAR*filename);
 	bool CreateTempFile(std::wstring&out);
 	bool WriteToFile(const WCHAR* filename, const WCHAR* string);
+	bool ReadFile(std::wstring &outFileimage, const WCHAR* filename);
 	
 	struct EnumeFileResult {
 		std::wstring	m_abs_filename;

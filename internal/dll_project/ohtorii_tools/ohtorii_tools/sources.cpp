@@ -42,7 +42,7 @@ Sources::~Sources(){
 	
 }
 
-WCHAR* Sources::Create(const WCHAR* source_ini){
+std::wstring Sources::Create(const WCHAR*source_name, const WCHAR* ini_image){
 	auto&			file = Unity::Instance().lock()->QueryFile();
 	std::wstring	temp_filename;
 
@@ -51,16 +51,16 @@ WCHAR* Sources::Create(const WCHAR* source_ini){
 	}
 
 	const WCHAR*ini_filename = temp_filename.c_str();
-	if (!file.WriteToFile(ini_filename, source_ini)) {
+	if (!file.WriteToFile(ini_filename, ini_image)) {
 		return gs_empty;
 	}
 
 	Source dst;
-	if (!IniToSource(dst, ini_filename)) {
+	if (!IniToSource(dst, source_name, ini_filename)) {
 		return gs_empty;
 	}
 	auto insert_it = m_sources.insert({ dst.m_name, dst });	
-	return const_cast<WCHAR*>(insert_it.first->first.c_str());
+	return insert_it.first->first;
 }
 
 Source* Sources::FindSource(const WCHAR*source_name) {
@@ -75,9 +75,8 @@ bool Sources::MakeSourcePathName(std::wstring&out, const WCHAR*file_name) {
 	WCHAR drive[_MAX_DRIVE];
 	WCHAR dir[_MAX_DIR];
 	WCHAR fname[_MAX_FNAME];
-	WCHAR ext[_MAX_EXT];
-
-	const errno_t err = _wsplitpath_s(file_name, drive, _MAX_DRIVE, dir, _MAX_DIR, fname, _MAX_FNAME, ext, _MAX_EXT);
+	
+	const errno_t err = _wsplitpath_s(file_name, drive, _MAX_DRIVE, dir, _MAX_DIR, fname, _MAX_FNAME, nullptr, 0);
 	if (err != 0) {
 		return false;
 	}
@@ -96,7 +95,6 @@ bool Sources::AppendFileNameAndSourceName(const WCHAR*file_name, const WCHAR*sou
 	if (!MakeSourcePathName(path, file_name)) {
 		return false;
 	}
-
 	try {
 		m_file_name_to_source_name.emplace(path, source_name);
 		return true;
@@ -161,35 +159,30 @@ bool Sources::Exist(const WCHAR*source_name)const {
 	return m_sources.end() != m_sources.find(source_name);
 }
 
-bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {	
+bool Sources::IniToSource(Source&dst, const WCHAR*source_name, const WCHAR*ini_filename) {
 	std::vector<WCHAR> buf;
 	const DWORD size = 8 * 1000;
 	buf.resize(size, 0);
 	auto* data = buf.data();
 
-	GetPrivateProfileString(_T("property"), _T("name"), _T(""), data, size, ini_filename);
-	dst.m_name.assign(data);
-	if(dst.m_name.size()==0)
-	{
-		WCHAR fname[_MAX_FNAME];
-		const errno_t err = _wsplitpath_s(ini_filename, nullptr, 0, nullptr, 0, fname, _MAX_FNAME, nullptr, 0);
-		if (err != 0) {
-			return false;
-		}
-		dst.m_name.assign(fname);		
+	if (GetPrivateProfileString(_T("property"), _T("name"), L"", data, size, ini_filename)) {
+		dst.m_name.assign(data);
+	}
+	else {
+        dst.m_name.assign(source_name);
 	}
 
 	GetPrivateProfileString(_T("property"), _T("description"), _T(""), data, size, ini_filename);
-	dst.m_description.assign(buf.data());
+	dst.m_description.assign(data);
 
 	GetPrivateProfileString(_T("property"), _T("default_kind"), _T(""), data, size, ini_filename);
-	dst.m_default_kind.assign(buf.data());
+	dst.m_default_kind.assign(data);
 
 	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), data, size, ini_filename);
-	dst.m_default_action.assign(buf.data());
+	dst.m_default_action.assign(data);
 
 	GetPrivateProfileString(_T("property"), _T("candidate_type"), _T(""), data, size, ini_filename);
-	dst.m_candidate_type.assign(buf.data());
+	dst.m_candidate_type.assign(data);
 	
 	GetPrivateProfileString(_T("property"), _T("is_interactive"), _T(""), data, size, ini_filename);
 	if (_wcsnicmp(data, L"true", size) == 0) {
@@ -204,17 +197,44 @@ bool Sources::IniToSource(Source&dst, const WCHAR*ini_filename) {
 	return true;
 }
 
+void Sources::SetRootPath(const WCHAR* root_dir) {
+    m_root_path.assign(root_dir);
+	// \で終端させる
+	if (!m_root_path.empty()) {
+		const WCHAR last_char = m_root_path.back();
+		if (last_char != L'\\' && last_char != L'/') {
+			m_root_path.push_back(L'\\');
+		}
+    }
+}
+
+const std::wstring& Sources::GetRootPath() const { 
+	return m_root_path; 
+}
+
 bool Sources::LoadSourceAll(const WCHAR* root_dir) {
 	File::EnumeFileResultContainer file_names;
 	if (!Unity::Instance().lock()->QueryFile().EnumeFiles(file_names, root_dir, _T("*.ini"))) {
 		return false;
 	}
 
+	WCHAR fname[_MAX_FNAME];
 	const auto num = file_names.size();
 	Source dst;
 	for (size_t i = 0; i < num; ++i) {
 		const auto &abs_filename = file_names.at(i).m_abs_filename;
-		if (!IniToSource(dst, abs_filename.c_str())) {
+		errno_t err = _wsplitpath_s(
+			abs_filename.c_str(),
+			nullptr, 0,
+			nullptr, 0,
+			fname, _countof(fname),
+			nullptr, 0
+		);
+		if (err != 0) {
+			return false;
+		}
+
+		if (!IniToSource(dst, fname, abs_filename.c_str())) {
 			return false;
 		}
 		m_sources.insert({ dst.m_name, dst });
