@@ -152,7 +152,31 @@ REM 不要なファイルを削除する
 		set RESULT=1
 		exit /b 1
 	)
-
+	
+	rmdir /S /Q  "%UNITY_ROOT_DIR%\.github"
+	if exist     "%UNITY_ROOT_DIR%\.github" (
+		echo .git ディレクトリの削除に失敗しました。
+		set RESULT=1
+		exit /b 1
+	)
+    del      "%UNITY_ROOT_DIR%\.gitattributes"
+	if exist "%UNITY_ROOT_DIR%\.gitattributes" (
+		echo tools ディレクトリの削除に失敗しました。
+		set RESULT=1
+		exit /b 1
+	)
+    del      "%UNITY_ROOT_DIR%\.gitignore"
+	if exist "%UNITY_ROOT_DIR%\.gitignore" (
+		echo tools ディレクトリの削除に失敗しました。
+		set RESULT=1
+		exit /b 1
+	)
+    del      "%UNITY_ROOT_DIR%\.gitmodules"
+	if exist "%UNITY_ROOT_DIR%\.gitmodules" (
+		echo tools ディレクトリの削除に失敗しました。
+		set RESULT=1
+		exit /b 1
+	)
 	rmdir /S /Q  "%UNITY_ROOT_DIR%\tools"
 	if exist     "%UNITY_ROOT_DIR%\tools" (
 		echo tools ディレクトリの削除に失敗しました。
