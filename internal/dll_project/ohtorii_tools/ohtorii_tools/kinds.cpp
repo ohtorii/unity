@@ -19,14 +19,16 @@ static bool ContainsAction(const WCHAR*str) {
 
 //[action.*]セクションのパース	
 static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* filename) {
-	WCHAR buf[2 * 1024];
-	buf[0] = 0;
+	const size_t size = 2 * 1024;
+	std::vector<WCHAR> buf;
+	buf.resize(size,0);
+	auto* data = buf.data();
 
-	GetPrivateProfileSectionNames(buf, _countof(buf), filename);
+	GetPrivateProfileSectionNames(data, size, filename);
 	
 	size_t i = 0;
-	while (((i + 1) < _countof(buf)) && (buf[i] != 0) && (buf[i + 1] != 0)) {
-		WCHAR* top = &buf[i];
+	while (((i + 1) < size) && (buf[i] != 0) && (data[i + 1] != 0)) {
+		WCHAR* top = data+i;
 		if (ContainsAction(top)) {
 			dst.push_back(top);
 		}
@@ -37,33 +39,34 @@ static void GatherActionSections(std::vector<std::wstring> &dst, const WCHAR* fi
 static void ParseActionSection(Action &dst, const WCHAR*section_name, const WCHAR* filename) {
 	/*アクションのセクションをパースする
 	*/
-	WCHAR buf[2*1024];
-	buf[0] = 0;
+    const size_t size = 2 * 1000;
+	std::vector<WCHAR> buf;
+	buf.resize(size,0);
+	auto* data = buf.data();
 
 	//memo: "action.nop" -> "nop"
 	dst.m_name.assign(section_name+gs_prefix_size);
 
-	GetPrivateProfileString(section_name, _T("function"), _T(""), buf, _countof(buf), filename);
-	dst.m_label.assign(buf);
+	GetPrivateProfileString(section_name, _T("function"), _T(""), data, size, filename);
+	dst.m_label.assign(data);
 
-	GetPrivateProfileString(section_name, _T("description"), _T(""), buf, _countof(buf), filename);
-	dst.m_description.assign(buf);
+	GetPrivateProfileString(section_name, _T("description"), _T(""), data, size, filename);
+	dst.m_description.assign(data);
 
-	GetPrivateProfileString(section_name, _T("is_quit"), _T("false"), buf, _countof(buf), filename);
-	dst.m_is_quit = StringToBool(buf);
+	GetPrivateProfileString(section_name, _T("is_quit"), _T("false"), data, size, filename);
+	dst.m_is_quit = StringToBool(data);
 	
-	GetPrivateProfileString(section_name, _T("is_multi_selectable"), _T("false"), buf, _countof(buf), filename);
-	dst.m_is_multi_selectable = StringToBool(buf);
+	GetPrivateProfileString(section_name, _T("is_multi_selectable"), _T("false"), data, size, filename);
+	dst.m_is_multi_selectable = StringToBool(data);
 	
-	GetPrivateProfileString(section_name, _T("is_start"), _T("false"), buf, _countof(buf), filename);
-	dst.m_is_start = StringToBool(buf);
+	GetPrivateProfileString(section_name, _T("is_start"), _T("false"), data, size, filename);
+	dst.m_is_start = StringToBool(data);
 
-	GetPrivateProfileString(section_name, _T("is_edit"), _T("false"), buf, _countof(buf), filename);
-	dst.m_is_edit = StringToBool(buf);
+	GetPrivateProfileString(section_name, _T("is_edit"), _T("false"), data, size, filename);
+	dst.m_is_edit = StringToBool(data);
 
-	GetPrivateProfileString(section_name, _T("is_reget_candidates"), _T("false"), buf, _countof(buf), filename);
-	dst.m_is_reget_candidates = StringToBool(buf);
-	
+	GetPrivateProfileString(section_name, _T("is_reget_candidates"), _T("false"), data, size, filename);
+	dst.m_is_reget_candidates = StringToBool(data);
 }
 
 static bool CheckAppendable(bool candidate_is_multi_select, bool action_is_multi_selectable) {
@@ -372,29 +375,32 @@ bool Kinds::GenerateKindCandidates(INT_PTR instance_index) {
 }
 
 bool Kinds::IniToKind(Kind&dst,const WCHAR*ini_filename){		
-	WCHAR buf[8 * 1000];
-	
-	GetPrivateProfileString(_T("property"), _T("name"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_name.assign(buf);	
+	const size_t size = 8 * 1000;
+	std::vector<WCHAR> buf;
+	buf.resize(size,0);
+	auto* data = buf.data();
+
+	GetPrivateProfileString(_T("property"), _T("name"), _T(""), data, size, ini_filename);
+	dst.m_name.assign(data);	
 	if (dst.m_name.size() == 0)	
 	{
 		WCHAR fname[_MAX_FNAME];
-		const errno_t err = _wsplitpath_s(ini_filename, nullptr, 0, nullptr, 0, fname, _MAX_FNAME, nullptr, 0);
+		const errno_t err = _wsplitpath_s(ini_filename, nullptr, 0, nullptr, 0, fname, _countof(fname), nullptr, 0);
 		if (err != 0) {
 			return false;
 		}
 		dst.m_name.assign(fname);		
 	}
 
-	GetPrivateProfileString(_T("property"), _T("description"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_description.assign(buf);
+	GetPrivateProfileString(_T("property"), _T("description"), _T(""), data, size, ini_filename);
+	dst.m_description.assign(data);
 
-	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), buf, _countof(buf), ini_filename);
-	dst.m_default_action.assign(buf);
+	GetPrivateProfileString(_T("property"), _T("default_action"), _T(""), data, size, ini_filename);
+	dst.m_default_action.assign(data);
 
 	{
-		GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), buf, _countof(buf), ini_filename);
-		Tokenize(dst.m_base_kind, buf, _T(" \t"));
+		GetPrivateProfileString(_T("property"), _T("base_kind"), _T(""), data, size, ini_filename);
+		Tokenize(dst.m_base_kind, data, _T(" \t"));
 		if (0) {
 			//debug
 			DebugLog(_T("  ==== Inheritance ===="));
@@ -436,6 +442,9 @@ bool Kinds::LoadKindAll(const WCHAR* root_dir) {
 }
 
 void Kinds::Dump()const {
+	if (!IsDebugLogEnable()) {
+		return;
+	}
 	DebugLog(_T("==== Kinds::Dump [kinds.size=%d] ===="), m_kinds.size());
 	size_t kind_index = 0;
 	for(auto &kind : m_kinds)

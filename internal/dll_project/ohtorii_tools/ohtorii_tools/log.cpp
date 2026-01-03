@@ -3,7 +3,9 @@
 
 static bool sg_enable_log = false;
 
-
+bool IsDebugLogEnable() {
+	return sg_enable_log;
+}
 void DebugLogEnable(bool enable) {
 	sg_enable_log = enable;
 }
@@ -11,7 +13,7 @@ void DebugLogEnable(bool enable) {
 
 void DebugLog(const WCHAR *fmt, ...)
 {
-	if (!sg_enable_log) {
+	if (!IsDebugLogEnable()) {
 		return;
 	}
 

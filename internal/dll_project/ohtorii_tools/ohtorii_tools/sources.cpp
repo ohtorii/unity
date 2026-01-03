@@ -76,7 +76,7 @@ bool Sources::MakeSourcePathName(std::wstring&out, const WCHAR*file_name) {
 	WCHAR dir[_MAX_DIR];
 	WCHAR fname[_MAX_FNAME];
 	
-	const errno_t err = _wsplitpath_s(file_name, drive, _MAX_DRIVE, dir, _MAX_DIR, fname, _MAX_FNAME, nullptr, 0);
+	const errno_t err = _wsplitpath_s(file_name, drive, _countof(drive), dir, _countof(dir), fname, _countof(fname), nullptr, 0);
 	if (err != 0) {
 		return false;
 	}
