@@ -23,7 +23,12 @@ endmacro $$return;
  * everything.ini ->  is_interactive=true の設定なので、検索文字列が変わるたびに呼び出されます
  */
 gather_candidates:
+    $g_everythingExtPath = getinistr(currentmacrodirectory+"\\everything.ini","paths","exe");
+    call ExpandEnvironmentVariable $g_everythingExtPath;
+    $g_everythingExtPath=$$return;
     if(!existfile($g_everythingExtPath)){
+        debuginfo 1;
+        debuginfo "$g_everythingExtPath="+ $g_everythingExtPath;
         return "";
     }
 	$$serchString=$$1;
@@ -82,3 +87,15 @@ DestroyPrevProcess:
     ##ret=dllfuncw(#g_dll_ohtorii_tools,"FileUnRegistAfterDeleteFile",$$prev_temp_filename);
     deletefile $$prev_temp_filename;
     return;
+
+ExpandEnvironmentVariable:
+	/*環境変数を展開する
+
+	$$1		環境変数を含む文字列
+	返値	引数を展開した文字列
+	*/
+	##objShell = createobject("WScript.Shell");
+	if(##objShell==0){
+		endmacro "";
+	}
+	return callmethod_returnstr(##objShell, "ExpandEnvironmentStrings", $$1);
