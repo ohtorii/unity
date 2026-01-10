@@ -9,12 +9,18 @@ class File{
 public:
 	File();
 	~File();
+	void Initialize(const WCHAR* temp_directry_name);
 	bool RegistAfterDelete(const WCHAR*filename);
 	bool UnRegistAfterDelete(const WCHAR*filename);
 	bool CreateTempFile(std::wstring&out);
 	bool WriteToFile(const WCHAR* filename, const WCHAR* string);
 	bool ReadFile(std::wstring &outFileimage, const WCHAR* filename);
-	
+	/// <summary>
+	/// 一時ディレクトリ名を取得する
+	/// </summary>
+	/// <returns></returns>
+	const std::wstring& GetTempDirectory()const;
+
 	struct EnumeFileResult {
 		std::wstring	m_abs_filename;
 	};
@@ -34,5 +40,6 @@ private:
 		bool			m_deleting;
 		std::wstring	m_filename;
 	};
+    static std::wstring     m_temp_directory_name;
 	static std::deque<DeleteFile_>	m_after_delete;
 };

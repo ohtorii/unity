@@ -2,6 +2,7 @@
 
 
 std::deque<File::DeleteFile_>	File::m_after_delete;
+std::wstring					File::m_temp_directory_name;
 
 /////////////////////////////////////////////////////////////////////////////
 //DeleteFile_
@@ -38,7 +39,13 @@ File::File(){
 
 File::~File(){
 }
+void File::Initialize(const WCHAR* temp_directry_name) {
+	m_temp_directory_name.assign(temp_directry_name);
+}
 
+const std::wstring& File::GetTempDirectory()const {
+	return m_temp_directory_name;
+}
 void File::Destroy() {
 	for (auto&item:m_after_delete) {
 		item.DeleteFile();

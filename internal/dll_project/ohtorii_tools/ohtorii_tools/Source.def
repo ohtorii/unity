@@ -1,5 +1,8 @@
 LIBRARY
 EXPORTS
+	BeginInitialization;
+	FinalizeInitialization
+
 	BeginSource
 	EndSource
 	AppendCandidateHeader
@@ -89,7 +92,7 @@ EXPORTS
 	CandidatesGetUserDataString
 	CandidatesGetUserDataNumeric
 	CandidatesClearWithSourceName
-
+	GatherCandidatesFromAsyncUpdatedFile
 	
 	KindGetKindName
 	KindGetKindDescription
