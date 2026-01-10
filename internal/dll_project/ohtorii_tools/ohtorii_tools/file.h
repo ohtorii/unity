@@ -12,13 +12,18 @@ public:
 	void Initialize(const WCHAR* temp_directry_name);
 	bool RegistAfterDelete(const WCHAR*filename);
 	bool UnRegistAfterDelete(const WCHAR*filename);
+	/// <summary>
+	/// 一時ファイルを生成しそのファイル名を返します
+	/// </summary>
+	/// <param name="out"></param>
+	/// <returns></returns>
 	bool CreateTempFile(std::wstring&out);
 	bool WriteToFile(const WCHAR* filename, const WCHAR* string);
 	bool ReadFile(std::wstring &outFileimage, const WCHAR* filename);
 	/// <summary>
 	/// 一時ディレクトリ名を取得する
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>ディレクトリ区切りで終端した文字列</returns>
 	const std::wstring& GetTempDirectory()const;
 
 	struct EnumeFileResult {

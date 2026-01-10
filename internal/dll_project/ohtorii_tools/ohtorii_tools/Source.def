@@ -92,7 +92,6 @@ EXPORTS
 	CandidatesGetUserDataString
 	CandidatesGetUserDataNumeric
 	CandidatesClearWithSourceName
-	GatherCandidatesFromAsyncUpdatedFile
 	
 	KindGetKindName
 	KindGetKindDescription

@@ -14,6 +14,14 @@ struct PathPointers {
 static PathPointers gs_path_pointers;
 
 
+extern "C" INT_PTR BeginInitialization(const WCHAR*temp_directory_name) {
+	Unity::Instance().lock()->QueryFile().Initialize(temp_directory_name);
+	return true;
+}
+
+extern "C" INT_PTR FinalizeInitialization() {
+	return true;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //Source制作者が利用する関数
@@ -450,7 +458,6 @@ extern "C" WCHAR* CandidatesGetText(INT_PTR index) {
 extern "C" INT_PTR CandidatesClearWithSourceName(const WCHAR*source_name) {
 	return Unity::Instance().lock()->CandidatesClearWithSourceName(source_name);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //kind

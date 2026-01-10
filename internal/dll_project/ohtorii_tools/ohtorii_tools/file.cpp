@@ -39,8 +39,20 @@ File::File(){
 
 File::~File(){
 }
-void File::Initialize(const WCHAR* temp_directry_name) {
+void File::Initialize(const WCHAR* temp_directry_name ) {
 	m_temp_directory_name.assign(temp_directry_name);
+	if (m_temp_directory_name.empty()) {
+		//pass
+	}
+	else {
+		auto c = m_temp_directory_name.back();
+		if ((c == '/') || (c == '\\')) {
+			//pass
+		}
+		else {
+			m_temp_directory_name.push_back('\\');
+		}
+	}
 }
 
 const std::wstring& File::GetTempDirectory()const {
@@ -79,16 +91,24 @@ bool File::UnRegistAfterDelete(const WCHAR* filename) {
 	return false;
 }
 
-bool File::CreateTempFile(std::wstring&out) {
-	wchar_t szTempPath[MAX_PATH];
+bool File::CreateTempFile(std::wstring& out) {
 	wchar_t szTempFileName[MAX_PATH];
+	{
+		wchar_t szTempPath[MAX_PATH];
+		const wchar_t* tempDirectoryPtr = nullptr;
+		if (m_temp_directory_name.empty()) {
+			if (GetTempPath(sizeof(szTempPath) / sizeof(szTempPath[0]), szTempPath) == 0) {
+				return false;
+			}
+			tempDirectoryPtr = szTempPath;
+		}
+		else {
+			tempDirectoryPtr = m_temp_directory_name.c_str();
+		}
 
-	out.clear();
-	if (GetTempPath(sizeof(szTempPath) / sizeof(szTempPath[0]), szTempPath) == 0) {
-		return false;
-	}
-	if (GetTempFileName(szTempPath, _T("hut"), 0, szTempFileName) == 0) {
-		return false;
+		if (GetTempFileName(tempDirectoryPtr, _T("hut"), 0, szTempFileName) == 0) {
+			return false;
+		}
 	}
 	out.assign(szTempFileName);
 	return true;
