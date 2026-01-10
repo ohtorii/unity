@@ -26,8 +26,6 @@ gather_candidates:
     call ExpandEnvironmentVariable $$everythingExtPath;
     $$everythingExtPath=$$return;
     if(!existfile($$everythingExtPath)){
-        debuginfo 1;
-        debuginfo "$$everythingExtPath="+ $$everythingExtPath;
         return "";
     }
 	$$serchString=$$1;
