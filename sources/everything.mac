@@ -2,7 +2,6 @@
 
 引数	Everythingの検索文字列
 */
-$g_everythingExtPath = macrodir + "\\bin\\everything\\es.exe";
 #g_dll_hm_process=val(getarg(29));
 #g_dll_ohtorii_tools=val(getarg(30));
 
@@ -23,12 +22,12 @@ endmacro $$return;
  * everything.ini ->  is_interactive=true の設定なので、検索文字列が変わるたびに呼び出されます
  */
 gather_candidates:
-    $g_everythingExtPath = getinistr(currentmacrodirectory+"\\everything.ini","paths","exe");
-    call ExpandEnvironmentVariable $g_everythingExtPath;
-    $g_everythingExtPath=$$return;
-    if(!existfile($g_everythingExtPath)){
+    $$everythingExtPath = getinistr(currentmacrodirectory+"\\everything.ini","paths","exe");
+    call ExpandEnvironmentVariable $$everythingExtPath;
+    $$everythingExtPath=$$return;
+    if(!existfile($$everythingExtPath)){
         debuginfo 1;
-        debuginfo "$g_everythingExtPath="+ $g_everythingExtPath;
+        debuginfo "$$everythingExtPath="+ $$everythingExtPath;
         return "";
     }
 	$$serchString=$$1;
@@ -51,7 +50,7 @@ gather_candidates:
 	    $$args = sprintf(R"(-s "%s")",$$serchString);
     }
 
-	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirectToFile",$g_everythingExtPath,$$args,true,true,$$temp_filename);
+	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirectToFile",$$everythingExtPath,$$args,true,true,$$temp_filename);
 	##ret=dllfuncw(#g_dll_hm_process,"SetCreateNoWindow",##handle,true);
 	##ret=dllfuncw(#g_dll_hm_process,"Start",##handle);
 	if(##ret==0){
