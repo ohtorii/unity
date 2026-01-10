@@ -45,7 +45,7 @@ public:
 	IsStart&GetIsStart();
 	const IsStart&GetIsStart() const;
 
-	void Initialize(INT_PTR target_hidemaru, INT_PTR search_hidemaru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory);
+	void Initialize(INT_PTR target_hidemaru, INT_PTR search_hidemaru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory, const WCHAR*temp_directory_name);
 	void UpdateStatus(INT_PTR kind_index, INT_PTR action_index,INT_PTR context_index);
 	/*再取得する候補のソース名の個数を得る
 	*/
@@ -57,6 +57,11 @@ public:
 	/*再取得する候補のソース名をクリアする
 	*/
 	void ClearSourceNamesForReacquisitionCandidates();
+	/// <summary>
+	/// 一時ディレクトリ名を取得する
+	/// </summary>
+	/// <returns></returns>
+	const std::wstring& GetTempDirectory()const;
 public:
 	bool			m_is_quit;	
 	CallBackContainer	m_process_finish_callbackes;
@@ -64,6 +69,7 @@ public:
 	INT_PTR			m_search_hidemaru_handle;
 	std::wstring	m_current_working_directory;
 	std::wstring	m_root_macro_directory;
+	std::wstring	m_temp_directory;
 
 private:
 	IsStart		m_is_start;

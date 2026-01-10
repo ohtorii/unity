@@ -290,9 +290,10 @@ Start:
 		return false;
 	}
 	call ShowPerformanceCounter "LoadDLL";
-
+    execmacro currentmacrodirectory + "\\get_temp_directory.mac";
+    $$tempdir = getresultex(-1);
 	##ret = dllfuncw(#g_dll_ohtorii_tools,"LogEnable",false);
-	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusInitialize",#g_target_hidemaru,#g_new_hidemaru,directory2,$g_root_macro_directory);
+	##ret = dllfuncw(#g_dll_ohtorii_tools,"StaticStatusInitialize",#g_target_hidemaru,#g_new_hidemaru,directory2,$g_root_macro_directory,$$tempdir);
 
 
 	##ret=dllfuncw(#g_dll_ohtorii_tools,"KindsLoadAll",$g_root_macro_directory+"\\kinds\\");

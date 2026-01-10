@@ -1,0 +1,11 @@
+﻿/* 一時ファイルのルートディレクトリを取得する
+
+*/
+$tempdir = getenv("tmp");
+if(0==strlen($tempdir)){
+	message("環境変数 tmp が設定されていません、設定して下さい。");
+	return	"";
+}
+
+$tempdir = $tempdir + "\\" + "tmp_hidemaru_unity";
+endmacro $tempdir;

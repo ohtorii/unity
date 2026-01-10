@@ -87,12 +87,13 @@ const StaticStatus::IsStart&	StaticStatus::GetIsStart()const {
 	return m_is_start;
 };
 
-void StaticStatus::Initialize(INT_PTR target_hidemaru, INT_PTR search_hideamru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory) {
+void StaticStatus::Initialize(INT_PTR target_hidemaru, INT_PTR search_hideamru_handle, const WCHAR* working_directory, const WCHAR*root_macro_directory, const WCHAR* temp_directory_name) {
 	m_process_finish_callbackes.Clear();
 	m_target_hidemaruhandle = target_hidemaru;
 	m_search_hidemaru_handle = search_hideamru_handle;
 	m_current_working_directory.assign(working_directory);
 	m_root_macro_directory.assign(root_macro_directory);
+    m_temp_directory.append(temp_directory_name);
 	m_is_quit = true;
 	//m_reget_candidate_source_names.clear();
 }
@@ -139,3 +140,6 @@ void StaticStatus::ClearSourceNamesForReacquisitionCandidates() {
 	m_reget_candidate_source_names.clear();
 }
 
+const std::wstring& StaticStatus::GetTempDirectory()const {
+	return m_temp_directory;
+}
