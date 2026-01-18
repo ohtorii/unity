@@ -1,0 +1,8 @@
+﻿/* everythingソース
+See: https://www.voidtools.com/support/everything/
+*/
+$sources="everything";
+$options="";
+$sources_args="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options,$sources_args;
+endmacro getresultex(-1);
