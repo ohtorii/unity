@@ -175,6 +175,7 @@ auto preview オプションをONにすると***previewアクション***を自�
 |mark|マーク一覧||
 |outline|アウトライン枠の内容||
 |process|プロセス一覧||
+|everything|ファイル検索|Windowsの高速なファイル検索ソフトeverythingと、コマンドラインツールのes.exeが必要です|
 |tab|タブ一覧||
 |window|ウインドウ一覧||
 
@@ -312,6 +313,7 @@ hidemaru-editor-script-directory
 |unity_source_hilight.mac				|hilightソースを指定して起動|×|×|×|
 |unity_source_outline.mac				|outlineソースを指定して起動|×|×|×|
 |unity_source_process.mac				|processソースを指定して起動|×|×|×|
+|unity_source_everything.mac			|everythingソースを指定して起動|×|×|Todo:次期バージョンで対応したい|
 |unity_source_tab.mac					|tabソースを指定して起動|×|×|×|
 |unity_source_window.mac				|windowソースを指定して起動|×|×|×|
 
@@ -339,6 +341,17 @@ hidemaru-editor-script-directory
 	sleep=1500
 
 通常はディフォルトのままで良いです、もし不都合あれば編集してください。
+
+## ソースのカスタマイズ(sources\everything.ini)
+'es.exe'のパスを指定できます。
+
+	[paths]
+	;
+	;es.exeのパスを指定します
+	;
+	exe=%HOMEDRIVE%%HOMEPATH%\hidemaru\macro\bin\everything\es.exe
+	;exe=%ProgramFiles%\Everything\es.exe
+
 
 # 動作環境
 
