@@ -1,0 +1,7 @@
+﻿/* sourceをソースとする
+*/
+$sources="source";
+$options="";
+$sources_args="";
+execmacro currentmacrodirectory+"\\internal\\main.mac",currentmacrodirectory,$sources,$options,$sources_args;
+endmacro getresultex(-1);
