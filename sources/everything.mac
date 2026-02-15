@@ -41,11 +41,11 @@ gather_candidates:
 	}
 
     if(1){
-        //候補数を制限する（数値の由来：1画面に100行表示できるとして、ｘ2しています）
-	    $$args = sprintf(R"(-s -n 200 "%s")",$$serchString);
+        //候補数を制限する（数値の由来：1画面に100行表示できるとして、ｘ10しています）
+	    $$args = sprintf(R"(-match-path -s -max-results 1000 %s)",$$serchString);
 	}else{
         //全候補を出力する（パフォーマンス検証に使用する想定です）
-	    $$args = sprintf(R"(-s "%s")",$$serchString);
+	    $$args = sprintf(R"(-match-path -s %s)",$$serchString);
     }
 
 	##handle=dllfuncw(#g_dll_hm_process,"SpawnWithRedirectToFile",$$everythingExtPath,$$args,true,true,$$temp_filename);
